@@ -1,9 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Scan from "../components/Home/Scan/Scan";
+import Header from "../components/Layout/Header";
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
       <Head>
         <title>The Dial</title>
         <meta
@@ -15,6 +17,7 @@ const Home: NextPage = () => {
         <meta property="og:image" content="https://thedial.xyz/card.png/" />
         <meta property="og:type" content="website" />
       </Head>
+      <Scan />
     </div>
   );
 };
