@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Dosis Regular";
+  font-weight: 400;
+  src: url("/fonts/Dosis Regular.ttf");
+}
+
 html,
 body {
   padding: 0;
@@ -14,21 +20,10 @@ body {
   background-color: #131313;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+#inputbox {
+  background-color: rgba(50, 197, 255, 0.3);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+::placeholder {
+  color: white !important;
 }
