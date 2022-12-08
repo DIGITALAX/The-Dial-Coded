@@ -1,9 +1,11 @@
 import { combineReducers } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
 import layoutReducer from "./reducers/layoutSlice";
+import publicationReducer from "./reducers/publicationSlice";
 
 const reducer = combineReducers({
   layoutReducer,
+  publicationReducer,
 });
 
 export const store = configureStore({
