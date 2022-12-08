@@ -1,9 +1,9 @@
 import { FunctionComponent } from "react";
-import Search from "./Search/Search";
-import BackgroundImage from "./BackgroundImage";
-import Marquee from "./Marquee";
-import SideText from "./SideText";
-import Turner from "./Turner";
+import Search from "./modules/Search/Search";
+import BackgroundImage from "./modules/BackgroundImage";
+import Marquee from "./modules/Marquee";
+import SideText from "./modules/SideText";
+import Turner from "./modules/Turner";
 
 const Scan: FunctionComponent = (): JSX.Element => {
   return (

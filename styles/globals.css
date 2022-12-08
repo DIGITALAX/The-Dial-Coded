@@ -23,3 +23,35 @@ body {
 ::placeholder {
   color: white !important;
 }
+
+#radialPinkBorder {
+  background: rgba(248, 245, 230, 0.7);
+  background: radial-gradient(
+    circle,
+    rgba(248, 245, 230, 1) 0%,
+    rgba(255, 241, 206, 1) 17%,
+    rgba(253, 254, 221, 1) 33%,
+    rgba(249, 215, 141, 1) 53%,
+    rgba(244, 198, 167, 1) 73%,
+    rgba(238, 192, 146, 1) 86%,
+    rgba(255, 219, 150, 1) 100%
+  );
+  opacity: 0.9;
+}
+
+div::-webkit-scrollbar {
+  width: 0.01rem;
+  height: 0.1rem;
+}
+
+div::-webkit-scrollbar {
+  width: 0.01rem;
+}
+
+div::-webkit-scrollbar-track:active {
+  background-color: #131313;
+}
+
+div::-webkit-scrollbar-thumb:active {
+  background-color: #ffdcff;
+}
