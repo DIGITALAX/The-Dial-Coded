@@ -4,3 +4,7 @@ export type UseSearchResults = {
   uris: string[];
   layoutType: string[];
 };
+
+export type UseCategoriesResults = {
+  listedCategories: string[];
+};

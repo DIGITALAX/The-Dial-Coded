@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import LayoutSwitch from "../components/Home/LayoutSwitch/LayoutSwitch";
 import Scan from "../components/Home/Scan/Scan";
 
 const Home: NextPage = () => {
@@ -17,6 +18,7 @@ const Home: NextPage = () => {
         <meta property="og:type" content="website" />
       </Head>
       <Scan />
+      <LayoutSwitch />
     </div>
   );
 };

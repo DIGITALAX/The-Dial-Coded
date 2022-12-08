@@ -1,4 +1,6 @@
-const useCategories = () => {
+import { UseCategoriesResults } from "../types/search.types";
+
+const useCategories = (): UseCategoriesResults => {
   const listedCategories: string[] = [
     "lo fi",
     "pixel art",
