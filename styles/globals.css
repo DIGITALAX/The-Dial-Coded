@@ -20,10 +20,6 @@ body {
   background-color: #131313;
 }
 
-#inputbox {
-  background-color: rgba(50, 197, 255, 0.3);
-}
-
 ::placeholder {
   color: white !important;
 }

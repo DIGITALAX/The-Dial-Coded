@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Scan from "../components/Home/Scan/Scan";
-import Header from "../components/Layout/Header";
 
 const Home: NextPage = () => {
   return (
