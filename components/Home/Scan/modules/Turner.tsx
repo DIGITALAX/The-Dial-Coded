@@ -4,14 +4,15 @@ import { TurnerProps } from "./../types/scan.types";
 
 const Turner: FunctionComponent<TurnerProps> = ({
   currentSetting,
-  setCount,
+  handleCount,
   canvasURIs,
 }): JSX.Element => {
+
   return (
     <div className="relative w-full h-fit col-start-2 grid grid-flow-row auto-rows-auto self-center justify-end gap-10 pr-10">
       <div
         className="relative w-fit h-fit row-start-1 active:rotate-6"
-        onClick={() => setCount(currentSetting)}
+        onClick={() => handleCount(currentSetting)}
       >
         <Image
           src="https://thedial.infura-ipfs.io/ipfs/QmQZ8UwjeizDQkbCiZED8Ya4LxpFD5JbVbNeAdowurHkiY"
@@ -42,7 +43,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
         <div className="relative w-10 h-full col-start-2">
           <Image
             src={`https://thedial.infura-ipfs.io/ipfs/${
-              canvasURIs[currentSetting - 1]
+              canvasURIs[currentSetting]
             }`}
             layout="fill"
             alt="canvas"

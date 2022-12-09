@@ -4,12 +4,14 @@ import layoutReducer from "./reducers/layoutSlice";
 import publicationReducer from "./reducers/publicationSlice";
 import dialReducer from "./reducers/dialSlice";
 import videoReducer from "./reducers/videoSlice";
+import backgroundReducer from "./reducers/backgroundSlice";
 
 const reducer = combineReducers({
   layoutReducer,
   publicationReducer,
   dialReducer,
   videoReducer,
+  backgroundReducer,
 });
 
 export const store = configureStore({

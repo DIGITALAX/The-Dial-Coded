@@ -8,6 +8,11 @@ const useCategories = (): UseCategoriesResults => {
     "synth wave",
     "retrofuturism",
     "ai art",
+    "precisionism",
+    "cypherpunk",
+    "latent",
+    "spacey",
+    "late night"
   ];
 
   const backgroundColors: string[] = [
