@@ -25,7 +25,6 @@ body {
 }
 
 #radialPinkBorder {
-  background: rgba(248, 245, 230, 0.7);
   background: radial-gradient(
     circle,
     rgba(248, 245, 230, 1) 0%,
@@ -54,4 +53,97 @@ div::-webkit-scrollbar-track:active {
 
 div::-webkit-scrollbar-thumb:active {
   background-color: #ffdcff;
+}
+
+#record1 {
+  background: conic-gradient(#2a36f6, #0714d6, #0710a2, #0a15c7, #2a36f6);
+  opacity: 0.9;
+}
+
+#record2 {
+  background: conic-gradient(#f8f5e6, #e7b97b, #ffdb96, #ffde90, #fff4bc);
+  opacity: 0.9;
+}
+
+#record3 {
+  background: conic-gradient(#fc9cf3, #b9d9ff, #0091ff, #fd99dc);
+  opacity: 0.9;
+}
+
+#record4 {
+  background: conic-gradient(#6486f3, #b620e0, #d66a71, #f7b500, #32c5ff);
+  opacity: 0.9;
+}
+
+#record5 {
+  background: conic-gradient(#2af651, #07d61d, #06cf0b, #2af640);
+  opacity: 0.9;
+}
+
+#record6 {
+  background: conic-gradient(#000000, #131313);
+  opacity: 0.9;
+}
+
+#record7 {
+  background: conic-gradient(#712af6, #7e07d6, #9806cf, #5a0ac7, #682af6);
+  opacity: 0.9;
+}
+
+#record8 {
+  background: conic-gradient(#6dd400, #96d026, #96cb00, #cabf00, #f7b500);
+  opacity: 0.9;
+}
+
+#record9 {
+  background: conic-gradient(#f62ada, #d607cf, #cf06ad, #c70aa1, #f62ad3);
+  opacity: 0.9;
+}
+
+#record10 {
+  background: conic-gradient(
+    #f7f7f3,
+    #dbdfb2,
+    #aeeccf,
+    #cedfde,
+    #f1d2ef,
+    #f6ebf7,
+    #f0ecf6,
+    #ffffff,
+    #f6f7e6
+  );
+  opacity: 0.9;
+}
+
+#record11 {
+  background: conic-gradient(#f62a2a, #d60707, #cf0606);
+  opacity: 0.9;
+}
+
+#record12 {
+  background: conic-gradient(#2abdf6, #078fd6, #06a9cf, #0ac7ab, #2abcf6);
+  opacity: 0.9;
+}
+
+#record13 {
+  background: conic-gradient(
+    #f6f7f3,
+    #f6ddc3,
+    #fefffe,
+    #f1d2ef,
+    #ffc4a1,
+    #f1cfbd,
+    #ffecfe
+  );
+  opacity: 0.9;
+}
+
+#record14 {
+  background: conic-gradient(#f6f42a, #d6b407, #cfaa06, #c7c20a, #f5f62a);
+  opacity: 0.9;
+}
+
+#record15 {
+  background: conic-gradient(#fc9cf3, #b9d9ff, #0091ff, #99fdc1);
+  opacity: 0.9;
 }

@@ -33,6 +33,7 @@ module.exports = {
         lily: "#F6DDC3",
         lili: "#B4FAB5",
         bluey: "#32C5FF",
+        offYellow: "#F7F7F3",
       },
     },
   },

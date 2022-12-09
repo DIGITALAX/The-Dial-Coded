@@ -14,7 +14,7 @@ const BackgroundImage: FunctionComponent<BackgroundImageProps> = ({
         objectFit="cover"
         objectPosition={"top"}
         alt="mirrorMain"
-        className="relative w-full h-full col-start-1 place-self-center mix-blend-lighten"
+        className="relative w-full h-full col-start-1 place-self-center opacity-80"
       />
     </div>
   );

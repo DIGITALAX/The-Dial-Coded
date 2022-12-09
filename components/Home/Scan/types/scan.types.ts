@@ -25,3 +25,7 @@ export type SideTextProps = {
   imageDescription: string[];
   currentSetting: number;
 };
+
+export type ScanProps = {
+  newLink: string;
+};
