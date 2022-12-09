@@ -13,11 +13,11 @@ const Home: NextPage = () => {
     (state: RootState) => state.app.publicationReducer.value
   );
   const streamLinks: string[] = [
-    "https://www.youtube.com/embed/Izh9pP18sVs?controls=0?rel=0&autoplay=1&mute=1",
+    "https://www.youtube.com/embed/2Sa8o39R0jY?controls=0?rel=0&autoplay=1&mute=1",
     "https://www.youtube.com/embed/qaoyC8D5Kt0?controls=0?rel=0&autoplay=1&mute=1",
   ];
   const [newLink, setNewLink] = useState<string>(
-    "https://www.youtube.com/embed/Izh9pP18sVs?controls=0?rel=0&autoplay=1&mute=1"
+    "https://www.youtube.com/embed/2Sa8o39R0jY?controls=0?rel=0&autoplay=1&mute=1"
   );
   useEffect(() => {
     const shuffledLinks: number[] = shuffle([0, 1]);

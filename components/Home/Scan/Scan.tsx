@@ -16,7 +16,7 @@ import { setVideo } from "../../../redux/reducers/videoSlice";
 const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
   const {
     currentSetting,
-    setCount,
+    handleCount,
     canvasURIs,
     mainImage,
     imageArtist,
@@ -30,7 +30,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
   let queryWindowSize1200: boolean = useMediaQuery("(max-width:1200px)");
   return (
     <div className="relative w-full h-full row-start-1 grid grid-flow-row auto-rows-auto">
-      <BackgroundImage currentSetting={currentSetting} mainImage={mainImage} />
+      <BackgroundImage mainImage={mainImage} />
       <div className="relative w-full h-screen px-6 grid grid-flow-col auto-cols-auto row-start-1">
         <SideText
           currentSetting={currentSetting}
@@ -69,7 +69,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
         <Turner
           canvasURIs={canvasURIs}
           currentSetting={currentSetting}
-          setCount={setCount}
+          handleCount={handleCount}
         />
       </div>
       <Marquee />
