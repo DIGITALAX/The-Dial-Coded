@@ -3,11 +3,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import layoutReducer from "./reducers/layoutSlice";
 import publicationReducer from "./reducers/publicationSlice";
 import dialReducer from "./reducers/dialSlice";
+import videoReducer from "./reducers/videoSlice";
 
 const reducer = combineReducers({
   layoutReducer,
   publicationReducer,
   dialReducer,
+  videoReducer,
 });
 
 export const store = configureStore({

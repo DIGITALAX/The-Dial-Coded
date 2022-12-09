@@ -5,11 +5,24 @@ import LayoutSwitch from "../components/Home/LayoutSwitch/LayoutSwitch";
 import Scan from "../components/Home/Scan/Scan";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { useEffect, useState } from "react";
+import shuffle from "shuffle-array";
 
 const Home: NextPage = () => {
   const makePublication = useSelector(
     (state: RootState) => state.app.publicationReducer.value
   );
+  const streamLinks: string[] = [
+    "https://www.youtube.com/embed/Izh9pP18sVs?controls=0?rel=0&autoplay=1&mute=1",
+    "https://www.youtube.com/embed/qaoyC8D5Kt0?controls=0?rel=0&autoplay=1&mute=1",
+  ];
+  const [newLink, setNewLink] = useState<string>(
+    "https://www.youtube.com/embed/Izh9pP18sVs?controls=0?rel=0&autoplay=1&mute=1"
+  );
+  useEffect(() => {
+    const shuffledLinks: number[] = shuffle([0, 1]);
+    setNewLink(streamLinks[shuffledLinks[0]]);
+  }, []);
   return (
     <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
       <Head>
@@ -23,7 +36,7 @@ const Home: NextPage = () => {
         <meta property="og:image" content="https://thedial.xyz/card.png/" />
         <meta property="og:type" content="website" />
       </Head>
-      <Scan />
+      <Scan newLink={newLink} />
       <LayoutSwitch />
       {makePublication && <PublicationModal />}
     </div>

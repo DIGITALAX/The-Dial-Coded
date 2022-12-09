@@ -1,14 +1,22 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setVideo } from "../../redux/reducers/videoSlice";
+import { RootState } from "../../redux/store";
 
 const Header: FunctionComponent = (): JSX.Element => {
+  const dispatch = useDispatch();
+  const video = useSelector((state: RootState) => state.app.videoReducer.value);
   return (
     <div className="absolute w-full h-fit grid grid-flow-col auto-cols-auto justify-between py-10 px-6 z-30">
       <div className="relative w-fit h-fit col-start-1 text-white font-dosis text-7xl">
         THE DIAL
       </div>
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-2 gap-6 place-self-center">
-        <div className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60">
+        <div
+          className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60"
+          onClick={() => dispatch(setVideo(!video))}
+        >
           <Image
             src="https://thedial.infura-ipfs.io/ipfs/Qmb4h9vReob4VXMByg7Go1kUmacjuGAcTxft5Rq4SbSgXY"
             alt="headerIcon1"

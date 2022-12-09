@@ -7,4 +7,5 @@ export type UseSearchResults = {
 
 export type UseCategoriesResults = {
   listedCategories: string[];
+  backgroundColors: string[];
 };
