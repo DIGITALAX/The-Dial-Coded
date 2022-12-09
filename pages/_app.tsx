@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import Header from "../components/Layout/Header";
 import { store } from "./../redux/store";
 import { Provider } from "react-redux";
+import PublicationModal from "../components/Common/Modals/Publication/PublicationModal";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

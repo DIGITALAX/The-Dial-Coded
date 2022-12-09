@@ -8,7 +8,7 @@ const useSearch = (): UseSearchResults => {
     "QmRUztxbrNETu85M3o9RoyqEKBeGEeV5kT5K8hberNTHw7",
     "QmfG4dGSYrtv2hCUnURNvfKyk92ZwVJoG9wiMvtjhVQm8y",
     "QmRUztxbrNETu85M3o9RoyqEKBeGEeV5kT5K8hberNTHw7",
-    "Qmc1i9Lag4a9ALhY5wueSF8kGXFUDFBXBheUN55FKvRJgB",
+    "QmWqomti4SpttTLXj878VHFgSM6c4EEGmEooDGm134HU9T",
   ];
 
   const layoutType: string[] = ["Slider", "Canvas", "Account", "Post"];

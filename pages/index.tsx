@@ -1,9 +1,15 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import PublicationModal from "../components/Common/Modals/Publication/PublicationModal";
 import LayoutSwitch from "../components/Home/LayoutSwitch/LayoutSwitch";
 import Scan from "../components/Home/Scan/Scan";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Home: NextPage = () => {
+  const makePublication = useSelector(
+    (state: RootState) => state.app.publicationReducer.value
+  );
   return (
     <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
       <Head>
@@ -19,6 +25,7 @@ const Home: NextPage = () => {
       </Head>
       <Scan />
       <LayoutSwitch />
+      {makePublication && <PublicationModal />}
     </div>
   );
 };
