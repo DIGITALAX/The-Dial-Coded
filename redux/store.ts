@@ -2,10 +2,12 @@ import { combineReducers } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
 import layoutReducer from "./reducers/layoutSlice";
 import publicationReducer from "./reducers/publicationSlice";
+import dialReducer from "./reducers/dialSlice";
 
 const reducer = combineReducers({
   layoutReducer,
   publicationReducer,
+  dialReducer,
 });
 
 export const store = configureStore({

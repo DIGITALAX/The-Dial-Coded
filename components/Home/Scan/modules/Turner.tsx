@@ -1,10 +1,18 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
+import { TurnerProps } from "./../types/scan.types";
 
-const Turner: FunctionComponent = (): JSX.Element => {
+const Turner: FunctionComponent<TurnerProps> = ({
+  currentSetting,
+  setCount,
+  canvasURIs,
+}): JSX.Element => {
   return (
     <div className="relative w-full h-fit col-start-2 grid grid-flow-row auto-rows-auto self-center justify-end gap-10 pr-10">
-      <div className="relative w-fit h-fit row-start-1">
+      <div
+        className="relative w-fit h-fit row-start-1 active:rotate-6"
+        onClick={() => setCount(currentSetting)}
+      >
         <Image
           src="https://thedial.infura-ipfs.io/ipfs/QmQZ8UwjeizDQkbCiZED8Ya4LxpFD5JbVbNeAdowurHkiY"
           className="relative w-fit h-fit relative cursor-pointer"
@@ -14,9 +22,7 @@ const Turner: FunctionComponent = (): JSX.Element => {
         />
       </div>
       <div className="relative w-full h-fit row-start-2 grid grid-flow-cols auto-cols-auto gap-6">
-        <div
-          className="relative w-full h-10 col-start-1 grid grid-flow-col auto-cols-auto rounded-lg border-2 border-white opacity-90 gap-3 pl-1 bg-bluey/30"
-        >
+        <div className="relative w-full h-10 col-start-1 grid grid-flow-col auto-cols-auto rounded-lg border-2 border-white opacity-90 gap-3 pl-1 bg-bluey/30">
           <div className="relative col-start-1 w-fit h-fit place-self-center place-self-center grid grid-flow-col auto-cols-auto pl-2">
             <Image
               src="https://thedial.infura-ipfs.io/ipfs/QmZhr4Eo92GHQ3Qn3xpv8HSz7ArcjgSPsD3Upe9v8H5rge"
@@ -35,7 +41,9 @@ const Turner: FunctionComponent = (): JSX.Element => {
         </div>
         <div className="relative w-10 h-full col-start-2">
           <Image
-            src="https://thedial.infura-ipfs.io/ipfs/QmQZAsmdnPUdGGhBVqWLLddLLWYF9v3oj1wjVe1S5sSm47"
+            src={`https://thedial.infura-ipfs.io/ipfs/${
+              canvasURIs[currentSetting - 1]
+            }`}
             layout="fill"
             alt="canvas"
           />
