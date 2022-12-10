@@ -9,6 +9,7 @@ import topicReducer from "./reducers/topicSlice";
 import feedOrderReducer from "./reducers/feedOrderSlice";
 import feedPriorityReducer from "./reducers/feedPrioritySlice";
 import feedTypeReducer from "./reducers/feedTypeSlice";
+import userViewerReducer from "./reducers/userViewSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -20,6 +21,7 @@ const reducer = combineReducers({
   feedOrderReducer,
   feedPriorityReducer,
   feedTypeReducer,
+  userViewerReducer,
 });
 
 export const store = configureStore({
