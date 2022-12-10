@@ -1,6 +1,6 @@
-import { TopicInterface } from "../types/samples.types";
+import { TopicInterface, UseSampleResult } from "../types/samples.types";
 
-const useSamples = () => {
+const useSamples = (): UseSampleResult => {
   const topics: string[] = [
     "in the style of",
     "genre",

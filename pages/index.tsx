@@ -8,7 +8,7 @@ import { RootState } from "../redux/store";
 import { useEffect, useState } from "react";
 import shuffle from "shuffle-array";
 
-const Home: NextPage = () => {
+const Home: NextPage = (): JSX.Element => {
   const makePublication = useSelector(
     (state: RootState) => state.app.publicationReducer.value
   );

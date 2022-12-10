@@ -11,3 +11,8 @@ export interface TopicInterface {
   equipment: string[];
   descriptive: string[];
 }
+
+export type UseSampleResult = {
+  topics: string[];
+  topicValues: TopicInterface;
+};
