@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
 import useSlider from "./hooks/useSlider";
+import Samples from "./modules/Samples/Samples";
 import SliderSwitch from "./SliderSwitch";
 
 const Slider: FunctionComponent = (): JSX.Element => {
@@ -40,6 +41,7 @@ const Slider: FunctionComponent = (): JSX.Element => {
           highlightsSlider={highlightsSlider}
         />
       </div>
+      <Samples />
     </div>
   );
 };

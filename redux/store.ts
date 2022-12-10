@@ -5,6 +5,7 @@ import publicationReducer from "./reducers/publicationSlice";
 import dialReducer from "./reducers/dialSlice";
 import videoReducer from "./reducers/videoSlice";
 import backgroundReducer from "./reducers/backgroundSlice";
+import topicReducer from "./reducers/topicSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -12,6 +13,7 @@ const reducer = combineReducers({
   dialReducer,
   videoReducer,
   backgroundReducer,
+  topicReducer,
 });
 
 export const store = configureStore({

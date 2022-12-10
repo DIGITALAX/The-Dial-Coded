@@ -40,7 +40,8 @@ const Badges: FunctionComponent = (): JSX.Element => {
         <div className="relative col-start-3 w-fit h-full grid grid-cols-5 grid-flow-col-dense grid-rows-3 gap-3 justify-self-end">
           {badges?.map((badge: string, index: number) => {
             return (
-              <div className="relative w-20 h-20 rounded-lg border-2 border-offBlack grid grid-flow-col auto-cols-auto cursor-pointer">
+              <div className="relative w-20 h-20 rounded-lg border-2 border-offBlack grid grid-flow-col auto-cols-auto cursor-pointer"
+              key={index}>
                 <Image
                   src={`https://thedial.infura-ipfs.io/ipfs/${badgeImage[index]}`}
                   layout="fill"
