@@ -6,6 +6,9 @@ import dialReducer from "./reducers/dialSlice";
 import videoReducer from "./reducers/videoSlice";
 import backgroundReducer from "./reducers/backgroundSlice";
 import topicReducer from "./reducers/topicSlice";
+import feedOrderReducer from "./reducers/feedOrderSlice";
+import feedPriorityReducer from "./reducers/feedPrioritySlice";
+import feedTypeReducer from "./reducers/feedTypeSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -14,6 +17,9 @@ const reducer = combineReducers({
   videoReducer,
   backgroundReducer,
   topicReducer,
+  feedOrderReducer,
+  feedPriorityReducer,
+  feedTypeReducer,
 });
 
 export const store = configureStore({

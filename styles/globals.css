@@ -147,3 +147,33 @@ div::-webkit-scrollbar-thumb:active {
   background: conic-gradient(#fc9cf3, #b9d9ff, #0091ff, #99fdc1);
   opacity: 0.9;
 }
+
+#select1 {
+  background: conic-gradient(#000000, #131313);
+  opacity: 0.9;
+}
+
+#select1:hover {
+  background: conic-gradient(#000000, #131313);
+  opacity: 0.4;
+}
+
+#select2 {
+  background: conic-gradient(#2a36f6, #0714d6, #0710a2, #0a15c7, #2a36f6);
+  opacity: 0.9;
+}
+
+#select2:hover {
+  background: conic-gradient(#2a36f6, #0714d6, #0710a2, #0a15c7, #2a36f6);
+  opacity: 0.4;
+}
+
+#select3 {
+  background: conic-gradient(#f62a2a, #d60707, #cf0606);
+  opacity: 0.9;
+}
+
+#select3:hover {
+  background: conic-gradient(#f62a2a, #d60707, #cf0606);
+  opacity: 0.4;
+}
