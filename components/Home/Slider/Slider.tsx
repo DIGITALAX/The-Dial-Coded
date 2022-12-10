@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
 import useSlider from "./hooks/useSlider";
+import Presets from "./modules/Presets/Presets";
 import Samples from "./modules/Samples/Samples";
 import SliderSwitch from "./SliderSwitch";
 
@@ -42,6 +43,7 @@ const Slider: FunctionComponent = (): JSX.Element => {
         />
       </div>
       <Samples />
+      <Presets />
     </div>
   );
 };
