@@ -34,6 +34,7 @@ module.exports = {
         lili: "#B4FAB5",
         bluey: "#32C5FF",
         offYellow: "#F7F7F3",
+        comp: "#B9B9B9"
       },
     },
   },

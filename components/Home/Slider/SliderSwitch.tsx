@@ -1,19 +1,15 @@
 import { FunctionComponent } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
+import Viewer from "./modules/Viewer";
 import { SliderSwitchProps } from "./types/slider.types";
-import ScannerViewer from "./modules/ScannerViewer";
-import HighlightsViewer from "./modules/HighlightsViewer";
-import DropsViewer from "./modules/DropsViewer";
-import ReachViewer from "./modules/ReachViewer";
-import RecordsViewer from "./modules/RecordsViewer";
 
 const SliderSwitch: FunctionComponent<SliderSwitchProps> = ({
   scannerSlider,
   highlightsSlider,
   reachSlider,
   recordsSlider,
-  dropsSlider
+  dropsSlider,
 }): JSX.Element => {
   const dialType: string | undefined = useSelector(
     (state: RootState) => state.app.dialReducer.value
@@ -26,19 +22,19 @@ const SliderSwitch: FunctionComponent<SliderSwitchProps> = ({
 
   switch (decideStringAction()) {
     case "Highlights":
-      return <HighlightsViewer highlightsSlider={highlightsSlider} />;
+      return <Viewer slider={highlightsSlider} width={"60"} />;
 
     case "Drops":
-      return <DropsViewer dropsSlider={dropsSlider} />;
+      return <Viewer slider={dropsSlider} width={"96"} />;
 
     case "Reach":
-      return <ReachViewer reachSlider={reachSlider} />;
+      return <Viewer slider={reachSlider} width={"40"} />;
 
     case "Records":
-      return <RecordsViewer recordsSlider={recordsSlider} />;
+      return <Viewer slider={recordsSlider} width={"60"} />;
 
     default:
-      return <ScannerViewer scannerSlider={scannerSlider} />;
+      return <Viewer slider={scannerSlider} width={"48"} />;
   }
 };
 
