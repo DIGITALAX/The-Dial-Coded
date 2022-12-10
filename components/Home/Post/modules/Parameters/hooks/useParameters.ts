@@ -5,12 +5,19 @@ const useParameters = (): UseParametersResult => {
   const [orderDrop, setOrderDrop] = useState<boolean>(false);
   const [orderType, setTypeDrop] = useState<boolean>(false);
   const [orderPriority, setPriorityDrop] = useState<boolean>(false);
+  const [userTypeOpen, setUserTypeOpen] = useState<boolean>(false);
 
   const feedOrder: string[] = ["chrono", "algo"];
 
   const feedType: string[] = ["saves", "reflex", "drafts", "canvas"];
 
   const feedPriority: string[] = ["interests", "reactions"];
+
+  const userList: string[] = [
+    "user one",
+    "user two",
+    "user three"
+  ]
 
   return {
     feedOrder,
@@ -22,6 +29,9 @@ const useParameters = (): UseParametersResult => {
     setTypeDrop,
     orderPriority,
     setPriorityDrop,
+    setUserTypeOpen,
+    userTypeOpen,
+    userList
   };
 };
 
