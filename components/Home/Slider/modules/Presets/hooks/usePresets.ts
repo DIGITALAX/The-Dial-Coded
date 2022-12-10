@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { UsePresetsResult } from "../types/presets.types";
 
-const usePresets = () => {
-  const [more, setMore] = useState<boolean>();
+const usePresets = (): UsePresetsResult => {
+  const [more, setMore] = useState<boolean>(false);
 
   const presetOptions: string[] = [
     "vintage americana",
