@@ -1,3 +1,5 @@
+import { TopicInterface } from "../types/samples.types";
+
 const useSamples = () => {
   const topics: string[] = [
     "in the style of",
@@ -13,7 +15,7 @@ const useSamples = () => {
     "descriptive",
   ];
 
-  const style: string[] = [
+  const inthestyleof: string[] = [
     "pixel expressionism",
     "neo precisionism",
     "web brutalism",
@@ -89,8 +91,8 @@ const useSamples = () => {
     "alphonse mucha",
   ];
 
-  const topicValues = {
-    style,
+  const topicValues: TopicInterface = {
+    inthestyleof,
     genre,
     format,
     colors,
