@@ -177,3 +177,29 @@ div::-webkit-scrollbar-thumb:active {
   background: conic-gradient(#f62a2a, #d60707, #cf0606);
   opacity: 0.4;
 }
+
+#feedBackground {
+  background: conic-gradient(
+    #000000,
+    #131313,
+    #000000,
+    #ece4e4,
+    #000000,
+    #131313,
+    #000000
+  );
+  opacity: 0.9;
+}
+
+#username {
+  background: linear-gradient(
+    -86deg,
+    #f8f5e6,
+    #f9d78d,
+    #e7b97b,
+    #fff1cf,
+    #fdfedd
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
