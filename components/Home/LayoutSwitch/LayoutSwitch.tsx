@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import Account from "../Account/Account";
 import Canvas from "../Canvas/Canvas";
+import Mixtape from "../Mixtape/Mixtape";
 import Post from "../Post/Post";
 import Slider from "../Slider/Slider";
 
@@ -25,6 +26,9 @@ const LayoutSwitch: FunctionComponent = (): JSX.Element => {
 
     case "Slider":
       return <Slider />;
+
+    case "Mixtape":
+      return <Mixtape />;
 
     default:
       return <Post />;
