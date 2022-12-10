@@ -203,3 +203,18 @@ div::-webkit-scrollbar-thumb:active {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+#hot {
+  background: conic-gradient(
+    #f7f7f3,
+    #dbdfb2,
+    #aeeccf,
+    #cedfde,
+    #f1d2ef,
+    #f6ebf7,
+    #f0ecf6,
+    #ffffff,
+    #f6f7e6
+  );
+  opacity: 0.85;
+}

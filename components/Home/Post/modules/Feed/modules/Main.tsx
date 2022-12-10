@@ -1,22 +1,23 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { MainProps } from "../types/feed.types";
-import {
-  BsSuitHeartFill,
-  BsSuitHeart,
-  BsCollection,
-  BsFillCollectionFill,
-} from "react-icons/bs";
-import { FaRegCommentDots, FaCommentDots } from "react-icons/fa";
-import { AiOutlineRetweet } from "react-icons/ai";
+import { MdOutlineExpandMore } from "react-icons/md";
+import Reactions from "./Reactions";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../../../redux/store";
+import { setMoreFeed } from "../../../../../../redux/reducers/moreFeedSlice";
 
 const Main: FunctionComponent<MainProps> = ({ images }): JSX.Element => {
+  const dispatch = useDispatch();
+  const isOpen = useSelector(
+    (state: RootState) => state.app.moreFeedReducer.value
+  );
   return (
-    <div className="relative w-full h-full col-start-1 grid grid-flow-row auto-rows-auto">
-      <div className="relative w-[40vw] h-full rounded-md grid grid-flow-row auto-rows-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-6">
+    <div className="relative w-[50vw] h-fit col-start-1 grid grid-flow-row auto-rows-auto">
+      <div className="relative w-full h-full rounded-md grid grid-flow-row auto-rows-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-6 border-2 border-black">
         <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto">
           <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-3">
-            <div className="relative w-fit h-fit col-start-1 self-center justify-self-start">
+            <div className="relative w-fit h-fit col-start-1 self-center justify-self-start cursor-pointer hover:opacity-70 active:scale-95 self-center">
               <Image src="" width={15} height={15} alt="pfp" />
             </div>
             <div className="relative w-fit h-fit col-start-2 grid grid-flow-row auto-rows-auto place-self-center">
@@ -30,6 +31,9 @@ const Main: FunctionComponent<MainProps> = ({ images }): JSX.Element => {
                 @something.lens
               </div>
             </div>
+          </div>
+          <div className="relative w-fit h-fit text-white font-dosis justify-self-end self-center">
+            10 mins ago
           </div>
         </div>
         <div className="relative w-full h-fit row-start-2 text-left font-dosis grid grid-flow-row auto-rows-auto gap-6 pl-6">
@@ -63,42 +67,23 @@ const Main: FunctionComponent<MainProps> = ({ images }): JSX.Element => {
           })}
         </div>
         <div className="relative w-full h-fit row-start-4 grid grid-flow-col auto-cols-auto pl-6">
-          <div className="relative w-fit h-fit col-start-1 justify-self-start self-center grid grid-flow-col auto-cols-auto gap-4">
-            <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-2 place-self-center">
-              <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
-                <BsSuitHeart color="red" size={15} />
-              </div>
-              <div className="relative w-fit h-fit col-start-2 text-white font-dosis text-xs place-self-center">
-                100
-              </div>
-            </div>
-            <div className="relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center">
-              <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
-                <FaRegCommentDots color="#FBEED1" size={15} />
-              </div>
-              <div className="relative w-fit h-fit col-start-2 place-self-center text-white font-dosis text-xs">
-                100
-              </div>
-            </div>
-            <div className="relative w-fit h-fit col-start-3 grid grid-flow-col auto-cols-auto gap-2 place-self-center">
-              <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
-                <AiOutlineRetweet color="#FEEA66" size={15} />
-              </div>
-              <div className="relative w-fit h-fit col-start-2 place-self-center text-white font-dosis text-xs">
-                100
-              </div>
-            </div>
-            <div className="relative w-fit h-fit col-start-4 grid grid-flow-col auto-cols-auto gap-2 place-self-center">
-              <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
-                <BsCollection size={15} color="#81A8F8" />
-              </div>
-              <div className="relative w-fit h-fit col-start-2 place-self-center text-white font-dosis text-xs">
-                100
-              </div>
-            </div>
+          <Reactions
+            textColor={"white"}
+            commentColor={"#FBEED1"}
+            mirrorColor={"#FEEA66"}
+            collectColor={"#81A8F8"}
+            heartColor={"red"}
+          />
+          <div className="relative w-fit h-fit col-start-2 justify-self-end self-center text-white">
+            more data
           </div>
-          <div className="relative w-fit h-fit col-start-2 justify-self-end self-center"></div>
         </div>
+      </div>
+      <div
+        className="relative row-start-2 p-4 w-fit h-fit place-self-center hover:opacity-70 active:scale-95 cursor-pointer"
+        onClick={() => dispatch(setMoreFeed(!isOpen))}
+      >
+        <MdOutlineExpandMore color="black" size={25} />
       </div>
     </div>
   );

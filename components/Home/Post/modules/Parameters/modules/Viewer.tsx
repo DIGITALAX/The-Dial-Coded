@@ -26,7 +26,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
             !userTypeOpen && "rounded-b-lg"
           } row-start-1 cursor-pointer grid grid-flow-col auto-cols-auto gap-2 border-t-2 ${
             userTypeOpen ? "border-b" : "border-b-2"
-          } border-x-2 border-black place-self-center`}
+          } border-x-2 border-black place-self-center bg-white`}
           onClick={() => {
             setUserTypeOpen(!userTypeOpen);
           }}
@@ -71,7 +71,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                 return (
                   <div
                     key={index}
-                    className={`relative w-40 h-fit px-3 py-2 ${
+                    className={`relative w-40 h-fit px-3 py-2 bg-white ${
                       userSelected === "Select User" &&
                       index === userList.length - 1 &&
                       "rounded-b-lg"
