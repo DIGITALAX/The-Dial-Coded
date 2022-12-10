@@ -18,6 +18,7 @@ const BackgroundImage: FunctionComponent<BackgroundImageProps> = ({
         objectFit="cover"
         objectPosition={"top"}
         alt="mirrorMain"
+        priority
         className="relative w-full h-full col-start-1 place-self-center opacity-80"
       />
     </div>
