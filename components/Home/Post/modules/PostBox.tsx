@@ -40,7 +40,7 @@ const PostBox: FunctionComponent = (): JSX.Element => {
                   />
                 </div>
                 <div className="relative col-start-2 w-fit h-fit font-dosis text-offBlack place-self-center">
-                  What's happening?
+                  What&apos;s happening?
                 </div>
               </div>
             </div>
