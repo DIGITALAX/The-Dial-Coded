@@ -9,3 +9,7 @@ export type UseCategoriesResults = {
   listedCategories: string[];
   backgroundColors: string[];
 };
+
+export type PanelTextProps = {
+  text: string
+}
