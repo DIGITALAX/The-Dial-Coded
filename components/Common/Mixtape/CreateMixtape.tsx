@@ -51,7 +51,7 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
           })}
         </div>
       </div>
-      <div className="relative w-full h-40 overflow-y-scroll grid grid-flow-row auto-rows-auto row-start-4 gap-6">
+      <div className="relative w-full h-44 overflow-y-scroll grid grid-flow-row auto-rows-auto row-start-4 gap-6">
         {Array.from(Array(10).keys()).map((index: number) => {
           return <TrackInput key={index} index={index} />;
         })}
