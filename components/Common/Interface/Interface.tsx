@@ -8,7 +8,7 @@ const Interface: FunctionComponent<InterfaceProps> = ({
   tapeTitles,
 }): JSX.Element => {
   return (
-    <div className="relative w-screen h-full p-10 col-start-1 grid grid-flow-col auto-cols-auto">
+    <div className="relative w-full h-full p-10 col-start-1 grid grid-flow-col auto-cols-auto">
       <div className="relative col-start-1 w-fit h-full bg-gradient-to-r from-offBlack via-black/70 to-offBlack rounded-lg grid grid-flow-col auto-cols-auto pt-4 px-4 pb-10 gap-8 justify-self-center">
         <div className="relative w-fit h-full col-start-1 grid grid-flow-row auto-rows-auto gap-8 justify-between">
           <div className="relative row-start-1 place-self-start w-fit h-fit grid grid-flow-row auto-rows-auto gap-6">
@@ -49,8 +49,6 @@ const Interface: FunctionComponent<InterfaceProps> = ({
           <MainDisplay
             tapeTitles={tapeTitles}
             row={"2"}
-            width={"[80vw"}
-            height={"full"}
             title={title}
           />
         </div>

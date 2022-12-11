@@ -239,3 +239,7 @@ div::-webkit-scrollbar-thumb:active {
   );
   opacity: 0.85;
 }
+
+#crt {
+  background: linear-gradient(to right, #fc9cf3, #b9d9ff, #0091ff, #99fdc1);
+}

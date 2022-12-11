@@ -3,7 +3,6 @@ import { ButtonIconProps } from "../types/common.types";
 import Image from "next/legacy/image";
 
 const ButtonIcon: FunctionComponent<ButtonIconProps> = ({
-  bgColor,
   width,
   height,
   image,
@@ -13,7 +12,7 @@ const ButtonIcon: FunctionComponent<ButtonIconProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`relative w-fit col-start-${col} border-4 w-${width} h-${height} border-black bg-${bgColor} grid grid-flow-row auto-rows-auto p-px self-${self} justify-self-${justify}`}
+      className={`relative w-fit col-start-${col} border-4 w-${width} h-${height} border-black bg-yell grid grid-flow-row auto-rows-auto p-px self-${self} justify-self-${justify}`}
     >
       {image && (
         <Image
