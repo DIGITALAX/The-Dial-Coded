@@ -1,6 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { RewindProps } from "../types/common.types";
+import { RewindProps } from "../../types/common.types";
 
 const Rewind: FunctionComponent<RewindProps> = ({
   row,

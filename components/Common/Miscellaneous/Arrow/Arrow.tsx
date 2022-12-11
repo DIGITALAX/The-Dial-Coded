@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
-import { ArrowProps } from "../types/common.types";
+import { ArrowProps } from "../../types/common.types";
 
 const Arrow: FunctionComponent<ArrowProps> = ({
   handleValue,

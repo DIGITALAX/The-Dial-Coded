@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
-import Rewind from "../../../Common/Rewind/Rewind";
+import Rewind from "../../../Common/Miscellaneous/Rewind/Rewind";
 import useSlider from "./hooks/useSlider";
 import Presets from "./modules/Presets/Presets";
 import Samples from "./modules/Samples/Samples";

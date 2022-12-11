@@ -6,7 +6,7 @@ import Categories from "./Categories";
 import useSearch from "./hooks/useSearch";
 import lodash from "lodash";
 import PanelOption from "../../../../Common/Panel/PanelOption";
-import Arrow from "../../../../Common/Arrow/Arrow";
+import Arrow from "../../../../Common/Miscellaneous/Arrow/Arrow";
 
 const Panel: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();

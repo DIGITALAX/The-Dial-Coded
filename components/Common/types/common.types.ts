@@ -82,3 +82,39 @@ export type OptionMenuProps = {
   imageWidth: number;
   imageHeight: number;
 };
+
+export type LineProps = {
+  col: string;
+  width: string;
+};
+
+export type PanelProps = {
+  height: string;
+  col: string;
+  width: string;
+};
+
+export type TapeProps = {
+  height: string;
+  width: string;
+  bgColor: string;
+  sideImage?: string;
+  title: string;
+};
+
+export type MainDisplayProps = {
+  width: string;
+  height: string;
+  row: string;
+  title: string;
+};
+
+export type ButtonIconProps = {
+  bgColor: string;
+  width: string;
+  height: string;
+  image?: string;
+  col: string;
+  justify: string;
+  self: string
+};
