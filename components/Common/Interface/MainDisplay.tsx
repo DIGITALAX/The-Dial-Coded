@@ -119,13 +119,13 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                 )}
               </div>
               <div
-                className={`relative w-full h-full h-10 bg-black grid grid-flow-col auto-cols-auto row-start-2 ${
-                  tapeTitles.length > 10 && "cursor-pointer"
-                }`}
+                className={`relative w-full h-full h-10 bg-black grid grid-flow-col auto-cols-auto row-start-2`}
               >
-                <div className="relative w-fit h-fit place-self-center">
-                  <IoMdArrowDropdown size={30} color="#FCDB8F" />
-                </div>
+                {tapeTitles.length > 10 && (
+                  <div className="relative w-fit h-fit place-self-center">
+                    <IoMdArrowDropdown size={30} color="#FCDB8F" />
+                  </div>
+                )}
               </div>
             </div>
           </div>

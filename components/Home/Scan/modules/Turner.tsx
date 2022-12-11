@@ -11,7 +11,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
   return (
     <div className="relative w-full h-fit col-start-2 grid grid-flow-row auto-rows-auto self-center justify-end gap-10 pr-10">
       <div
-        className="relative w-fit h-fit row-start-1 active:rotate-6"
+        className="relative w-fit h-fit row-start-1 hover:rotate-3 active:rotate-6"
         onClick={() => handleCount(currentSetting)}
       >
         <Image
