@@ -1,4 +1,6 @@
-const useMain = () => {
+import { UseMainResults } from "../types/feed.types";
+
+const useMain = (): UseMainResults => {
   const images: string[] = [
     "QmQv4SDQJBEw1wFGdCj3wNVeVFFxXREAUyD2sgwSHwYmCm",
     "QmVgq2bb9AYFQ5EEMupc9mvPqaPYn7x7Hf2nMM2H6XhfYg",

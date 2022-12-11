@@ -1,4 +1,6 @@
-const useHot = () => {
+import { UseHotResults } from "../types/feed.types";
+
+const useHot = (): UseHotResults => {
   const topTrending: string[] = [
     "QmcDKJt29aMZeFpHtv61R4TZU1MbBXeb5RzfdoY6Ee2hsY",
     "QmcuNti3wRdtbwmHGXg1S6oExw4mn2DRmK1QqkWrMh97AW",

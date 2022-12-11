@@ -1,9 +1,19 @@
 export type MainProps = {
-    images: string[]
-}
+  images: string[];
+};
 
 export type HotProps = {
-    topMixtape: string[] 
-    topTracks: string[]
-    topTrending: string[]
-}
+  topMixtape: string[];
+  topTracks: string[];
+  topTrending: string[];
+};
+
+export type UseHotResults = {
+  topMixtape: string[];
+  topTracks: string[];
+  topTrending: string[];
+};
+
+export type UseMainResults = {
+  images: string[];
+};
