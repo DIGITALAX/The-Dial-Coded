@@ -14,7 +14,7 @@ const NotificationSlider: FunctionComponent<NotificationSliderProps> = ({
             key={index}
             className={`relative w-44 h-full col-start-${
               index + 1
-            } justify-self-end self-center`}
+            } justify-self-end self-center cursor-pointer active:opacity-70`}
           >
             <Image
               src={`https://thedial.infura-ipfs.io/ipfs/${image}`}

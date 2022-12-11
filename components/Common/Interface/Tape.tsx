@@ -60,7 +60,7 @@ const Tape: FunctionComponent<TapeProps> = ({
         >
           <div className="relative w-fit h-fit place-self-center p-1">
             {mixtape ? (
-              `mixtape vol ${index} - ${title}`
+              `mixtape vol ${index+1} - ${title}`
             ) : locked ? (
               <RiLock2Fill color="black" size={20} />
             ) : (

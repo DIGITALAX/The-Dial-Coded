@@ -42,7 +42,9 @@ module.exports = {
         yell: "#FCDB8F",
         dcomp: "#606362",
         dullY: "#F9EBCC",
-        bright: "#FA4040"
+        bright: "#FA4040",
+        dialY: "#FBDB84",
+        dialG: "#A6DA70"
       },
     },
   },

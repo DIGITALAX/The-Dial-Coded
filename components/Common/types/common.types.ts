@@ -140,7 +140,7 @@ export type NotificationBarProps = {
   message?: Message;
 };
 
-interface Message {
+export interface Message {
   title: string;
   paragraph: string;
 }
