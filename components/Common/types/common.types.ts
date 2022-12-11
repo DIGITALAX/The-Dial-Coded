@@ -12,6 +12,8 @@ export type ReactionProps = {
 export type InterfaceProps = {
   title: string;
   tapeTitles: string[];
+  handleTapeSet: (title: string) => void;
+  images?: string[]
 };
 
 export type BoxProps = {
@@ -101,6 +103,7 @@ export type TapeProps = {
   locked?: boolean;
   mixtape?: boolean;
   index: number;
+  handleTapeSet?: (title: string) => void;
 };
 
 export type MainDisplayProps = {
@@ -108,6 +111,8 @@ export type MainDisplayProps = {
   title: string;
   mixtape?: boolean;
   tapeTitles: string[];
+  handleTapeSet: (title: string) => void;
+  images?: string[]
 };
 
 export type ButtonIconProps = {
@@ -118,3 +123,11 @@ export type ButtonIconProps = {
   justify: string;
   self: string;
 };
+
+export type NotificationSliderProps = {
+  images?: string[]
+}
+
+export type NotificationBarProps = {
+  images?: string[]
+}

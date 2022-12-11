@@ -10,6 +10,7 @@ const Tape: FunctionComponent<TapeProps> = ({
   mixtape,
   index,
   locked,
+  handleTapeSet,
 }): JSX.Element => {
   return (
     <div
@@ -20,6 +21,9 @@ const Tape: FunctionComponent<TapeProps> = ({
       } grid grid-flow-col auto-cols-auto ${
         !sideImage ? "pr-2 pl-20" : "pr-2 pl-2"
       } cursor-pointer hover:mix-blend-hard-light`}
+      onClick={() => {
+        handleTapeSet && handleTapeSet(title as string);
+      }}
     >
       {sideImage && (
         <div className="relative w-16 h-full col-start-1 self-center justify-self-start mix-blend-hard-light">

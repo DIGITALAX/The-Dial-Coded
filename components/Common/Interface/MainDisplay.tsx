@@ -6,11 +6,14 @@ import Line from "./Line";
 import Panel from "./Panel";
 import Tape from "./Tape";
 import { IoMdArrowDropdown } from "react-icons/io";
+import NotificationsBar from "./Notifications/NotificationsBar";
 
 const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   row,
   title,
   tapeTitles,
+  handleTapeSet,
+  images,
 }): JSX.Element => {
   return (
     <div
@@ -68,10 +71,15 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
               </div>
               <div className="relative w-full h-full row-start-2"></div>
             </div>
-            <div className="relative col-start-11 w-full h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll border-y-4 border-l-4 border-black justify-self-end">
+            <div
+              className={`relative col-start-11 w-full h-fit grid grid-flow-row auto-rows-auto ${
+                tapeTitles.length > 10 ? "overflow-y-scroll" : "overflow-y-none"
+              } border-y-4 border-l-4 border-black justify-self-end`}
+            >
               {tapeTitles?.map((title: string, index: number) => {
                 return (
                   <Tape
+                    handleTapeSet={handleTapeSet}
                     key={index}
                     bgColor={"feedBackground"}
                     title={title}
@@ -91,6 +99,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                       return (
                         <Tape
                           key={index}
+                          handleTapeSet={handleTapeSet}
                           bgColor={"feedBackground"}
                           locked={true}
                           index={index}
@@ -114,7 +123,9 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
               </div>
             </div>
           </div>
-          <div className="relative w-full h-full row-start-2">hey</div>
+          <div className="relative w-full h-full row-start-2">
+            <NotificationsBar images={images} />
+          </div>
         </div>
       </div>
     </div>

@@ -6,6 +6,8 @@ import MainDisplay from "./MainDisplay";
 const Interface: FunctionComponent<InterfaceProps> = ({
   title,
   tapeTitles,
+  handleTapeSet,
+  images
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full p-10 col-start-1 grid grid-flow-col auto-cols-auto">
@@ -50,6 +52,8 @@ const Interface: FunctionComponent<InterfaceProps> = ({
             tapeTitles={tapeTitles}
             row={"2"}
             title={title}
+            handleTapeSet={handleTapeSet}
+            images={images}
           />
         </div>
         <div className="relative w-fit h-full justify-between col-start-3 grid grid-flow-row auto-rows-auto gap-8 justify-self-end">

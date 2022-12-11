@@ -1,3 +1,5 @@
 export type UseAccountResult = {
-    accountTitles: string[]
-}
+  accountTitles: string[];
+  handleTapeSet: (title: string) => void;
+  notificationImages: string[]
+};
