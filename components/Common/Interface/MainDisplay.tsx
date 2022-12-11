@@ -14,7 +14,10 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   tapeTitles,
   handleTapeSet,
   images,
-  message
+  message,
+  sideImage,
+  backgroundImages,
+  mixtape,
 }): JSX.Element => {
   return (
     <div
@@ -73,48 +76,50 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
               <div className="relative w-full h-full row-start-2"></div>
             </div>
             <div
-              className={`relative col-start-11 w-full h-fit grid grid-flow-row auto-rows-auto ${
-                tapeTitles.length > 10 ? "overflow-y-scroll" : "overflow-y-none"
-              } border-y-4 border-l-4 border-black justify-self-end`}
+              className={`relative col-start-11 w-full h-full grid grid-flow-row auto-rows-auto border-y-4 border-l-4 border-black justify-self-end`}
             >
-              {tapeTitles?.map((title: string, index: number) => {
-                return (
-                  <Tape
-                    handleTapeSet={handleTapeSet}
-                    key={index}
-                    bgColor={"feedBackground"}
-                    title={title}
-                    index={index}
-                    sideImage={"QmRFAf3en6jmyETP2bh2e4nDjmQsxjv7vU7m7q9VhF88Rd"}
-                  />
-                );
-              })}
-              {tapeTitles.length < 10 && (
-                <div
-                  className={`relative w-full h-full row-start-${
-                    tapeTitles.length + 1
-                  }`}
-                >
-                  {Array.from(Array(10 - tapeTitles.length).keys()).map(
-                    (index: number) => {
-                      return (
-                        <Tape
-                          key={index}
-                          handleTapeSet={handleTapeSet}
-                          bgColor={"feedBackground"}
-                          locked={true}
-                          index={index}
-                          sideImage={
-                            "QmRFAf3en6jmyETP2bh2e4nDjmQsxjv7vU7m7q9VhF88Rd"
-                          }
-                        />
-                      );
-                    }
-                  )}
-                </div>
-              )}
+              <div className="relative w-full h-[50rem] grid grid-flow-row auto-rows-auto row-start-1 overflow-y-scroll">
+                {tapeTitles?.map((title: string, index: number) => {
+                  return (
+                    <Tape
+                      handleTapeSet={handleTapeSet}
+                      key={index}
+                      bgColor={"feedBackground"}
+                      title={title}
+                      index={index}
+                      sideImage={sideImage}
+                      backgroundImages={backgroundImages}
+                      mixtape={mixtape}
+                    />
+                  );
+                })}
+                {tapeTitles.length < 10 && (
+                  <div
+                    className={`relative w-full h-full row-start-${
+                      tapeTitles.length + 1
+                    }`}
+                  >
+                    {Array.from(Array(10 - tapeTitles.length).keys()).map(
+                      (index: number) => {
+                        return (
+                          <Tape
+                            key={index}
+                            handleTapeSet={handleTapeSet}
+                            bgColor={"feedBackground"}
+                            locked={true}
+                            index={index}
+                            sideImage={
+                              "QmRFAf3en6jmyETP2bh2e4nDjmQsxjv7vU7m7q9VhF88Rd"
+                            }
+                          />
+                        );
+                      }
+                    )}
+                  </div>
+                )}
+              </div>
               <div
-                className={`relative w-full h-full h-10 bg-black grid grid-flow-col auto-cols-auto ${
+                className={`relative w-full h-full h-10 bg-black grid grid-flow-col auto-cols-auto row-start-2 ${
                   tapeTitles.length > 10 && "cursor-pointer"
                 }`}
               >

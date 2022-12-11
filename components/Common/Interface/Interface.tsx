@@ -8,7 +8,10 @@ const Interface: FunctionComponent<InterfaceProps> = ({
   tapeTitles,
   handleTapeSet,
   images,
-  message
+  message,
+  sideImage,
+  backgroundImages,
+  mixtape
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto">
@@ -56,6 +59,9 @@ const Interface: FunctionComponent<InterfaceProps> = ({
             handleTapeSet={handleTapeSet}
             images={images}
             message={message}
+            sideImage={sideImage}
+            backgroundImages={backgroundImages}
+            mixtape={mixtape}
           />
         </div>
         <div className="relative w-fit h-full justify-between col-start-3 grid grid-flow-row auto-rows-auto gap-8 justify-self-end">

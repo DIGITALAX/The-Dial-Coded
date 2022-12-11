@@ -15,6 +15,9 @@ export type InterfaceProps = {
   handleTapeSet: (title: string) => void;
   images?: string[];
   message?: Message;
+  backgroundImages?: string[];
+  sideImage?: string;
+  mixtape?: boolean;
 };
 
 export type BoxProps = {
@@ -98,8 +101,8 @@ export type PanelProps = {
 
 export type TapeProps = {
   bgColor: string;
+  backgroundImages?: string[];
   sideImage?: string;
-  backgroundImage?: string;
   title?: string;
   locked?: boolean;
   mixtape?: boolean;
@@ -115,6 +118,8 @@ export type MainDisplayProps = {
   handleTapeSet: (title: string) => void;
   images?: string[];
   message?: Message;
+  backgroundImages?: string[];
+  sideImage?: string;
 };
 
 export type ButtonIconProps = {
