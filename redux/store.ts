@@ -12,6 +12,7 @@ import feedTypeReducer from "./reducers/feedTypeSlice";
 import userViewerReducer from "./reducers/userViewSlice";
 import moreFeedReducer from "./reducers/moreFeedSlice";
 import accountPageReducer from "./reducers/accountPageSlice";
+import mixtapePageReducer from "./reducers/mixtapePageSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -26,6 +27,7 @@ const reducer = combineReducers({
   userViewerReducer,
   moreFeedReducer,
   accountPageReducer,
+  mixtapePageReducer,
 });
 
 export const store = configureStore({

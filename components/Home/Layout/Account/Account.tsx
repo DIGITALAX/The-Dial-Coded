@@ -11,6 +11,7 @@ const Account: FunctionComponent = (): JSX.Element => {
         tapeTitles={accountTitles}
         handleTapeSet={handleTapeSet}
         images={notificationImages}
+        sideImage={"QmRFAf3en6jmyETP2bh2e4nDjmQsxjv7vU7m7q9VhF88Rd"}
       />
     </div>
   );

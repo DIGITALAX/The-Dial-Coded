@@ -6,6 +6,7 @@ import { RiLock2Fill } from "react-icons/ri";
 const Tape: FunctionComponent<TapeProps> = ({
   bgColor,
   sideImage,
+  backgroundImages,
   title,
   mixtape,
   index,
@@ -34,15 +35,30 @@ const Tape: FunctionComponent<TapeProps> = ({
           />
         </div>
       )}
+      {backgroundImages && (
+        <div className="absolute w-full h-full mix-blend-hard-light">
+          <Image
+            src={`https://thedial.infura-ipfs.io/ipfs/${
+              backgroundImages[index + 1]
+            }`}
+            layout="fill"
+            priority
+            objectFit="cover"
+            objectPosition={"center"}
+          />
+        </div>
+      )}
       <div
-        className={`relative w-52 h-fit p-2 ${
+        className={`relative w-fit h-fit p-2 ${
           sideImage ? "col-start-2" : "col-start-1"
-        } grid grid-flow-col auto-cols-auto place-self-center`}
+        } grid grid-flow-col auto-cols-auto self-center justify-self-end`}
       >
         <div
-          className={`relative w-full h-10 rounded-tl-2xl bg-white font-digiB text-black text-2xl grid grid-flow-col auto-cols-auto border border-bright`}
+          className={`relative ${
+            sideImage ? "w-52" : "w-fit"
+          } h-10 rounded-tl-2xl bg-white font-digiB text-black text-2xl grid grid-flow-col auto-cols-auto border border-bright whitespace-nowrap`}
         >
-          <div className="relative w-fit h-fit place-self-center">
+          <div className="relative w-fit h-fit place-self-center p-1">
             {mixtape ? (
               `mixtape vol ${index} - ${title}`
             ) : locked ? (
