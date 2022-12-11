@@ -7,7 +7,7 @@ import {
 } from "react-icons/bs";
 import { FaRegCommentDots, FaCommentDots } from "react-icons/fa";
 import { AiOutlineRetweet } from "react-icons/ai";
-import { ReactionProps } from "../types/common.types";
+import { ReactionProps } from "../../types/common.types";
 
 const Reactions: FunctionComponent<ReactionProps> = ({
   textColor,

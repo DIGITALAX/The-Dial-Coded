@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import Box from "./Box";
+import Box from "../Miscellaneous/Box";
 import { InterfaceProps } from "../types/common.types";
 import MainDisplay from "./MainDisplay";
 

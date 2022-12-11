@@ -4,7 +4,7 @@ import { MdOutlineExpandMore, MdOutlineExpandLess } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../../../redux/store";
 import { setMoreFeed } from "../../../../../../../redux/reducers/moreFeedSlice";
-import FeedPublication from "../../../../../../Common/FeedPublication/FeedPublication";
+import FeedPublication from "../../../../../../Common/Feed/FeedPublication";
 
 const Main: FunctionComponent<MainProps> = ({ images }): JSX.Element => {
   const dispatch = useDispatch();
