@@ -1,11 +1,12 @@
 import { FunctionComponent } from "react";
+import { NotificationMessageProps } from "../../types/common.types";
 
-const NotificationMessage: FunctionComponent = (): JSX.Element => {
-    return (
-        <div className="relative w-fit justify-self-start self-center h-full col-start-1">
+const NotificationMessage: FunctionComponent<NotificationMessageProps> = ({
+  message,
+}): JSX.Element => {
+  return (
+    <div className="relative w-fit justify-self-start self-center h-full col-start-1"></div>
+  );
+};
 
-        </div>
-    )
-}
-
-export default NotificationMessage
+export default NotificationMessage;

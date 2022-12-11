@@ -13,7 +13,8 @@ export type InterfaceProps = {
   title: string;
   tapeTitles: string[];
   handleTapeSet: (title: string) => void;
-  images?: string[]
+  images?: string[];
+  message?: Message;
 };
 
 export type BoxProps = {
@@ -112,7 +113,8 @@ export type MainDisplayProps = {
   mixtape?: boolean;
   tapeTitles: string[];
   handleTapeSet: (title: string) => void;
-  images?: string[]
+  images?: string[];
+  message?: Message;
 };
 
 export type ButtonIconProps = {
@@ -125,9 +127,19 @@ export type ButtonIconProps = {
 };
 
 export type NotificationSliderProps = {
-  images?: string[]
-}
+  images?: string[];
+};
 
 export type NotificationBarProps = {
-  images?: string[]
+  images?: string[];
+  message?: Message;
+};
+
+interface Message {
+  title: string;
+  paragraph: string;
 }
+
+export type NotificationMessageProps = {
+  message?: Message;
+};
