@@ -5,17 +5,16 @@ import ButtonIcon from "./ButtonIcon";
 import Line from "./Line";
 import Panel from "./Panel";
 import Tape from "./Tape";
+import { IoMdArrowDropdown } from "react-icons/io";
 
 const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   row,
-  width,
-  height,
   title,
   tapeTitles,
 }): JSX.Element => {
   return (
     <div
-      className={`relative row-start-${row} bg-white w-${width} h-${height} rounded-lg p-1 grid grid-flow-col auto-cols-auto`}
+      className={`relative row-start-${row} bg-white w-[80vw] h-full rounded-lg p-1 grid grid-flow-col auto-cols-auto`}
     >
       <div className="col-start-1 relative w-full h-full bg-comp p-4 grid grid-flow-row auto-rows-auto self-start gap-4 rounded">
         <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-4">
@@ -23,7 +22,6 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
             <ButtonIcon
               width={"12"}
               height={"12"}
-              bgColor={"yell"}
               col={"1"}
               justify={"start"}
               self={"center"}
@@ -39,7 +37,6 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
               <ButtonIcon
                 width={"12"}
                 height={"12"}
-                bgColor={"yell"}
                 col={"1"}
                 image={"QmSMt1Et6xQZA6RikNoHg4HQQNeZZLX5Ho7QtmyZmMTGdd"}
                 justify={"start"}
@@ -48,7 +45,6 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
               <ButtonIcon
                 width={"12"}
                 height={"12"}
-                bgColor={"yell"}
                 col={"2"}
                 image={"QmURfK4nEow8epVW2B4o9G7F5A2jFbDRX1gE78A988krNw"}
                 justify={"end"}
@@ -59,23 +55,63 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
         </div>
         <div className="relative w-full h-full row-start-2 border-4 border-black grid grid-flow-row auto-rows-auto">
           <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto">
-            <div className="relative col-start-1 min-w-full h-fit bg-dullY grid grid-flow-row auto-rows-auto w-full">
+            <div className="relative h-full bg-dullY col-start-1 grid-flow-row auto-rows-auto col-span-10 w-full grid">
+              <Image
+                src="https://thedial.infura-ipfs.io/ipfs/QmTLN24oXMbEj3QgHX7dD3GWnYwL2GqsP16yvLzm29bk5X"
+                objectFit="cover"
+                layout="fill"
+                className="absolute"
+              />
               <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto">
-                <Panel height={"16"} col={"1"} width={"full"} />
-                <Panel height={"16"} col={"2"} width={"full"} />
+                <Panel col={"1"} />
+                <Panel col={"2"} />
               </div>
-              <div className="relative w-full h-96 row-start-2"></div>
+              <div className="relative w-full h-full row-start-2"></div>
             </div>
-            <div className="relative col-start-2 w-fit max-w-fit h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll border-y-4 border-l-4 border-black justify-self-end">
+            <div className="relative col-start-11 w-full h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll border-y-4 border-l-4 border-black justify-self-end">
               {tapeTitles?.map((title: string, index: number) => {
                 return (
                   <Tape
+                    key={index}
                     bgColor={"feedBackground"}
                     title={title}
                     index={index}
+                    sideImage={"QmRFAf3en6jmyETP2bh2e4nDjmQsxjv7vU7m7q9VhF88Rd"}
                   />
                 );
               })}
+              {tapeTitles.length < 10 && (
+                <div
+                  className={`relative w-full h-full row-start-${
+                    tapeTitles.length + 1
+                  }`}
+                >
+                  {Array.from(Array(10 - tapeTitles.length).keys()).map(
+                    (index: number) => {
+                      return (
+                        <Tape
+                          key={index}
+                          bgColor={"feedBackground"}
+                          locked={true}
+                          index={index}
+                          sideImage={
+                            "QmRFAf3en6jmyETP2bh2e4nDjmQsxjv7vU7m7q9VhF88Rd"
+                          }
+                        />
+                      );
+                    }
+                  )}
+                </div>
+              )}
+              <div
+                className={`relative w-full h-full h-10 bg-black grid grid-flow-col auto-cols-auto ${
+                  tapeTitles.length > 10 && "cursor-pointer"
+                }`}
+              >
+                <div className="relative w-fit h-fit place-self-center">
+                  <IoMdArrowDropdown size={30} color="#FCDB8F" />
+                </div>
+              </div>
             </div>
           </div>
           <div className="relative w-full h-full row-start-2">hey</div>

@@ -90,23 +90,20 @@ export type LineProps = {
 };
 
 export type PanelProps = {
-  height: string;
   col: string;
-  width: string;
 };
 
 export type TapeProps = {
   bgColor: string;
   sideImage?: string;
   backgroundImage?: string;
-  title: string;
+  title?: string;
+  locked?: boolean;
   mixtape?: boolean;
   index: number;
 };
 
 export type MainDisplayProps = {
-  width: string;
-  height: string;
   row: string;
   title: string;
   mixtape?: boolean;
@@ -114,7 +111,6 @@ export type MainDisplayProps = {
 };
 
 export type ButtonIconProps = {
-  bgColor: string;
   width: string;
   height: string;
   image?: string;
