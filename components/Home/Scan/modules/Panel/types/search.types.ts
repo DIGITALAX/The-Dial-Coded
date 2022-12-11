@@ -1,4 +1,4 @@
-export type UseSearchResults = {
+export type UsePanelResults = {
   open: boolean;
   setOpen: (e: boolean) => void;
   uris: string[];

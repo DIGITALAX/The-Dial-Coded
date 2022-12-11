@@ -8,7 +8,7 @@ const initialAccountPageState: AccountPageState = {
   value: "account",
 };
 
-export const AccountPageSlice = createSlice({
+export const accountPageSlice = createSlice({
   name: "account page",
   initialState: initialAccountPageState,
   reducers: {
@@ -21,6 +21,6 @@ export const AccountPageSlice = createSlice({
   },
 });
 
-export const { setAccountPage } = AccountPageSlice.actions;
+export const { setAccountPage } = accountPageSlice.actions;
 
-export default AccountPageSlice.reducer;
+export default accountPageSlice.reducer;

@@ -3,7 +3,7 @@ import { FunctionComponent } from "react";
 import { useDispatch } from "react-redux";
 import { setLayout } from "../../../../../redux/reducers/layoutSlice";
 import Categories from "./Categories";
-import useSearch from "./hooks/useSearch";
+import useSearch from "./hooks/usePanel";
 import lodash from "lodash";
 import PanelOption from "../../../../Common/Panel/PanelOption";
 import Arrow from "../../../../Common/Miscellaneous/Arrow/Arrow";
@@ -30,7 +30,7 @@ const Panel: FunctionComponent = (): JSX.Element => {
             }
           )}
         </div>
-        <Arrow handleValue={setOpen} value={open} />
+        <Arrow handleValue={setOpen} value={open} up={"QmeeHhyUcz1SM8KJB2SrY7b7r9uhYFEWuMx45b2a2VgoLB"} middle={"QmZSpwDjU9YYru6g44RVPaeeoLAu5YnCkXTCaNfEULzZ3i"} down={"QmXfG8mpaHad7rVnbqUtGrnCsm9vkXZT3zNa8mugndUS72"}  />
         <div className="relative w-1 h-full col-start-3 bg-bluey/30"></div>
       </div>
       <Categories />

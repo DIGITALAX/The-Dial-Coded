@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { UseSearchResults } from "../types/search.types";
+import { UsePanelResults } from "../types/search.types";
 
-const useSearch = (): UseSearchResults => {
+const usePanel = (): UsePanelResults => {
   const [open, setOpen] = useState<boolean>(false);
 
   const uris: string[] = [
@@ -23,4 +23,4 @@ const useSearch = (): UseSearchResults => {
   return { open, setOpen, uris, layoutType };
 };
 
-export default useSearch;
+export default usePanel;

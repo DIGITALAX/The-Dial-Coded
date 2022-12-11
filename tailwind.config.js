@@ -44,7 +44,8 @@ module.exports = {
         dullY: "#F9EBCC",
         bright: "#FA4040",
         dialY: "#FBDB84",
-        dialG: "#A6DA70"
+        dialG: "#A6DA70",
+        lB: "#06A9CF",
       },
     },
   },
