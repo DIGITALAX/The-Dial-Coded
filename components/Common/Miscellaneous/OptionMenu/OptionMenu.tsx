@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import lodash from "lodash";
 import Image from "next/image";
-import { OptionMenuProps } from "../types/common.types";
+import { OptionMenuProps } from "../../types/common.types";
 
 const OptionMenu: FunctionComponent<OptionMenuProps> = ({
   col,

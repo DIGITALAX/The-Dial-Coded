@@ -1,6 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import Reactions from "../Reactions/Reactions";
+import Reactions from "./Reactions/Reactions";
 import { FeedPublicationProps } from "../types/common.types";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({

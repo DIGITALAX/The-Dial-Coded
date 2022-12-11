@@ -4,7 +4,7 @@ import { HotProps } from "../types/feed.types";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../../../redux/store";
 import lodash from "lodash";
-import Reactions from "../../../../../../Common/Reactions/Reactions";
+import Reactions from "../../../../../../Common/Feed/Reactions/Reactions";
 
 const Hot: FunctionComponent<HotProps> = ({
   topMixtape,

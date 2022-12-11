@@ -148,3 +148,13 @@ export interface Message {
 export type NotificationMessageProps = {
   message?: Message;
 };
+
+export type MixSaveProps = {
+  col: string;
+};
+
+export type MixButtonProps = {
+  col: string;
+  bgColor: string;
+  text: string;
+};

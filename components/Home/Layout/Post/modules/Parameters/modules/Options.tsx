@@ -5,7 +5,7 @@ import { setFeedType } from "../../../../../../../redux/reducers/feedTypeSlice";
 import { OptionsProps } from "../types/parameters.types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../../../redux/store";
-import OptionMenu from "../../../../../../Common/OptionMenu/OptionMenu";
+import OptionMenu from "../../../../../../Common/Miscellaneous/OptionMenu/OptionMenu";
 
 const Options: FunctionComponent<OptionsProps> = ({
   feedOrder,

@@ -1,4 +1,4 @@
-import { FunctionComponent, Profiler } from "react";
+import { FunctionComponent } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import Account from "../Layout/Account/Account";
