@@ -8,6 +8,30 @@
   src: url("/fonts/Dosis Regular.ttf");
 }
 
+@font-face {
+  font-family: "Digi Reg";
+  font-weight: 400;
+  src: url("/fonts/DS-DIGI.ttf");
+}
+
+@font-face {
+  font-family: "Digi Bold";
+  font-weight: 400;
+  src: url("/fonts/DS-DIGIB.ttf");
+}
+
+@font-face {
+  font-family: "Digi Italic";
+  font-weight: 400;
+  src: url("/fonts/DS-DIGII.ttf");
+}
+
+@font-face {
+  font-family: "Digi T";
+  font-weight: 400;
+  src: url("/fonts/DS-DIGIT.ttf");
+}
+
 html,
 body {
   padding: 0;
@@ -150,7 +174,6 @@ div::-webkit-scrollbar-thumb:active {
 
 #select1 {
   background: conic-gradient(#000000, #131313);
-  opacity: 0.9;
 }
 
 #select1:hover {
@@ -160,7 +183,6 @@ div::-webkit-scrollbar-thumb:active {
 
 #select2 {
   background: conic-gradient(#2a36f6, #0714d6, #0710a2, #0a15c7, #2a36f6);
-  opacity: 0.9;
 }
 
 #select2:hover {
@@ -170,7 +192,6 @@ div::-webkit-scrollbar-thumb:active {
 
 #select3 {
   background: conic-gradient(#f62a2a, #d60707, #cf0606);
-  opacity: 0.9;
 }
 
 #select3:hover {

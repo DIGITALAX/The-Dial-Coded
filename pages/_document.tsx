@@ -6,9 +6,12 @@ class Document extends NextDocument {
     return (
       <Html>
         <Head>
-        <meta name="og:url" content="https://thedial.xyz/" />
+          <meta name="og:url" content="https://thedial.xyz/" />
           <meta name="og:title" content="The Dial" />
-          <meta name="og:description" content="An ever evolving canvas you can use with friends." />
+          <meta
+            name="og:description"
+            content="An ever evolving canvas you can use with friends."
+          />
           <meta name="og:image" content="https://thedial.xyz/card.png/" />
           <meta name="twitter:card" content="summary" />
           <meta name="og:url" content="https://thedial.xyz/" />
@@ -16,10 +19,7 @@ class Document extends NextDocument {
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@igitalax_" />
           <meta name="twitter:creator" content="@digitalax_" />
-          <meta
-            name="twitter:image"
-            content="https://thedial.xyz/card.png/"
-          />
+          <meta name="twitter:image" content="https://thedial.xyz/card.png/" />
           <meta name="twitter:url" content="https://thedial.xyz/" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="canonical" href="https://thedial.xyz/" />
@@ -35,6 +35,30 @@ class Document extends NextDocument {
                 font-family: "Dosis Regular";
                 font-weight: 400;
                 src: url("./fonts/Dosis Regular.ttf");
+              }
+
+              @font-face {
+                font-family: "Digi Reg";
+                font-weight: 400;
+                src: url("./fonts/DS-DIGI.ttf");
+              }
+              
+              @font-face {
+                font-family: "Digi Bold";
+                font-weight: 400;
+                src: url("./fonts/DS-DIGIB.ttf");
+              }
+              
+              @font-face {
+                font-family: "Digi Italic";
+                font-weight: 400;
+                src: url("./fonts/DS-DIGII.ttf");
+              }
+              
+              @font-face {
+                font-family: "Digi T";
+                font-weight: 400;
+                src: url("./fonts/DS-DIGIT.ttf");
               }
             `,
             }}

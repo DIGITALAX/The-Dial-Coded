@@ -1,11 +1,11 @@
 import { FunctionComponent, Profiler } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import Account from "../Account/Account";
-import Canvas from "../Canvas/Canvas";
-import Mixtape from "../Mixtape/Mixtape";
-import Post from "../Post/Post";
-import Slider from "../Slider/Slider";
+import Account from "../Layout/Account/Account";
+import Canvas from "../Layout/Canvas/Canvas";
+import Mixtape from "../Layout/Mixtape/Mixtape";
+import Post from "../Layout/Post/Post";
+import Slider from "../Layout/Slider/Slider";
 
 const LayoutSwitch: FunctionComponent = (): JSX.Element => {
   const layoutType: string | undefined = useSelector(

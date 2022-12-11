@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import Search from "./modules/Search/Search";
+import Panel from "./modules/Panel/Panel";
 import BackgroundImage from "./modules/BackgroundImage";
 import Marquee from "./modules/Marquee";
 import SideText from "./modules/SideText";
@@ -73,7 +73,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
         />
       </div>
       <Marquee />
-      <Search />
+      <Panel />
     </div>
   );
 };
