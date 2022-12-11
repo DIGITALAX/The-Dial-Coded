@@ -27,6 +27,7 @@ const Badges: FunctionComponent = (): JSX.Element => {
           {badges?.map((badge: string, index: number) => {
             return (
               <Badge
+               key={index}
                 badge={badge}
                 index={index}
                 badgeColor={badgeColor}

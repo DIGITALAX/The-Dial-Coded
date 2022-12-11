@@ -11,6 +11,7 @@ export type ReactionProps = {
 
 export type InterfaceProps = {
   title: string;
+  tapeTitles: string[];
 };
 
 export type BoxProps = {
@@ -95,11 +96,12 @@ export type PanelProps = {
 };
 
 export type TapeProps = {
-  height: string;
-  width: string;
   bgColor: string;
   sideImage?: string;
+  backgroundImage?: string;
   title: string;
+  mixtape?: boolean;
+  index: number;
 };
 
 export type MainDisplayProps = {
@@ -107,6 +109,8 @@ export type MainDisplayProps = {
   height: string;
   row: string;
   title: string;
+  mixtape?: boolean;
+  tapeTitles: string[];
 };
 
 export type ButtonIconProps = {
@@ -116,5 +120,5 @@ export type ButtonIconProps = {
   image?: string;
   col: string;
   justify: string;
-  self: string
+  self: string;
 };

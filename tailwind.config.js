@@ -41,7 +41,8 @@ module.exports = {
         comp: "#B9B9B9",
         yell: "#FCDB8F",
         dcomp: "#606362",
-        dullY: "#F9EBCC"
+        dullY: "#F9EBCC",
+        bright: "#FA4040"
       },
     },
   },
