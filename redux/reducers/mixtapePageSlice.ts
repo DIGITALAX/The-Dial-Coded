@@ -8,7 +8,7 @@ const initialMixtapePageState: MixtapePageState = {
   value: "Create",
 };
 
-export const MixtapePageSlice = createSlice({
+export const mixtapePageSlice = createSlice({
   name: "Mixtape page",
   initialState: initialMixtapePageState,
   reducers: {
@@ -21,6 +21,6 @@ export const MixtapePageSlice = createSlice({
   },
 });
 
-export const { setMixtapePage } = MixtapePageSlice.actions;
+export const { setMixtapePage } = mixtapePageSlice.actions;
 
-export default MixtapePageSlice.reducer;
+export default mixtapePageSlice.reducer;

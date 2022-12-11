@@ -17,7 +17,6 @@ const Viewer: FunctionComponent<ViewerProps> = ({
   const userSelected = useSelector(
     (state: RootState) => state.app.userViewerReducer.value
   );
-  console.log(userSelected, userList);
   return (
     <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto col-start-2 gap-6 justify-self-end self-center">
       <div className="relative w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto place-self-center">

@@ -62,8 +62,12 @@ export type PanelOptionProps = {
 };
 
 export type ArrowProps = {
-  handleValue: (e: boolean) => void;
-  value: boolean;
+  handleValue?: (e: boolean) => void;
+  value?: boolean;
+  up: string;
+  middle: string;
+  down: string;
+  vertical?: boolean;
 };
 
 export type PresetProps = {
@@ -157,4 +161,44 @@ export type MixButtonProps = {
   col: string;
   bgColor: string;
   text: string;
+  textSize: string;
+  width: string;
+  border?: boolean;
+};
+
+export type MixInputProps = {
+  row: string;
+  name: string;
+  title: string;
+};
+
+export type MixCheckProps = {
+  value: string;
+  handleClicked: (valueClicked: boolean, value: string) => void;
+  valueClicked: boolean;
+};
+
+export type UseCreateMixtapeResults = {
+  checkValues: string[];
+  handleClicked: (valueClicked: boolean, value: string) => void;
+  valueClicked: boolean;
+};
+
+export type CreateMixtapeProps = {
+  checkValues: string[];
+  handleClicked: (valueClicked: boolean, value: string) => void;
+  valueClicked: boolean;
+  dispatch: Dispatch<AnyAction>;
+  setAddTrack: ActionCreatorWithPayload<number, "add track/setAddTrack">;
+  setEditTrack: ActionCreatorWithPayload<string, "edit track/setEditTrack">;
+  setDeleteTrack: ActionCreatorWithPayload<
+    string,
+    "delete track/setDeleteTrack"
+  >;
+  setAddMixtape: ActionCreatorWithPayload<string, "add mixtape/setAddMixtape">;
+  trackNumber: number | undefined;
+};
+
+export type TrackInputProps = {
+  index: number;
 };

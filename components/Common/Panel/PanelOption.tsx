@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
+import { setMixtapePage } from "../../../redux/reducers/mixtapePageSlice";
 import { PanelOptionProps } from "../types/common.types";
 
 const PanelOption: FunctionComponent<PanelOptionProps> = ({
@@ -15,7 +16,8 @@ const PanelOption: FunctionComponent<PanelOptionProps> = ({
         index + 1
       } grid grid-flow-col auto-cols-auto gap-2 cursor-pointer hover:opacity-80 active:scale-95`}
       key={index}
-      onClick={() => dispatch(setLayout(layoutType[index]))}
+      onClick={() => {dispatch(setLayout(layoutType[index]))
+      layoutType[index] === "Mixtape" && dispatch(setMixtapePage("Create"))}}
     >
       <div className="relative w-fit h-fit col-start-1 place-self-center">
         <Image

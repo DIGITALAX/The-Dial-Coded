@@ -243,3 +243,25 @@ div::-webkit-scrollbar-thumb:active {
 #crt {
   background: linear-gradient(to right, #fc9cf3, #b9d9ff, #0091ff, #fd99dc);
 }
+
+#create {
+  background: linear-gradient(
+    to right,
+    #2a36f6,
+    #0714d6,
+    #0710a2,
+    #0a15c7,
+    #7077de
+  );
+}
+
+#add {
+  background: linear-gradient(
+    -86deg,
+    #c3ac3b,
+    #f9d78d,
+    #e7b97b,
+    #cea23b,
+    #eaed8a
+  );
+}

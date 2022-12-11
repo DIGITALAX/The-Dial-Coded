@@ -20,7 +20,7 @@ const Tape: FunctionComponent<TapeProps> = ({
       className={`relative w-full h-20 border-black border-b-2 ${
         index !== 0 && "border-t-2"
       } grid grid-flow-col auto-cols-auto ${
-        !sideImage ? "pr-2 pl-20" : "pr-2 pl-2"
+        !sideImage ? "pr-2 pl-10" : "pr-2 pl-2"
       } cursor-pointer hover:mix-blend-hard-light`}
       onClick={() => {
         handleTapeSet && handleTapeSet(title as string);

@@ -7,6 +7,8 @@ import Panel from "./Panel";
 import Tape from "./Tape";
 import { IoMdArrowDropdown } from "react-icons/io";
 import NotificationsBar from "./Notifications/NotificationsBar";
+import MixtapeSwitch from "../../Home/Layout/Mixtape/MixtapeSwitch";
+import { setAddMixtape } from "../../../redux/reducers/addMixtapeSlice";
 
 const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   row,
@@ -62,23 +64,25 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
         </div>
         <div className="relative w-full h-full row-start-2 border-4 border-black grid grid-flow-row auto-rows-auto">
           <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto">
-            <div className="relative h-full bg-dullY col-start-1 grid-flow-row auto-rows-auto col-span-10 w-full grid">
+            <div className="relative h-full bg-dullY flex flex-col col-start-1 col-span-10 w-full">
               <Image
                 src="https://thedial.infura-ipfs.io/ipfs/QmTLN24oXMbEj3QgHX7dD3GWnYwL2GqsP16yvLzm29bk5X"
                 objectFit="cover"
                 layout="fill"
                 className="absolute"
               />
-              <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto">
+              <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
                 <Panel col={"1"} />
                 <Panel col={"2"} />
               </div>
-              <div className="relative w-full h-full row-start-2"></div>
+              <div className="relative w-full h-full grid grid-flow-col auto-cols-auto p-4 self-start">
+                {mixtape && <MixtapeSwitch />}
+              </div>
             </div>
             <div
               className={`relative col-start-11 w-full h-full grid grid-flow-row auto-rows-auto border-y-4 border-l-4 border-black justify-self-end`}
             >
-              <div className="relative w-full h-[50rem] grid grid-flow-row auto-rows-auto row-start-1 overflow-y-scroll">
+              <div className="relative w-full h-[50rem] grid grid-flow-row auto-rows-auto row-start-1 overflow-y-scroll overflow-x-clip">
                 {tapeTitles?.map((title: string, index: number) => {
                   return (
                     <Tape
@@ -116,6 +120,15 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                       }
                     )}
                   </div>
+                )}
+                {mixtape && (
+                  <Tape
+                    title="Add New Mixtape"
+                    key={1}
+                    index={1}
+                    handleTapeSet={setAddMixtape}
+                    bgColor={"record10"}
+                  />
                 )}
               </div>
               <div

@@ -13,6 +13,12 @@ import userViewerReducer from "./reducers/userViewSlice";
 import moreFeedReducer from "./reducers/moreFeedSlice";
 import accountPageReducer from "./reducers/accountPageSlice";
 import mixtapePageReducer from "./reducers/mixtapePageSlice";
+import mixtapeCheckReducer from "./reducers/mixtapeCheckSlice";
+import addMixtapeReducer from "./reducers/addMixtapeSlice";
+import saveMixtapeReducer from "./reducers/saveMixtapeSlice";
+import addTrackReducer from "./reducers/addTrackSlice";
+import editTrackReducer from "./reducers/editTrackSlice";
+import deleteTrackReducer from "./reducers/deleteTrackSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -28,6 +34,12 @@ const reducer = combineReducers({
   moreFeedReducer,
   accountPageReducer,
   mixtapePageReducer,
+  mixtapeCheckReducer,
+  addMixtapeReducer,
+  saveMixtapeReducer,
+  addTrackReducer,
+  editTrackReducer,
+  deleteTrackReducer,
 });
 
 export const store = configureStore({
