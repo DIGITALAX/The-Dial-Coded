@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import Badge from "../../Common/Badge/Badge";
-import Rewind from "../../Common/Rewind/Rewind";
+import Rewind from "../../Common/Miscellaneous/Rewind/Rewind";
 import useBadges from "./hooks/useBadges";
 
 const Badges: FunctionComponent = (): JSX.Element => {
