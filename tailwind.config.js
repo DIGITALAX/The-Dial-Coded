@@ -8,6 +8,10 @@ module.exports = {
     extend: {
       fontFamily: {
         dosis: "Dosis Regular",
+        digiR: "Digi Reg",
+        digiB: "Digi Bold",
+        digiI: "Digi Italic",
+        digiT: "Digi T",
       },
       colors: {
         offBlack: "#111313",
@@ -34,7 +38,10 @@ module.exports = {
         lili: "#B4FAB5",
         bluey: "#32C5FF",
         offYellow: "#F7F7F3",
-        comp: "#B9B9B9"
+        comp: "#B9B9B9",
+        yell: "#FCDB8F",
+        dcomp: "#606362",
+        dullY: "#F9EBCC"
       },
     },
   },
