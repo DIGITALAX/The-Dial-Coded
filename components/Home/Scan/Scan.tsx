@@ -31,7 +31,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
   return (
     <div className="relative w-full h-full row-start-1 grid grid-flow-row auto-rows-auto">
       <BackgroundImage mainImage={mainImage} />
-      <div className="relative w-full h-screen px-6 grid grid-flow-col auto-cols-auto row-start-1">
+      <div className="relative w-full h-screen min-h-[50vw] px-6 grid grid-flow-col auto-cols-auto row-start-1">
         <SideText
           currentSetting={currentSetting}
           imageArtist={imageArtist}

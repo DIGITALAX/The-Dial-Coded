@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { setMixtapePage } from "../../../../../redux/reducers/mixtapePageSlice";
+import { Message } from "../../../../Common/types/common.types";
 import { UseMixtapeResults } from "../types/mixtape.types";
 
 const useMixtape = (): UseMixtapeResults => {
@@ -25,10 +26,10 @@ const useMixtape = (): UseMixtapeResults => {
   };
 
   const notificationImages: string[] = [
-    "QmZS3Af6ypfwrPYg8w46kjpUR8REGuGb8bj98PukM7yu87",
-    "QmZS3Af6ypfwrPYg8w46kjpUR8REGuGb8bj98PukM7yu87",
-    "QmZS3Af6ypfwrPYg8w46kjpUR8REGuGb8bj98PukM7yu87",
-    "QmZS3Af6ypfwrPYg8w46kjpUR8REGuGb8bj98PukM7yu87",
+    "QmWR9hQkHLZ8VwWMCX1mnDUgabniBr7SuvSA4JpDVmUrjX",
+    "QmUFEhfqFsKAnTPZaL8Ln9yaz8QPNiJNnuvbStZmXvage3",
+    "QmZ6Theb5qCCscnBZhYZK2epoJftL67yLsD3JweBkBXtvK",
+    "QmXfuFr8qDbajQ4nCTnrb4bfdrZgD7TymxMziSukyqxHk2",
   ];
 
   const backgroundImages: string[] = [
@@ -47,6 +48,17 @@ const useMixtape = (): UseMixtapeResults => {
     "QmRe72544oLTxq1gA4zvXS7SVXuKhqbdr4ioheFPgKYuYY",
   ];
 
-  return { mixtapeTitles, handleTapeSet, notificationImages, backgroundImages };
+  const message: Message = {
+    title: "The dial in retro*",
+    paragraph: "A New Mix Made For You To Evolve & Enjoy Each Week",
+  };
+
+  return {
+    mixtapeTitles,
+    handleTapeSet,
+    notificationImages,
+    backgroundImages,
+    message,
+  };
 };
 export default useMixtape;
