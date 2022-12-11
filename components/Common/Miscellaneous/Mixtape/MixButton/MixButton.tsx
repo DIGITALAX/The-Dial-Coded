@@ -14,7 +14,7 @@ const MixButton: FunctionComponent<MixButtonProps> = ({
   return (
     <div
       id={bgColor}
-      className={`relative w-${width} col-start-${col} h-fit grid grid-flow-col auto-cols-auto cursor-pointer active:scale-95 rounded-md pb-2 pt-1 pl-3 pr-1`}
+      className={`relative w-${width} col-start-${col} h-fit grid grid-flow-col auto-cols-auto cursor-pointer active:scale-95 rounded-md pb-1 pt-1 pl-3 pr-1`}
     >
       <Image
         src="https://thedial.infura-ipfs.io/ipfs/QmTLN24oXMbEj3QgHX7dD3GWnYwL2GqsP16yvLzm29bk5X"

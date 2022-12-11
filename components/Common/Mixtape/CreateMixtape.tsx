@@ -31,8 +31,8 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
         <MixSave col={"2"} />
       </div>
       <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto row-start-2 gap-6 pr-10">
-        <MixInput row={"1"} name={"source"} title={"Mixtape Name"} />
-        <MixInput row={"2"} name={"mixtapeName"} title={"Source"} />
+        <MixInput row={"1"} name={"mixtapeName"} title={"Mixtape Name"} />
+        <MixInput row={"2"} name={"source"} title={"Source"} />
       </div>
       <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto row-start-3 gap-2 pr-10">
         <div className="relative w-fit h-fit col-start-1 font-digiB text-xl text-black place-self-start">

@@ -1,5 +1,6 @@
 import { Dispatch, AnyAction } from "redux";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
+import { BadgeInfo } from "../../Home/Badges/types/badges.types";
 
 export type ReactionProps = {
   textColor: string;
@@ -29,15 +30,16 @@ export type BoxProps = {
 };
 
 export type BadgeProps = {
-  badgeColor: string[];
   index: number;
-  badge: string;
-  badgeImage: string[];
+  badgeInfo: BadgeInfo;
 };
 
 export type RewindProps = {
   row: string;
   scale?: string;
+  limitValue?: number;
+  currentValue?: number;
+  handleValueChange?: (e: number) => void;
 };
 
 export type TopicProps = {
@@ -201,4 +203,9 @@ export type CreateMixtapeProps = {
 
 export type TrackInputProps = {
   index: number;
+};
+
+export type RecordProps = {
+  index: number;
+  recordImage: string;
 };
