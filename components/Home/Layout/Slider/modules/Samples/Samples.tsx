@@ -23,6 +23,7 @@ const Samples: FunctionComponent = (): JSX.Element => {
               index={index}
               selectedTopic={selectedTopic}
               dispatch={dispatch}
+              key={index}
               setTopic={setTopic}
             />
           );
@@ -34,7 +35,7 @@ const Samples: FunctionComponent = (): JSX.Element => {
             .toLowerCase()
             .replaceAll(" ", "") as keyof TopicInterface
         ]?.map((value: string, index: number) => {
-          return <TopicValues index={index} value={value} />;
+          return <TopicValues index={index} value={value} key={index} />;
         })}
       </div>
     </div>

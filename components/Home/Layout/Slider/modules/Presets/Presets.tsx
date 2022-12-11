@@ -13,7 +13,7 @@ const Presets: FunctionComponent = (): JSX.Element => {
       <div className="relative w-11/12 h-full row-start-2 flex flex-wrap justify-center gap-2 place-self-center text-center min-h-96">
         {(more ? presetOptions : lodash.slice(presetOptions, 0, 13)).map(
           (format: string, index: number) => {
-            return <Preset index={index} format={format} />;
+            return <Preset index={index} format={format} key={index} />;
           }
         )}
         {presetOptions.length > 13 && (

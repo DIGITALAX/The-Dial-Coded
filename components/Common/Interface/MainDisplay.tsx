@@ -11,6 +11,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   width,
   height,
   title,
+  tapeTitles,
 }): JSX.Element => {
   return (
     <div
@@ -29,7 +30,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
             />
             <Line col={"2"} width={"60"} />
           </div>
-          <div className="relative w-fit h-fit font-digiB text-black text-2xl uppercase col-start-2 text-center place-self-center">
+          <div className="relative w-fit h-fit font-digiB text-black text-2xl uppercase col-start-2 text-center place-self-center px-10">
             *{title}*
           </div>
           <div className="relative w-fit h-fit col-start-3 justify-self-end self-center grid grid-flow-col auto-cols-auto gap-4">
@@ -58,20 +59,23 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
         </div>
         <div className="relative w-full h-full row-start-2 border-4 border-black grid grid-flow-row auto-rows-auto">
           <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto">
-            <div className="relative col-start-1 w-full h-fit bg-dullY grid grid-flow-row auto-rows-auto">
+            <div className="relative col-start-1 min-w-full h-fit bg-dullY grid grid-flow-row auto-rows-auto w-full">
               <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto">
                 <Panel height={"16"} col={"1"} width={"full"} />
                 <Panel height={"16"} col={"2"} width={"full"} />
               </div>
               <div className="relative w-full h-96 row-start-2"></div>
             </div>
-            <div className="relative col-start-2 w-full h-full grid grid-flow-row auto-rows-auto overflow-y-scroll border-4 border-black justify-self-end">
-              <Tape
-                width={"full"}
-                height={"20"}
-                bgColor={"white"}
-                title={"hello mix"}
-              />
+            <div className="relative col-start-2 w-fit max-w-fit h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll border-y-4 border-l-4 border-black justify-self-end">
+              {tapeTitles?.map((title: string, index: number) => {
+                return (
+                  <Tape
+                    bgColor={"feedBackground"}
+                    title={title}
+                    index={index}
+                  />
+                );
+              })}
             </div>
           </div>
           <div className="relative w-full h-full row-start-2">hey</div>

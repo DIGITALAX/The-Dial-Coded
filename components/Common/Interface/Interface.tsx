@@ -5,6 +5,7 @@ import MainDisplay from "./MainDisplay";
 
 const Interface: FunctionComponent<InterfaceProps> = ({
   title,
+  tapeTitles,
 }): JSX.Element => {
   return (
     <div className="relative w-screen h-full p-10 col-start-1 grid grid-flow-col auto-cols-auto">
@@ -46,6 +47,7 @@ const Interface: FunctionComponent<InterfaceProps> = ({
             />
           </div>
           <MainDisplay
+            tapeTitles={tapeTitles}
             row={"2"}
             width={"[80vw"}
             height={"full"}
