@@ -14,6 +14,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   tapeTitles,
   handleTapeSet,
   images,
+  message
 }): JSX.Element => {
   return (
     <div
@@ -124,7 +125,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
             </div>
           </div>
           <div className="relative w-full h-full row-start-2">
-            <NotificationsBar images={images} />
+            <NotificationsBar images={images} message={message} />
           </div>
         </div>
       </div>

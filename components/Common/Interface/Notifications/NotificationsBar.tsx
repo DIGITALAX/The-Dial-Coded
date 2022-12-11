@@ -9,7 +9,7 @@ const NotificationsBar: FunctionComponent<NotificationBarProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative w-full h-60 bg-comp border-t-4 border-white grid grid-flow-col auto-cols-auto p-6">
-      {message && <NotificationMessage />}
+      {message && <NotificationMessage message={message} />}
       <NotificationSlider images={images} />
     </div>
   );
