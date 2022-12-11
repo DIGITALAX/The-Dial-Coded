@@ -24,6 +24,7 @@ const Panel: FunctionComponent = (): JSX.Element => {
                   dispatch={dispatch}
                   setLayout={setLayout}
                   layoutType={layoutType}
+                  key={index}
                 />
               );
             }
