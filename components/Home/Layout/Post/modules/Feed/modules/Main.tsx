@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { MainProps } from "../types/feed.types";
-import { MdOutlineExpandMore } from "react-icons/md";
+import { MdOutlineExpandMore, MdOutlineExpandLess } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../../../redux/store";
 import { setMoreFeed } from "../../../../../../../redux/reducers/moreFeedSlice";
@@ -18,7 +18,11 @@ const Main: FunctionComponent<MainProps> = ({ images }): JSX.Element => {
         className="relative row-start-2 p-4 w-fit h-fit place-self-center hover:opacity-70 active:scale-95 cursor-pointer"
         onClick={() => dispatch(setMoreFeed(!isOpen))}
       >
-        <MdOutlineExpandMore color="black" size={25} />
+        {isOpen ? (
+          <MdOutlineExpandLess color="black" size={25} />
+        ) : (
+          <MdOutlineExpandMore color="black" size={25} />
+        )}
       </div>
     </div>
   );
