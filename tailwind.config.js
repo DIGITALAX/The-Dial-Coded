@@ -18,6 +18,7 @@ module.exports = {
         offBlue: "#81A8F8",
         offWhite: "#F2F2F2",
         midGreen: "#09C261",
+        lensLight: "#ABFE2C",
         midWhite: "#FAF4E8",
         mustard: "#FBEED1",
         midMus: "#FDF3D8",

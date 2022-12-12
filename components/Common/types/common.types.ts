@@ -209,3 +209,21 @@ export type RecordProps = {
   index: number;
   recordImage: string;
 };
+
+export type useLensSignInResults = {
+  handleLensLogin: () => Promise<void>;
+  profileState: string;
+  isLoading: boolean;
+  isError: boolean;
+  isSuccess: boolean;
+};
+
+export type LensSignInProps = {
+  handleAction?: () => any;
+  isLoading?: boolean;
+};
+
+export type AuthSwitchProps = {
+  isConnected: boolean;
+  profileState: string;
+}
