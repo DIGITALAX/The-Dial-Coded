@@ -7,12 +7,12 @@ import { setPublication } from "../../../../redux/reducers/publicationSlice";
 const PublicationModal: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
   return (
-    <div className="absolute flex items-center justify-center fixed w-full h-full z-30 bg-opacity-50 backdrop-blur-sm">
-      <div className="relative w-full h-full grid-flow-row auto-rows-auto gap-10">
+    <div className="inset-0 justify-center fixed z-30 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
+      <div className="relative w-[60vw] h-fit col-start-1 place-self-center">
         <div className="relative w-full row-start-2 h-fit rounded-xl grid grid-flow-col auto-cols-auto">
           <div
             id="radialPinkBorder"
-            className="relative w-[60%] h-40 col-start-1 rounded-xl place-self-center"
+            className="relative w-full h-full col-start-1 rounded-xl place-self-center"
           >
             <Image
               src="https://thedial.infura-ipfs.io/ipfs/QmPTSfH2nh8S7H4yXWHn3wxBADoGfvj7aD8P4gkLmkKDpw"
@@ -42,7 +42,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 >
                   <textarea
                     style={{ resize: "none" }}
-                    className="relative w-full h-full col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2"
+                    className="relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2"
                   ></textarea>
                 </div>
               </div>

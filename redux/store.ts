@@ -19,6 +19,12 @@ import saveMixtapeReducer from "./reducers/saveMixtapeSlice";
 import addTrackReducer from "./reducers/addTrackSlice";
 import editTrackReducer from "./reducers/editTrackSlice";
 import deleteTrackReducer from "./reducers/deleteTrackSlice";
+import lensProfileReducer from "./reducers/lensProfileSlice";
+import getProfileModalReducer from "./reducers/getProfileModalSlice";
+import signInReducer from "./reducers/signInSlice";
+import authStatusReducer from "./reducers/authStatusSlice";
+import signInSettledReducer from "./reducers/signInSettledSlice";
+import hamburgerReducer from "./reducers/hamburgerSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -40,6 +46,12 @@ const reducer = combineReducers({
   addTrackReducer,
   editTrackReducer,
   deleteTrackReducer,
+  lensProfileReducer,
+  getProfileModalReducer,
+  signInReducer,
+  authStatusReducer,
+  signInSettledReducer,
+  hamburgerReducer,
 });
 
 export const store = configureStore({

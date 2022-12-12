@@ -14,7 +14,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
       <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto">
         <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-3">
           <div className="relative w-fit h-fit col-start-1 self-center justify-self-start cursor-pointer hover:opacity-70 active:scale-95 self-center">
-            <Image src="" width={15} height={15} alt="pfp" />
+            <Image src="https://thedial.infura-ipfs.io/ipfs/QmcUnJ4YryhceTmwBw9zqGSfym1qqGLiHKrC7F4i8SRbxQ" width={15} height={15} alt="pfp" />
           </div>
           <div className="relative w-fit h-fit col-start-2 grid grid-flow-row auto-rows-auto place-self-center">
             <div className="relative w-fit h-fit row-start-1 text-white font-dosis text-base self-center">

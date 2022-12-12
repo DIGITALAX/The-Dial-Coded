@@ -7,10 +7,18 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { useEffect, useState } from "react";
 import shuffle from "shuffle-array";
+import SignInModal from "../components/Common/Modals/SignIn/SignInModal";
+import GetProfileModal from "../components/Common/Modals/GetProfile/GetProfileModal";
 
 const Home: NextPage = (): JSX.Element => {
   const makePublication = useSelector(
     (state: RootState) => state.app.publicationReducer.value
+  );
+  const signInModal = useSelector(
+    (state: RootState) => state.app.signInReducer.value
+  );
+  const getProfileModal = useSelector(
+    (state: RootState) => state.app.getProfileModalReducer.value
   );
   const streamLinks: string[] = [
     "https://www.youtube.com/embed/2Sa8o39R0jY?controls=0?rel=0&autoplay=1&mute=1",
@@ -39,6 +47,8 @@ const Home: NextPage = (): JSX.Element => {
       <Scan newLink={newLink} />
       <LayoutSwitch />
       {makePublication && <PublicationModal />}
+      {signInModal && <SignInModal />}
+      {getProfileModal && <GetProfileModal />}
     </div>
   );
 };
