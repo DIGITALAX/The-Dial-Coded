@@ -27,6 +27,10 @@ export type BoxProps = {
   col: string;
   self: string;
   justify: string;
+  contain?: boolean;
+  bgColor?: boolean;
+  rounded?: boolean;
+  border?: boolean;
 };
 
 export type BadgeProps = {
@@ -226,4 +230,9 @@ export type LensSignInProps = {
 export type AuthSwitchProps = {
   isConnected: boolean;
   profileState: string;
+  dispatch: Dispatch<AnyAction>;
+}
+
+export type ProfileProps = {
+  dispatch: Dispatch<AnyAction>;
 }

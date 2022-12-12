@@ -7,9 +7,9 @@ const usePanel = (): UsePanelResults => {
   const uris: string[] = [
     "QmRUztxbrNETu85M3o9RoyqEKBeGEeV5kT5K8hberNTHw7",
     "QmfG4dGSYrtv2hCUnURNvfKyk92ZwVJoG9wiMvtjhVQm8y",
-    "QmcW5F3a6WyWzj9cYZSxcecTe93dMxYeXPj2GZ9MvGWrJa",
-    "QmWqomti4SpttTLXj878VHFgSM6c4EEGmEooDGm134HU9T",
-    "Qmct1VBhhLeRnBu7WynCrXSUYYFKubBWruRAuP2LgDbDTY",
+    "QmS3dGNFY7JuqGaQcuZnmSqTZxsKBHjsKfCySEMxjLduQc",
+    "QmVvtK2x9TQJzqfAnQPUKapQKVohXAjUrTrpry8TWZMhei",
+    "QmdptnVYNSsfrg7s39y4QetAFtcVsrNRR5eH7ayifS1j79",
   ];
 
   const layoutType: string[] = [

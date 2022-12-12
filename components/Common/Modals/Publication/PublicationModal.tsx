@@ -7,20 +7,14 @@ import { setPublication } from "../../../../redux/reducers/publicationSlice";
 const PublicationModal: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
   return (
-    <div className="inset-0 justify-center fixed z-30 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-[60vw] h-fit col-start-1 place-self-center">
+    <div className="inset-0 justify-center fixed z-30 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
+      <div className="relative w-[60vw] h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
         <div className="relative w-full row-start-2 h-fit rounded-xl grid grid-flow-col auto-cols-auto">
-          <div
-            id="radialPinkBorder"
-            className="relative w-full h-full col-start-1 rounded-xl place-self-center"
-          >
-            <Image
-              src="https://thedial.infura-ipfs.io/ipfs/QmPTSfH2nh8S7H4yXWHn3wxBADoGfvj7aD8P4gkLmkKDpw"
-              layout="fill"
-              objectFit="cover"
-              className="absolute w-full h-full p-2 rounded-xl"
-            />
-            <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-10">
+          <div className="relative w-full h-full col-start-1 rounded-xl place-self-center">
+            <div
+              className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-4
+            "
+            >
               <div className="relative w-fit h-fit row-start-1 self-center justify-self-end pr-3 pt-3 cursor-pointer">
                 <ImCross
                   color="white"
@@ -28,22 +22,21 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   onClick={() => dispatch(setPublication(false))}
                 />
               </div>
-              <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto px-4 pb-4 gap-6 row-start-2">
-                <div className="relative w-fit h-fit place-self-center col-start-1 col-span-1">
-                  <Image
-                    src="https://thedial.infura-ipfs.io/ipfs/QmcUnJ4YryhceTmwBw9zqGSfym1qqGLiHKrC7F4i8SRbxQ"
-                    height={40}
-                    width={40}
-                  />
-                </div>
+              <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto pb-4 gap-6 row-start-2">
                 <div
                   id="radialPinkBorder"
-                  className="relative col-start-2 w-full h-full grid grid-flow-col auto-cols-auto p-1 rounded-xl col-span-10"
+                  className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1 rounded-xl"
                 >
                   <textarea
                     style={{ resize: "none" }}
-                    className="relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2"
+                    placeholder="Have something to share..."
+                    className="relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 place-self-center"
                   ></textarea>
+                </div>
+              </div>
+              <div className="relative h-8 row-start-3 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis cursor-pointer active:scale-95 justify-self-end self-center">
+                <div className="relative w-fit h-fit col-start-1 place-self-center text-sm">
+                  POST
                 </div>
               </div>
             </div>

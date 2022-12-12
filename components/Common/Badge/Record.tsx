@@ -4,7 +4,7 @@ import { RecordProps } from "../types/common.types";
 
 const Record: FunctionComponent<RecordProps> = ({index, recordImage}): JSX.Element => {
     return (
-        <div className="relative w-20 h-20 rounded-lg border-2 border-offBlack grid grid-flow-col auto-cols-auto cursor-pointer"
+        <div className="relative w-20 h-20 rounded-lg border-2 border-offBlack grid grid-flow-col auto-cols-auto cursor-pointer bg-offBlue"
         key={index}>
           <Image
             src={`https://thedial.infura-ipfs.io/ipfs/${recordImage}`}

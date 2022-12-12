@@ -25,17 +25,16 @@ const GetProfileModal: FunctionComponent = (): JSX.Element | null => {
                   Claim A Lens Handle to Sign In to The Dial.
                 </div>
               </div>
-              <Link legacyBehavior href={"claim.lens.xyz"}>
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  className="relative w-fit h-10 col-start-1 grid grid-flow-col auto-cols-auto px-4 row-start-3 cursor-pointer active:scale-95 bg-lensLight/80 font-dosis text-white rounded-md place-self-center"
-                >
-                  <div className="relative w-fit h-fit place-self-center col-start-1 text-lg px-3 py-1.5 text-center">
-                    Claim Handle
-                  </div>
-                </a>
-              </Link>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={"https://claim.lens.xyz"}
+                className="relative w-fit h-10 col-start-1 grid grid-flow-col auto-cols-auto px-4 row-start-3 cursor-pointer active:scale-95 bg-lensLight/80 font-dosis text-white rounded-md place-self-center"
+              >
+                <div className="relative w-fit h-fit place-self-center col-start-1 text-lg px-3 py-1.5 text-center">
+                  Claim Handle
+                </div>
+              </a>
             </div>
           </div>
         </div>
