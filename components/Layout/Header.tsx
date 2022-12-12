@@ -23,6 +23,7 @@ const Header: FunctionComponent = (): JSX.Element => {
   const accountDrop = useSelector(
     (state: RootState) => state.app.hamburgerReducer.value
   );
+  console.log(profileState, isConnected)
   const { handleImageData } = useHeader();
   const { isError, isSuccess, handleLensLogin } = useLensSignIn();
   return (
@@ -55,7 +56,9 @@ const Header: FunctionComponent = (): JSX.Element => {
         </div>
         <div
           className={`relative w-fit h-fit col-start-3 opacity-80 place-self-center grid grid-flow-row auto-rows-auto gap-3 ${
-            profileState === "no profile" && "cursor-pointer active:scale-95"
+            isConnected &&
+            profileState !== "profile" &&
+            "cursor-pointer active:scale-95"
           }`}
           onClick={() => {
             ((isConnected && profileState === "no profile") ||
@@ -81,7 +84,7 @@ const Header: FunctionComponent = (): JSX.Element => {
           )}
         </div>
         <div className="relative w-fit h-fit col-start-4 opacity-80 place-self-center cursor-pointer active:scale-95 -top-1 hover:opacity-60">
-          <AuthSwitch isConnected={isConnected} profileState={profileState} />
+          <AuthSwitch isConnected={isConnected} profileState={profileState} dispatch={dispatch} />
         </div>
       </div>
     </div>

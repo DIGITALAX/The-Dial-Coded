@@ -265,3 +265,7 @@ div::-webkit-scrollbar-thumb:active {
     #eaed8a
   );
 }
+
+textarea::placeholder {
+  color: #131313 !important
+}

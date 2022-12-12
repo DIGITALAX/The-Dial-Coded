@@ -12,7 +12,7 @@ const PanelOption: FunctionComponent<PanelOptionProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`relative w-fit h-full col-start-${
+      className={`relative w-fit h-12 col-start-${
         index + 1
       } grid grid-flow-col auto-cols-auto gap-2 cursor-pointer hover:opacity-80 active:scale-95`}
       key={index}
@@ -27,7 +27,7 @@ const PanelOption: FunctionComponent<PanelOptionProps> = ({
           height={30}
         />
       </div>
-      <div className="relative w-fit h-full col-start-2 grid grid-flow-row auto-rows-auto place-self-center">
+      <div className="relative w-fit h-fit gap-1 col-start-2 grid grid-flow-row auto-rows-auto place-self-center">
         <div className="relative row-start-1 h-2 w-2 rounded-full border border-offBlack self-center"></div>
         <div className="relative row-start-2 h-2 w-2 rounded-full border border-offBlack self-center"></div>
         <div className="relative row-start-3 h-2 w-2 rounded-full border border-offBlack self-center"></div>

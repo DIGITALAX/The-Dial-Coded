@@ -6,6 +6,7 @@ import { AuthSwitchProps } from "../../types/common.types";
 const AuthSwitch: FunctionComponent<AuthSwitchProps> = ({
   isConnected,
   profileState,
+  dispatch
 }): JSX.Element => {
   let action: string = "NOT_CONNECTED";
   const decideStringAction = () => {
@@ -17,7 +18,7 @@ const AuthSwitch: FunctionComponent<AuthSwitchProps> = ({
 
   switch (decideStringAction()) {
     case "PROFILE":
-      <Profile />;
+      <Profile dispatch={dispatch} />;
 
     default:
       return <Connect />;

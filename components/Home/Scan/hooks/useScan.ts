@@ -47,7 +47,7 @@ const useScan = (): UseScanResult => {
     "INFINITE RECORDS",
     "WHY STOP AT AI SELFIES?",
     "AUTOCOMPLETE FOR EVERYTHING",
-    "",
+    "SURF THE LATENT WAVES",
     "",
   ];
 
@@ -55,7 +55,7 @@ const useScan = (): UseScanResult => {
     "EVERY PUBLIC MESSAGE A SAVED MEMORY",
     "START WITH DRAFTS TO TRAIN YOUR OWN MODELS",
     "IT’S A LOT MORE THAN 140 CHARACTERS OR LESS",
-    "",
+    "NEW TAKES ON 24/7 LO-FI MIXTAPES",
     "",
   ];
 
@@ -63,7 +63,7 @@ const useScan = (): UseScanResult => {
     "That’s all art is. Showing yourself to the world, hoping someone else understands, and knowing it won’t be lost when Elon unplugs the bird. Because this time it’s all user owned.",
     "Now that you’ve been tempted, like everyone else on the old mobile instant influencer apps, to upload a few selfies and see how good AI can make you look… don’t you want to take it somewhere a bit more interesting?",
     "With text-to-image, text-to-text, text-to-textiles, and everything always coming along a step or two faster than we can expect, we’ve built a lightweight canvas to replace the old and outdated text box. Bet you didn’t know you’d love it so.",
-    "",
+    "Attention, attention, fellow AI spellslingers. Are you tired of the old same / same social feeds? Then listen up, because there’s always something special on the dial for all you creative rebels out there. Ditch the mainstream commentariat. Stay free, stay wild, and we’ll see you on the other side of the wall.",
     "",
   ];
 

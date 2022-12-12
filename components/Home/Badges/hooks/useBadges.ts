@@ -22,7 +22,7 @@ const useBadges = (): useBadgesResult => {
       color: "record3",
     },
     {
-      name: "master",
+      name: "creative",
       image: "QmedQ8w5WjSX5aKqdLAKywuwsThpR1dDb6bnLynpH4bh5d",
       color: "record4",
     },
