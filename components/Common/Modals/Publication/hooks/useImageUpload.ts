@@ -1,11 +1,17 @@
 import { FormEvent, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setPostImages } from "../../../../../redux/reducers/postImagesSlice";
+import { RootState } from "../../../../../redux/store";
+import lodash from "lodash";
+import { ImageUploadResults } from "../../../types/common.types";
 
-const useImageUpload = () => {
+const useImageUpload = (): ImageUploadResults => {
   const [imageUploading, setImageUploading] = useState<boolean>(false);
   const [mappedFeaturedFiles, setMappedFeaturedFiles] = useState<string[]>([]);
   const dispatch = useDispatch();
+  const imagesUploaded = useSelector(
+    (state: RootState) => state.app.postImageReducer.value
+  );
 
   const uploadImage = async (e: FormEvent): Promise<void> => {
     let finalImages: string[] = [];
@@ -37,11 +43,25 @@ const useImageUpload = () => {
     );
   };
 
+  const handleRemoveImage = (image: string): void => {
+    console.log(imagesUploaded);
+    const cleanedArray = lodash.filter(
+      imagesUploaded,
+      (uploaded) => uploaded !== image
+    );
+    setMappedFeaturedFiles(cleanedArray);
+  };
+
   useEffect(() => {
     dispatch(setPostImages(mappedFeaturedFiles));
   }, [mappedFeaturedFiles]);
 
-  return { uploadImage, imageUploading, mappedFeaturedFiles };
+  return {
+    uploadImage,
+    imageUploading,
+    mappedFeaturedFiles,
+    handleRemoveImage,
+  };
 };
 
 export default useImageUpload;

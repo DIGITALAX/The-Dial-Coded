@@ -1,10 +1,11 @@
-import { FunctionComponent } from "react";
+import { FormEvent, FunctionComponent } from "react";
 import { ImCross } from "react-icons/im";
 import { useDispatch, useSelector } from "react-redux";
 import { setPublication } from "../../../../redux/reducers/publicationSlice";
 import { RootState } from "../../../../redux/store";
 import useCollectionModal from "./hooks/useCollectionModal";
 import useImageUpload from "./hooks/useImageUpload";
+import usePublication from "./hooks/usePublication";
 import CollectOptionsModal from "./modules/CollectOptionsModal";
 import ImagePicker from "./modules/ImagePicker";
 import ImageUploads from "./modules/ImageUploads";
@@ -55,7 +56,20 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     timeLimitDropDown,
     setTimeLimitDropDown,
   } = useCollectionModal();
-  const { uploadImage, imageUploading, mappedFeaturedFiles } = useImageUpload();
+  const {
+    uploadImage,
+    imageUploading,
+    mappedFeaturedFiles,
+    handleRemoveImage,
+  } = useImageUpload();
+  const {
+    handlePostDescription,
+    hashtags,
+    urls,
+    handleEmoji,
+    postDescription,
+  } = usePublication();
+  console.log(hashtags, urls);
   return (
     <div className="inset-0 justify-center fixed z-30 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
@@ -100,10 +114,16 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
           />
         )}
         {mappedFeaturedFiles?.length !== 0 && (
-          <ImageUploads mappedFeaturedFiles={mappedFeaturedFiles} />
+          <ImageUploads
+            mappedFeaturedFiles={mappedFeaturedFiles}
+            handleRemoveImage={handleRemoveImage}
+          />
         )}
         {imagePickerModal !== "" && (
-          <ImagePicker imagePicker={imagePickerModal as string} />
+          <ImagePicker
+            imagePicker={imagePickerModal as string}
+            handleEmoji={handleEmoji}
+          />
         )}
         <div className="relative w-full h-fit rounded-xl grid grid-flow-col auto-cols-auto">
           <div className="relative w-full h-full col-start-1 rounded-xl place-self-center grid grid-flow-row auto-rows-auto gap-4">
@@ -120,9 +140,11 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1 rounded-xl"
               >
                 <textarea
+                  onChange={(e: FormEvent) => handlePostDescription(e)}
                   style={{ resize: "none" }}
+                  value={postDescription}
                   placeholder="Have something to share..."
-                  className="relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 place-self-center"
+                  className={`relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 place-self-center`}
                 ></textarea>
               </div>
             </div>
