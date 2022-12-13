@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../../../redux/store";
 import lodash from "lodash";
 import Reactions from "../../../../../../Common/Feed/Reactions/Reactions";
+import { INFURA_GATEWAY } from "../../../../../../../lib/lens/constants";
 
 const Hot: FunctionComponent<HotProps> = ({
   topMixtape,
@@ -24,7 +25,7 @@ const Hot: FunctionComponent<HotProps> = ({
               className="relative w-full h-80 border-2 border-black rounded-md p-4 grid grid-flow-col auto-cols-auto"
             >
               <Image
-                src={`https://thedial.infura-ipfs.io/ipfs/${image}`}
+                src={`${INFURA_GATEWAY}/ipfs/${image}`}
                 layout="fill"
                 alt={image}
                 objectFit="cover"
@@ -55,7 +56,7 @@ const Hot: FunctionComponent<HotProps> = ({
               className="relative w-96 h-60 border-2 border-black rounded-md p-4 grid grid-flow-col auto-cols-auto"
             >
               <Image
-                src={`https://thedial.infura-ipfs.io/ipfs/${image}`}
+                src={`${INFURA_GATEWAY}/ipfs/${image}`}
                 layout="fill"
                 alt={image}
                 objectFit="cover"
@@ -87,7 +88,7 @@ const Hot: FunctionComponent<HotProps> = ({
                 className="relative w-full h-80 border-2 border-black rounded-md p-4 grid grid-flow-col auto-cols-auto"
               >
                 <Image
-                  src={`https://thedial.infura-ipfs.io/ipfs/${image}`}
+                  src={`${INFURA_GATEWAY}/ipfs/${image}`}
                   layout="fill"
                   alt={image}
                   objectFit="cover"

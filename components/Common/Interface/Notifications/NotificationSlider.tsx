@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { NotificationSliderProps } from "./../../types/common.types";
 
 const NotificationSlider: FunctionComponent<NotificationSliderProps> = ({
@@ -17,7 +18,7 @@ const NotificationSlider: FunctionComponent<NotificationSliderProps> = ({
             } justify-self-end self-center cursor-pointer active:opacity-70`}
           >
             <Image
-              src={`https://thedial.infura-ipfs.io/ipfs/${image}`}
+              src={`${INFURA_GATEWAY}/ipfs/${image}`}
               alt={image}
               layout="fill"
               className="p-0.5"

@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
 import { ButtonIconProps } from "../types/common.types";
 import Image from "next/legacy/image";
+import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 
 const ButtonIcon: FunctionComponent<ButtonIconProps> = ({
   width,
@@ -16,7 +17,7 @@ const ButtonIcon: FunctionComponent<ButtonIconProps> = ({
     >
       {image && (
         <Image
-          src={`https://thedial.infura-ipfs.io/ipfs/${image}`}
+          src={`${INFURA_GATEWAY}/ipfs/${image}`}
           objectFit="cover"
           objectPosition="center"
           layout="fill"

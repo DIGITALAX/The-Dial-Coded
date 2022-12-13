@@ -2,6 +2,7 @@ import { Dispatch, AnyAction } from "redux";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { BadgeInfo } from "../../Home/Badges/types/badges.types";
 import { Erc20 } from "./lens.types";
+import { FormEvent } from "react";
 
 export type ReactionProps = {
   textColor: string;
@@ -241,7 +242,14 @@ export type ProfileProps = {
 export type PostOptionsProps = {
   dispatch: Dispatch<AnyAction>;
   imagePicker: string | undefined;
+  uploadImage: (e: FormEvent) => Promise<void>;
+  imageUploading: boolean;
+  mappedFeaturedFiles: string[] | undefined;
 };
+
+export type ImageUploadProps = {
+  mappedFeaturedFiles: string[] | undefined;
+}
 
 export type ImagePickerProps = {
   imagePicker: string;

@@ -28,6 +28,7 @@ import hamburgerReducer from "./reducers/hamburgerSlice";
 import collectOptionsReducer from "./reducers/collectOptionsModalSlice";
 import emojiPickerReducer from "./reducers/imagePickerSlice";
 import collectValuesReducer from "./reducers/collectValuesSlice";
+import postImageReducer from "./reducers/postImagesSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -58,6 +59,7 @@ const reducer = combineReducers({
   collectOptionsReducer,
   emojiPickerReducer,
   collectValuesReducer,
+  postImageReducer,
 });
 
 export const store = configureStore({

@@ -1,5 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import { BadgeProps } from "../types/common.types";
 
 const Badge: FunctionComponent<BadgeProps> = ({
@@ -12,7 +13,7 @@ const Badge: FunctionComponent<BadgeProps> = ({
       key={index}
     >
       <Image
-        src={`https://thedial.infura-ipfs.io/ipfs/${badgeInfo.image}`}
+        src={`${INFURA_GATEWAY}/ipfs/${badgeInfo.image}`}
         layout="fill"
         objectFit="cover"
       />
@@ -22,7 +23,7 @@ const Badge: FunctionComponent<BadgeProps> = ({
       >
         <div className="relative col-start-1 place-self-center w-full h-full grid grid-flow-col auto-cols-auto rounded-full border-2 border-offBlack">
           <Image
-            src={`https://thedial.infura-ipfs.io/ipfs/QmVxMmLejwVJrDAfV1vgYVwJyxP29i2K51LiqxK62adPbg`}
+            src={`${INFURA_GATEWAY}/ipfs/QmVxMmLejwVJrDAfV1vgYVwJyxP29i2K51LiqxK62adPbg`}
             layout="fill"
             objectFit="cover"
             className="hover:rotate-12"

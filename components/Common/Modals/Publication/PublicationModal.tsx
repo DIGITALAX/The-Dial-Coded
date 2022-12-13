@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPublication } from "../../../../redux/reducers/publicationSlice";
 import { RootState } from "../../../../redux/store";
 import useCollectionModal from "./hooks/useCollectionModal";
+import useImageUpload from "./hooks/useImageUpload";
 import CollectOptionsModal from "./modules/CollectOptionsModal";
 import ImagePicker from "./modules/ImagePicker";
+import ImageUploads from "./modules/ImageUploads";
 import PostOptions from "./modules/PostOptions";
 
 const PublicationModal: FunctionComponent = (): JSX.Element => {
@@ -53,6 +55,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     timeLimitDropDown,
     setTimeLimitDropDown,
   } = useCollectionModal();
+  const { uploadImage, imageUploading, mappedFeaturedFiles } = useImageUpload();
   return (
     <div className="inset-0 justify-center fixed z-30 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
@@ -96,6 +99,9 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
             setTimeLimitDropDown={setTimeLimitDropDown}
           />
         )}
+        {mappedFeaturedFiles?.length !== 0 && (
+          <ImageUploads mappedFeaturedFiles={mappedFeaturedFiles} />
+        )}
         {imagePickerModal !== "" && (
           <ImagePicker imagePicker={imagePickerModal as string} />
         )}
@@ -125,6 +131,9 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 <PostOptions
                   dispatch={dispatch}
                   imagePicker={imagePickerModal}
+                  uploadImage={uploadImage}
+                  imageUploading={imageUploading}
+                  mappedFeaturedFiles={mappedFeaturedFiles}
                 />
               </div>
               <div className="col-start-2 relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis cursor-pointer active:scale-95 justify-self-end self-center">

@@ -1,5 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import { BoxProps } from "../types/common.types";
 
 const Box: FunctionComponent<BoxProps> = ({
@@ -20,7 +21,7 @@ const Box: FunctionComponent<BoxProps> = ({
       } ${rounded ? "rounded-full" : "rounded-md "} ${border && "border-black border-2"}`}
     >
       <Image
-        src={`https://thedial.infura-ipfs.io/ipfs/${image}`}
+        src={`${INFURA_GATEWAY}/ipfs/${image}`}
         alt="box"
         objectFit={contain ? "contain" : "cover"}
         objectPosition={"center"}

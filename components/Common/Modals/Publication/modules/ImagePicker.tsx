@@ -6,7 +6,7 @@ const ImagePicker: FunctionComponent<ImagePickerProps> = ({
   imagePicker,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit content-center">
+    <div className="relative w-full h-fit content-center py-3">
       {imagePicker === "emoji" ? <Emoji /> : ""}
     </div>
   );

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import { setMixtapePage } from "../../../redux/reducers/mixtapePageSlice";
 import { PanelOptionProps } from "../types/common.types";
 
@@ -16,13 +17,15 @@ const PanelOption: FunctionComponent<PanelOptionProps> = ({
         index + 1
       } grid grid-flow-col auto-cols-auto gap-2 cursor-pointer hover:opacity-80 active:scale-95`}
       key={index}
-      onClick={() => {dispatch(setLayout(layoutType[index]))
-      layoutType[index] === "Mixtape" && dispatch(setMixtapePage("Create"))}}
+      onClick={() => {
+        dispatch(setLayout(layoutType[index]));
+        layoutType[index] === "Mixtape" && dispatch(setMixtapePage("Create"));
+      }}
     >
       <div className="relative w-fit h-fit col-start-1 place-self-center">
         <Image
           alt="files"
-          src={`https://thedial.infura-ipfs.io/ipfs/${uri}`}
+          src={`${INFURA_GATEWAY}/ipfs/${uri}`}
           width={30}
           height={30}
         />

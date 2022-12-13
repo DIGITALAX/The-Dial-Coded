@@ -2,13 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { FunctionComponent } from "react";
 import { BsTwitter } from "react-icons/bs";
+import { INFURA_GATEWAY } from "../../lib/lens/constants";
 
 const Footer: FunctionComponent = (): JSX.Element => {
   return (
     <div className="relative bottom-0 w-full h-72 grid grid-flow-col auto-cols-auto p-6">
       <div className="relative w-fit h-fit self-end justify-self-start col-start-1">
         <Image
-          src="https://thedial.infura-ipfs.io/ipfs/QmezZzto6fapjAkN5mT18WFZ2vHRHAoxx4CL74GRwzcDTM"
+          src={`${INFURA_GATEWAY}/ipfs/QmezZzto6fapjAkN5mT18WFZ2vHRHAoxx4CL74GRwzcDTM`}
           alt="grid"
           width={26}
           height={26}
@@ -22,7 +23,7 @@ const Footer: FunctionComponent = (): JSX.Element => {
             rel="noreferrer"
           >
             <Image
-              src="https://thedial.infura-ipfs.io/ipfs/QmagzBh9TbN3YvYsUZ9cwxwceb6n2NNtbEixtVZbpioQyb"
+              src={`${INFURA_GATEWAY}/ipfs/QmagzBh9TbN3YvYsUZ9cwxwceb6n2NNtbEixtVZbpioQyb`}
               width={27}
               height={32}
               priority
@@ -38,7 +39,7 @@ const Footer: FunctionComponent = (): JSX.Element => {
             rel="noreferrer"
           >
             <Image
-              src="https://thedial.infura-ipfs.io/ipfs/QmS3VAwkxRAecoENrF1dPsG7zMoJYiJzdJy7YBx3K5o1Rr"
+              src={`${INFURA_GATEWAY}/ipfs/QmS3VAwkxRAecoENrF1dPsG7zMoJYiJzdJy7YBx3K5o1Rr`}
               alt="github"
               width={29}
               height={28}
@@ -53,7 +54,7 @@ const Footer: FunctionComponent = (): JSX.Element => {
             rel="noreferrer"
           >
             <Image
-              src="https://thedial.infura-ipfs.io/ipfs/QmSLfNX9cjYoMPqec8WHEZfDV79WMdhSZZu64tTf2nP5Xk"
+              src={`${INFURA_GATEWAY}/ipfs/QmSLfNX9cjYoMPqec8WHEZfDV79WMdhSZZu64tTf2nP5Xk`}
               alt="lens"
               width={30}
               height={30}
