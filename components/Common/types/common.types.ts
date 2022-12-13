@@ -1,6 +1,7 @@
 import { Dispatch, AnyAction } from "redux";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { BadgeInfo } from "../../Home/Badges/types/badges.types";
+import { Erc20 } from "./lens.types";
 
 export type ReactionProps = {
   textColor: string;
@@ -231,8 +232,120 @@ export type AuthSwitchProps = {
   isConnected: boolean;
   profileState: string;
   dispatch: Dispatch<AnyAction>;
-}
+};
 
 export type ProfileProps = {
   dispatch: Dispatch<AnyAction>;
-}
+};
+
+export type PostOptionsProps = {
+  dispatch: Dispatch<AnyAction>;
+  imagePicker: string | undefined;
+};
+
+export type ImagePickerProps = {
+  imagePicker: string;
+};
+
+export type CollectButtonProps = {
+  values?: string[] | Erc20[];
+  col: string;
+  row: string;
+  openDropdown: boolean;
+  handleOpenDropdown: (e: boolean) => void;
+  selectValue: string | undefined;
+  selectFunction: (e: string) => void;
+  label: string;
+};
+
+export type UseCollectionModalResults = {
+  enabledCurrencies: Erc20[];
+  collectTypes: string[];
+  audienceTypes: string[];
+  setCollectType: (e: string) => void;
+  collectType: string;
+  setAudienceType: (e: string) => void;
+  audienceType: string;
+  setEnabledCurrency: (e: string) => void;
+  enabledCurrency: string | undefined;
+  setChargeCollectDropDown: (e: boolean) => void;
+  setAudienceDropDown: (e: boolean) => void;
+  setCurrencyDropDown: (e: boolean) => void;
+  chargeCollectDropDown: boolean;
+  audienceDropDown: boolean;
+  currencyDropDown: boolean;
+  referral: number;
+  setReferral: (e: number) => void;
+  limit: number;
+  setLimit: (e: number) => void;
+  value: number;
+  setValue: (e: number) => void;
+  collectibleDropDown: boolean;
+  setCollectibleDropDown: (e: boolean) => void;
+  collectible: string;
+  setCollectible: (e: string) => void;
+  chargeCollect: string;
+  setChargeCollect: (e: string) => void;
+  limitedDropDown: boolean;
+  setLimitedDropDown: (e: boolean) => void;
+  limitedEdition: string;
+  setLimitedEdition: (e: string) => void;
+  setTimeLimit: (e: string) => void;
+  timeLimit: string;
+  timeLimitDropDown: boolean;
+  setTimeLimitDropDown: (e: boolean) => void;
+};
+
+export type CollectOptionsModalProps = {
+  enabledCurrencies: Erc20[];
+  collectTypes: string[];
+  dispatch: Dispatch<AnyAction>;
+  audienceTypes: string[];
+  setCollectType: (e: string) => void;
+  collectType: string;
+  setAudienceType: (e: string) => void;
+  audienceType: string;
+  setEnabledCurrency: (e: string) => void;
+  enabledCurrency: string | undefined;
+  setChargeCollectDropDown: (e: boolean) => void;
+  setAudienceDropDown: (e: boolean) => void;
+  setCurrencyDropDown: (e: boolean) => void;
+  chargeCollectDropDown: boolean;
+  audienceDropDown: boolean;
+  currencyDropDown: boolean;
+  referral: number;
+  setReferral: (e: number) => void;
+  limit: number;
+  setLimit: (e: number) => void;
+  value: number;
+  setValue: (e: number) => void;
+  collectibleDropDown: boolean;
+  setCollectibleDropDown: (e: boolean) => void;
+  collectible: string;
+  setCollectible: (e: string) => void;
+  chargeCollect: string;
+  setChargeCollect: (e: string) => void;
+  limitedDropDown: boolean;
+  setLimitedDropDown: (e: boolean) => void;
+  limitedEdition: string;
+  setLimitedEdition: (e: string) => void;
+  setTimeLimit: (e: string) => void;
+  timeLimit: string;
+  timeLimitDropDown: boolean;
+  setTimeLimitDropDown: (e: boolean) => void;
+};
+
+export type CollectInputProps = {
+  id: string;
+  name: string;
+  step?: string;
+  min?: string;
+  max?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  col?: string;
+  row?: string;
+  label?: string;
+  valueChange: number;
+  handleValueChange: (e: number) => void;
+};

@@ -48,7 +48,7 @@ const useScan = (): UseScanResult => {
     "WHY STOP AT AI SELFIES?",
     "AUTOCOMPLETE FOR EVERYTHING",
     "SURF THE LATENT WAVES",
-    "",
+    "EVOLVE FUTURE NOSTALGIA",
   ];
 
   const imageArtist: string[] = [
@@ -56,7 +56,7 @@ const useScan = (): UseScanResult => {
     "START WITH DRAFTS TO TRAIN YOUR OWN MODELS",
     "IT’S A LOT MORE THAN 140 CHARACTERS OR LESS",
     "NEW TAKES ON 24/7 LO-FI MIXTAPES",
-    "",
+    "SHRINK THE DISTANCE BETWEEN THEN AND NOW",
   ];
 
   const imageDescription: string[] = [
@@ -64,7 +64,7 @@ const useScan = (): UseScanResult => {
     "Now that you’ve been tempted, like everyone else on the old mobile instant influencer apps, to upload a few selfies and see how good AI can make you look… don’t you want to take it somewhere a bit more interesting?",
     "With text-to-image, text-to-text, text-to-textiles, and everything always coming along a step or two faster than we can expect, we’ve built a lightweight canvas to replace the old and outdated text box. Bet you didn’t know you’d love it so.",
     "Attention, attention, fellow AI spellslingers. Are you tired of the old same / same social feeds? Then listen up, because there’s always something special on the dial for all you creative rebels out there. Ditch the mainstream commentariat. Stay free, stay wild, and we’ll see you on the other side of the wall.",
-    "",
+    "What’s it like in a year or two, looking back to when it all felt new? Let’s skip the chit chat and test it live right here: “The insatiable need for more processing power, ideally located as close as possible to the user, but at the very least in nearby industrial server farms, invariably leads to a third option. Decentralized computing.” [src] Take that as your prompt. Will it be theft in the inspiration, or new art in the remix? Let’s evolve together & find out.",
   ];
 
   const dialSettings: string[] = [
