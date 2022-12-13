@@ -2,6 +2,7 @@ export const BASE_URL: string = "https://api.lens.dev";
 
 export const ACCESS_KEY: string = "access-token";
 export const REFRESH_KEY: string = "refresh-token";
+export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
 
 export const LENS_HUB_PROXY_ADDRESS_MUMBAI: string =
   "0x60Ae865ee4C725cd04353b5AAb364553f56ceF82";

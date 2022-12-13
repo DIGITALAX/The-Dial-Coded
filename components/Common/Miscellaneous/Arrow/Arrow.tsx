@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { ArrowProps } from "../../types/common.types";
 
 const Arrow: FunctionComponent<ArrowProps> = ({
@@ -32,7 +33,7 @@ const Arrow: FunctionComponent<ArrowProps> = ({
           width={12}
           height={12}
           alt="leftArrow"
-          src={`https://thedial.infura-ipfs.io/ipfs/${up}`}
+          src={`${INFURA_GATEWAY}/ipfs/${up}`}
         />
       </div>
       <div
@@ -44,7 +45,7 @@ const Arrow: FunctionComponent<ArrowProps> = ({
           width={12}
           height={12}
           alt="centerDot"
-          src={`https://thedial.infura-ipfs.io/ipfs/${middle}`}
+          src={`${INFURA_GATEWAY}/ipfs/${middle}`}
         />
       </div>
       <div
@@ -56,7 +57,7 @@ const Arrow: FunctionComponent<ArrowProps> = ({
           width={12}
           height={12}
           alt="rightArrow"
-          src={`https://thedial.infura-ipfs.io/ipfs/${down}`}
+          src={`${INFURA_GATEWAY}/ipfs/${down}`}
         />
       </div>
     </div>

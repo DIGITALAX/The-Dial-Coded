@@ -9,6 +9,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import NotificationsBar from "./Notifications/NotificationsBar";
 import MixtapeSwitch from "../../Home/Layout/Mixtape/MixtapeSwitch";
 import { setAddMixtape } from "../../../redux/reducers/addMixtapeSlice";
+import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 
 const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   row,
@@ -66,7 +67,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
           <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto">
             <div className="relative h-full bg-dullY flex flex-col col-start-1 col-span-10 w-full">
               <Image
-                src="https://thedial.infura-ipfs.io/ipfs/QmTLN24oXMbEj3QgHX7dD3GWnYwL2GqsP16yvLzm29bk5X"
+                src={`${INFURA_GATEWAY}/ipfs/QmTLN24oXMbEj3QgHX7dD3GWnYwL2GqsP16yvLzm29bk5X`}
                 objectFit="cover"
                 layout="fill"
                 className="absolute"

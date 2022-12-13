@@ -1,0 +1,39 @@
+import Image from "next/legacy/image";
+import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../../../lib/lens/constants";
+import { ImageUploadProps } from "../../../types/common.types";
+import { RiCloseCircleFill } from "react-icons/ri";
+
+const ImageUploads: FunctionComponent<ImageUploadProps> = ({
+  mappedFeaturedFiles,
+}): JSX.Element => {
+  return (
+    <div className="relative w-full h-fit overflow-x-scroll grid grid-flow-col auto-cols-auto gap-2">
+      {mappedFeaturedFiles?.map((image: string, index: number) => {
+        return (
+          <div
+            key={index}
+            className={`relative w-60 h-60 border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
+              index + 1
+            }`}
+          >
+            <div className="relative w-full h-full flex col-start-1 grid grid-flow-col auto-cols-auto">
+              <Image
+                src={`${INFURA_GATEWAY}/ipfs/${image}`}
+                layout="fill"
+                objectFit="cover"
+                objectPosition={"center"}
+                className="rounded-md absolute"
+              />
+              <div className="relative w-fit h-fit col-start-1 justify-self-end self-start cursor-pointer active:scale-95 p-px">
+                <RiCloseCircleFill color="white" size={28} />
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default ImageUploads;

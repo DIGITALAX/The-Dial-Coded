@@ -1,5 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../../../lib/lens/constants";
 import { ViewerProps } from "../types/slider.types";
 
 const Viewer: FunctionComponent<ViewerProps> = ({
@@ -16,7 +17,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
           >
             <div className={`relative w-${width} h-full rounded-2xl`}>
               <Image
-                src={`https://thedial.infura-ipfs.io/ipfs/${uri}`}
+                src={`${INFURA_GATEWAY}/ipfs/${uri}`}
                 layout="fill"
                 objectFit="cover"
                 objectPosition={"center"}

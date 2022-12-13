@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { setLayout } from "../../../../redux/reducers/layoutSlice";
 import { ProfileProps } from "../../types/common.types";
 
@@ -13,7 +14,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
       onClick={() => dispatch(setLayout("Account"))}
     >
       <Image
-        src="https://thedial.infura-ipfs.io/ipfs/QmcUnJ4YryhceTmwBw9zqGSfym1qqGLiHKrC7F4i8SRbxQ"
+        src={`${INFURA_GATEWAY}/ipfs/QmcUnJ4YryhceTmwBw9zqGSfym1qqGLiHKrC7F4i8SRbxQ`}
         alt="profileIcon"
         width={40}
         height={30}

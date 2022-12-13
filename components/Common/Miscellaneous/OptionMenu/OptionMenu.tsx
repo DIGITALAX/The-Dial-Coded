@@ -3,6 +3,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import lodash from "lodash";
 import Image from "next/image";
 import { OptionMenuProps } from "../../types/common.types";
+import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 
 const OptionMenu: FunctionComponent<OptionMenuProps> = ({
   col,
@@ -34,7 +35,7 @@ const OptionMenu: FunctionComponent<OptionMenuProps> = ({
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center">
           <Image
-            src={`https://thedial.infura-ipfs.io/ipfs/${image}`}
+            src={`${INFURA_GATEWAY}/ipfs/${image}`}
             alt={image}
             width={imageWidth}
             height={imageHeight}

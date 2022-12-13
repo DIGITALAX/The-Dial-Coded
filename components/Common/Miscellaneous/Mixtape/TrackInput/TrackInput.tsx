@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../../../lib/lens/constants";
 import { TrackInputProps } from "../../../types/common.types";
 import Arrow from "../../Arrow/Arrow";
 
@@ -32,7 +33,7 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
         </div>
         <div className="relative w-fit h-fit col-start-2 place-self-center cursor-pointer active:scale-95">
           <Image
-            src="https://thedial.infura-ipfs.io/ipfs/QmTZmuX3ZiDXHTaFcB31yf6cFC98xPZSAciDC7GhmDgDYq"
+            src={`${INFURA_GATEWAY}/ipfs/QmTZmuX3ZiDXHTaFcB31yf6cFC98xPZSAciDC7GhmDgDYq`}
             alt="edit"
             width={20}
             height={20}
@@ -40,7 +41,7 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
         </div>
         <div className="relative w-fit h-fit col-start-3 place-self-center cursor-pointer active:scale-95">
           <Image
-            src="https://thedial.infura-ipfs.io/ipfs/QmcYatyHhVBravcfEyrLx4Cbjt5Pkicdnq7nJ88XeG7Dwt"
+            src={`${INFURA_GATEWAY}/ipfs/QmcYatyHhVBravcfEyrLx4Cbjt5Pkicdnq7nJ88XeG7Dwt`}
             alt="cross"
             width={20}
             height={20}

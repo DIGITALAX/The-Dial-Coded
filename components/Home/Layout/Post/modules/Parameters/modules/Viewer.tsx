@@ -7,6 +7,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../../../redux/store";
 import { setUserViewer } from "../../../../../../../redux/reducers/userViewSlice";
+import { INFURA_GATEWAY } from "../../../../../../../lib/lens/constants";
 
 const Viewer: FunctionComponent<ViewerProps> = ({
   setUserTypeOpen,
@@ -110,7 +111,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
       </div>
       <div className="relative w-fit h-fit col-start-2 row-start-1 cursor-pointer active:scale-95 justify-self-end self-center">
         <Image
-          src="https://thedial.infura-ipfs.io/ipfs/QmfNvhTRhR7ginJh2pHTEPTNthM6GWhp8NpfuA9LggqgYQ"
+          src={`${INFURA_GATEWAY}/ipfs/QmfNvhTRhR7ginJh2pHTEPTNthM6GWhp8NpfuA9LggqgYQ`}
           width={30}
           height={30}
           alt="venn"
@@ -118,7 +119,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
       </div>
       <div className="relative w-fit h-fit row-start-2 col-start-2 cursor-pointer active:scale-95 justify-self-end self-center">
         <Image
-          src="https://thedial.infura-ipfs.io/ipfs/QmUbXpg43xj51Lvj9uDswhvkBZfXVnwWmaJfwp9jYgRMUT"
+          src={`${INFURA_GATEWAY}/ipfs/QmUbXpg43xj51Lvj9uDswhvkBZfXVnwWmaJfwp9jYgRMUT`}
           width={30}
           height={30}
           alt="fire"

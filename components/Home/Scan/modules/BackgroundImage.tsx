@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import { RootState } from "../../../../redux/store";
 import { BackgroundImageProps } from "./../types/scan.types";
 import { useSelector } from "react-redux";
+import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 
 const BackgroundImage: FunctionComponent<BackgroundImageProps> = ({
   mainImage,
@@ -13,7 +14,7 @@ const BackgroundImage: FunctionComponent<BackgroundImageProps> = ({
   return (
     <div className="absolute w-full h-full grid grid-flow-col auto-cols-auto">
       <Image
-        src={`https://thedial.infura-ipfs.io/ipfs/${mainImage[backgroundNumber]}`}
+        src={`${INFURA_GATEWAY}/ipfs/${mainImage[backgroundNumber]}`}
         layout="fill"
         objectFit="cover"
         objectPosition={"top"}

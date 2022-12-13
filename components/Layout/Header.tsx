@@ -9,6 +9,7 @@ import { useAccount } from "wagmi";
 import useLensSignIn from "../Common/Auth/hooks/useLensSignIn";
 import { setHamburger } from "../../redux/reducers/hamburgerSlice";
 import Disconnect from "../Common/Auth/modules/Disconnect";
+import { INFURA_GATEWAY } from "../../lib/lens/constants";
 
 const Header: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const Header: FunctionComponent = (): JSX.Element => {
           onClick={() => dispatch(setVideo(!video))}
         >
           <Image
-            src="https://thedial.infura-ipfs.io/ipfs/Qmb4h9vReob4VXMByg7Go1kUmacjuGAcTxft5Rq4SbSgXY"
+            src={`${INFURA_GATEWAY}/ipfs/Qmb4h9vReob4VXMByg7Go1kUmacjuGAcTxft5Rq4SbSgXY`}
             alt="headerIcon1"
             width={50}
             height={50}
@@ -47,7 +48,7 @@ const Header: FunctionComponent = (): JSX.Element => {
           onClick={() => handleImageData(currentImage)}
         >
           <Image
-            src="https://thedial.infura-ipfs.io/ipfs/QmTUha42rLj2Epo3XYMi5eAyKFryt2TFEhik7jFyfzh2dp"
+            src={`${INFURA_GATEWAY}/ipfs/QmTUha42rLj2Epo3XYMi5eAyKFryt2TFEhik7jFyfzh2dp`}
             alt="headerIcon2"
             width={50}
             height={50}

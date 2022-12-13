@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FormEvent, FunctionComponent } from "react";
 import { IoMdImages } from "react-icons/io";
 import { AiOutlineGif } from "react-icons/ai";
 import { BsFillEmojiLaughingFill } from "react-icons/bs";
@@ -10,12 +10,30 @@ import { setImagePickerModal } from "../../../../../redux/reducers/imagePickerSl
 const PostOptions: FunctionComponent<PostOptionsProps> = ({
   dispatch,
   imagePicker,
+  uploadImage,
+  imageUploading,
+  mappedFeaturedFiles,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2">
-      <div className="relative col-start-1 w-fit h-fit place-self-center cursor-pointer active:scale-95">
+      <label className="relative col-start-1 w-fit h-fit place-self-center cursor-pointer active:scale-95"
+      onChange={(e: FormEvent) => uploadImage(e)}>
         <IoMdImages color="white" size={20} />
-      </div>
+        <input
+          type="file"
+          accept="image/png"
+          hidden
+          required
+          id="files"
+          multiple={true}
+          name="images"
+          disabled={
+            imageUploading
+              ? true
+              : false
+          }
+        />
+      </label>
       <div className="relative w-fit h-fit col-start-2 place-self-center cursor-pointer active:scale-95">
         <AiOutlineGif
           color="white"

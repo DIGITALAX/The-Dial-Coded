@@ -1,5 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { TurnerProps } from "./../types/scan.types";
 
 const Turner: FunctionComponent<TurnerProps> = ({
@@ -15,7 +16,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
         onClick={() => handleCount(currentSetting)}
       >
         <Image
-          src="https://thedial.infura-ipfs.io/ipfs/QmQZ8UwjeizDQkbCiZED8Ya4LxpFD5JbVbNeAdowurHkiY"
+          src={`${INFURA_GATEWAY}/ipfs/QmQZ8UwjeizDQkbCiZED8Ya4LxpFD5JbVbNeAdowurHkiY`}
           className="relative w-fit h-fit relative cursor-pointer"
           width={230}
           height={230}
@@ -26,7 +27,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
         <div className="relative w-full h-10 col-start-1 grid grid-flow-col auto-cols-auto rounded-lg border-2 border-white opacity-90 gap-3 pl-1 bg-bluey/30">
           <div className="relative col-start-1 w-fit h-fit place-self-center place-self-center grid grid-flow-col auto-cols-auto pl-2">
             <Image
-              src="https://thedial.infura-ipfs.io/ipfs/QmZhr4Eo92GHQ3Qn3xpv8HSz7ArcjgSPsD3Upe9v8H5rge"
+              src={`${INFURA_GATEWAY}/ipfs/QmZhr4Eo92GHQ3Qn3xpv8HSz7ArcjgSPsD3Upe9v8H5rge`}
               alt="search"
               width={15}
               height={20}
@@ -42,7 +43,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
         </div>
         <div className="relative w-10 h-full col-start-2">
           <Image
-            src={`https://thedial.infura-ipfs.io/ipfs/${
+            src={`${INFURA_GATEWAY}/ipfs/${
               canvasURIs[currentSetting]
             }`}
             layout="fill"

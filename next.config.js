@@ -12,6 +12,10 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
-}
+  experimental: {
+    scrollRestoration: true,
+    appDir: false,
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

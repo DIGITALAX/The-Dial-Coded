@@ -1,5 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { RewindProps } from "../../types/common.types";
 
 const Rewind: FunctionComponent<RewindProps> = ({
@@ -25,7 +26,7 @@ const Rewind: FunctionComponent<RewindProps> = ({
       <Image
         width={40}
         height={40}
-        src="https://thedial.infura-ipfs.io/ipfs/QmeEDch97j4u2fKzsSTZk5WxE4CWDppqngEXHmTJ9hne5T"
+        src={`${INFURA_GATEWAY}/ipfs/QmeEDch97j4u2fKzsSTZk5WxE4CWDppqngEXHmTJ9hne5T`}
         alt="forward"
       />
     </div>

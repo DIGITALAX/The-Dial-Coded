@@ -2,6 +2,7 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { TapeProps } from "../types/common.types";
 import { RiLock2Fill } from "react-icons/ri";
+import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 
 const Tape: FunctionComponent<TapeProps> = ({
   bgColor,
@@ -29,7 +30,7 @@ const Tape: FunctionComponent<TapeProps> = ({
       {sideImage && (
         <div className="relative w-16 h-full col-start-1 self-center justify-self-start mix-blend-hard-light">
           <Image
-            src={`https://thedial.infura-ipfs.io/ipfs/${sideImage}`}
+            src={`${INFURA_GATEWAY}/ipfs/${sideImage}`}
             layout="fill"
             priority
           />
@@ -38,7 +39,7 @@ const Tape: FunctionComponent<TapeProps> = ({
       {backgroundImages && (
         <div className="absolute w-full h-full mix-blend-hard-light">
           <Image
-            src={`https://thedial.infura-ipfs.io/ipfs/${
+            src={`${INFURA_GATEWAY}/ipfs/${
               backgroundImages[index + 1]
             }`}
             layout="fill"
