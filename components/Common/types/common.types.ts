@@ -249,10 +249,19 @@ export type PostOptionsProps = {
 
 export type ImageUploadProps = {
   mappedFeaturedFiles: string[] | undefined;
-}
+  handleRemoveImage: (e: string) => void;
+};
+
+export type ImageUploadResults = {
+  uploadImage: (e: FormEvent) => Promise<void>;
+  imageUploading: boolean;
+  mappedFeaturedFiles: string[] | undefined;
+  handleRemoveImage: (e: string) => void;
+};
 
 export type ImagePickerProps = {
   imagePicker: string;
+  handleEmoji: (e: any) => void;
 };
 
 export type CollectButtonProps = {
