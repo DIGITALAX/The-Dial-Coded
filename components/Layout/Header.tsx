@@ -23,7 +23,6 @@ const Header: FunctionComponent = (): JSX.Element => {
   const accountDrop = useSelector(
     (state: RootState) => state.app.hamburgerReducer.value
   );
-  console.log(profileState, isConnected)
   const { handleImageData } = useHeader();
   const { isError, isSuccess, handleLensLogin } = useLensSignIn();
   return (

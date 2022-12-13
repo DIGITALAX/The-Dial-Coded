@@ -25,6 +25,9 @@ import signInReducer from "./reducers/signInSlice";
 import authStatusReducer from "./reducers/authStatusSlice";
 import signInSettledReducer from "./reducers/signInSettledSlice";
 import hamburgerReducer from "./reducers/hamburgerSlice";
+import collectOptionsReducer from "./reducers/collectOptionsModalSlice";
+import emojiPickerReducer from "./reducers/imagePickerSlice";
+import collectValuesReducer from "./reducers/collectValuesSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -52,6 +55,9 @@ const reducer = combineReducers({
   authStatusReducer,
   signInSettledReducer,
   hamburgerReducer,
+  collectOptionsReducer,
+  emojiPickerReducer,
+  collectValuesReducer,
 });
 
 export const store = configureStore({
