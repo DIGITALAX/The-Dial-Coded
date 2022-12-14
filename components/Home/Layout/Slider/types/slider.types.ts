@@ -21,6 +21,7 @@ export type UseSliderResults = {
   dropsSlider: string[];
   handleForward: (e: number) => void;
   handleBackward: (e: number) => void;
+  currentValue: number;
 };
 
 export interface Viewer {

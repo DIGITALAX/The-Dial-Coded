@@ -5,7 +5,7 @@ export interface TopicInterface {
   colors: string[];
   lighting: string[];
   engines: string[];
-  design: string[];
+  designtools: string[];
   techniques: string[];
   fashion: string[];
   equipment: string[];

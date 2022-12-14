@@ -1,6 +1,19 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setDial } from "../../../../../redux/reducers/dialSlice";
 import { UseSliderResults } from "../types/slider.types";
 
 const useSlider = (): UseSliderResults => {
+  const [currentValue, setCurrentValue] = useState<number>(0);
+  const dispatch = useDispatch();
+  const dialSettings: string[] = [
+    "Scanner",
+    "Highlights",
+    "Drops",
+    "Reach",
+    "Records",
+  ];
+
   const scannerSlider: string[] = [
     "QmcBV71Rt3DnPUG6JX8a3Y87eio4jnDNbw5mFynNbgzbUK",
     "QmUa96CBCsBxSyEgFS6bU9T6yZtpwcTT92LHuBqGAWhYPg",
@@ -84,20 +97,18 @@ const useSlider = (): UseSliderResults => {
     "QmNf3YWPHHc18uUpEVhZPxa5CweXpABTV6XcBGBpwMUQ8R",
   ];
 
-  const handleForward = (current: number): void => {
-    // if (dialSetting) {
-    //   if ((dialSetting as number) < 4) {
-    //     dispatch(setDialSetting(dialSetting + 1));
-    //   }
-    // }
+  const handleForward = (currentValue: number): void => {
+    if (currentValue < 4) {
+      setCurrentValue(currentValue + 1);
+      dispatch(setDial(dialSettings[currentValue]));
+    }
   };
 
-  const handleBackward = (current: number): void => {
-    // if (dialSetting) {
-    //   if ((dialSetting as number) > 0) {
-    //     dispatch(setDialSetting(dialSetting - 1));
-    //   }
-    // }
+  const handleBackward = (currentValue: number): void => {
+    if (currentValue > 0) {
+      setCurrentValue(currentValue - 1);
+      dispatch(setDial(dialSettings[currentValue]));
+    }
   };
 
   return {
@@ -108,6 +119,7 @@ const useSlider = (): UseSliderResults => {
     dropsSlider,
     handleForward,
     handleBackward,
+    currentValue,
   };
 };
 
