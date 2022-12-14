@@ -15,7 +15,7 @@ const Rewind: FunctionComponent<RewindProps> = ({
       className={`relative w-fit h-fit row-start-${row} place-self-center ${
         scale && "scale-x-[-1]"
       } ${
-        currentValue && currentValue === limitValue
+        currentValue === limitValue
           ? "opacity-40"
           : "cursor-pointer hover:opacity-80 active:opacity-70"
       }`}
