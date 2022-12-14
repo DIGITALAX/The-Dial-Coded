@@ -1,4 +1,6 @@
+import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import Badge from "../../Common/Badge/Badge";
 import Record from "../../Common/Badge/Record";
 import Rewind from "../../Common/Miscellaneous/Rewind/Rewind";
@@ -16,10 +18,10 @@ const Badges: FunctionComponent = (): JSX.Element => {
   } = useBadges();
   return (
     <div className="relative bg-white p-10 w-full h-full grid grid-flow-row auto-rows-auto gap-5">
-      <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto pb-20">
-        <div className="relative uppercase w-fit h-fit text-black font-dosis text-center text-4xl place-self-center leading-loose">
-          great place for <br />
-          some text here
+      <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto py-32">
+        <div className="relative uppercase w-2/3 h-fit text-black font-digiB text-center text-3xl place-self-center leading-loose">
+          Shrink the distance between drafts, awards winning creation, and
+          casual reactions to your infinite record collection.
         </div>
       </div>
       <div className="relative row-start-2 w-full h-full grid grid-flow-row auto-rows-auto gap-5 col-span-1">
@@ -38,10 +40,24 @@ const Badges: FunctionComponent = (): JSX.Element => {
             currentValue={currentPage}
           />
         </div>
-        <div className="relative w-fit h-fit font-dosis text-black place-self-center text-right text-[1.5vw] col-start-2">
-          canvas and drafts as process in the public memory <br />
-          audience growth through reach and reflex <br />
-          records
+        <div className="relative w-2/3 h-full py-3 place-self-center  col-start-2">
+          <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
+            <div className="absolute object-cover w-full h-full bg-black">
+              <Image
+                alt="badgeMain"
+                src={`${INFURA_GATEWAY}/ipfs/Qmb3eWA9cT1VTfpM6QG4bYCeGziCzA7A3NeU3CqLAAYiwQ`}
+                layout="fill"
+                objectFit="cover"
+                className="opacity-60"
+              />
+            </div>
+            <div className="relative w-2/3 h-fit text-center text-[1.2vw] font-dosis text-white px-3 place-self-center">
+              Struck by the sheer number and size of the waves, we watched in
+              fascination as one collector after another scanned the records.
+              This machine transforming its contents into a dazzling display of
+              light and sound.
+            </div>
+          </div>
         </div>
         <div className="relative col-start-3 w-fit h-full grid grid-cols-5 grid-flow-col-dense grid-rows-3 gap-3 justify-self-end">
           {(currentPage === 1 ? badgeInfo : records)?.map(

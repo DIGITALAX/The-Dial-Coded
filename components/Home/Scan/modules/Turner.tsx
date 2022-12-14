@@ -8,7 +8,6 @@ const Turner: FunctionComponent<TurnerProps> = ({
   handleCount,
   canvasURIs,
 }): JSX.Element => {
-
   return (
     <div className="relative w-full h-fit col-start-2 grid grid-flow-row auto-rows-auto self-center justify-end gap-10 pr-10">
       <div

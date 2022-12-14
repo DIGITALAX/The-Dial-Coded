@@ -1,24 +1,50 @@
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
+import { setHamburger } from "../../../../redux/reducers/hamburgerSlice";
 import { setLayout } from "../../../../redux/reducers/layoutSlice";
 import { ProfileProps } from "../../types/common.types";
 
 const Profile: FunctionComponent<ProfileProps> = ({
   dispatch,
+  lensProfile,
+  authStatus,
 }): JSX.Element => {
+  let profileImage: any;
+  if (!lensProfile?.picture) {
+    profileImage = <></>;
+  } else if (lensProfile?.picture?.original) {
+    if (lensProfile?.picture.original.url.includes("http")) {
+      profileImage = lensProfile?.picture.original.url;
+    } else {
+      const cut = lensProfile?.picture.original.url.split("/");
+      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
+    }
+  } else {
+    profileImage = lensProfile?.picture?.uri;
+  }
   return (
     <div
-      id={"profile"}
-      className="relative w-fit h-fit col-start-4 opacity-80 place-self-center cursor-pointer active:scale-95 -top-1 hover:opacity-60"
-      onClick={() => dispatch(setLayout("Account"))}
+      className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 -top-1 hover:opacity-60 grid grid-flow-col auto-cols-auto"
+      onClick={() =>
+        authStatus
+          ? dispatch(setLayout("Account"))
+          : dispatch(setHamburger(true))
+      }
     >
-      <Image
-        src={`${INFURA_GATEWAY}/ipfs/QmcUnJ4YryhceTmwBw9zqGSfym1qqGLiHKrC7F4i8SRbxQ`}
-        alt="profileIcon"
-        width={40}
-        height={30}
-      />
+      <div
+        className="relative w-10 h-10 rounded-full col-start-1 place-self-center"
+        id={"crt"}
+      >
+        {authStatus && (
+          <Image
+            src={profileImage}
+            layout="fill"
+            objectFit="cover"
+            className="w-full h-full rounded-full"
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface AuthStatusState {
-  value: string;
+  value: boolean;
 }
 
 const initialAuthStatusState: AuthStatusState = {
-  value: "unknown",
+  value: false,
 };
 
 export const authStatusSlice = createSlice({
-  name: "auth status",
+  name: "authStatus",
   initialState: initialAuthStatusState,
   reducers: {
-    setAuthStatus: (state: AuthStatusState, action: PayloadAction<string>) => {
+    setAuthStatus: (state: AuthStatusState, action: PayloadAction<boolean>) => {
       state.value = action.payload;
     },
   },

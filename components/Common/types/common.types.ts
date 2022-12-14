@@ -1,7 +1,7 @@
 import { Dispatch, AnyAction } from "redux";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { BadgeInfo } from "../../Home/Badges/types/badges.types";
-import { Erc20 } from "./lens.types";
+import { Erc20, Profile } from "./lens.types";
 import { FormEvent } from "react";
 
 export type ReactionProps = {
@@ -218,10 +218,11 @@ export type RecordProps = {
 
 export type useLensSignInResults = {
   handleLensLogin: () => Promise<void>;
-  profileState: string;
+  authStatus: boolean;
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
+  lensProfile: Profile | undefined;
 };
 
 export type LensSignInProps = {
@@ -230,13 +231,14 @@ export type LensSignInProps = {
 };
 
 export type AuthSwitchProps = {
-  isConnected: boolean;
-  profileState: string;
+  connected: boolean;
   dispatch: Dispatch<AnyAction>;
 };
 
 export type ProfileProps = {
   dispatch: Dispatch<AnyAction>;
+  lensProfile: Profile | undefined;
+  authStatus: boolean;
 };
 
 export type PostOptionsProps = {
@@ -244,12 +246,13 @@ export type PostOptionsProps = {
   imagePicker: string | undefined;
   uploadImage: (e: FormEvent) => Promise<void>;
   imageUploading: boolean;
-  mappedFeaturedFiles: string[] | undefined;
+  postLoading: boolean;
 };
 
 export type ImageUploadProps = {
   mappedFeaturedFiles: string[] | undefined;
   handleRemoveImage: (e: string) => void;
+  postLoading: boolean;
 };
 
 export type ImageUploadResults = {
@@ -277,10 +280,7 @@ export type CollectButtonProps = {
 
 export type UseCollectionModalResults = {
   enabledCurrencies: Erc20[];
-  collectTypes: string[];
   audienceTypes: string[];
-  setCollectType: (e: string) => void;
-  collectType: string;
   setAudienceType: (e: string) => void;
   audienceType: string;
   setEnabledCurrency: (e: string) => void;
@@ -311,15 +311,13 @@ export type UseCollectionModalResults = {
   timeLimit: string;
   timeLimitDropDown: boolean;
   setTimeLimitDropDown: (e: boolean) => void;
+  handleSetCollectValues: () => void;
 };
 
 export type CollectOptionsModalProps = {
   enabledCurrencies: Erc20[];
-  collectTypes: string[];
   dispatch: Dispatch<AnyAction>;
   audienceTypes: string[];
-  setCollectType: (e: string) => void;
-  collectType: string;
   setAudienceType: (e: string) => void;
   audienceType: string;
   setEnabledCurrency: (e: string) => void;
@@ -350,6 +348,7 @@ export type CollectOptionsModalProps = {
   timeLimit: string;
   timeLimitDropDown: boolean;
   setTimeLimitDropDown: (e: boolean) => void;
+  handleSetCollectValues: () => void;
 };
 
 export type CollectInputProps = {
@@ -365,4 +364,74 @@ export type CollectInputProps = {
   label?: string;
   valueChange: number;
   handleValueChange: (e: number) => void;
+};
+
+export interface PostImage {
+  item: string;
+  type: string;
+  altTag: string;
+}
+
+export type PostArgsType = {
+  profileId: string;
+  contentURI: string;
+  collectModule: string;
+  collectModuleInitData: string;
+  referenceModule: string;
+  referenceModuleInitData: string;
+  sig: {
+    v: number;
+    r: string;
+    s: string;
+    deadline: number;
+  };
+};
+
+export interface CollectValueType {
+  freeCollectModule?: {
+    followerOnly: boolean;
+  };
+  revertCollectModule?: boolean;
+  feeCollectModule?: {
+    amount: {
+      currency: string;
+      value: string;
+    };
+    recipient: string;
+    referralFee: number;
+    followerOnly: boolean;
+  };
+  limitedFeeCollectModule?: {
+    collectLimit: string;
+    amount: {
+      currency: string;
+      value: string;
+    };
+    recipient: string;
+    referralFee: number;
+    followerOnly: boolean;
+  };
+  limitedTimedFeeCollectModule?: {
+    collectLimit: string;
+    amount: {
+      currency: string;
+      value: string;
+    };
+    recipient: string;
+    referralFee: number;
+    followerOnly: boolean;
+  };
+  timedFeeCollectModule?: {
+    amount: {
+      currency: string;
+      value: string;
+    };
+    recipient: string;
+    referralFee: number;
+    followerOnly: boolean;
+  };
+}
+
+export type DisconnectProps = {
+  dispatch: Dispatch<AnyAction>;
 };

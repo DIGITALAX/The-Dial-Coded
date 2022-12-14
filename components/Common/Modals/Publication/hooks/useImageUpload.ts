@@ -44,7 +44,6 @@ const useImageUpload = (): ImageUploadResults => {
   };
 
   const handleRemoveImage = (image: string): void => {
-    console.log(imagesUploaded);
     const cleanedArray = lodash.filter(
       imagesUploaded,
       (uploaded) => uploaded !== image

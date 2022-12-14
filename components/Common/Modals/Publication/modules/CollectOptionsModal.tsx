@@ -1,17 +1,14 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent} from "react";
 import { ImCross } from "react-icons/im";
 import { setCollectOptionsModal } from "../../../../../redux/reducers/collectOptionsModalSlice";
-import { setCollectValues } from "../../../../../redux/reducers/collectValuesSlice";
 import CollectButton from "../../../Miscellaneous/CollectButton/CollectButton";
 import { CollectOptionsModalProps } from "../../../types/common.types";
 import CollectInput from "./CollectInput";
 
 const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
   enabledCurrencies,
-  collectTypes,
   audienceTypes,
-  setCollectType,
-  collectType,
+  handleSetCollectValues,
   setAudienceType,
   audienceType,
   setEnabledCurrency,
@@ -79,10 +76,10 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     label={"Who can collect your post?"}
                   />
                 )}
-                {collectible === "yes" && (
+                {collectible === "yes" && chargeCollect === "yes" && (
                   <CollectButton
                     col={"1"}
-                    row={"2"}
+                    row={"4"}
                     selectFunction={setTimeLimit}
                     openDropdown={timeLimitDropDown}
                     handleOpenDropdown={setTimeLimitDropDown}
@@ -90,10 +87,10 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     label={"Limit collects to 24 hours"}
                   />
                 )}
-                {collectible === "yes" && (
+                {collectible === "yes" && chargeCollect === "yes" && (
                   <CollectButton
                     col={"2"}
-                    row={"2"}
+                    row={"4"}
                     selectFunction={setLimitedEdition}
                     openDropdown={limitedDropDown}
                     handleOpenDropdown={setLimitedDropDown}
@@ -101,7 +98,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     label={"Is this a limited edition post?"}
                   />
                 )}
-                {collectible === "yes" && limitedEdition === "yes" && (
+                {collectible === "yes" && limitedEdition === "yes" && chargeCollect === "yes" && (
                   <CollectInput
                     min="1"
                     step="1"
@@ -111,7 +108,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     label="Limited Edition"
                     name="collectLimit"
                     col="3"
-                    row="2"
+                    row="4"
                     valueChange={limit}
                     handleValueChange={setLimit}
                   />
@@ -119,7 +116,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                 {collectible === "yes" && (
                   <CollectButton
                     col={"1"}
-                    row={"3"}
+                    row={"2"}
                     selectFunction={setChargeCollect}
                     openDropdown={chargeCollectDropDown}
                     handleOpenDropdown={setChargeCollectDropDown}
@@ -130,7 +127,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                 {collectible === "yes" && chargeCollect === "yes" && (
                   <CollectButton
                     col={"2"}
-                    row={"3"}
+                    row={"2"}
                     values={enabledCurrencies}
                     selectFunction={setEnabledCurrency}
                     openDropdown={currencyDropDown}
@@ -148,7 +145,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     label="Award amount"
                     name="valueAmount"
                     col="3"
-                    row="3"
+                    row="2"
                     step="0.00001"
                     valueChange={value}
                     handleValueChange={setValue}
@@ -164,7 +161,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     label="Pass along awards for mirrored posts (%)"
                     name="referral"
                     col="1"
-                    row="4"
+                    row="3"
                     step="0.1"
                     valueChange={referral}
                     handleValueChange={setReferral}
@@ -200,7 +197,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     </a>
                     <br />
                     {chargeCollect === "yes" && value > 0 && (
-                      <a>
+                      <p>
                         You'll receive an award in{" "}
                         <a className="underline decoration-offBlue">
                           {enabledCurrency}
@@ -208,7 +205,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                         of{" "}
                         <a className="underline decoration-offBlue">${value}</a>{" "}
                         each time someone collects your post.
-                      </a>
+                      </p>
                     )}
                     <br />
                     {referral > 0 && (
@@ -227,21 +224,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
               </div>
               <div
                 className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-4 cursor-pointer active:scale-95 bg-offBlue/80 font-dosis text-white rounded-md place-self-end"
-                onClick={() => {
-                  dispatch(setCollectOptionsModal(false));
-                  dispatch(
-                    setCollectValues({
-                      actionFollower: audienceType,
-                      actionRevert: collectible,
-                      actionAmount: value,
-                      actionCurrency: enabledCurrency,
-                      actionReferral: referral,
-                      actionLimited: limitedEdition,
-                      actionEditions: limit,
-                      actionTimeLimited: timeLimit,
-                    })
-                  );
-                }}
+                onClick={() => handleSetCollectValues()}
               >
                 <div className="relative w-fit h-fit place-self-center col-start-1 text-sm p-2 text-center">
                   Set Collect Values

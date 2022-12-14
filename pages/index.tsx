@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import shuffle from "shuffle-array";
 import SignInModal from "../components/Common/Modals/SignIn/SignInModal";
 import GetProfileModal from "../components/Common/Modals/GetProfile/GetProfileModal";
+import ImageViewerModal from "../components/Common/Modals/ImageViewer/ImageViewer";
 
 const Home: NextPage = (): JSX.Element => {
   const makePublication = useSelector(
@@ -19,6 +20,9 @@ const Home: NextPage = (): JSX.Element => {
   );
   const getProfileModal = useSelector(
     (state: RootState) => state.app.getProfileModalReducer.value
+  );
+  const imageViewerModal = useSelector(
+    (state: RootState) => state.app.imageViewerReducer.open
   );
   const streamLinks: string[] = [
     "https://www.youtube.com/embed/2Sa8o39R0jY?controls=0?rel=0&autoplay=1&mute=1",
@@ -49,6 +53,7 @@ const Home: NextPage = (): JSX.Element => {
       {makePublication && <PublicationModal />}
       {signInModal && <SignInModal />}
       {getProfileModal && <GetProfileModal />}
+      {imageViewerModal && <ImageViewerModal />}
     </div>
   );
 };

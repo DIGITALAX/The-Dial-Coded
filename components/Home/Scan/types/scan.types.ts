@@ -28,3 +28,7 @@ export type SideTextProps = {
 export type ScanProps = {
   newLink: string;
 };
+
+export type PanelProps = {
+  layout: string | undefined;
+}
