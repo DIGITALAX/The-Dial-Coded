@@ -1,4 +1,5 @@
 import { FormEvent, FunctionComponent } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
 import { useDispatch, useSelector } from "react-redux";
 import { setPublication } from "../../../../redux/reducers/publicationSlice";
@@ -21,10 +22,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
   );
   const {
     enabledCurrencies,
-    collectTypes,
     audienceTypes,
-    setCollectType,
-    collectType,
     setAudienceType,
     audienceType,
     setEnabledCurrency,
@@ -55,6 +53,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     timeLimit,
     timeLimitDropDown,
     setTimeLimitDropDown,
+    handleSetCollectValues,
   } = useCollectionModal();
   const {
     uploadImage,
@@ -68,20 +67,22 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     urls,
     handleEmoji,
     postDescription,
+    handlePost,
+    postLoading,
+    handlePostWrite,
+    isSuccess,
   } = usePublication();
-  console.log(hashtags, urls);
+  console.log(isSuccess);
   return (
     <div className="inset-0 justify-center fixed z-30 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
         {collectOptionsModal && (
           <CollectOptionsModal
+            handleSetCollectValues={handleSetCollectValues}
             chargeCollect={chargeCollect}
             setChargeCollect={setChargeCollect}
             enabledCurrencies={enabledCurrencies}
-            collectTypes={collectTypes}
             audienceTypes={audienceTypes}
-            setCollectType={setCollectType}
-            collectType={collectType}
             setAudienceType={setAudienceType}
             audienceType={audienceType}
             setEnabledCurrency={setEnabledCurrency}
@@ -117,6 +118,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
           <ImageUploads
             mappedFeaturedFiles={mappedFeaturedFiles}
             handleRemoveImage={handleRemoveImage}
+            postLoading={postLoading}
           />
         )}
         {imagePickerModal !== "" && (
@@ -145,6 +147,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   value={postDescription}
                   placeholder="Have something to share..."
                   className={`relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 place-self-center`}
+                  disabled={postLoading ? true : false}
                 ></textarea>
               </div>
             </div>
@@ -155,12 +158,36 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   imagePicker={imagePickerModal}
                   uploadImage={uploadImage}
                   imageUploading={imageUploading}
-                  mappedFeaturedFiles={mappedFeaturedFiles}
+                  postLoading={postLoading}
                 />
               </div>
-              <div className="col-start-2 relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis cursor-pointer active:scale-95 justify-self-end self-center">
-                <div className="relative w-fit h-fit col-start-1 place-self-center text-sm">
-                  POST
+              <div
+                className={`col-start-2 relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis justify-self-end self-center ${
+                  postDescription !== "" || !imageUploading || !postLoading
+                    ? "active:scale-95 cursor-pointer"
+                    : "opacity-60"
+                }`}
+                onClick={() => {
+                  (!imageUploading || !postLoading || postDescription !== "") &&
+                  !isSuccess
+                    ? handlePost()
+                    : isSuccess
+                    ? handlePostWrite()
+                    : {};
+                }}
+              >
+                <div
+                  className={`relative w-fit h-fit col-start-1 place-self-center text-sm ${
+                    (imageUploading || postLoading) && "animate-spin"
+                  }`}
+                >
+                  {imageUploading || postLoading ? (
+                    <AiOutlineLoading color="black" size={20} />
+                  ) : isSuccess && !postLoading && !imageUploading ? (
+                    "POST"
+                  ) : (
+                    !isSuccess && !postLoading && !imageUploading && "SET"
+                  )}
                 </div>
               </div>
             </div>

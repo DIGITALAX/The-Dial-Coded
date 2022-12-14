@@ -1,3 +1,5 @@
+import { AnyAction, Dispatch } from "redux";
+
 export type SliderSwitchProps = {
   scannerSlider: string[];
   highlightsSlider: string[];
@@ -8,6 +10,7 @@ export type SliderSwitchProps = {
 export type ViewerProps = {
   slider: string[];
   width: string;
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type UseSliderResults = {
@@ -16,4 +19,11 @@ export type UseSliderResults = {
   recordsSlider: string[];
   reachSlider: string[];
   dropsSlider: string[];
+  handleForward: (e: number) => void;
+  handleBackward: (e: number) => void;
 };
+
+export interface Viewer {
+  open?: boolean;
+  image?: string;
+}

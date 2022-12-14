@@ -12,12 +12,18 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
   imagePicker,
   uploadImage,
   imageUploading,
-  mappedFeaturedFiles,
+  postLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2">
-      <label className="relative col-start-1 w-fit h-fit place-self-center cursor-pointer active:scale-95"
-      onChange={(e: FormEvent) => uploadImage(e)}>
+      <label
+        className={`relative w-fit h-fit col-start-1 place-self-center ${
+          !postLoading && "cursor-pointer active:scale-95"
+        }`}
+        onChange={(e: FormEvent) => {
+          !postLoading ? uploadImage(e) : {};
+        }}
+      >
         <IoMdImages color="white" size={20} />
         <input
           type="file"
@@ -27,33 +33,47 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
           id="files"
           multiple={true}
           name="images"
-          disabled={
-            imageUploading
-              ? true
-              : false
-          }
+          disabled={(imageUploading || postLoading) ? true : false}
         />
       </label>
-      <div className="relative w-fit h-fit col-start-2 place-self-center cursor-pointer active:scale-95">
+      <div
+        className={`relative w-fit h-fit col-start-2 place-self-center ${
+          !postLoading && "cursor-pointer active:scale-95"
+        }`}
+      >
         <AiOutlineGif
           color="white"
           size={25}
-          onClick={() =>
-            dispatch(setImagePickerModal(imagePicker === "gif" ? "" : "gif"))
-          }
+          onClick={() => {
+            !postLoading
+              ? dispatch(
+                  setImagePickerModal(imagePicker === "gif" ? "" : "gif")
+                )
+              : {};
+          }}
         />
       </div>
       <div
-        className="relative w-fit h-fit col-start-3 place-self-center cursor-pointer active:scale-95"
-        onClick={() =>
-          dispatch(setImagePickerModal(imagePicker === "emoji" ? "" : "emoji"))
-        }
+        className={`relative w-fit h-fit col-start-3 place-self-center ${
+          !postLoading && "cursor-pointer active:scale-95"
+        }`}
+        onClick={() => {
+          !postLoading
+            ? dispatch(
+                setImagePickerModal(imagePicker === "emoji" ? "" : "emoji")
+              )
+            : {};
+        }}
       >
         <BsFillEmojiLaughingFill color="white" size={17} />
       </div>
       <div
-        className="relative w-fit h-fit col-start-4 place-self-center cursor-pointer active:scale-95"
-        onClick={() => dispatch(setCollectOptionsModal(true))}
+        className={`relative w-fit h-fit col-start-4 place-self-center ${
+          !postLoading && "cursor-pointer active:scale-95"
+        }`}
+        onClick={() => {
+          !postLoading ? dispatch(setCollectOptionsModal(true)) : {};
+        }}
       >
         <RiGalleryUploadLine color="white" size={20} />
       </div>

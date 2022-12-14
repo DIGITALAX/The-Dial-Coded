@@ -8,15 +8,18 @@ import PanelOption from "../../../../Common/Panel/PanelOption";
 import Arrow from "../../../../Common/Miscellaneous/Arrow/Arrow";
 import { RootState } from "../../../../../redux/store";
 import PanelText from "./PanelText";
+import { PanelProps } from "../../types/scan.types";
 
-const Panel: FunctionComponent = (): JSX.Element => {
+const Panel: FunctionComponent<PanelProps> = ({ layout }): JSX.Element => {
   const dispatch = useDispatch();
   const { open, setOpen, uris, layoutType } = useSearch();
   const layoutState: string | undefined = useSelector(
     (state: RootState) => state.app.layoutReducer.value
   );
   return (
-    <div className="relative w-full h-full bg-white rounded-t-2xl row-start-3 grid grid-flow-col auto-cols-auto py-6 pl-10 z-10">
+    <div
+      className={`relative w-full h-full bg-white rounded-t-2xl row-start-3 grid grid-flow-col auto-cols-auto pl-10 z-10 py-6`}
+    >
       <div className="relative w-fit h-fit col-start-1 gap-3 grid grid-flow-col auto-cols-auto self-center justify-self-start pr-2 pl-3">
         <div className="relative w-fit h-fit col-start-1 gap-6 grid grid-flow-col auto-cols-auto">
           {(!open ? lodash.slice(uris, 0, 3) : uris)?.map(

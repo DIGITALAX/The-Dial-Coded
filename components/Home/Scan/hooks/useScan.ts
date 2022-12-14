@@ -28,19 +28,19 @@ const useScan = (): UseScanResult => {
     "QmWsyrjoizyX4GRYeGvJ3ecd7YDMkonDM2KBTW2bHH18VX",
     "QmP2fNq3YQ5RbeZitu8cRc1ajCeW8YbgZmkjV6Nn9VGenT",
     // other images
-    "QmWkJaHuQv9LWUDE4eqDPWx4vdq55Ug5gKhHpBnLP6jex4",
+    "QmYJ3bkG7b1EHr2sipLRX1NW8Szei8uizSGwohpTbTL5i7",
     "QmfVLPL7WG3QrgJ63bK33uzG5RCAntB734vo8J2JBGSYyr",
-    "QmVQDYFT9A98on8BHdDRNsnXV5e55XTurDYHg52Z6ui7CF",
+    "QmQVwiqRtAaTCFtmssBTghahs83xM2Fgs1F188Dt6pDiSi",
     "QmbfZrJ79XhFTgBTzTb4CaZwM59EgnPuPYMcx7gtazxcdE",
     "QmUECY83LZx8eYsZ4XUNVYMQDF5Cm8iowrVTYi1vpi1Ajo",
     "QmQ4y8wbehLHjhfdp6P9VZQ88ArC7wYYe6wVXs7Di9MTzm",
+    "QmUa96CBCsBxSyEgFS6bU9T6yZtpwcTT92LHuBqGAWhYPg",
+    "QmQVwiqRtAaTCFtmssBTghahs83xM2Fgs1F188Dt6pDiSi",
+    "QmWkJaHuQv9LWUDE4eqDPWx4vdq55Ug5gKhHpBnLP6jex4",
+    "QmVQDYFT9A98on8BHdDRNsnXV5e55XTurDYHg52Z6ui7CF",
+    "QmYJ3bkG7b1EHr2sipLRX1NW8Szei8uizSGwohpTbTL5i7",
     "Qma8CDZVUg5BHYzeB1PeTephfPUx8MWt7jm71YTAKS5tt3",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
+    "QmcBV71Rt3DnPUG6JX8a3Y87eio4jnDNbw5mFynNbgzbUK",
   ];
 
   const imageTitle: string[] = [

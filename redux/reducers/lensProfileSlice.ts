@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Profile } from "../../components/Common/types/lens.types";
 
 export interface LensProfileState {
@@ -10,14 +10,14 @@ const initialLensProfileState: LensProfileState = {
 };
 
 export const lensProfileSlice = createSlice({
-  name: "lens profile",
+  name: "lensProfile",
   initialState: initialLensProfileState,
   reducers: {
     setLensProfile: (
       state: LensProfileState,
-      { payload: { actionProfile } }
+      action: PayloadAction<Profile>
     ) => {
-      state.profile = actionProfile;
+      state.profile = action.payload;
     },
   },
 });

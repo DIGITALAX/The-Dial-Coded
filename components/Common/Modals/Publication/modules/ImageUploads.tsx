@@ -7,6 +7,7 @@ import { RiCloseCircleFill } from "react-icons/ri";
 const ImageUploads: FunctionComponent<ImageUploadProps> = ({
   mappedFeaturedFiles,
   handleRemoveImage,
+  postLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit overflow-x-scroll grid grid-flow-col auto-cols-auto gap-2">
@@ -27,8 +28,12 @@ const ImageUploads: FunctionComponent<ImageUploadProps> = ({
                 className="rounded-md absolute"
               />
               <div
-                className="relative w-fit h-fit col-start-1 justify-self-end self-start cursor-pointer active:scale-95 p-px"
-                onClick={() => handleRemoveImage(image)}
+                className={`relative w-fit h-fit col-start-1 justify-self-end self-start p-px ${
+                  !postLoading && "cursor-pointer active:scale-95"
+                }`}
+                onClick={() => {
+                  !postLoading ? handleRemoveImage(image) : {};
+                }}
               >
                 <RiCloseCircleFill color="white" size={28} />
               </div>
