@@ -10,6 +10,7 @@ import shuffle from "shuffle-array";
 import SignInModal from "../components/Common/Modals/SignIn/SignInModal";
 import GetProfileModal from "../components/Common/Modals/GetProfile/GetProfileModal";
 import ImageViewerModal from "../components/Common/Modals/ImageViewer/ImageViewer";
+import CollectNotificationModal from "../components/Common/Modals/CollectNotification/CollectNotificationModal";
 
 const Home: NextPage = (): JSX.Element => {
   const makePublication = useSelector(
@@ -17,6 +18,9 @@ const Home: NextPage = (): JSX.Element => {
   );
   const signInModal = useSelector(
     (state: RootState) => state.app.signInReducer.value
+  );
+  const collectNotificationModal = useSelector(
+    (state: RootState) => state.app.collectNotificationReducer.open
   );
   const getProfileModal = useSelector(
     (state: RootState) => state.app.getProfileModalReducer.value
@@ -54,6 +58,7 @@ const Home: NextPage = (): JSX.Element => {
       {signInModal && <SignInModal />}
       {getProfileModal && <GetProfileModal />}
       {imageViewerModal && <ImageViewerModal />}
+      {collectNotificationModal && <CollectNotificationModal />}
     </div>
   );
 };

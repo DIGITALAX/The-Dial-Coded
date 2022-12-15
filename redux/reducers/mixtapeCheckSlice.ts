@@ -9,7 +9,7 @@ const initialMixtapeCheckState: MixtapeCheckState = {
 };
 
 export const mixtapeCheckSlice = createSlice({
-  name: "mixtape check",
+  name: "mixtapeCheck",
   initialState: initialMixtapeCheckState,
   reducers: {
     setMixtapeCheck: (

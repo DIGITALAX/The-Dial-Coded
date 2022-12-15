@@ -9,7 +9,7 @@ const initialMixtapePageState: MixtapePageState = {
 };
 
 export const mixtapePageSlice = createSlice({
-  name: "Mixtape page",
+  name: "mixtapePage",
   initialState: initialMixtapePageState,
   reducers: {
     setMixtapePage: (

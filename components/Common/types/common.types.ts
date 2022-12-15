@@ -197,13 +197,13 @@ export type CreateMixtapeProps = {
   handleClicked: (valueClicked: boolean, value: string) => void;
   valueClicked: boolean;
   dispatch: Dispatch<AnyAction>;
-  setAddTrack: ActionCreatorWithPayload<number, "add track/setAddTrack">;
-  setEditTrack: ActionCreatorWithPayload<string, "edit track/setEditTrack">;
+  setAddTrack: ActionCreatorWithPayload<number, "addTrack/setAddTrack">;
+  setEditTrack: ActionCreatorWithPayload<string, "editTrack/setEditTrack">;
   setDeleteTrack: ActionCreatorWithPayload<
     string,
-    "delete track/setDeleteTrack"
+    "deleteTrack/setDeleteTrack"
   >;
-  setAddMixtape: ActionCreatorWithPayload<string, "add mixtape/setAddMixtape">;
+  setAddMixtape: ActionCreatorWithPayload<string, "addMixtape/setAddMixtape">;
   trackNumber: number | undefined;
 };
 

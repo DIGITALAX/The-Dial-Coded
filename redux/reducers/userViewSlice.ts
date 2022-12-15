@@ -9,7 +9,7 @@ const initialUserViewerState: UserViewerState = {
 };
 
 export const userViewerSlice = createSlice({
-  name: "user viewer",
+  name: "userViewer",
   initialState: initialUserViewerState,
   reducers: {
     setUserViewer: (state: UserViewerState, action: PayloadAction<string>) => {

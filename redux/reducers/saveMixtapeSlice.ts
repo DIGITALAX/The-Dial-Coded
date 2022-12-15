@@ -15,7 +15,7 @@ const initialSaveMixtapeState: SaveMixtapeState = {
 };
 
 export const saveMixtapeSlice = createSlice({
-  name: "save mixtape",
+  name: "saveMixtape",
   initialState: initialSaveMixtapeState,
   reducers: {
     setSaveMixtape: (

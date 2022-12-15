@@ -30,6 +30,7 @@ import emojiPickerReducer from "./reducers/imagePickerSlice";
 import collectValueTypeReducer from "./reducers/collectValueTypeSlice";
 import postImageReducer from "./reducers/postImagesSlice";
 import imageViewerReducer from "./reducers/imageViewerSlice";
+import collectNotificationReducer from "./reducers/collectNotificationSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -61,7 +62,8 @@ const reducer = combineReducers({
   emojiPickerReducer,
   collectValueTypeReducer,
   postImageReducer,
-  imageViewerReducer
+  imageViewerReducer,
+  collectNotificationReducer,
 });
 
 export const store = configureStore({

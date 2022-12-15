@@ -11,6 +11,7 @@ import {
 } from "../../../types/common.types";
 import { Erc20 } from "../../../types/lens.types";
 import lodash from "lodash";
+import { setCollectNotification } from "../../../../../redux/reducers/collectNotificationSlice";
 
 const useCollectionModal = (): UseCollectionModalResults => {
   const [enabledCurrencies, setEnabledCurrencies] = useState<Erc20[]>([]);
@@ -49,6 +50,18 @@ const useCollectionModal = (): UseCollectionModalResults => {
   }, [publicationModuleOpen]);
 
   const handleSetCollectValues = (): void => {
+    if (value <= 0) {
+      dispatch(
+        setCollectNotification({ actionOpen: true, actionType: "value" })
+      );
+      return;
+    }
+    if (limit < 1) {
+      dispatch(
+        setCollectNotification({ actionOpen: true, actionType: "limit" })
+      );
+      return;
+    }
     const setCurrency: Erc20[] = lodash.filter(
       enabledCurrencies,
       (currency) => currency.symbol === enabledCurrency

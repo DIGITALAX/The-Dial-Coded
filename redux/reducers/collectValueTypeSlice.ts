@@ -14,7 +14,7 @@ const initialCollectValueState: CollectValueTypeState = {
 };
 
 export const collectValueTypeSlice = createSlice({
-  name: "collect values",
+  name: "collectValues",
   initialState: initialCollectValueState,
   reducers: {
     setCollectValueType: (
