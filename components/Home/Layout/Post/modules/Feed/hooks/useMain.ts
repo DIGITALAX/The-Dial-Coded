@@ -12,7 +12,6 @@ const useMain = (): UseMainResults => {
   const [publicationsFeed, setPublicationsFeed] = useState<Post[]>([]);
   const [paginatedResults, setPaginatedResults] =
     useState<PaginatedResultInfo>();
-  const [hasMoreBoolean, setHasMoreBoolean] = useState<boolean>(false);
   const fetchPublications = async (): Promise<void> => {
     try {
       const publicationsList = await explorePublications({
@@ -43,11 +42,11 @@ const useMain = (): UseMainResults => {
         noRandomize: true,
         cursor: paginatedResults?.next,
       });
-      const arr: any[] = [...morePublications?.data.explorePublications.items];
-      const sortedArr: any[] = arr.sort(
+      const arr: Post[] = [...morePublications?.data.explorePublications.items];
+      const sortedArr: Post[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      setPublicationsFeed(sortedArr);
+      setPublicationsFeed([...publicationsFeed, ...sortedArr]);
       setPaginatedResults(morePublications?.data.explorePublications.pageInfo);
     } catch (err: any) {
       console.error(err.message);
@@ -63,7 +62,6 @@ const useMain = (): UseMainResults => {
     setSortCriteria,
     fetchMorePublications,
     publicationsFeed,
-    hasMoreBoolean,
   };
 };
 

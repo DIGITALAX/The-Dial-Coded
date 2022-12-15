@@ -14,7 +14,15 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   commentColor,
   mirrorColor,
   heartColor,
-  collectColor
+  collectColor,
+  mirrorAmount,
+  collectAmount,
+  heartAmount,
+  commentAmount,
+  mirrorExpand,
+  heartExpand,
+  collectExpand,
+  commentExpand,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit col-start-1 justify-self-start self-center grid grid-flow-col auto-cols-auto gap-4">
@@ -25,7 +33,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
         <div
           className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center`}
         >
-          100
+          {heartAmount}
         </div>
       </div>
       <div className="relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center">
@@ -35,7 +43,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
         <div
           className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center`}
         >
-          100
+          {commentAmount}
         </div>
       </div>
       <div className="relative w-fit h-fit col-start-3 grid grid-flow-col auto-cols-auto gap-2 place-self-center">
@@ -45,7 +53,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
         <div
           className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center`}
         >
-          100
+          {mirrorAmount}
         </div>
       </div>
       <div className="relative w-fit h-fit col-start-4 grid grid-flow-col auto-cols-auto gap-2 place-self-center">
@@ -55,7 +63,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
         <div
           className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center`}
         >
-          100
+          {collectAmount}
         </div>
       </div>
     </div>

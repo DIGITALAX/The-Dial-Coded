@@ -3,7 +3,6 @@ import { Post } from "../../../../../../Common/types/lens.types";
 export type MainProps = {
   publicationsFeed: Post[];
   fetchMorePublications: () => Promise<void>;
-  hasMoreBoolean: boolean;
   isOpen: boolean;
 };
 
@@ -25,7 +24,6 @@ export type UseMainResults = {
   setSortCriteria: (e: string) => void;
   fetchMorePublications: () => Promise<void>;
   publicationsFeed: Post[];
-  hasMoreBoolean: boolean;
 };
 
 export type ParametersProps = {

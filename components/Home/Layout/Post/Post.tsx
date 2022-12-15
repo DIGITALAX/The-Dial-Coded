@@ -21,7 +21,6 @@ const Post: FunctionComponent = (): JSX.Element => {
     setSortCriteria,
     fetchMorePublications,
     publicationsFeed,
-    hasMoreBoolean
   } = useMain();
   const { topTrending, topMixtape, topTracks } = useHot();
   return (
@@ -41,7 +40,6 @@ const Post: FunctionComponent = (): JSX.Element => {
         topTracks={topTracks}
         publicationsFeed={publicationsFeed}
         fetchMorePublications={fetchMorePublications}
-        hasMoreBoolean={hasMoreBoolean}
       />
     </div>
   );

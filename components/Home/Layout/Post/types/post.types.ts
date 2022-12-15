@@ -16,5 +16,4 @@ export type FeedProps = {
   topTracks: string[];
   publicationsFeed: Post[];
   fetchMorePublications: () => Promise<void>;
-  hasMoreBoolean: boolean;
 };
