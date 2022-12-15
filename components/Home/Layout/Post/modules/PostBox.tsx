@@ -5,7 +5,6 @@ import { INFURA_GATEWAY } from "../../../../../lib/lens/constants";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import { setSignIn } from "../../../../../redux/reducers/signInSlice";
 import { PostBoxProps } from "../types/post.types";
-import {ProfileMedia} from "./../../../../Common/types/lens.types";
 
 const PostBox: FunctionComponent<PostBoxProps> = ({
   isConnected,
@@ -13,18 +12,18 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
   lensProfile,
 }): JSX.Element => {
   const dispatch = useDispatch();
-  let profileImage: ProfileMedia;
-  if (!lensProfile?.picture) {
-    profileImage = <></>;
-  } else if (lensProfile?.picture?.original) {
-    if (lensProfile?.picture.original.url.includes("http")) {
-      profileImage = lensProfile?.picture.original.url;
+  let profileImage: string;
+  if (!lensProfile?.metadata?.picture.original) {
+    profileImage = "";
+  } else if (lensProfile.metadata?.picture?.original) {
+    if (lensProfile.metadata?.picture.original.url.includes("http")) {
+      profileImage = lensProfile.metadata?.picture.original.url;
     } else {
-      const cut = lensProfile?.picture.original.url.split("/");
+      const cut = lensProfile.metadata?.picture.original.url.split("/");
       profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
     }
   } else {
-    profileImage = lensProfile?.picture?.uri;
+    profileImage = lensProfile.metadata?.picture?.uri;
   }
   return (
     <div className="relative row-start-1 w-full h-full rounded-xl grid grid-flow-col auto-cols-auto">

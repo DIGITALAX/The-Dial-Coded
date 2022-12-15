@@ -10,18 +10,18 @@ const Profile: FunctionComponent<ProfileProps> = ({
   authStatus,
   handleAccount
 }): JSX.Element => {
-  let profileImage: any;
-  if (!lensProfile?.picture) {
-    profileImage = <></>;
-  } else if (lensProfile?.picture?.original) {
-    if (lensProfile?.picture.original.url.includes("http")) {
-      profileImage = lensProfile?.picture.original.url;
+  let profileImage: string;
+  if (!lensProfile?.metadata?.picture.original) {
+    profileImage = "";
+  } else if (lensProfile.metadata?.picture?.original) {
+    if (lensProfile.metadata?.picture.original.url.includes("http")) {
+      profileImage = lensProfile.metadata?.picture.original.url;
     } else {
-      const cut = lensProfile?.picture.original.url.split("/");
+      const cut = lensProfile.metadata?.picture.original.url.split("/");
       profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
     }
   } else {
-    profileImage = lensProfile?.picture?.uri;
+    profileImage = lensProfile.metadata?.picture?.uri;
   }
   return (
     <div

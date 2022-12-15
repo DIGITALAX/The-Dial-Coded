@@ -8,10 +8,11 @@ import { RootState } from "../../../../redux/store";
 import usePost from "./hooks/usePost";
 import useMain from "./modules/Feed/hooks/useMain";
 import useHot from "./modules/Feed/hooks/useHot";
+import { Profile } from "../../../Common/types/lens.types";
 
 const Post: FunctionComponent = (): JSX.Element => {
   const { openConnectModal } = useConnectModal();
-  const lensProfile = useSelector(
+  const lensProfile: Profile | undefined = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
   const { connected } = usePost();
@@ -20,6 +21,7 @@ const Post: FunctionComponent = (): JSX.Element => {
     setSortCriteria,
     fetchMorePublications,
     publicationsFeed,
+    hasMoreBoolean
   } = useMain();
   const { topTrending, topMixtape, topTracks } = useHot();
   return (
@@ -32,13 +34,14 @@ const Post: FunctionComponent = (): JSX.Element => {
       <Parameters
         setFeedType={setFeedType}
         setSortCriteria={setSortCriteria}
-        fetchMorePublications={fetchMorePublications}
       />
       <Feed
         topTrending={topTrending}
         topMixtape={topMixtape}
         topTracks={topTracks}
         publicationsFeed={publicationsFeed}
+        fetchMorePublications={fetchMorePublications}
+        hasMoreBoolean={hasMoreBoolean}
       />
     </div>
   );

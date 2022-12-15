@@ -4,7 +4,7 @@ import useParameters from "./hooks/useParameters";
 import Options from "./modules/Options";
 import Viewer from "./modules/Viewer";
 
-const Parameters: FunctionComponent<ParametersProps> = ({setFeedType, setSortCriteria, fetchMorePublications}): JSX.Element => {
+const Parameters: FunctionComponent<ParametersProps> = ({setFeedType, setSortCriteria}): JSX.Element => {
   const {
     feedOrder,
     feedType,
@@ -34,7 +34,6 @@ const Parameters: FunctionComponent<ParametersProps> = ({setFeedType, setSortCri
         setOrderDrop={setOrderDrop}
         setFeedType={setFeedType}
         setSortCriteria={setSortCriteria}
-        fetchMorePublications={fetchMorePublications}
       />
       <Viewer
         userList={userList}

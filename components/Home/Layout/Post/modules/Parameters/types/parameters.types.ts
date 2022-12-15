@@ -25,7 +25,6 @@ export type OptionsProps = {
   setOrderDrop: (e: boolean) => void;
   setFeedType: (e: string[]) => void;
   setSortCriteria: (e: string) => void;
-  fetchMorePublications: () => Promise<void>;
 };
 
 export type ViewerProps = {

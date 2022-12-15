@@ -12,13 +12,13 @@ const useMain = (): UseMainResults => {
   const [publicationsFeed, setPublicationsFeed] = useState<Post[]>([]);
   const [paginatedResults, setPaginatedResults] =
     useState<PaginatedResultInfo>();
-
+  const [hasMoreBoolean, setHasMoreBoolean] = useState<boolean>(false);
   const fetchPublications = async (): Promise<void> => {
     try {
       const publicationsList = await explorePublications({
         sources: "thedial",
         publicationTypes: feedType,
-        limit: 30,
+        limit: 20,
         sortCriteria: sortCriteria,
         noRandomize: true,
       });
@@ -38,7 +38,7 @@ const useMain = (): UseMainResults => {
       const morePublications = await explorePublications({
         sources: "thedial",
         publicationTypes: feedType,
-        limit: 30,
+        limit: 20,
         sortCriteria: sortCriteria,
         noRandomize: true,
         cursor: paginatedResults?.next,
@@ -58,7 +58,13 @@ const useMain = (): UseMainResults => {
     fetchPublications();
   }, []);
 
-  return { setFeedType, setSortCriteria, fetchMorePublications, publicationsFeed };
+  return {
+    setFeedType,
+    setSortCriteria,
+    fetchMorePublications,
+    publicationsFeed,
+    hasMoreBoolean,
+  };
 };
 
 export default useMain;
