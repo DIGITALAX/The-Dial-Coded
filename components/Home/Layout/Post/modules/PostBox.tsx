@@ -13,17 +13,17 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
 }): JSX.Element => {
   const dispatch = useDispatch();
   let profileImage: string;
-  if (!lensProfile?.metadata?.picture.original) {
+  if (!(lensProfile?.picture as any)?.original) {
     profileImage = "";
-  } else if (lensProfile.metadata?.picture?.original) {
-    if (lensProfile.metadata?.picture.original.url.includes("http")) {
-      profileImage = lensProfile.metadata?.picture.original.url;
+  } else if ((lensProfile?.picture as any)?.original) {
+    if ((lensProfile?.picture as any)?.original.url.includes("http")) {
+      profileImage = (lensProfile?.picture as any)?.original.url;
     } else {
-      const cut = lensProfile.metadata?.picture.original.url.split("/");
+      const cut = (lensProfile?.picture as any)?.original.url.split("/");
       profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
     }
   } else {
-    profileImage = lensProfile.metadata?.picture?.uri;
+    profileImage = (lensProfile?.picture as any)?.uri;
   }
   return (
     <div className="relative row-start-1 w-full h-full rounded-xl grid grid-flow-col auto-cols-auto">

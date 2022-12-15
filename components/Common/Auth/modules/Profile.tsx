@@ -8,28 +8,27 @@ const Profile: FunctionComponent<ProfileProps> = ({
   dispatch,
   lensProfile,
   authStatus,
-  handleAccount
+  handleAccount,
 }): JSX.Element => {
   let profileImage: string;
-  if (!lensProfile?.metadata?.picture.original) {
+  console.log(lensProfile);
+  if (!(lensProfile?.picture as any)?.original) {
     profileImage = "";
-  } else if (lensProfile.metadata?.picture?.original) {
-    if (lensProfile.metadata?.picture.original.url.includes("http")) {
-      profileImage = lensProfile.metadata?.picture.original.url;
+  } else if ((lensProfile?.picture as any)?.original) {
+    if ((lensProfile?.picture as any)?.original.url.includes("http")) {
+      profileImage = (lensProfile?.picture as any)?.original.url;
     } else {
-      const cut = lensProfile.metadata?.picture.original.url.split("/");
+      const cut = (lensProfile?.picture as any)?.original.url.split("/");
       profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
     }
   } else {
-    profileImage = lensProfile.metadata?.picture?.uri;
+    profileImage = (lensProfile?.picture as any)?.uri;
   }
   return (
     <div
       className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 -top-1 hover:opacity-60 grid grid-flow-col auto-cols-auto"
       onClick={() =>
-        authStatus
-          ? handleAccount()
-          : dispatch(setHamburger(true))
+        authStatus ? handleAccount() : dispatch(setHamburger(true))
       }
     >
       <div

@@ -8,7 +8,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 const Main: FunctionComponent<MainProps> = ({
   publicationsFeed,
   fetchMorePublications,
-  hasMoreBoolean,
   isOpen,
 }): JSX.Element => {
   const dispatch = useDispatch();
@@ -21,8 +20,7 @@ const Main: FunctionComponent<MainProps> = ({
         scrollableTarget={"targetDiv"}
         height={isOpen ? undefined : "100rem"}
         loader={""}
-        hasMore={hasMoreBoolean}
-        endMessage={"...Check back for more soon..."}
+        hasMore={true}
         next={fetchMorePublications}
         dataLength={publicationsFeed?.length}
         className={`relative row-start-1 w-full h-full overflow-y-scroll grid grid-flow-row auto-rows-auto gap-3`}

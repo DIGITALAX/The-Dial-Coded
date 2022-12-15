@@ -10,6 +10,14 @@ export type ReactionProps = {
   mirrorColor: string;
   collectColor: string;
   heartColor: string;
+  mirrorAmount?: number;
+  collectAmount?: number;
+  heartAmount?: number;
+  commentAmount?: number;
+  mirrorExpand?: () => void;
+  heartExpand?: () => void;
+  collectExpand?: () => void;
+  commentExpand?: () => void;
 };
 
 export type InterfaceProps = {

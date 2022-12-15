@@ -13,7 +13,6 @@ const Feed: FunctionComponent<FeedProps> = ({
   topTracks,
   publicationsFeed,
   fetchMorePublications,
-  hasMoreBoolean,
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -25,7 +24,6 @@ const Feed: FunctionComponent<FeedProps> = ({
         <Main
           publicationsFeed={publicationsFeed}
           fetchMorePublications={fetchMorePublications}
-          hasMoreBoolean={hasMoreBoolean}
           isOpen={isOpen}
         />
         <Hot
@@ -37,7 +35,10 @@ const Feed: FunctionComponent<FeedProps> = ({
       </div>
       <div
         className="relative row-start-2 p-4 w-full h-fit grid grid-flow-col auto-cols-auto bg-offBlue/60 hover:opacity-70 active:scale-95 cursor-pointer"
-        onClick={() => dispatch(setMoreFeed(!isOpen))}
+        onClick={() => {
+          dispatch(setMoreFeed(!isOpen));
+          fetchMorePublications();
+        }}
       >
         <div className="relative w-fit h-fit place-self-center col-start-1 ">
           {isOpen ? (
