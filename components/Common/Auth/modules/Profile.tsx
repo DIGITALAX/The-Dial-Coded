@@ -2,13 +2,13 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { setHamburger } from "../../../../redux/reducers/hamburgerSlice";
-import { setLayout } from "../../../../redux/reducers/layoutSlice";
 import { ProfileProps } from "../../types/common.types";
 
 const Profile: FunctionComponent<ProfileProps> = ({
   dispatch,
   lensProfile,
   authStatus,
+  handleAccount
 }): JSX.Element => {
   let profileImage: any;
   if (!lensProfile?.picture) {
@@ -28,7 +28,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
       className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 -top-1 hover:opacity-60 grid grid-flow-col auto-cols-auto"
       onClick={() =>
         authStatus
-          ? dispatch(setLayout("Account"))
+          ? handleAccount()
           : dispatch(setHamburger(true))
       }
     >

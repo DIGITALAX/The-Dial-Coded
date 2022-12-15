@@ -19,6 +19,7 @@ const Panel: FunctionComponent<PanelProps> = ({ layout }): JSX.Element => {
   return (
     <div
       className={`relative w-full h-full bg-white rounded-t-2xl row-start-3 grid grid-flow-col auto-cols-auto pl-10 z-10 py-6`}
+      id={"account"}
     >
       <div className="relative w-fit h-fit col-start-1 gap-3 grid grid-flow-col auto-cols-auto self-center justify-self-start pr-2 pl-3">
         <div className="relative w-fit h-fit col-start-1 gap-6 grid grid-flow-col auto-cols-auto">

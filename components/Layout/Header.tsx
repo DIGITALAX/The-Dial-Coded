@@ -16,7 +16,7 @@ const Header: FunctionComponent = (): JSX.Element => {
   const currentImage = useSelector(
     (state: RootState) => state.app.backgroundReducer.value
   );
-  const { handleImageData, connected } = useHeader();
+  const { handleImageData, connected, handleAccount } = useHeader();
   const { authStatus, lensProfile, handleLensLogin } = useLensSignIn();
   const hamburger = useSelector(
     (state: RootState) => state.app.hamburgerReducer.value
@@ -58,6 +58,7 @@ const Header: FunctionComponent = (): JSX.Element => {
                 dispatch={dispatch}
                 lensProfile={lensProfile}
                 authStatus={authStatus}
+                handleAccount={handleAccount}
               />
             )
           )}

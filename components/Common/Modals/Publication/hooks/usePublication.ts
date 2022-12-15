@@ -1,10 +1,8 @@
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 import {
-  useAccount,
   useContractWrite,
   usePrepareContractWrite,
   useSignTypedData,
-  useWaitForTransaction,
 } from "wagmi";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../../lib/lens/constants";
 import LensHubProxy from "./../../../../../abis/LensHubProxy.json";
@@ -18,6 +16,7 @@ import { omit, splitSignature } from "../../../../../lib/lens/helpers";
 import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import { setSignIn } from "../../../../../redux/reducers/signInSlice";
+import lodash from "lodash";
 
 const usePublication = () => {
   const [postDescription, setPostDesription] = useState<string>("");
@@ -27,18 +26,21 @@ const usePublication = () => {
   const [contentURI, setContentURI] = useState<string | undefined>();
   const [args, setArgs] = useState<PostArgsType | undefined>();
   const [enabled, setEnabled] = useState<boolean>(false);
+  const [searchGif, setSearchGif] = useState<string>();
+  const [results, setResults] = useState<any>([]);
   const dispatch = useDispatch();
   const defaultProfile = useSelector(
-    (state: RootState) => state.app.lensProfileReducer.profile?.id
+    (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
   );
   console.log(defaultProfile);
   const { signTypedDataAsync } = useSignTypedData();
   const postImages = useSelector(
-    (state: RootState) => state.app.postImageReducer.value
+    (state: RootState) => state?.app?.postImageReducer?.value
   );
   const collectModuleType = useSelector(
-    (state: RootState) => state.app.collectValueTypeReducer.type
+    (state: RootState) => state?.app?.collectValueTypeReducer?.type
   );
+  const [gifs, setGifs] = useState<string[]>([]);
   const { config, isSuccess } = usePrepareContractWrite({
     address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
     abi: LensHubProxy,
@@ -70,6 +72,30 @@ const usePublication = () => {
     setPostDesription(postDescription + e.emoji);
   };
 
+  const handleGif = (e: FormEvent): void => {
+    setSearchGif((e.target as HTMLFormElement).value);
+  };
+
+  const handleGifSubmit = async (e: any): Promise<void> => {
+    console.log("HEERADF");
+    const getGifs = await fetch("/api/giphy", {
+      method: "POST",
+      body: searchGif,
+    });
+    const gifs = await getGifs.json();
+    setResults(gifs?.results?.data);
+    setSearchGif("");
+  };
+
+  const handleSetGif = (result: any) => {
+    setGifs([...gifs, result]);
+  };
+
+  const handleRemoveGif = (result: any) => {
+    const filtered: string[] = lodash.filter(gifs, (gif) => gif !== result);
+    setGifs(filtered);
+  };
+
   const uploadContent = async (): Promise<string | undefined> => {
     let newImages: PostImage[] = [];
     postImages?.forEach((image) => {
@@ -79,6 +105,16 @@ const usePublication = () => {
         altTag: image,
       });
     });
+
+    if (gifs.length > 0) {
+      for (let i = 0; i < gifs.length; i++) {
+        newImages.push({
+          item: gifs[i],
+          type: "image/gif",
+          altTag: gifs[i],
+        });
+      }
+    }
 
     const data = {
       version: "2.0.0",
@@ -90,7 +126,8 @@ const usePublication = () => {
         postImages && postImages?.length > 0 ? "ipfs://" + postImages[0] : null,
       imageMimeType: "image/png",
       name: postDescription ? postDescription?.slice(0, 20) : "The Dial",
-      mainContentFocus: newImages.length > 0 ? "IMAGE" : "TEXT_ONLY",
+      mainContentFocus:
+        newImages.length > 0 || gifs.length > 0 ? "IMAGE" : "TEXT_ONLY",
       contentWarning: null,
       attributes: [
         {
@@ -165,7 +202,7 @@ const usePublication = () => {
       setEnabled(true);
     } catch (err: any) {
       console.error(err.message);
-      dispatch(setSignIn(true))
+      dispatch(setSignIn(true));
     }
     setPostLoading(false);
   };
@@ -231,6 +268,13 @@ const usePublication = () => {
     postLoading,
     handlePostWrite,
     isSuccess,
+    searchGif,
+    results,
+    handleGif,
+    handleGifSubmit,
+    handleSetGif,
+    gifs,
+    handleRemoveGif,
   };
 };
 

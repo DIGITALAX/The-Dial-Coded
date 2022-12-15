@@ -3,12 +3,13 @@ import { setBackground } from "../../../redux/reducers/backgroundSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { useAccount } from "wagmi";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { setSignIn } from "../../../redux/reducers/signInSlice";
 import {
   getAuthenticationToken,
   removeAuthenticationToken,
 } from "../../../lib/lens/utils";
+import { setLayout } from "../../../redux/reducers/layoutSlice";
 
 const useHeader = (): UseHeaderResult => {
   const dispatch = useDispatch();
@@ -17,13 +18,20 @@ const useHeader = (): UseHeaderResult => {
     (state: RootState) => state.app.backgroundReducer.value
   );
   const { isConnected } = useAccount();
-
   const handleImageData = (): void => {
     if (backgroundNumber < 18 && backgroundNumber > 4) {
       dispatch(setBackground(backgroundNumber + 1));
     } else if (backgroundNumber === 18 || backgroundNumber <= 4) {
       dispatch(setBackground(5));
     }
+  };
+
+  const handleAccount = (): void => {
+    document.getElementById("account")?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+    dispatch(setLayout("Account"));
   };
 
   useEffect(() => {
@@ -36,7 +44,7 @@ const useHeader = (): UseHeaderResult => {
     // set refresh
   }, [isConnected]);
 
-  return { handleImageData, connected };
+  return { handleImageData, connected, handleAccount };
 };
 
 export default useHeader;

@@ -1,3 +1,4 @@
+import Image from "next/legacy/image";
 import { FormEvent, FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
@@ -71,8 +72,15 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     postLoading,
     handlePostWrite,
     isSuccess,
+    handleGif,
+    handleGifSubmit,
+    results,
+    searchGif,
+    handleSetGif,
+    handleRemoveGif,
+    gifs,
   } = usePublication();
-  console.log(isSuccess);
+  console.log(gifs);
   return (
     <div className="inset-0 justify-center fixed z-30 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
@@ -125,6 +133,11 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
           <ImagePicker
             imagePicker={imagePickerModal as string}
             handleEmoji={handleEmoji}
+            handleGif={handleGif}
+            handleGifSubmit={handleGifSubmit}
+            results={results}
+            searchGif={searchGif}
+            handleSetGif={handleSetGif}
           />
         )}
         <div className="relative w-full h-fit rounded-xl grid grid-flow-col auto-cols-auto">
@@ -161,8 +174,25 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   postLoading={postLoading}
                 />
               </div>
+              {gifs && (
+                <div className="relative w-28 h-full justify-self-end col-start-2 grid grid-flow-col auto-cols overflow-x-scroll gap-2">
+                  {gifs?.map((gif: any, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className={`col-start-${index} relative w-6 h-full cursor-pointer scale:active-95`}
+                        onClick={() => handleRemoveGif(gif)}
+                      >
+                        <Image src={gif} objectFit="cover" layout="fill" />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
               <div
-                className={`col-start-2 relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis justify-self-end self-center ${
+                className={`${
+                  gifs ? "col-start-3" : "col-start-2"
+                } relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis justify-self-end self-center ${
                   postDescription !== "" || !imageUploading || !postLoading
                     ? "active:scale-95 cursor-pointer"
                     : "opacity-60"
