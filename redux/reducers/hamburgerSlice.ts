@@ -9,7 +9,7 @@ const initialHamburgerState: HamburgerState = {
 };
 
 export const hamburgerSlice = createSlice({
-  name: "hamburger feed",
+  name: "hamburger",
   initialState: initialHamburgerState,
   reducers: {
     setHamburger: (

@@ -9,7 +9,7 @@ const initialAddTrackState: AddTrackState = {
 };
 
 export const addTrackSlice = createSlice({
-  name: "add track",
+  name: "addTrack",
   initialState: initialAddTrackState,
   reducers: {
     setAddTrack: (state: AddTrackState, action: PayloadAction<number>) => {

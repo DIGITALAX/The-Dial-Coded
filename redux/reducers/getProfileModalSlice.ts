@@ -9,7 +9,7 @@ const initialGetProfileModalState: GetProfileModalState = {
 };
 
 export const getProfileModalSlice = createSlice({
-  name: "get Profile Modal",
+  name: "getProfileModal",
   initialState: initialGetProfileModalState,
   reducers: {
     setGetProfileModal: (state: GetProfileModalState, action: PayloadAction<boolean>) => {

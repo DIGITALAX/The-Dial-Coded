@@ -9,7 +9,7 @@ const initialEditTrackState: EditTrackState = {
 };
 
 export const editTrackSlice = createSlice({
-  name: "edit track",
+  name: "editTrack",
   initialState: initialEditTrackState,
   reducers: {
     setEditTrack: (

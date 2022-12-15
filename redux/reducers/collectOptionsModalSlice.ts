@@ -9,7 +9,7 @@ const initialCollectOptionsModalState: CollectOptionsModalState = {
 };
 
 export const collectOptionsModalSlice = createSlice({
-  name: "collect options Modal",
+  name: "collectOptionsModal",
   initialState: initialCollectOptionsModalState,
   reducers: {
     setCollectOptionsModal: (state: CollectOptionsModalState, action: PayloadAction<boolean>) => {

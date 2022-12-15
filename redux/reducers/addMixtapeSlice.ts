@@ -15,7 +15,7 @@ const initialAddMixtapeState: AddMixtapeState = {
 };
 
 export const addMixtapeSlice = createSlice({
-  name: "add mixtape",
+  name: "addMixtape",
   initialState: initialAddMixtapeState,
   reducers: {
     setAddMixtape: (

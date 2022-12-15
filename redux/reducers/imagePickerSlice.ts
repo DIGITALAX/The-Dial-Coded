@@ -9,7 +9,7 @@ const initialImagePickerModalState: ImagePickerModalState = {
 };
 
 export const imagePickerModalSlice = createSlice({
-  name: "image picker Modal",
+  name: "imagePickerModal",
   initialState: initialImagePickerModalState,
   reducers: {
     setImagePickerModal: (state: ImagePickerModalState, action: PayloadAction<string>) => {

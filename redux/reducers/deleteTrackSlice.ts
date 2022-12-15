@@ -9,7 +9,7 @@ const initialDeleteTrackState: DeleteTrackState = {
 };
 
 export const deleteTrackSlice = createSlice({
-  name: "delete track",
+  name: "deleteTrack",
   initialState: initialDeleteTrackState,
   reducers: {
     setDeleteTrack: (

@@ -9,7 +9,7 @@ const initialMoreFeedState: MoreFeedState = {
 };
 
 export const moreFeedSlice = createSlice({
-  name: "more feed",
+  name: "moreFeed",
   initialState: initialMoreFeedState,
   reducers: {
     setMoreFeed: (
