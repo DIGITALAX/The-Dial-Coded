@@ -47,14 +47,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
         <div className="relative w-fit h-fit rounded-xl grid grid-flow-col auto-cols-auto">
           <div className="relative w-fit h-full col-start-1 rounded-xl place-self-center">
             <div className="relative w-fit h-full grid grid-flow-row auto-rows-auto gap-10">
-              <div className="relative w-fit h-fit row-start-1 self-center justify-self-end cursor-pointer">
-                <ImCross
-                  color="black"
-                  size={15}
-                  onClick={() => dispatch(setCollectOptionsModal(false))}
-                />
-              </div>
-              <div className="relative w-fit h-fit row-start-2 grid grid-flow-row auto-rows-auto place-self-start gap-3 px-4">
+              <div className="relative w-fit h-fit row-start-1 grid grid-flow-row auto-rows-auto place-self-start gap-3 px-4">
                 <CollectButton
                   col={"1"}
                   row={"1"}
@@ -168,7 +161,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                   />
                 )}
               </div>
-              <div className="relative w-fit text-md justify-self-center self-center text-center h-fit row-start-3 text-black font-dosis capitalize py-2 px-4">
+              <div className="relative w-fit text-md justify-self-center self-center text-center h-fit row-start-2 text-black font-dosis capitalize py-2 px-4">
                 {collectible === "yes" ? (
                   <p>
                     <a className="underline decoration-offBlue">
@@ -223,7 +216,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                 )}
               </div>
               <div
-                className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-4 cursor-pointer active:scale-95 bg-offBlue/80 font-dosis text-white rounded-md place-self-end"
+                className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-3 cursor-pointer active:scale-95 bg-offBlue/80 font-dosis text-white rounded-md place-self-end"
                 onClick={() => handleSetCollectValues()}
               >
                 <div className="relative w-fit h-fit place-self-center col-start-1 text-sm p-2 text-center">

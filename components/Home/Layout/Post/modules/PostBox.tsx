@@ -5,6 +5,7 @@ import { INFURA_GATEWAY } from "../../../../../lib/lens/constants";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import { setSignIn } from "../../../../../redux/reducers/signInSlice";
 import { PostBoxProps } from "../types/post.types";
+import {ProfileMedia} from "./../../../../Common/types/lens.types";
 
 const PostBox: FunctionComponent<PostBoxProps> = ({
   isConnected,
@@ -12,7 +13,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
   lensProfile,
 }): JSX.Element => {
   const dispatch = useDispatch();
-  let profileImage: any;
+  let profileImage: ProfileMedia;
   if (!lensProfile?.picture) {
     profileImage = <></>;
   } else if (lensProfile?.picture?.original) {

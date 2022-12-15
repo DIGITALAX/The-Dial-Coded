@@ -1,7 +1,7 @@
 import { Dispatch, AnyAction } from "redux";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { BadgeInfo } from "../../Home/Badges/types/badges.types";
-import { Erc20, Profile } from "./lens.types";
+import { Erc20, Post, Profile } from "./lens.types";
 import { FormEvent } from "react";
 
 export type ReactionProps = {
@@ -84,8 +84,8 @@ export type PresetProps = {
 };
 
 export type FeedPublicationProps = {
-  images: string[];
-  row: string;
+  publication: Post;
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type OptionMenuProps = {
@@ -239,6 +239,7 @@ export type ProfileProps = {
   dispatch: Dispatch<AnyAction>;
   lensProfile: Profile | undefined;
   authStatus: boolean;
+  handleAccount: () => void;
 };
 
 export type PostOptionsProps = {
@@ -265,6 +266,19 @@ export type ImageUploadResults = {
 export type ImagePickerProps = {
   imagePicker: string;
   handleEmoji: (e: any) => void;
+  handleGif: (e: FormEvent) => void;
+  handleGifSubmit: (e: FormEvent) => Promise<void>;
+  searchGif: string | undefined;
+  results: any[];
+  handleSetGif: (result: string) => void;
+};
+
+export type GridProps = {
+  handleGif: (e: FormEvent) => void;
+  handleGifSubmit: (e: FormEvent) => Promise<void>;
+  searchGif: string | undefined;
+  results: any[];
+  handleSetGif: (result: string) => void;
 };
 
 export type CollectButtonProps = {

@@ -9,6 +9,11 @@ const nextConfig = {
         hostname: "thedial.infura-ipfs.io",
         pathname: "/ipfs/**",
       },
+      {
+        protocol: "https",
+        hostname: "media0.giphy.com",
+        pathname: "/media/**",
+      },
     ],
     unoptimized: true,
   },

@@ -1,14 +1,12 @@
-import { FunctionComponent, useRef } from "react";
+import { FunctionComponent } from "react";
 import Interface from "../../../Common/Interface/Interface";
 import useAccount from "./hooks/useAccount";
 
 const Account: FunctionComponent = (): JSX.Element => {
   const { accountTitles, handleTapeSet, notificationImages } = useAccount();
-  const account = useRef<null | HTMLDivElement>(null);
   return (
     <div
       className="relative w-full h-full row-start-2 bg-white grid grid-flow-col auto-cols-auto"
-      ref={account}
     >
       <Interface
         title={"Settings"}
