@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface MoreFeedState {
-  value?: boolean;
+  value: boolean;
 }
 
 const initialMoreFeedState: MoreFeedState = {

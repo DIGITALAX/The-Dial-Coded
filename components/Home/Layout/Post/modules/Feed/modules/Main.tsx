@@ -1,36 +1,43 @@
 import { FunctionComponent } from "react";
 import { MainProps } from "../types/feed.types";
-import { MdOutlineExpandMore, MdOutlineExpandLess } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../../../../redux/store";
-import { setMoreFeed } from "../../../../../../../redux/reducers/moreFeedSlice";
+import { useDispatch } from "react-redux";
 import FeedPublication from "../../../../../../Common/Feed/FeedPublication";
 import { Post } from "../../../../../../Common/types/lens.types";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Main: FunctionComponent<MainProps> = ({
   publicationsFeed,
+  fetchMorePublications,
+  hasMoreBoolean,
+  isOpen,
 }): JSX.Element => {
   const dispatch = useDispatch();
-  const isOpen = useSelector(
-    (state: RootState) => state.app.moreFeedReducer.value
-  );
   return (
-    <div className="relative w-[50vw] h-fit col-start-1 grid grid-flow-row auto-rows-auto gap-5">
-      <div className={`relative row-start-1 w-full h-[80rem] overflow-y-scroll grid grid-flow-row auto-rows-auto gap-3`}>
-        {publicationsFeed?.map((publication: Post, index: number) => {
-          return <FeedPublication dispatch={dispatch} publication={publication} key={index} />;
-        })}
-      </div>
-      <div
-        className="relative row-start-2 p-4 w-fit h-fit place-self-center hover:opacity-70 active:scale-95 cursor-pointer"
-        onClick={() => dispatch(setMoreFeed(!isOpen))}
+    <div
+      className="relative w-[50vw] h-full col-start-1 grid grid-flow-row auto-rows-auto gap-5"
+      id="targetDiv"
+    >
+      <InfiniteScroll
+        scrollableTarget={"targetDiv"}
+        height={isOpen ? undefined : "100rem"}
+        loader={""}
+        hasMore={hasMoreBoolean}
+        endMessage={"...Check back for more soon..."}
+        next={fetchMorePublications}
+        dataLength={publicationsFeed?.length}
+        className={`relative row-start-1 w-full h-full overflow-y-scroll grid grid-flow-row auto-rows-auto gap-3`}
+        style={{ color: "#131313", fontFamily: "Digi Reg" }}
       >
-        {isOpen ? (
-          <MdOutlineExpandLess color="black" size={25} />
-        ) : (
-          <MdOutlineExpandMore color="black" size={25} />
-        )}
-      </div>
+        {publicationsFeed?.map((publication: Post, index: number) => {
+          return (
+            <FeedPublication
+              dispatch={dispatch}
+              publication={publication}
+              key={index}
+            />
+          );
+        })}
+      </InfiniteScroll>
     </div>
   );
 };

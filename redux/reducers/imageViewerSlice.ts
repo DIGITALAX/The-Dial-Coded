@@ -2,12 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface ImageViewerState {
   open?: boolean;
-  image?: string;
+  image: string;
 }
 
 const initialImageViewerState: ImageViewerState = {
   open: false,
-  image: undefined,
+  image: "",
 };
 
 export const imageViewerSlice = createSlice({

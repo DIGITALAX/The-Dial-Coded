@@ -18,8 +18,7 @@ const Options: FunctionComponent<OptionsProps> = ({
   orderPriority,
   setPriorityDrop,
   setFeedType,
-        setSortCriteria,
-        fetchMorePublications,
+  setSortCriteria,
 }): JSX.Element => {
   const dispatch = useDispatch();
   const orderSelected = useSelector(

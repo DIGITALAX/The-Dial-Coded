@@ -1,14 +1,12 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { ImCross } from "react-icons/im";
 import { useDispatch, useSelector } from "react-redux";
-import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { setImageViewer } from "../../../../redux/reducers/imageViewerSlice";
 import { RootState } from "../../../../redux/store";
 
 const ImageViewerModal: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
-  const imageURI = useSelector(
+  const imageURI: string = useSelector(
     (state: RootState) => state.app.imageViewerReducer.image
   );
   return (
@@ -21,11 +19,7 @@ const ImageViewerModal: FunctionComponent = (): JSX.Element => {
       >
         <div className="relative w-full h-screen grid grid-flow-row auto-rows-auto py-8">
           <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto px-4">
-            <Image
-              src={`${INFURA_GATEWAY}/ipfs/${imageURI}`}
-              layout="fill"
-              objectFit="contain"
-            />
+            <Image src={imageURI} layout="fill" objectFit="contain" />
           </div>
         </div>
       </div>
