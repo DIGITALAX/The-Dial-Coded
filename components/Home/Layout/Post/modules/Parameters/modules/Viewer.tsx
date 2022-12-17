@@ -19,7 +19,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
     (state: RootState) => state.app.userViewerReducer.value
   );
   return (
-    <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto col-start-2 gap-6 justify-self-end self-center">
+    <div className="relative w-fit h-full grid grid-flow-row auto-rows-auto col-start-2 gap-6 justify-self-end self-start">
       <div className="relative w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto place-self-center">
         <div
           className={`relative w-40 h-fit px-3 py-2 rounded-t-lg ${

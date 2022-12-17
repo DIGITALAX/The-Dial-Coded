@@ -1,7 +1,15 @@
 import { Dispatch, AnyAction } from "redux";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { BadgeInfo } from "../../Home/Badges/types/badges.types";
-import { Erc20, Post, Profile } from "./lens.types";
+import {
+  Erc20,
+  Post,
+  Profile,
+  ProfileQueryRequest,
+  PublicationQueryRequest,
+  ReactionRequest,
+  WhoCollectedPublicationRequest,
+} from "./lens.types";
 import { FormEvent } from "react";
 
 export type ReactionProps = {
@@ -10,14 +18,20 @@ export type ReactionProps = {
   mirrorColor: string;
   collectColor: string;
   heartColor: string;
-  mirrorAmount?: number;
-  collectAmount?: number;
-  heartAmount?: number;
-  commentAmount?: number;
-  mirrorExpand?: () => void;
-  heartExpand?: () => void;
-  collectExpand?: () => void;
-  commentExpand?: () => void;
+  mirrorAmount?: string | number;
+  collectAmount?: string | number;
+  heartAmount?: string | number;
+  commentAmount?: string | number;
+  mirrorExpand?: ActionCreatorWithPayload<any>;
+  heartExpand?: ActionCreatorWithPayload<any>;
+  collectExpand?: ActionCreatorWithPayload<any>;
+  commentExpand?: ActionCreatorWithPayload<any>;
+  dispatch?: Dispatch<AnyAction>;
+  mirrorValue?: string;
+  collectValue?: string;
+  commentValue?: string;
+  heartValue?: string;
+  canCollect?: boolean;
 };
 
 export type InterfaceProps = {
@@ -94,6 +108,7 @@ export type PresetProps = {
 export type FeedPublicationProps = {
   publication: Post;
   dispatch: Dispatch<AnyAction>;
+  fetchReactions: (id: string) => Promise<number | void>;
 };
 
 export type OptionMenuProps = {
@@ -456,4 +471,47 @@ export interface CollectValueType {
 
 export type DisconnectProps = {
   dispatch: Dispatch<AnyAction>;
+};
+
+export type CollectsModalProps = {
+  collectors: WhoCollectedPublicationRequest[];
+  getMorePostCollects: () => Promise<void>;
+  usdValue: number | undefined;
+};
+
+export type MirrorsModalProps = {
+  mirrorers: ProfileQueryRequest[];
+  getMorePostMirrors: () => Promise<void>;
+  mirrorPost: () => Promise<void>;
+  mirrorLoading: boolean;
+  mirrorComplete: boolean;
+};
+
+export type CommentsModalProps = {
+  commentors: PublicationQueryRequest[];
+  getMorePostComments: () => Promise<void>;
+};
+
+export type UseReactionsResult = {
+  getMorePostReactions: () => Promise<void>;
+  mirrorers: ProfileQueryRequest[];
+  getMorePostMirrors: () => Promise<void>;
+  commentors: PublicationQueryRequest[];
+  getMorePostComments: () => Promise<void>;
+  collectors: WhoCollectedPublicationRequest[];
+  getMorePostCollects: () => Promise<void>;
+  mirrorPost: () => Promise<void>;
+  reacters: ReactionRequest[];
+  reactionPost: () => Promise<void>;
+  mirrorLoading: boolean;
+  reactionLoading: boolean;
+  mirrorComplete: boolean;
+  usdValue: number | undefined;
+};
+
+export type ReactionModalProps = {
+  getMorePostReactions: () => Promise<void>;
+  reacters: ReactionRequest[];
+  reactionPost: () => Promise<void>;
+  reactionLoading: boolean;
 };

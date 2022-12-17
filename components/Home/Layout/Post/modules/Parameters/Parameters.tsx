@@ -21,7 +21,7 @@ const Parameters: FunctionComponent<ParametersProps> = ({setFeedType, setSortCri
   } = useParameters();
 
   return (
-    <div className="relative w-full h-full row-start-2 grid grid-flow-col auto-cols-auto z-30">
+    <div className="relative w-full h-28 row-start-2 grid grid-flow-col auto-cols-auto z-30">
       <Options
         feedOrder={feedOrder}
         feedType={feedType}

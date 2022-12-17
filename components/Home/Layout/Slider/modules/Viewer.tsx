@@ -17,7 +17,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
             key={index}
             className={`relative w-full object-cover rounded-2xl h-96 cursor-pointer active:scale-95`}
             onClick={() =>
-              dispatch(setImageViewer({ actionOpen: true, actionImage: uri }))
+              dispatch(setImageViewer({ actionOpen: true, actionImage: `${INFURA_GATEWAY}/ipfs/${uri}` }))
             }
           >
             <div className={`relative w-${width} h-full rounded-2xl`}>

@@ -11,7 +11,6 @@ const Profile: FunctionComponent<ProfileProps> = ({
   handleAccount,
 }): JSX.Element => {
   let profileImage: string;
-  console.log(lensProfile);
   if (!(lensProfile?.picture as any)?.original) {
     profileImage = "";
   } else if ((lensProfile?.picture as any)?.original) {

@@ -31,6 +31,9 @@ import collectValueTypeReducer from "./reducers/collectValueTypeSlice";
 import postImageReducer from "./reducers/postImagesSlice";
 import imageViewerReducer from "./reducers/imageViewerSlice";
 import collectNotificationReducer from "./reducers/collectNotificationSlice";
+import reactionStateReducer from "./reducers/reactionStateSlice";
+import commentShowReducer from "./reducers/commentShowSlice";
+import postCollectValuesReducer from "./reducers/postCollectValuesSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -64,6 +67,9 @@ const reducer = combineReducers({
   postImageReducer,
   imageViewerReducer,
   collectNotificationReducer,
+  reactionStateReducer,
+  commentShowReducer,
+  postCollectValuesReducer
 });
 
 export const store = configureStore({

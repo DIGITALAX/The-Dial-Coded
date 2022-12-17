@@ -14,6 +14,8 @@
     "@material-ui/core": "^4.12.4",
     "@rainbow-me/rainbowkit": "^0.8.0",
     "@reduxjs/toolkit": "^1.9.1",
+    "body-parser": "^1.20.1",
+    "coingecko-api": "^1.0.10",
     "emoji-picker-react": "^4.4.7",
     "ethers": "^5.7.2",
     "graphql": "^16.6.0",
@@ -39,6 +41,7 @@
     "wagmi": "^0.8.5"
   },
   "devDependencies": {
+    "@types/coingecko-api": "^1.0.10",
     "@types/lodash": "^4.14.191",
     "@types/multiparty": "^0.0.33",
     "@types/node": "18.11.11",

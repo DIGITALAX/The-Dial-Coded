@@ -13,6 +13,7 @@ const Feed: FunctionComponent<FeedProps> = ({
   topTracks,
   publicationsFeed,
   fetchMorePublications,
+  fetchReactions,
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -25,6 +26,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           publicationsFeed={publicationsFeed}
           fetchMorePublications={fetchMorePublications}
           isOpen={isOpen}
+          fetchReactions={fetchReactions}
         />
         <Hot
           topTrending={topTrending}

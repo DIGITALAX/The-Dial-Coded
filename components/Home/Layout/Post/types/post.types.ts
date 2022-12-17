@@ -1,4 +1,8 @@
-import { Post, Profile } from "../../../../Common/types/lens.types";
+import {
+  Post,
+  Profile,
+  ReactionRequest,
+} from "../../../../Common/types/lens.types";
 
 export type PostBoxProps = {
   isConnected: boolean;
@@ -16,4 +20,5 @@ export type FeedProps = {
   topTracks: string[];
   publicationsFeed: Post[];
   fetchMorePublications: () => Promise<void>;
+  fetchReactions: (id: string) => Promise<number | void>
 };

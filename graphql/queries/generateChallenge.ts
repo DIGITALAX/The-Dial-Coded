@@ -15,6 +15,7 @@ export const generateChallenge = (address?: string) => {
         address,
       },
     },
+    fetchPolicy: "no-cache"
   });
 };
 export default generateChallenge;

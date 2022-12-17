@@ -8,14 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import { RootState } from "../../../../redux/store";
-import { MirrorsModalProps } from "../../types/common.types";
+import { ReactionModalProps } from "../../types/common.types";
 
-const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
-  mirrorers,
-  getMorePostMirrors,
-  mirrorPost,
-  mirrorLoading,
-  mirrorComplete
+const HeartsModal: FunctionComponent<ReactionModalProps> = ({
+  reacters,
+  getMorePostReactions,
+  reactionLoading,
+  reactionPost
 }): JSX.Element | null => {
   const dispatch = useDispatch();
   const pubId = useSelector((state: RootState) => state.app.reactionStateReducer.value)
@@ -30,7 +29,7 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                 dispatch(
                   setReactionState({
                     actionOpen: false,
-                    actionType: "mirror",
+                    actionType: "heart",
                     actionValue: pubId,
                   })
                 )
@@ -38,39 +37,42 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
             >
               <ImCross color="black" size={15} />
             </div>
-            {mirrorers.length > 0 ? (
+            {reacters?.length > 0 ? (
               <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto">
                 <InfiniteScroll
                   hasMore={true}
-                  dataLength={mirrorers.length}
-                  next={getMorePostMirrors}
+                  dataLength={reacters?.length}
+                  next={getMorePostReactions}
                   loader={""}
                   height={"10rem"}
                   className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4"
                 >
-                  {mirrorers?.map((mirrorer: any, index: number) => {
+                  {reacters?.map((reacter: any, index: number) => {
                     let profileImage: string;
-                    if (!(mirrorer?.picture as any)?.original) {
+                    if (!(reacter?.profile?.picture as any)?.original) {
                       profileImage = "";
-                    } else if ((mirrorer?.picture as any)?.original) {
+                    } else if ((reacter?.profile?.picture as any)?.original) {
                       if (
-                        (mirrorer?.picture as any)?.original?.url.includes(
-                          "http"
-                        )
+                        (
+                          reacter?.profile?.picture as any
+                        )?.original?.url?.includes("http")
                       ) {
-                        profileImage = (mirrorer?.picture as any)?.original.url;
+                        profileImage = (reacter?.profile?.picture as any)
+                          ?.original?.url;
                       } else {
                         const cut = (
-                          mirrorer?.picture as any
-                        ).original.url.split("/");
+                          reacter?.profile?.picture as any
+                        )?.original?.url?.split("/");
                         profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
                       }
                     } else {
-                      profileImage = (mirrorer?.picture as any)?.uri;
+                      profileImage = (reacter?.profile?.picture as any)?.uri;
                     }
                     return (
                       <Link
-                        href={`/profile/${mirrorer.handle.split("lens")[0]}`}
+                        href={`/profile/${
+                          reacter?.profile?.handle?.split("lens")[0]
+                        }`}
                         key={index}
                         className="relative w-full h-fit p-2 drop-shadow-lg grid grid-flow-col bg-gray-50 auto-cols-auto rounded-lg border border-gray-50"
                       >
@@ -88,7 +90,7 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                             id="handle"
                             className="relative w-fit h-fit place-self-center col-start-2"
                           >
-                            @{mirrorer?.handle}
+                            @{reacter?.profile?.handle}
                           </div>
                         </div>
                       </Link>
@@ -97,21 +99,21 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                 </InfiniteScroll>
                 <div className="relative w-fit h-fit row-start-2 grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3 place-self-center">
                   <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
-                    Mirror this post?
+                    Heart this post?
                   </div>
                   <div
                     className="relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95"
-                    onClick={() => mirrorPost()}
+                    onClick={() => reactionPost()}
                   >
                     <div
                       className={`relative w-fit h-fit col-start-1 place-self-center ${
-                        mirrorLoading && "animate-spin"
+                        reactionLoading && "animate-spin"
                       }`}
                     >
-                      {mirrorLoading ? (
+                      {reactionLoading ? (
                         <AiOutlineLoading color="white" size={20} />
                       ) : (
-                        "Mirror"
+                        "Heart"
                       )}
                     </div>
                   </div>
@@ -120,21 +122,21 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
             ) : (
               <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3">
                 <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
-                  This post hasn&apos;t been mirrored. Will you be first?
+                  This post has no reactions. Will you be first?
                 </div>
                 <div
                   className="relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95"
-                  onClick={() => mirrorPost()}
+                  onClick={() => reactionPost()}
                 >
                   <div
                     className={`relative w-fit h-fit col-start-1 place-self-center ${
-                      mirrorLoading && "animate-spin"
+                      reactionLoading && "animate-spin"
                     }`}
                   >
-                    {mirrorLoading ? (
+                    {reactionLoading ? (
                       <AiOutlineLoading color="white" size={20} />
                     ) : (
-                      "Mirror"
+                      "Heart"
                     )}
                   </div>
                 </div>
@@ -147,4 +149,4 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
   );
 };
 
-export default MirrorsModal;
+export default HeartsModal;
