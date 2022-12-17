@@ -50,13 +50,13 @@ const useCollectionModal = (): UseCollectionModalResults => {
   }, [publicationModuleOpen]);
 
   const handleSetCollectValues = (): void => {
-    if (value <= 0) {
+    if (value <= 0 && chargeCollect === "yes") {
       dispatch(
         setCollectNotification({ actionOpen: true, actionType: "value" })
       );
       return;
     }
-    if (limit < 1) {
+    if (limit < 1 && chargeCollect === "yes") {
       dispatch(
         setCollectNotification({ actionOpen: true, actionType: "limit" })
       );

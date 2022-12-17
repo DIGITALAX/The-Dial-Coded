@@ -9,6 +9,7 @@ const Main: FunctionComponent<MainProps> = ({
   publicationsFeed,
   fetchMorePublications,
   isOpen,
+  fetchReactions,
 }): JSX.Element => {
   const dispatch = useDispatch();
   return (
@@ -32,6 +33,7 @@ const Main: FunctionComponent<MainProps> = ({
               dispatch={dispatch}
               publication={publication}
               key={index}
+              fetchReactions={fetchReactions}
             />
           );
         })}

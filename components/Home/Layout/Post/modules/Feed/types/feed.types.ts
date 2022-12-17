@@ -1,9 +1,10 @@
-import { Post } from "../../../../../../Common/types/lens.types";
+import { Post, ReactionRequest } from "../../../../../../Common/types/lens.types";
 
 export type MainProps = {
   publicationsFeed: Post[];
   fetchMorePublications: () => Promise<void>;
   isOpen: boolean;
+  fetchReactions: (id: string) => Promise<number | void>
 };
 
 export type HotProps = {
@@ -24,6 +25,7 @@ export type UseMainResults = {
   setSortCriteria: (e: string) => void;
   fetchMorePublications: () => Promise<void>;
   publicationsFeed: Post[];
+  fetchReactions: (id: string) => Promise<number | void>
 };
 
 export type ParametersProps = {

@@ -70,7 +70,6 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     postDescription,
     handlePost,
     postLoading,
-    handlePostWrite,
     isSuccess,
     handleGif,
     handleGifSubmit,
@@ -80,7 +79,6 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     handleRemoveGif,
     gifs,
   } = usePublication();
-  console.log(gifs);
   return (
     <div className="inset-0 justify-center fixed z-30 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
@@ -201,8 +199,6 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   (!imageUploading || !postLoading || postDescription !== "") &&
                   !isSuccess
                     ? handlePost()
-                    : isSuccess
-                    ? handlePostWrite()
                     : {};
                 }}
               >
@@ -213,10 +209,8 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 >
                   {imageUploading || postLoading ? (
                     <AiOutlineLoading color="black" size={20} />
-                  ) : isSuccess && !postLoading && !imageUploading ? (
-                    "POST"
                   ) : (
-                    !isSuccess && !postLoading && !imageUploading && "SET"
+                    !postLoading && !imageUploading && "POST"
                   )}
                 </div>
               </div>

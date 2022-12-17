@@ -340,20 +340,18 @@ const GET_PUBLICATION = `query Publication($request: PublicationQueryRequest!) {
       degreesOfSeparation
     }
   }
-  `
+  `;
 
-  const getPublication = async (
-    id?: string
-  ): Promise<ApolloQueryResult<any>> => {
-    return apolloClient.query({
-      query: gql(GET_PUBLICATION),
-      variables: {
-        request: {
-            publicationId: id,
-        },
-      },
-    });
-  };
-  
-  export default getPublication;
-  
+const getPublication = async (id?: string): Promise<ApolloQueryResult<any>> => {
+  return apolloClient.query({
+    query: gql(GET_PUBLICATION),
+    variables: {
+      request: {
+        publicationId: id,
+      }
+    },
+    fetchPolicy: "no-cache"
+  });
+};
+
+export default getPublication;

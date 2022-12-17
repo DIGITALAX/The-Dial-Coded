@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { authClient } from "../../lib/lens/client";
 
-const EXPLORE_PUBLICATIONS_AWARDS = `query ProfilePublicationsForSale($request: ProfilePublicationsForSale!) {
+const EXPLORE_PUBLICATIONS_AWARDS = `query ProfilePublicationsForSale($request: ProfilePublicationsForSaleRequest!) {
     profilePublicationsForSale(request: $request) {
       items {
         ... on Post {

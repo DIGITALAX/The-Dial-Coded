@@ -1,5 +1,5 @@
 import Image from "next/legacy/image";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import Reactions from "./Reactions/Reactions";
 import { FeedPublicationProps } from "../types/common.types";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
@@ -10,10 +10,13 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { AiFillEye } from "react-icons/ai";
+import { setReactionState } from "../../../redux/reducers/reactionStateSlice";
+import { setCommentShow } from "../../../redux/reducers/commentShowSlice";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
   dispatch,
+  fetchReactions,
 }): JSX.Element => {
   let profileImage: string;
   if (!(publication?.profile?.picture as any)?.original) {
@@ -36,6 +39,12 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   const viewerOpen = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
   );
+  const reactionState = useSelector((state: RootState) => state.app.reactionStateReducer.open)
+  const [reaction, setReaction] = useState<number>();
+  useMemo(async () => {
+    const reactionLength = await fetchReactions(publication?.id);
+    setReaction(reactionLength as number);
+  }, [reactionState]);
   return (
     <div
       className={`relative w-full h-full rounded-md grid grid-flow-row auto-rows-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-6 border-2 border-black z-0`}
@@ -137,9 +146,25 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
           mirrorColor={"#FEEA66"}
           collectColor={"#81A8F8"}
           heartColor={"red"}
-          mirrorAmount={publication?.stats?.totalAmountOfMirrors}
-          collectAmount={publication?.stats?.totalAmountOfCollects}
-          commentAmount={publication?.stats?.totalAmountOfComments}
+          mirrorAmount={Number(publication?.stats?.totalAmountOfMirrors)}
+          collectAmount={Number(publication?.stats?.totalAmountOfCollects)}
+          commentAmount={Number(publication?.stats?.totalAmountOfComments)}
+          heartAmount={reaction}
+          heartExpand={setReactionState}
+          mirrorExpand={setReactionState}
+          collectExpand={setReactionState}
+          commentExpand={setCommentShow}
+          dispatch={dispatch}
+          mirrorValue={publication?.id}
+          collectValue={publication?.id}
+          commentValue={publication?.id}
+          heartValue={publication?.id}
+          canCollect={
+            publication.collectModule.__typename !==
+            "RevertCollectModuleSettings"
+              ? true
+              : false
+          }
         />
         <div
           className="relative w-fit h-fit col-start-2 justify-self-end self-center text-white grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95"
