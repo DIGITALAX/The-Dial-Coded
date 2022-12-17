@@ -67,7 +67,6 @@ const useReactions = (): UseReactionsResult => {
   const [reactionLoading, setReactionLoading] = useState<boolean>(false);
   const [reacters, setReacters] = useState<any>([]);
   const [reactionVote, setReactionVote] = useState<string | undefined>();
-  const [usdValue, setUsdValue] = useState<number>();
   const [reactionPageInfo, setReactionPageInfo] =
     useState<PaginatedResultInfo>();
   const defaultProfile = useSelector(
@@ -337,20 +336,7 @@ const useReactions = (): UseReactionsResult => {
     }
   };
 
-  const handleCoinUSDConversion = async () => {
-    const currency = amount?.asset?.symbol.toLowerCase();
-    try {
-      const response = await fetch("/api/coin", {
-        method: "POST",
-        body: currency,
-      });
-      const json = await response.json();
-      const usdValue = lodash.find(json.data, "usd");
-      setUsdValue(usdValue.usd);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
+  
 
   useEffect(() => {
     if (commentShow) {
@@ -366,7 +352,6 @@ const useReactions = (): UseReactionsResult => {
     }
 
     if (reactions.type === "collect") {
-      handleCoinUSDConversion();
       getPostCollects();
     }
   }, [reactions.type, reactions.open, pubId, commentShow]);
@@ -391,7 +376,6 @@ const useReactions = (): UseReactionsResult => {
     mirrorLoading,
     reactionLoading,
     mirrorComplete,
-    usdValue
   };
 };
 

@@ -16,6 +16,7 @@ export interface PostCollectValuesState {
     };
     value?: string;
   };
+  usd?: number;
 }
 
 const initialPostCollectValuesState: PostCollectValuesState = {
@@ -37,7 +38,8 @@ export const postCollectValuesSlice = createSlice({
           actionRecipient,
           actionReferralFee,
           actionEndTime,
-          actionAmount
+          actionAmount,
+          actionUSD,
         },
       }
     ) => {
@@ -48,6 +50,7 @@ export const postCollectValuesSlice = createSlice({
       state.referralFee = actionReferralFee;
       state.endTime = actionEndTime;
       state.amount = actionAmount;
+      state.usd = actionUSD;
     },
   },
 });
