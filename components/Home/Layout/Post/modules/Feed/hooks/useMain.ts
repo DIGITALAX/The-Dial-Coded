@@ -85,11 +85,35 @@ const useMain = (): UseMainResults => {
     }
   };
 
-  const getCollectInfo = async () => {
+  const handleCoinUSDConversion = async (
+    currency: string,
+    amount: string
+  ): Promise<number | void> => {
+    if (!amount) {
+      return;
+    }
+    try {
+      const response = await fetch("/api/coin", {
+        method: "POST",
+        body: currency?.toLowerCase(),
+      });
+      const json = await response.json();
+      const usdValue = lodash.find(json.data, "usd");
+      const convertedValue = Number(amount) * usdValue.usd;
+      return convertedValue;
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const getCollectInfo = async (): Promise<void> => {
     try {
       const { data } = await getPublication(reactionsModal.value);
-      console.log(data?.publication?.collectModule);
       const collectModule = data?.publication?.collectModule;
+      const convertedValue = await handleCoinUSDConversion(
+        collectModule?.amount?.asset?.symbol,
+        collectModule?.amount?.value
+      );
       dispatch(
         setPostCollectValues({
           actionType: collectModule?.type,
@@ -108,6 +132,7 @@ const useMain = (): UseMainResults => {
             },
             value: collectModule?.amount?.value,
           },
+          actionUSD: convertedValue ? convertedValue : null,
         })
       );
     } catch (err: any) {

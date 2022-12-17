@@ -50,7 +50,6 @@ const Home: NextPage = (): JSX.Element => {
     reactionLoading,
     mirrorLoading,
     mirrorComplete,
-    usdValue
   } = useReactions();
   const streamLinks: string[] = [
     "https://www.youtube.com/embed/2Sa8o39R0jY?controls=0?rel=0&autoplay=1&mute=1",
@@ -90,7 +89,6 @@ const Home: NextPage = (): JSX.Element => {
         <CollectsModal
           collectors={collectors}
           getMorePostCollects={getMorePostCollects}
-          usdValue={usdValue}
         />
       )}
       {reactionModal.open && reactionModal.type === "mirror" && (

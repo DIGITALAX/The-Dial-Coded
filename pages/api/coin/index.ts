@@ -12,7 +12,6 @@ handler.use((req: any, res: any, next) => {
 
 handler.post(async (req: any, res: any) => {
   const CoinGeckoClient = makeCoinGeckoClient();
-  console.log(req.body)
   try {
     const price = await CoinGeckoClient.simple.price({
       ids: [req.body],

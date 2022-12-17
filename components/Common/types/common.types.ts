@@ -476,7 +476,6 @@ export type DisconnectProps = {
 export type CollectsModalProps = {
   collectors: WhoCollectedPublicationRequest[];
   getMorePostCollects: () => Promise<void>;
-  usdValue: number | undefined;
 };
 
 export type MirrorsModalProps = {
@@ -506,7 +505,6 @@ export type UseReactionsResult = {
   mirrorLoading: boolean;
   reactionLoading: boolean;
   mirrorComplete: boolean;
-  usdValue: number | undefined;
 };
 
 export type ReactionModalProps = {

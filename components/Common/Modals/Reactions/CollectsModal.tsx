@@ -13,7 +13,6 @@ import moment from "moment";
 const CollectsModal: FunctionComponent<CollectsModalProps> = ({
   collectors,
   getMorePostCollects,
-  usdValue,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
   const pubId = useSelector(
@@ -161,7 +160,7 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                       {collectModuleValues?.amount?.asset?.symbol}
                     </div>
                     <div className="relative w-fit h-fit text-offBlack/70 font-dosis text-sm place-self-center row-start-2 pr-2">
-                      ${String(usdValue).slice(0, 6)}
+                      ${String(collectModuleValues?.usd).slice(0, 6)}
                     </div>
                   </div>
                   {(collectModuleValues?.limit ||

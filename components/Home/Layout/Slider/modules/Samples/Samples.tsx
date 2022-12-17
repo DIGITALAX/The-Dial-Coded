@@ -32,8 +32,8 @@ const Samples: FunctionComponent = (): JSX.Element => {
       <div className="relative w-full h-fit row-start-2 grid grid-flow-col auto-cols-auto gap-7 pl-10 overflow-x-scroll">
         {topicValues[
           selectedTopic
-            .toLowerCase()
-            .replaceAll(" ", "") as keyof TopicInterface
+            ?.toLowerCase()
+            ?.replaceAll(" ", "") as keyof TopicInterface
         ]?.map((value: string, index: number) => {
           return <TopicValues index={index} value={value} key={index} />;
         })}
