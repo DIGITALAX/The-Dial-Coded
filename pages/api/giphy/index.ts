@@ -1,29 +1,18 @@
 import type { NextApiResponse } from "next";
 import nextConnect from "next-connect";
-import { GiphyFetch } from "@giphy/js-fetch-api";
 
 const handler = nextConnect();
 
-const key = process.env.GIPHY_API as string;
-
 handler.post(async (req: any, res: NextApiResponse<any>) => {
-  const giphy = await createGiphy();
   try {
-    const results = await giphy.gifs(req);
-    return res.status(200).json({ results });
+    const results = await fetch(
+      `https://tenor.googleapis.com/v2/search?q=${req.body}&key=${process.env.TENOR_KEY}&limit=35`
+    );
+    const json = await results.json()
+    return res.json({json});
   } catch (err: any) {
     console.log(err.message);
   }
 });
-
-const createGiphy = async () => {
-  return new GiphyFetch(key);
-};
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 export default handler;

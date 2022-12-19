@@ -9,17 +9,34 @@ import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import { RootState } from "../../../../redux/store";
 import { ReactionModalProps } from "../../types/common.types";
+import lodash from "lodash";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { setSignIn } from "../../../../redux/reducers/signInSlice";
+import { setLensProfile } from "../../../../redux/reducers/lensProfileSlice";
 
 const HeartsModal: FunctionComponent<ReactionModalProps> = ({
   reacters,
   getMorePostReactions,
   reactionLoading,
-  reactionPost
+  reactionPost,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
-  const pubId = useSelector((state: RootState) => state.app.reactionStateReducer.value)
+  const pubId = useSelector(
+    (state: RootState) => state.app.reactionStateReducer.value
+  );
+  const isConnected = useSelector(
+    (state: RootState) => state.app.walletConnectedReducer.value
+  );
+  const lensProfile: string = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
+  const hasReacted = lodash.filter(
+    reacters,
+    (reaction) => (reaction as any)?.profile?.id === lensProfile
+  );
+  const { openConnectModal } = useConnectModal();
   return (
-    <div className="inset-0 justify-center fixed z-30 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
+    <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[40vw] h-fit col-start-1 place-self-center bg-offBlue/70 rounded-lg p-2">
         <div className="relative bg-white w-full h-fit rounded-xl grid grid-flow-col auto-cols-auto">
           <div className="relative w-full h-full col-start-1 rounded-xl place-self-center grid grid-flow-row auto-rows-auto gap-10 pb-8">
@@ -37,7 +54,7 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
             >
               <ImCross color="black" size={15} />
             </div>
-            {reacters?.length > 0 ? (
+            {reacters?.length > 0 && (
               <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto">
                 <InfiniteScroll
                   hasMore={true}
@@ -97,51 +114,49 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
                     );
                   })}
                 </InfiniteScroll>
-                <div className="relative w-fit h-fit row-start-2 grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3 place-self-center">
-                  <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
-                    Heart this post?
-                  </div>
-                  <div
-                    className="relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95"
-                    onClick={() => reactionPost()}
-                  >
-                    <div
-                      className={`relative w-fit h-fit col-start-1 place-self-center ${
-                        reactionLoading && "animate-spin"
-                      }`}
-                    >
-                      {reactionLoading ? (
-                        <AiOutlineLoading color="white" size={20} />
-                      ) : (
-                        "Heart"
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3">
-                <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
-                  This post has no reactions. Will you be first?
-                </div>
-                <div
-                  className="relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95"
-                  onClick={() => reactionPost()}
-                >
-                  <div
-                    className={`relative w-fit h-fit col-start-1 place-self-center ${
-                      reactionLoading && "animate-spin"
-                    }`}
-                  >
-                    {reactionLoading ? (
-                      <AiOutlineLoading color="white" size={20} />
-                    ) : (
-                      "Heart"
-                    )}
-                  </div>
-                </div>
               </div>
             )}
+            <div
+              className={`relative w-full h-fit ${
+                reacters?.length > 0 ? "row-start-3" : "row-start-2"
+              } grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3`}
+            >
+              <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
+                {reacters?.length > 0
+                  ? hasReacted.length > 0
+                    ? "Remove heart?"
+                    : "Heart this post?"
+                  : "This post has no reactions. Will you be first?"}
+              </div>
+              <div
+                className={`relative w-20 h-10 rounded-md bg-${
+                  hasReacted?.length > 0 ? "heat" : "offBlue"
+                } cursor-pointer hover:opacity-70 active:scale-95 grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center `}
+                onClick={
+                  isConnected
+                    ? () => {
+                        lensProfile
+                          ? reactionPost()
+                          : dispatch(setSignIn(true)); dispatch(setLensProfile(undefined))
+                      }
+                    : openConnectModal
+                }
+              >
+                <div
+                  className={`relative w-fit h-fit col-start-1 place-self-center ${
+                    reactionLoading && "animate-spin"
+                  }`}
+                >
+                  {reactionLoading ? (
+                    <AiOutlineLoading color="white" size={20} />
+                  ) : hasReacted?.length > 0 ? (
+                    "Remove"
+                  ) : (
+                    "Heart"
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

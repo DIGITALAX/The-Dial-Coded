@@ -8,6 +8,9 @@ import {
 import { FaRegCommentDots, FaCommentDots } from "react-icons/fa";
 import { AiOutlineRetweet } from "react-icons/ai";
 import { ReactionProps } from "../../types/common.types";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { useRouter } from "next/router";
 
 const Reactions: FunctionComponent<ReactionProps> = ({
   textColor,
@@ -29,7 +32,12 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   commentValue,
   heartValue,
   canCollect,
+  hasCollected,
 }): JSX.Element => {
+  const inCommentBox = useSelector(
+    (state: RootState) => state.app.commentShowReducer
+  );
+  const router = useRouter();
   return (
     <div className="relative w-fit h-fit col-start-1 justify-self-start self-center grid grid-flow-col auto-cols-auto gap-4">
       <div
@@ -47,7 +55,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
         }}
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
-          { heartAmount && heartAmount > 0 ? (
+          {heartAmount && heartAmount > 0 ? (
             <BsSuitHeartFill size={15} color={heartColor} />
           ) : (
             <BsSuitHeart color={heartColor} size={15} />
@@ -62,15 +70,17 @@ const Reactions: FunctionComponent<ReactionProps> = ({
       <div
         className={`relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
         onClick={() => {
-          commentExpand &&
-            dispatch &&
-            dispatch(
-              commentExpand({
-                actionOpen: true,
-                actionType: "comment",
-                actionValue: commentValue,
-              })
-            );
+          !inCommentBox?.open
+            ? commentExpand &&
+              dispatch &&
+              dispatch(
+                commentExpand({
+                  actionOpen: true,
+                  actionType: "comment",
+                  actionValue: commentValue,
+                })
+              )
+            : router.push(`/comment/${inCommentBox?.value}`);
         }}
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">

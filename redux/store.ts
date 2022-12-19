@@ -34,6 +34,10 @@ import collectNotificationReducer from "./reducers/collectNotificationSlice";
 import reactionStateReducer from "./reducers/reactionStateSlice";
 import commentShowReducer from "./reducers/commentShowSlice";
 import postCollectValuesReducer from "./reducers/postCollectValuesSlice";
+import walletConnectedReducer from "./reducers/walletConnectedSlice";
+import approvalArgsReducer from "./reducers/approvalArgsSlice";
+import commentReducer from "./reducers/commentSlice";
+import fireReducer from "./reducers/fireSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -69,7 +73,11 @@ const reducer = combineReducers({
   collectNotificationReducer,
   reactionStateReducer,
   commentShowReducer,
-  postCollectValuesReducer
+  postCollectValuesReducer,
+  walletConnectedReducer,
+  approvalArgsReducer,
+  commentReducer,
+  fireReducer
 });
 
 export const store = configureStore({

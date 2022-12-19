@@ -14,10 +14,14 @@ const Feed: FunctionComponent<FeedProps> = ({
   publicationsFeed,
   fetchMorePublications,
   fetchReactions,
+  getMoreFeedTimeline,
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
     (state: RootState) => state.app.moreFeedReducer.value
+  );
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-3 gap-3">
@@ -27,6 +31,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           fetchMorePublications={fetchMorePublications}
           isOpen={isOpen}
           fetchReactions={fetchReactions}
+          getMoreFeedTimeline={getMoreFeedTimeline}
         />
         <Hot
           topTrending={topTrending}
@@ -39,7 +44,11 @@ const Feed: FunctionComponent<FeedProps> = ({
         className="relative row-start-2 p-4 w-full h-fit grid grid-flow-col auto-cols-auto bg-offBlue/60 hover:opacity-70 active:scale-95 cursor-pointer"
         onClick={() => {
           dispatch(setMoreFeed(!isOpen));
-          fetchMorePublications();
+          if (lensProfile) {
+            getMoreFeedTimeline();
+          } else {
+            fetchMorePublications();
+          }
         }}
       >
         <div className="relative w-fit h-fit place-self-center col-start-1 ">

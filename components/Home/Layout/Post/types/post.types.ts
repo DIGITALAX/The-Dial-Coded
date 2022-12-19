@@ -1,6 +1,7 @@
 import {
   Post,
   Profile,
+  PublicationQueryRequest,
   ReactionRequest,
 } from "../../../../Common/types/lens.types";
 
@@ -18,7 +19,8 @@ export type FeedProps = {
   topTrending: string[];
   topMixtape: string[];
   topTracks: string[];
-  publicationsFeed: Post[];
+  publicationsFeed: PublicationQueryRequest[];
   fetchMorePublications: () => Promise<void>;
   fetchReactions: (id: string) => Promise<number | void>
+  getMoreFeedTimeline:  () => Promise<void>;
 };

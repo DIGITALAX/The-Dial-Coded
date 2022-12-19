@@ -91,7 +91,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
                 value: String(value),
               },
               recipient: address as string,
-              referralFee: Number(referral),
+              referralFee: Number(Number(referral).toFixed(2)),
               followerOnly: audienceType === "everyone" ? false : true,
             },
           };
@@ -103,7 +103,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
                 value: String(value),
               },
               recipient: address as string,
-              referralFee: Number(referral),
+              referralFee: Number(Number(referral).toFixed(2)),
               followerOnly: audienceType === "everyone" ? false : true,
             },
           };
@@ -116,7 +116,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
                 value: String(value),
               },
               recipient: address as string,
-              referralFee: Number(referral),
+              referralFee: Number(Number(referral).toFixed(2)),
               followerOnly: audienceType === "everyone" ? false : true,
             },
           };
@@ -129,7 +129,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
                 value: String(value),
               },
               recipient: address as string,
-              referralFee: Number(referral),
+              referralFee: Number(Number(referral).toFixed(2)),
               followerOnly: audienceType === "everyone" ? false : true,
             },
           };

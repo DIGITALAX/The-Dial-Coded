@@ -17,7 +17,7 @@ import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import { setSignIn } from "../../../../../redux/reducers/signInSlice";
 import lodash from "lodash";
-import { setCollectValueType } from "../../../../../redux/reducers/collectValueTypeSlice";
+import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
 
 const usePublication = () => {
   const [postDescription, setPostDesription] = useState<string>("");
@@ -71,11 +71,10 @@ const usePublication = () => {
   const handleGifSubmit = async (e: any): Promise<void> => {
     const getGifs = await fetch("/api/giphy", {
       method: "POST",
-      body: searchGif,
+      body: JSON.stringify(searchGif),
     });
-    const gifs = await getGifs.json();
-    setResults(gifs?.results?.data);
-    setSearchGif("");
+    const allGifs = await getGifs.json()
+    setResults(allGifs?.json?.results);
   };
 
   const handleSetGif = (result: any) => {
@@ -205,6 +204,7 @@ const usePublication = () => {
       setEnabled(true);
     } catch (err: any) {
       console.error(err.message);
+      dispatch(setLensProfile(undefined));
       dispatch(setSignIn(true));
     }
     setPostLoading(false);

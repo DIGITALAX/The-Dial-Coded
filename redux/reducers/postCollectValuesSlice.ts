@@ -17,6 +17,10 @@ export interface PostCollectValuesState {
     value?: string;
   };
   usd?: number;
+  canCollect?: boolean;
+  isApproved?: boolean;
+  approvedAmount?: number;
+  totalCollects?: number;
 }
 
 const initialPostCollectValuesState: PostCollectValuesState = {
@@ -40,6 +44,10 @@ export const postCollectValuesSlice = createSlice({
           actionEndTime,
           actionAmount,
           actionUSD,
+          actionCanCollect,
+          actionApproved,
+          actionApprovedAmount,
+          actionTotalCollects,
         },
       }
     ) => {
@@ -51,6 +59,10 @@ export const postCollectValuesSlice = createSlice({
       state.endTime = actionEndTime;
       state.amount = actionAmount;
       state.usd = actionUSD;
+      state.canCollect = actionCanCollect;
+      state.isApproved = actionApproved;
+      state.approvedAmount = actionApprovedAmount;
+      state.totalCollects = actionTotalCollects;
     },
   },
 });

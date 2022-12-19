@@ -22,7 +22,7 @@ const Header: FunctionComponent = (): JSX.Element => {
     (state: RootState) => state.app.hamburgerReducer.value
   );
   return (
-    <div className="absolute w-full h-fit grid grid-flow-col auto-cols-auto justify-between py-10 px-6 z-30">
+    <div className="absolute w-full h-fit grid grid-flow-col auto-cols-auto justify-between py-10 px-6 z-20">
       <div className="relative w-fit h-fit col-start-1 text-white font-dosis text-7xl">
         THE DIAL
       </div>
@@ -66,9 +66,11 @@ const Header: FunctionComponent = (): JSX.Element => {
             <div className="absolute row-start-2 bg-white w-fit h-fit font-dosis grid grid-flow-row auto-rows-auto gap-3 p-2 z-10 justify-self-center top-2 whitespace-nowrap">
               <div
                 className="relative text-black row-start-1 w-fit h-fit place-self-center text-xs hover:opacity-60 cursor-pointer"
-                onClick={() => handleLensLogin()}
+                onClick={() => {
+                  authStatus ? handleAccount() : handleLensLogin();
+                }}
               >
-                Lens Sign In
+                {authStatus ? "Account" : "Lens Sign In"}
               </div>
               <div className="relative text-black row-start-2 w-fit h-fit place-self-center text-xs hover:opacity-60 cursor-pointer">
                 <Disconnect dispatch={dispatch} />

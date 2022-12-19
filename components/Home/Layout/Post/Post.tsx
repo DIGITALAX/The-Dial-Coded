@@ -17,9 +17,9 @@ const Post: FunctionComponent = (): JSX.Element => {
   );
   const { connected } = usePost();
   const {
-    setFeedType,
     setSortCriteria,
     fetchMorePublications,
+    getMoreFeedTimeline,
     publicationsFeed,
     fetchReactions,
   } = useMain();
@@ -31,7 +31,7 @@ const Post: FunctionComponent = (): JSX.Element => {
         lensProfile={lensProfile}
         isConnected={connected}
       />
-      <Parameters setFeedType={setFeedType} setSortCriteria={setSortCriteria} />
+      <Parameters setSortCriteria={setSortCriteria} />
       <Feed
         topTrending={topTrending}
         topMixtape={topMixtape}
@@ -39,6 +39,7 @@ const Post: FunctionComponent = (): JSX.Element => {
         publicationsFeed={publicationsFeed}
         fetchMorePublications={fetchMorePublications}
         fetchReactions={fetchReactions}
+        getMoreFeedTimeline={getMoreFeedTimeline}
       />
     </div>
   );

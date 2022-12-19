@@ -34,11 +34,11 @@ export const CREATE_POST_TYPED_DATA = `
  }
 `;
 
-const createPostTypedData = (createPostRequest: any) => {
+const createPostTypedData = (CreatePostRequest: any) => {
   return apolloClient.mutate({
     mutation: gql(CREATE_POST_TYPED_DATA),
     variables: {
-      request: createPostRequest,
+      request: CreatePostRequest,
     },
   });
 };
