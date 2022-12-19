@@ -10,6 +10,7 @@ import NotificationsBar from "./Notifications/NotificationsBar";
 import MixtapeSwitch from "../../Home/Layout/Mixtape/MixtapeSwitch";
 import { setAddMixtape } from "../../../redux/reducers/addMixtapeSlice";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
+import AccountSwitch from "../../Home/Layout/Account/AccountSwitch";
 
 const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   row,
@@ -76,8 +77,8 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                 <Panel col={"1"} />
                 <Panel col={"2"} />
               </div>
-              <div className="relative w-full h-full grid grid-flow-col auto-cols-auto p-4 self-start">
-                {mixtape && <MixtapeSwitch />}
+              <div className="relative w-[50vw] h-full grid grid-flow-col auto-cols-auto p-4 self-start">
+                {mixtape ? <MixtapeSwitch /> : <AccountSwitch />}
               </div>
             </div>
             <div

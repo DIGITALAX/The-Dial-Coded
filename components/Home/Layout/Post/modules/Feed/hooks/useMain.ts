@@ -4,13 +4,19 @@ import explorePublications from "../../../../../../../graphql/queries/explorePub
 import whoReactedublications from "../../../../../../../graphql/queries/whoReactedPublication";
 import { RootState } from "../../../../../../../redux/store";
 import {
+  ApprovedAllowanceAmount,
   PaginatedResultInfo,
   Post,
+  PublicationQueryRequest,
 } from "../../../../../../Common/types/lens.types";
 import { UseMainResults } from "../types/feed.types";
 import lodash from "lodash";
 import getPublication from "../../../../../../../graphql/queries/getPublication";
 import { setPostCollectValues } from "../../../../../../../redux/reducers/postCollectValuesSlice";
+import approvedModuleAllowance from "../../../../../../../graphql/queries/approvedModuleAllowance";
+import approvedData from "../../../../../../../graphql/queries/approveData";
+import { setApprovalArgs } from "../../../../../../../redux/reducers/approvalArgsSlice";
+import feedTimeline from "../../../../../../../graphql/queries/feedTimeline";
 
 const useMain = (): UseMainResults => {
   const [feedType, setFeedType] = useState<string[]>(["POST"]);
@@ -22,17 +28,52 @@ const useMain = (): UseMainResults => {
   const reactionsModal = useSelector(
     (state: RootState) => state.app.reactionStateReducer
   );
+  const feedOrderState = useSelector(
+    (state: RootState) => state.app.feedOrderReducer.value
+  );
+  const feedPriorityState = useSelector(
+    (state: RootState) => state.app.feedPriorityReducer.value
+  );
+  const userView = useSelector(
+    (state: RootState) => state.app.userViewerReducer.value
+  );
+  const isConnected = useSelector(
+    (state: RootState) => state.app.walletConnectedReducer.value
+  );
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
   const commentsModal = useSelector(
     (state: RootState) => state.app.commentShowReducer.open
   );
-  const [publicationsFeed, setPublicationsFeed] = useState<Post[]>([]);
+  const [publicationsFeed, setPublicationsFeed] = useState<
+    PublicationQueryRequest[]
+  >([]);
   const [paginatedResults, setPaginatedResults] =
     useState<PaginatedResultInfo>();
   const fetchPublications = async (): Promise<void> => {
+    let feedOrder: string[];
+    if (!feedOrderState && !feedPriorityState) {
+      feedOrder = feedType;
+    } else {
+      if (feedPriorityState === "interests") {
+        if (feedOrderState === "chrono") {
+          feedOrder = ["POST"];
+        } else {
+          feedOrder = ["POST", "COMMENT", "MIRROR"];
+        }
+      } else {
+        if (feedOrderState === "algo") {
+          feedOrder = ["COMMENT", "MIRROR"];
+        } else {
+          feedOrder = ["COMMENT"];
+        }
+      }
+    }
     try {
       const publicationsList = await explorePublications({
         sources: "thedial",
-        publicationTypes: feedType,
+        publicationTypes: feedOrder,
         limit: 20,
         sortCriteria: sortCriteria,
         noRandomize: true,
@@ -49,21 +90,73 @@ const useMain = (): UseMainResults => {
   };
 
   const fetchMorePublications = async (): Promise<void> => {
+    let feedOrder: string[];
+    if (!feedOrderState && !feedPriorityState) {
+      feedOrder = feedType;
+    } else {
+      if (!feedPriorityState) {
+        if (feedOrderState === "chrono") {
+          feedOrder = ["POST"];
+        } else {
+          feedOrder = ["POST", "COMMENT", "MIRROR"];
+        }
+      } else {
+        if (feedOrderState === "chrono" && feedPriorityState === "reactions") {
+          feedOrder = ["COMMENT", "MIRROR"];
+        } else {
+          feedOrder = ["COMMENT"];
+        }
+      }
+    }
     try {
       const morePublications = await explorePublications({
         sources: "thedial",
-        publicationTypes: feedType,
+        publicationTypes: feedOrder,
         limit: 20,
         sortCriteria: sortCriteria,
         noRandomize: true,
         cursor: paginatedResults?.next,
       });
-      const arr: Post[] = [...morePublications?.data.explorePublications.items];
-      const sortedArr: Post[] = arr.sort(
+      const arr: PublicationQueryRequest[] = [
+        ...morePublications?.data.explorePublications.items,
+      ];
+      const sortedArr: PublicationQueryRequest[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       setPublicationsFeed([...publicationsFeed, ...sortedArr]);
       setPaginatedResults(morePublications?.data.explorePublications.pageInfo);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const checkApproved = async (
+    currencyAddress: string,
+    collectModule: string,
+    followModule: string | null,
+    referenceModule: string | null,
+    value: string
+  ): Promise<ApprovedAllowanceAmount | void> => {
+    if (!currencyAddress || !isConnected || !lensProfile) {
+      return;
+    }
+    try {
+      const response = await approvedModuleAllowance({
+        currencies: [currencyAddress],
+        collectModules: [collectModule],
+        followModules: followModule ? [followModule] : [],
+        referenceModules: referenceModule ? [referenceModule] : [],
+      });
+      const approvalArgs = await approvedData({
+        currency: currencyAddress,
+        value: value,
+        collectModule: collectModule,
+      });
+      dispatch(
+        setApprovalArgs(approvalArgs?.data?.generateModuleCurrencyApprovalData)
+      );
+      console.log(response?.data?.approvedModuleAllowanceAmount[0]);
+      return response?.data?.approvedModuleAllowanceAmount[0];
     } catch (err: any) {
       console.error(err.message);
     }
@@ -114,6 +207,14 @@ const useMain = (): UseMainResults => {
         collectModule?.amount?.asset?.symbol,
         collectModule?.amount?.value
       );
+      const approvalData: ApprovedAllowanceAmount | void = await checkApproved(
+        collectModule?.amount?.asset?.address,
+        collectModule?.type,
+        null,
+        null,
+        collectModule?.amount?.value
+      );
+      const isApproved = parseInt(approvalData?.allowance as string, 16);
       dispatch(
         setPostCollectValues({
           actionType: collectModule?.type,
@@ -133,6 +234,13 @@ const useMain = (): UseMainResults => {
             value: collectModule?.amount?.value,
           },
           actionUSD: convertedValue ? convertedValue : null,
+          actionCanCollect: data?.publication?.hasCollectedByMe,
+          actionApproved:
+            collectModule?.type === "FreeCollectModule" ||
+            isApproved > collectModule?.amount?.value
+              ? true
+              : false,
+          actionTotalCollects: data?.publication?.stats?.totalAmountOfCollects,
         })
       );
     } catch (err: any) {
@@ -140,8 +248,57 @@ const useMain = (): UseMainResults => {
     }
   };
 
+  const getFeedTimeline = async (): Promise<void> => {
+    try {
+      const publicationsList = await feedTimeline({
+        profileId: lensProfile,
+        limit: 50,
+      });
+      const arr: any[] = [...publicationsList?.data.feed.items];
+      const sortedArr: any[] = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      setPublicationsFeed(sortedArr);
+      setPaginatedResults(publicationsList?.data.feed.pageInfo);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const getMoreFeedTimeline = async (): Promise<void> => {
+    try {
+      const morePublications = await feedTimeline({
+        profileId: lensProfile,
+        limit: 50,
+        noRandomize: true,
+        cursor: paginatedResults?.next,
+      });
+      const arr: PublicationQueryRequest[] = [
+        ...morePublications?.data.feed.items,
+      ];
+      const sortedArr: PublicationQueryRequest[] = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      setPublicationsFeed([...publicationsFeed, ...sortedArr]);
+      setPaginatedResults(morePublications?.data.feed.pageInfo);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  // useMemo(async () => {
+  //   if (reactionsModal.type === "collect") {
+  //     await getCollectInfo();
+  //   }
+  // }, [reactionsModal.open, reactionsModal.type]);
+
   useEffect(() => {
-    fetchPublications();
+    if (lensProfile) {
+      getFeedTimeline();
+    } else {
+      fetchPublications();
+    }
+
     if (reactionsModal.type === "heart") {
       fetchReactions(reactionsModal.value);
     }
@@ -153,6 +310,9 @@ const useMain = (): UseMainResults => {
     commentsModal,
     reactionsModal.open,
     reactionsModal.type,
+    feedOrderState,
+    feedPriorityState,
+    lensProfile,
   ]);
 
   return {
@@ -161,6 +321,7 @@ const useMain = (): UseMainResults => {
     fetchMorePublications,
     publicationsFeed,
     fetchReactions,
+    getMoreFeedTimeline
   };
 };
 

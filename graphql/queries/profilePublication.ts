@@ -1,9 +1,9 @@
 import { gql } from "@apollo/client";
 import { authClient } from "../../lib/lens/client";
 
-const EXPLORE_PUBLICATIONS = `
-  query($request: ExplorePublicationRequest!) {
-    explorePublications(request: $request) {
+const PROFILE_PUBLICATION = `
+query Publications($request: PublicationsQueryRequest!) {
+    publications(request: $request) {
       items {
         __typename 
         ... on Post {
@@ -23,19 +23,21 @@ const EXPLORE_PUBLICATIONS = `
       }
     }
   }
+  
   fragment MediaFields on Media {
     url
     mimeType
   }
+  
   fragment ProfileFields on Profile {
     id
     name
     bio
     attributes {
-      displayType
-      traitType
-      key
-      value
+       displayType
+       traitType
+       key
+       value
     }
     isFollowedByMe
     isFollowing(who: null)
@@ -83,32 +85,18 @@ const EXPLORE_PUBLICATIONS = `
       totalCollects
     }
     followModule {
-      ... on FeeFollowModuleSettings {
-        type
-        amount {
-          asset {
-            name
-            symbol
-            decimals
-            address
-          }
-          value
-        }
-        recipient
-      }
-      ... on ProfileFollowModuleSettings {
-        type
-      }
-      ... on RevertFollowModuleSettings {
-        type
-      }
+      ...FollowModuleFields
     }
   }
+  
   fragment PublicationStatsFields on PublicationStats { 
     totalAmountOfMirrors
     totalAmountOfCollects
     totalAmountOfComments
+    totalUpvotes
+    totalDownvotes
   }
+  
   fragment MetadataOutputFields on MetadataOutput {
     name
     description
@@ -124,12 +112,161 @@ const EXPLORE_PUBLICATIONS = `
       value
     }
   }
+  
   fragment Erc20Fields on Erc20 {
     name
     symbol
     decimals
     address
   }
+  
+  fragment PostFields on Post {
+    id
+    profile {
+      ...ProfileFields
+    }
+    stats {
+      ...PublicationStatsFields
+    }
+    metadata {
+      ...MetadataOutputFields
+    }
+    createdAt
+    collectModule {
+      ...CollectModuleFields
+    }
+    referenceModule {
+      ...ReferenceModuleFields
+    }
+    appId
+    hidden
+    reaction(request: null)
+    mirrors(by: null)
+    hasCollectedByMe
+  }
+  
+  fragment MirrorBaseFields on Mirror {
+    id
+    profile {
+      ...ProfileFields
+    }
+    stats {
+      ...PublicationStatsFields
+    }
+    metadata {
+      ...MetadataOutputFields
+    }
+    createdAt
+    collectModule {
+      ...CollectModuleFields
+    }
+    referenceModule {
+      ...ReferenceModuleFields
+    }
+    appId
+    hidden
+    reaction(request: null)
+    hasCollectedByMe
+  }
+  
+  fragment MirrorFields on Mirror {
+    ...MirrorBaseFields
+    mirrorOf {
+     ... on Post {
+        ...PostFields          
+     }
+     ... on Comment {
+        ...CommentFields          
+     }
+    }
+  }
+  
+  fragment CommentBaseFields on Comment {
+    id
+    profile {
+      ...ProfileFields
+    }
+    stats {
+      ...PublicationStatsFields
+    }
+    metadata {
+      ...MetadataOutputFields
+    }
+    createdAt
+    collectModule {
+      ...CollectModuleFields
+    }
+    referenceModule {
+      ...ReferenceModuleFields
+    }
+    appId
+    hidden
+    reaction(request: null)
+    mirrors(by: null)
+    hasCollectedByMe
+  }
+  
+  fragment CommentFields on Comment {
+    ...CommentBaseFields
+    mainPost {
+      ... on Post {
+        ...PostFields
+      }
+      ... on Mirror {
+        ...MirrorBaseFields
+        mirrorOf {
+          ... on Post {
+             ...PostFields          
+          }
+          ... on Comment {
+             ...CommentMirrorOfFields        
+          }
+        }
+      }
+    }
+  }
+  
+  fragment CommentMirrorOfFields on Comment {
+    ...CommentBaseFields
+    mainPost {
+      ... on Post {
+        ...PostFields
+      }
+      ... on Mirror {
+         ...MirrorBaseFields
+      }
+    }
+  }
+  
+  fragment FollowModuleFields on FollowModule {
+    ... on FeeFollowModuleSettings {
+      type
+      amount {
+        asset {
+          name
+          symbol
+          decimals
+          address
+        }
+        value
+      }
+      recipient
+    }
+    ... on ProfileFollowModuleSettings {
+      type
+      contractAddress
+    }
+    ... on RevertFollowModuleSettings {
+      type
+      contractAddress
+    }
+    ... on UnknownFollowModuleSettings {
+      type
+      contractAddress
+      followModuleReturnData
+    }
+  }
+  
   fragment CollectModuleFields on CollectModule {
     __typename
     ... on FreeCollectModuleSettings {
@@ -188,135 +325,40 @@ const EXPLORE_PUBLICATIONS = `
       referralFee
       endTimestamp
     }
-  }
-  fragment PostFields on Post {
-    id
-    profile {
-      ...ProfileFields
-    }
-    stats {
-      ...PublicationStatsFields
-    }
-    metadata {
-      ...MetadataOutputFields
-    }
-    createdAt
-    collectModule {
-      ...CollectModuleFields
-    }
-    referenceModule {
-      ... on FollowOnlyReferenceModuleSettings {
-        type
-      }
-    }
-    appId
-    hidden
-    reaction(request: null)
-    mirrors(by: null)
-    hasCollectedByMe
-  }
-  fragment MirrorBaseFields on Mirror {
-    id
-    profile {
-      ...ProfileFields
-    }
-    stats {
-      ...PublicationStatsFields
-    }
-    metadata {
-      ...MetadataOutputFields
-    }
-    createdAt
-    collectModule {
-      ...CollectModuleFields
-    }
-    referenceModule {
-      ... on FollowOnlyReferenceModuleSettings {
-        type
-      }
-    }
-    appId
-    hidden
-    reaction(request: null)
-    hasCollectedByMe
-  }
-  fragment MirrorFields on Mirror {
-    ...MirrorBaseFields
-    mirrorOf {
-     ... on Post {
-        ...PostFields          
-     }
-     ... on Comment {
-        ...CommentFields          
-     }
+    ... on UnknownCollectModuleSettings {
+      type
+      contractAddress
+      collectModuleReturnData
     }
   }
-  fragment CommentBaseFields on Comment {
-    id
-    profile {
-      ...ProfileFields
+  
+  fragment ReferenceModuleFields on ReferenceModule {
+    ... on FollowOnlyReferenceModuleSettings {
+      type
+      contractAddress
     }
-    stats {
-      ...PublicationStatsFields
+    ... on UnknownReferenceModuleSettings {
+      type
+      contractAddress
+      referenceModuleReturnData
     }
-    metadata {
-      ...MetadataOutputFields
-    }
-    createdAt
-    collectModule {
-      ...CollectModuleFields
-    }
-    referenceModule {
-      ... on FollowOnlyReferenceModuleSettings {
-        type
-      }
-    }
-    appId
-    hidden
-    reaction(request: null)
-    mirrors(by: null)
-    hasCollectedByMe
-  }
-  fragment CommentFields on Comment {
-    ...CommentBaseFields
-    mainPost {
-      ... on Post {
-        ...PostFields
-      }
-      ... on Mirror {
-        ...MirrorBaseFields
-        mirrorOf {
-          ... on Post {
-             ...PostFields          
-          }
-          ... on Comment {
-             ...CommentMirrorOfFields        
-          }
-        }
-      }
-    }
-  }
-  fragment CommentMirrorOfFields on Comment {
-    ...CommentBaseFields
-    mainPost {
-      ... on Post {
-        ...PostFields
-      }
-      ... on Mirror {
-         ...MirrorBaseFields
-      }
+    ... on DegreesOfSeparationReferenceModuleSettings {
+      type
+      contractAddress
+      commentsRestricted
+      mirrorsRestricted
+      degreesOfSeparation
     }
   }
 `;
 
-const explorePublications = (request: any) => {
+const profilePublications = (request: any) => {
   return authClient.query({
-    query: gql(EXPLORE_PUBLICATIONS),
+    query: gql(PROFILE_PUBLICATION),
     variables: {
       request: request,
     },
-    fetchPolicy: "no-cache",
   });
 };
 
-export default explorePublications;
+export default profilePublications;

@@ -1,6 +1,6 @@
 import { splitSignature } from "ethers/lib/utils.js";
 import { omit } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   useContractWrite as useContractMirrorWrite,
@@ -12,6 +12,8 @@ import {
   usePrepareContractWrite as usePrepareContractCollectWrite,
   usePrepareContractWrite as usePrepareContractReactWrite,
   useSignTypedData,
+  useSendTransaction,
+  usePrepareSendTransaction,
 } from "wagmi";
 import mirror from "../../../../graphql/mutations/mirror";
 import whoCollectedPublications from "../../../../graphql/queries/whoCollectPublications";
@@ -24,8 +26,7 @@ import { UseReactionsResult } from "../../types/common.types";
 import {
   PaginatedResultInfo,
   ProfileQueryRequest,
-  PublicationQueryRequest,
-  ReactionRequest,
+  PublicationsQueryRequest,
   WhoCollectedPublicationRequest,
 } from "../../types/lens.types";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
@@ -35,14 +36,16 @@ import {
 } from "../../../../graphql/mutations/react";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import lodash from "lodash";
+import comment from "../../../../graphql/mutations/comment";
 
 const useReactions = (): UseReactionsResult => {
   const pubId = useSelector(
     (state: RootState) => state.app.reactionStateReducer.value
   );
-  const { type, amount } = useSelector(
-    (state: RootState) => state.app.postCollectValuesReducer
+  const approvalArgs = useSelector(
+    (state: RootState) => state.app.approvalArgsReducer.args
   );
+  console.log(approvalArgs);
   const reactions = useSelector(
     (state: RootState) => state.app.reactionStateReducer
   );
@@ -62,18 +65,45 @@ const useReactions = (): UseReactionsResult => {
   const [collectPageInfo, setCollectPageInfo] = useState<PaginatedResultInfo>();
   const [mirrorPageInfo, setMirrorPageInfo] = useState<PaginatedResultInfo>();
   const [mirrorers, setMirrorers] = useState<ProfileQueryRequest[]>([]);
-  const [commentors, setCommentors] = useState<PublicationQueryRequest[]>([]);
+  const [commentors, setCommentors] = useState<PublicationsQueryRequest[]>([]);
   const [commentPageInfo, setCommentPageInfo] = useState<PaginatedResultInfo>();
   const [reactionLoading, setReactionLoading] = useState<boolean>(false);
   const [reacters, setReacters] = useState<any>([]);
-  const [reactionVote, setReactionVote] = useState<string | undefined>();
+  const [collectLoading, setCollectLoading] = useState<boolean>(false);
+  const [approvalLoading, setApprovalLoading] = useState<boolean>(false);
+  const [commentLoading, setCommentLoading] = useState<boolean>(false);
   const [reactionPageInfo, setReactionPageInfo] =
     useState<PaginatedResultInfo>();
   const defaultProfile = useSelector(
     (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
   );
-  const { signTypedDataAsync } = useSignTypedData();
+  const [commentEnabled, setCommentEnabled] = useState<boolean>(false);
+  const [approvalSendEnabled, setApprovalSendEnabled] =
+    useState<boolean>(false);
+  const {
+    config: approvalConfig,
+    error: configerror,
+    isSuccess: approvalConfigSuccess,
+  } = usePrepareSendTransaction({
+    request: {
+      to: approvalArgs?.to as string,
+      from: approvalArgs?.from as string,
+      value: approvalArgs?.data as string,
+    },
+    enabled: Boolean(approvalSendEnabled),
+  });
+  const {
+    sendTransactionAsync,
+    isSuccess: approvalSuccess,
+    error,
+    data,
+  } = useSendTransaction({
+    mode: "recklesslyUnprepared",
+    to: approvalArgs?.to as string,
+    value: approvalArgs?.data as string,
+  });
 
+  const { signTypedDataAsync } = useSignTypedData();
   const getPostCollects = async (): Promise<void> => {
     try {
       const collects = await whoCollectedPublications({
@@ -303,19 +333,77 @@ const useReactions = (): UseReactionsResult => {
   };
 
   const collectPost = async (): Promise<void> => {
+    setCollectLoading(true);
     try {
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setCollectLoading(false);
+  };
+
+  const callApprovalSign = async (): Promise<void> => {
+    try {
+      await sendTransactionAsync?.();
+      console.log("waited", configerror);
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
-  const approveCurrency = async (): Promise<void> => {};
-
-  const commentPost = async (): Promise<void> => {
+  const approveCurrency = async (): Promise<void> => {
+    setApprovalLoading(true);
+    setApprovalSendEnabled(true);
     try {
+      await callApprovalSign();
     } catch (err: any) {
       console.error(err.message);
     }
+    setApprovalLoading(false);
+  };
+
+  const commentPost = async (): Promise<void> => {
+    setCommentLoading(true);
+    try {
+      const commentPost = await comment({
+        profileId: defaultProfile,
+        publicationId: pubId,
+        contentURI: "ipfs://QmPogtffEF3oAbKERsoR4Ky8aTvLgBF5totp5AuF8YN6vl",
+        collectModule: {
+          revertCollectModule: true,
+        },
+        referenceModule: {
+          followerOnlyReferenceModule: false,
+        },
+      });
+      const typedData: any = commentPost.data.createMirrorTypedData.typedData;
+
+      const signature: any = await signTypedDataAsync({
+        domain: omit(typedData?.domain, ["__typename"]),
+        types: omit(typedData?.types, ["__typename"]) as any,
+        value: omit(typedData?.value, ["__typename"]) as any,
+      });
+
+      const { v, r, s } = splitSignature(signature);
+      const commentArgs = {
+        profileId: typedData.value.profileId,
+        profileIdPointed: typedData.value.profileIdPointed,
+        pubIdPointed: typedData.value.pubIdPointed,
+        referenceModuleData: typedData.value.referenceModuleData,
+        referenceModule: typedData.value.referenceModule,
+        referenceModuleInitData: typedData.value.referenceModuleInitData,
+        sig: {
+          v,
+          r,
+          s,
+          deadline: typedData.value.deadline,
+        },
+      };
+      setArgs(commentArgs);
+      setCommentEnabled(true);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setCommentLoading(false);
   };
 
   const commentWrite = async (): Promise<void> => {};
@@ -336,9 +424,8 @@ const useReactions = (): UseReactionsResult => {
     }
   };
 
-  
-
   useEffect(() => {
+    
     if (commentShow) {
       getPostComments();
     }
@@ -376,6 +463,13 @@ const useReactions = (): UseReactionsResult => {
     mirrorLoading,
     reactionLoading,
     mirrorComplete,
+    approvalSuccess,
+    approvalLoading,
+    collectLoading,
+    approveCurrency,
+    collectPost,
+    commentPost,
+    commentLoading,
   };
 };
 

@@ -47,7 +47,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
                 cancel=".frame"
                 enableUserSelectHack={false}
               >
-                <div className="absolute z-50 bg-black w-fit h-fit px-8 pb-8 pt-4 grid grid-flow-col auto-cols-auto cursor-pointer place-self-center">
+                <div className="absolute z-40 bg-black w-fit h-fit px-8 pb-8 pt-4 grid grid-flow-col auto-cols-auto cursor-pointer place-self-center">
                   <div
                     className="relative w-fit h-fit justify-self-end row-start-1 pb-4"
                     onClick={() => dispatch(setVideo(false))}

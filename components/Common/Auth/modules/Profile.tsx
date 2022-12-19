@@ -1,7 +1,9 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
+import { useSelector } from "react-redux";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { setHamburger } from "../../../../redux/reducers/hamburgerSlice";
+import { RootState } from "../../../../redux/store";
 import { ProfileProps } from "../../types/common.types";
 
 const Profile: FunctionComponent<ProfileProps> = ({
@@ -23,11 +25,16 @@ const Profile: FunctionComponent<ProfileProps> = ({
   } else {
     profileImage = (lensProfile?.picture as any)?.uri;
   }
+  const hamburgerValue = useSelector(
+    (state: RootState) => state.app.hamburgerReducer.value
+  );
   return (
     <div
       className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 -top-1 hover:opacity-60 grid grid-flow-col auto-cols-auto"
       onClick={() =>
-        authStatus ? handleAccount() : dispatch(setHamburger(true))
+        dispatch(
+          setHamburger(hamburgerValue !== undefined ? !hamburgerValue : true)
+        )
       }
     >
       <div

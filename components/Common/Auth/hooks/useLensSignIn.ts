@@ -8,6 +8,7 @@ import {
   setAuthenticationToken,
   removeAuthenticationToken,
 } from "../../../../lib/lens/utils";
+import { setAccountPage } from "../../../../redux/reducers/accountPageSlice";
 import { setAuthStatus } from "../../../../redux/reducers/authStatusSlice";
 import { setGetProfileModal } from "../../../../redux/reducers/getProfileModalSlice";
 import { setHamburger } from "../../../../redux/reducers/hamburgerSlice";
@@ -56,6 +57,7 @@ const useLensSignIn = (): useLensSignInResults => {
           dispatch(setLensProfile(profile.data.defaultProfile));
           dispatch(setAuthStatus(true));
           dispatch(setSignIn(false));
+          dispatch(setAccountPage("account"))
           dispatch(setHamburger(false));
         } else {
           dispatch(setGetProfileModal(true));

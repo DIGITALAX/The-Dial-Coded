@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../../../redux/store";
 import { setUserViewer } from "../../../../../../../redux/reducers/userViewSlice";
 import { INFURA_GATEWAY } from "../../../../../../../lib/lens/constants";
+import { setFire } from "../../../../../../../redux/reducers/fireSlice";
 
 const Viewer: FunctionComponent<ViewerProps> = ({
   setUserTypeOpen,
@@ -17,6 +18,9 @@ const Viewer: FunctionComponent<ViewerProps> = ({
   const dispatch = useDispatch();
   const userSelected = useSelector(
     (state: RootState) => state.app.userViewerReducer.value
+  );
+  const fireCount = useSelector(
+    (state: RootState) => state.app.fireReducer.value
   );
   return (
     <div className="relative w-fit h-full grid grid-flow-row auto-rows-auto col-start-2 gap-6 justify-self-end self-start">
@@ -109,7 +113,14 @@ const Viewer: FunctionComponent<ViewerProps> = ({
           </div>
         </div>
       </div>
-      <div className="relative w-fit h-fit col-start-2 row-start-1 cursor-pointer active:scale-95 justify-self-end self-center">
+      <div
+        className="relative w-fit h-fit col-start-2 row-start-1 cursor-pointer active:scale-95 justify-self-end self-center"
+        onClick={() =>
+          dispatch(
+            setFire(!fireCount ? 0 : fireCount === 5 ? 0 : fireCount + 1)
+          )
+        }
+      >
         <Image
           src={`${INFURA_GATEWAY}/ipfs/QmfNvhTRhR7ginJh2pHTEPTNthM6GWhp8NpfuA9LggqgYQ`}
           width={30}
@@ -117,7 +128,14 @@ const Viewer: FunctionComponent<ViewerProps> = ({
           alt="venn"
         />
       </div>
-      <div className="relative w-fit h-fit row-start-2 col-start-2 cursor-pointer active:scale-95 justify-self-end self-center">
+      <div
+        className="relative w-fit h-fit row-start-2 col-start-2 cursor-pointer active:scale-95 justify-self-end self-center"
+        onClick={() =>
+          dispatch(
+            setFire(!fireCount ? 0 : fireCount === 5 ? 0 : fireCount + 1)
+          )
+        }
+      >
         <Image
           src={`${INFURA_GATEWAY}/ipfs/QmUbXpg43xj51Lvj9uDswhvkBZfXVnwWmaJfwp9jYgRMUT`}
           width={30}

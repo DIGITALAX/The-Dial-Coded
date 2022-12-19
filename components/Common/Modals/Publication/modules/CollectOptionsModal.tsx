@@ -42,7 +42,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
   setTimeLimitDropDown,
 }): JSX.Element | null => {
   return (
-    <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
+    <div className="inset-0 justify-center fixed z-40 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-fit h-fit col-start-1 place-self-center bg-white/95 rounded-lg p-3">
         <div className="relative w-fit h-fit rounded-xl grid grid-flow-col auto-cols-auto">
           <div className="relative w-fit h-full col-start-1 rounded-xl place-self-center">

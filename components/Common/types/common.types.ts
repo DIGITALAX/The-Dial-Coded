@@ -7,6 +7,7 @@ import {
   Profile,
   ProfileQueryRequest,
   PublicationQueryRequest,
+  PublicationsQueryRequest,
   ReactionRequest,
   WhoCollectedPublicationRequest,
 } from "./lens.types";
@@ -32,6 +33,7 @@ export type ReactionProps = {
   commentValue?: string;
   heartValue?: string;
   canCollect?: boolean;
+  hasCollected?: boolean;
 };
 
 export type InterfaceProps = {
@@ -106,9 +108,10 @@ export type PresetProps = {
 };
 
 export type FeedPublicationProps = {
-  publication: Post;
+  publication: PublicationsQueryRequest;
   dispatch: Dispatch<AnyAction>;
   fetchReactions: (id: string) => Promise<number | void>;
+  type?: string;
 };
 
 export type OptionMenuProps = {
@@ -424,6 +427,7 @@ export type PostArgsType = {
   };
 };
 
+
 export interface CollectValueType {
   freeCollectModule?: {
     followerOnly: boolean;
@@ -476,6 +480,8 @@ export type DisconnectProps = {
 export type CollectsModalProps = {
   collectors: WhoCollectedPublicationRequest[];
   getMorePostCollects: () => Promise<void>;
+  handleApprove?: () => void;
+  handleCollect?: () => Promise<void>;
 };
 
 export type MirrorsModalProps = {
@@ -489,6 +495,8 @@ export type MirrorsModalProps = {
 export type CommentsModalProps = {
   commentors: PublicationQueryRequest[];
   getMorePostComments: () => Promise<void>;
+  commentPost: () => Promise<void>;
+  commentLoading: boolean;
 };
 
 export type UseReactionsResult = {
@@ -502,9 +510,16 @@ export type UseReactionsResult = {
   mirrorPost: () => Promise<void>;
   reacters: ReactionRequest[];
   reactionPost: () => Promise<void>;
+  commentPost: () => Promise<void>;
   mirrorLoading: boolean;
   reactionLoading: boolean;
   mirrorComplete: boolean;
+  approveCurrency?: () => void;
+  collectPost?: () => Promise<void>;
+  approvalSuccess: boolean;
+  approvalLoading: boolean;
+  collectLoading: boolean;
+  commentLoading: boolean;
 };
 
 export type ReactionModalProps = {
@@ -513,3 +528,26 @@ export type ReactionModalProps = {
   reactionPost: () => Promise<void>;
   reactionLoading: boolean;
 };
+
+export type CollectInfoProps = {
+  buttonText: string;
+  showText: boolean;
+  buttonColor: string;
+  type?: string;
+  symbol?: string;
+  value?: string;
+  usd?: number;
+  limit?: string;
+  time?: string;
+  totalCollected?: number;
+  canClick?: boolean;
+  isApproved?: boolean;
+  handleApprove?: () => void;
+  handleCollect?: () => Promise<void>;
+};
+
+export interface ApprovalArgs {
+  to: string,
+  from: string,
+  data: string
+}

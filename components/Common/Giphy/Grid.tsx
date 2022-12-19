@@ -1,5 +1,6 @@
 import Image from "next/legacy/image";
 import { FormEvent, FunctionComponent } from "react";
+import Tenor from "react-tenor";
 import { GridProps } from "../types/common.types";
 
 const Grid: FunctionComponent<GridProps> = ({
@@ -28,11 +29,11 @@ const Grid: FunctionComponent<GridProps> = ({
         <div className="relative w-full h-40 row-start-3 col-span-2 col-start-1 grid grid-cols-3 overflow-y-scroll pb-3 gap-2">
           {results?.map((result: any, index: number) => {
             return (
-              <div key={index} className="relative w-32 h-20 bg-offBlue cursor-pointer active:scale-95 place-self-center" onClick={() => handleSetGif(result?.images?.preview_gif?.url)}>
+              <div key={index} className="relative w-32 h-20 bg-offBlue cursor-pointer active:scale-95 place-self-center" onClick={() => handleSetGif(result?.media_formats?.gif?.url)}>
                 <Image
                   layout="fill"
                   objectFit="cover"
-                  src={result?.images?.preview_gif?.url}
+                  src={result?.media_formats?.gif?.url}
                 />
               </div>
             );

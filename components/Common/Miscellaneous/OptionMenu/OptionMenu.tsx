@@ -64,7 +64,7 @@ const OptionMenu: FunctionComponent<OptionMenuProps> = ({
                   } col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer`}
                   onClick={() => {
                     handleOpenDropdown(!openDropdown);
-                    openDropdown && dispatch(dispatchFunction(item));
+                    openDropdown && dispatchFunction && dispatch(dispatchFunction(item));
                   }}
                 >
                   <div className="relative w-fit h-fit col-start-1 text-white font-dosis lowercase place-self-center grid grid-flow-col auto-cols-auto">

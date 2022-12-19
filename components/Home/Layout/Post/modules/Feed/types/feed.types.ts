@@ -1,10 +1,11 @@
-import { Post, ReactionRequest } from "../../../../../../Common/types/lens.types";
+import { Post, PublicationQueryRequest } from "../../../../../../Common/types/lens.types";
 
 export type MainProps = {
-  publicationsFeed: Post[];
+  publicationsFeed: PublicationQueryRequest[];
   fetchMorePublications: () => Promise<void>;
   isOpen: boolean;
   fetchReactions: (id: string) => Promise<number | void>
+  getMoreFeedTimeline:  () => Promise<void>;
 };
 
 export type HotProps = {
@@ -24,11 +25,11 @@ export type UseMainResults = {
   setFeedType: (e: string[]) => void;
   setSortCriteria: (e: string) => void;
   fetchMorePublications: () => Promise<void>;
-  publicationsFeed: Post[];
+  publicationsFeed: PublicationQueryRequest[];
   fetchReactions: (id: string) => Promise<number | void>
+  getMoreFeedTimeline:  () => Promise<void>;
 };
 
 export type ParametersProps = {
-  setFeedType: (e: string[]) => void;
   setSortCriteria: (e: string) => void;
 };

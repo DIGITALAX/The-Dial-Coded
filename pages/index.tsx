@@ -50,6 +50,10 @@ const Home: NextPage = (): JSX.Element => {
     reactionLoading,
     mirrorLoading,
     mirrorComplete,
+    approveCurrency,
+    collectPost,
+    commentPost,
+    commentLoading
   } = useReactions();
   const streamLinks: string[] = [
     "https://www.youtube.com/embed/2Sa8o39R0jY?controls=0?rel=0&autoplay=1&mute=1",
@@ -89,6 +93,8 @@ const Home: NextPage = (): JSX.Element => {
         <CollectsModal
           collectors={collectors}
           getMorePostCollects={getMorePostCollects}
+          handleApprove={approveCurrency}
+          handleCollect={collectPost}
         />
       )}
       {reactionModal.open && reactionModal.type === "mirror" && (
@@ -110,8 +116,10 @@ const Home: NextPage = (): JSX.Element => {
       )}
       {commentShow.open && (
         <CommentsModal
+          commentPost={commentPost}
           commentors={commentors}
           getMorePostComments={getMorePostComments}
+          commentLoading={commentLoading}
         />
       )}
     </div>

@@ -80,7 +80,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     gifs,
   } = usePublication();
   return (
-    <div className="inset-0 justify-center fixed z-30 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
+    <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
         {collectOptionsModal && (
           <CollectOptionsModal

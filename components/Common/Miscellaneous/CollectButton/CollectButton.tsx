@@ -51,7 +51,7 @@ const CollectButton: FunctionComponent<CollectButtonProps> = ({
           <IoMdArrowDropdown color="#FFDE90" size={15} />
         </div>
       </div>
-      <div className="absolute row-start-3 grid grid-flow-row auto-rows-auto w-32 h-fit cursor-pointer z-30">
+      <div className="absolute row-start-3 grid grid-flow-row auto-rows-auto w-32 h-fit cursor-pointer">
         {openDropdown &&
           lodash
             .filter(newValues, (item) => item !== selectValue)

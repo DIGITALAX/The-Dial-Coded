@@ -10,6 +10,7 @@ import {
   removeAuthenticationToken,
 } from "../../../lib/lens/utils";
 import { setLayout } from "../../../redux/reducers/layoutSlice";
+import { setLensProfile } from "../../../redux/reducers/lensProfileSlice";
 
 const useHeader = (): UseHeaderResult => {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const useHeader = (): UseHeaderResult => {
     setConnected(isConnected);
     if (isConnected && !authToken) {
       dispatch(setSignIn(true));
+      dispatch(setLensProfile(undefined));
     }
     // set refresh
   }, [isConnected]);

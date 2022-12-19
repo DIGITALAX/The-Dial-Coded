@@ -2,6 +2,7 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { useDispatch } from "react-redux";
 import { INFURA_GATEWAY } from "../../../../../lib/lens/constants";
+import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import { setSignIn } from "../../../../../redux/reducers/signInSlice";
 import { PostBoxProps } from "../types/post.types";
@@ -61,7 +62,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
                 ? () => {
                     lensProfile
                       ? dispatch(setPublication(true))
-                      : dispatch(setSignIn(true));
+                      : dispatch(setSignIn(true)); dispatch(setLensProfile(undefined));
                   }
                 : openConnectModal
             }

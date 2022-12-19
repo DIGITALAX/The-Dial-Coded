@@ -11,8 +11,8 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "media0.giphy.com",
-        pathname: "/media/**",
+        hostname: "media.tenor.com",
+        pathname: "/**",
       },
     ],
     unoptimized: true,

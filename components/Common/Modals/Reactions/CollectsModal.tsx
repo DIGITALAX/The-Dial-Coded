@@ -9,10 +9,13 @@ import { setReactionState } from "../../../../redux/reducers/reactionStateSlice"
 import { RootState } from "../../../../redux/store";
 import { CollectsModalProps } from "../../types/common.types";
 import moment from "moment";
+import CollectInfo from "../../Feed/Reactions/CollectInfo";
 
 const CollectsModal: FunctionComponent<CollectsModalProps> = ({
   collectors,
   getMorePostCollects,
+  handleApprove,
+  handleCollect,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
   const pubId = useSelector(
@@ -21,8 +24,14 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
   const collectModuleValues = useSelector(
     (state: RootState) => state.app.postCollectValuesReducer
   );
+  const isConnected = useSelector(
+    (state: RootState) => state.app.walletConnectedReducer.value
+  );
+  const lensProfile: string = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
   return (
-    <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
+    <div className="inset-0 justify-center fixed z-40 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[40vw] h-fit col-start-1 place-self-center bg-offBlue/70 rounded-lg p-2">
         <div className="relative bg-white w-full h-fit rounded-xl grid grid-flow-col auto-cols-auto">
           <div className="relative w-full h-full col-start-1 rounded-xl place-self-center grid grid-flow-row auto-rows-auto gap-10 pb-8">
@@ -40,7 +49,7 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
             >
               <ImCross color="black" size={15} />
             </div>
-            {collectors.length > 0 ? (
+            {collectors.length > 0 && (
               <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto">
                 <InfiniteScroll
                   hasMore={true}
@@ -106,114 +115,67 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                     );
                   })}
                 </InfiniteScroll>
-                <div className="relative w-fit h-fit row-start-2 grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3 place-self-center">
-                  <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
-                    Collect this post?
-                  </div>
-                  <div className="relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95">
-                    <div className="relative w-fit h-fit col-start-1 place-self-center">
-                      Collect
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : collectModuleValues?.type === "FreeCollectModule" ? (
-              <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3">
-                <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
-                  This post hasn&apos;t been collected. Will you be first?
-                </div>
-                <div className="relative w-fit h-fit row-start-2 place-self-center grid grid-flow-col auto-cols-auto py-2 bg-gray-50 rounded-md px-2 drop-shadow-lg">
-                  <div className="relative w-44 h-60 flex col-start-1 place-self-center p-2">
-                    <Image
-                      src={`${INFURA_GATEWAY}/ipfs/QmcHYeemWE3z8qy7m42pJbasYzyvMRWNPRMfXvSNz6XKoK`}
-                      layout="fill"
-                      objectFit="cover"
-                      className="relative w-fit h-fit flex"
-                    />
-                  </div>
-                </div>
-                <div className="relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95 row-start-3">
-                  <div className="relative w-fit h-fit col-start-1 place-self-center">
-                    Collect
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-6">
-                <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
-                  This post hasn&apos;t been collected. Will you be first?
-                </div>
-                <div className="relative w-fit h-fit row-start-2 place-self-center grid grid-flow-col auto-cols-auto gap-2 py-2 bg-gray-50 rounded-md px-2 drop-shadow-lg">
-                  <div className="relative w-fit h-fit col-start-1 place-self-center grid grid-flow-col auto-cols-auto row-start-1 row-span-2 pr-3">
-                    <div className="relative w-44 h-60 flex col-start-1 place-self-center">
-                      <Image
-                        src={`${INFURA_GATEWAY}/ipfs/QmcHYeemWE3z8qy7m42pJbasYzyvMRWNPRMfXvSNz6XKoK`}
-                        layout="fill"
-                        objectFit="cover"
-                        className="relative w-fit h-fit flex"
-                      />
-                    </div>
-                  </div>
-                  <div className="relative w-fit h-fit col-start-2 row-start-1 grid grid-flow-row auto-rows-auto">
-                    <div className="relative w-fit h-fit text-offBlack font-digiB text-4xl self-center justify-self-start row-start-1">
-                      {collectModuleValues?.amount?.value}{" "}
-                      {collectModuleValues?.amount?.asset?.symbol}
-                    </div>
-                    <div className="relative w-fit h-fit text-offBlack/70 font-dosis text-sm place-self-center row-start-2 pr-2">
-                      ${String(collectModuleValues?.usd).slice(0, 6)}
-                    </div>
-                  </div>
-                  {(collectModuleValues?.limit ||
-                    collectModuleValues?.endTime) && (
-                    <div className="relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto place-self-center row-start-2 font-digiR text-base text-offBlack gap-3">
-                      {collectModuleValues?.limit && (
-                        <div className="relative w-fit h-fit col-start-1 place-self-center">
-                          Limited Edition: {collectModuleValues?.limit}
-                        </div>
-                      )}
-                      {collectModuleValues?.endTime &&
-                        moment(collectModuleValues.endTime).isAfter() && (
-                          <div
-                            className={`relative w-fit h-fit ${
-                              collectModuleValues?.limit
-                                ? "col-start-2"
-                                : "col-start-1"
-                            } place-self-center grid grid-flow-row auto-rows-auto`}
-                          >
-                            <div className="relative w-fit h-fit row-start-1 place-self-center font-digiB">
-                              TIME TO COLLECT:
-                            </div>
-                            <div className="relative w-fit h-fit row-start-2 place-self-center">
-                              {moment(
-                                `${collectModuleValues?.endTime}`
-                              ).fromNow()}
-                            </div>
-                          </div>
-                        )}
-                    </div>
-                  )}
-                </div>
-                {!collectModuleValues?.endTime ? (
-                  <div className="relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95 row-start-3">
-                    <div className="relative w-fit h-fit col-start-1 place-self-center">
-                      Collect
-                    </div>
-                  </div>
-                ) : moment(collectModuleValues.endTime).isAfter() ? (
-                  <div className="relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95 row-start-3">
-                    <div className="relative w-fit h-fit col-start-1 place-self-center">
-                      Collect
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative w-fit px-1 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center row-start-3 opacity-70">
-                    <div className="relative w-fit h-fit col-start-1 place-self-center">
-                      Collect Period is Over
-                    </div>
-                  </div>
-                )}
               </div>
             )}
+            <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto row-start-3">
+              {collectModuleValues?.canCollect ? (
+                <CollectInfo
+                  showText={false}
+                  buttonText={"Collected"}
+                  buttonColor={"heat"}
+                  type={collectModuleValues?.type}
+                  canClick={false}
+                />
+              ) : (
+                <CollectInfo
+                  showText={collectors.length > 0 ? false : true}
+                  buttonText={
+                    collectModuleValues?.type === "FreeCollectModule"
+                      ? "Collect"
+                      : (collectModuleValues?.endTime &&
+                          !moment(collectModuleValues?.endTime).isAfter()) ||
+                        collectModuleValues?.totalCollects ===
+                          Number(collectModuleValues?.limit)
+                      ? "Collect Period Over"
+                      : collectModuleValues?.canCollect
+                      ? "Collect"
+                      : "Approve"
+                  }
+                  buttonColor={
+                    (collectModuleValues?.endTime &&
+                      !moment(collectModuleValues?.endTime).isAfter()) ||
+                    (Number(collectModuleValues?.limit) > 0 &&
+                      Number(collectModuleValues?.totalCollects) ===
+                        Number(collectModuleValues?.limit))
+                      ? "heat"
+                      : "offBlue"
+                  }
+                  type={collectModuleValues?.type as string}
+                  symbol={collectModuleValues?.amount?.asset?.symbol}
+                  value={collectModuleValues?.amount?.value}
+                  usd={collectModuleValues?.usd}
+                  limit={collectModuleValues?.limit}
+                  time={collectModuleValues?.endTime}
+                  totalCollected={collectModuleValues?.totalCollects}
+                  canClick={
+                    (isConnected &&
+                      lensProfile &&
+                      collectModuleValues?.endTime &&
+                      !moment(collectModuleValues?.endTime).isAfter()) ||
+                    (isConnected &&
+                      lensProfile &&
+                      Number(collectModuleValues?.limit) > 0 &&
+                      Number(collectModuleValues?.totalCollects) ===
+                        Number(collectModuleValues?.limit))
+                      ? false
+                      : true
+                  }
+                  isApproved={collectModuleValues?.isApproved}
+                  handleApprove={handleApprove}
+                  handleCollect={handleCollect}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
-            <div className="min-h-fit h-auto min-w-screen w-screen relative selection:bg-offBlue selection:text-midWhite">
+            <div className="min-h-fit h-auto min-w-screen w-screen relative selection:bg-offBlue selection:text-midWhite z-0">
               <Header />
               <Component {...pageProps} />
               <Badges />
