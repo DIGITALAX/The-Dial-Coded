@@ -43,6 +43,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
     profileImagePicture = imagePrefix?.uri;
   }
 
+  console.log(profile)
   if (!coverPrefix?.original) {
     coverImagePicture = "";
   } else if (coverPrefix?.original) {
@@ -55,9 +56,6 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
   } else {
     coverImagePicture = coverPrefix?.uri;
   }
-
-  console.log(profile, "tab");
-  console.log(coverImagePicture);
 
   return (
     <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-16 font-dosis text-offBlack self-start">
@@ -148,7 +146,6 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
                   type="file"
                   accept="image/png"
                   hidden
-                  required
                   id="files"
                   multiple={false}
                   name="cover"
