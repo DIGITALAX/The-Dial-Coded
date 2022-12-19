@@ -143,7 +143,6 @@ const useAccount = (): UseAccountResult => {
   };
 
   const uploadContent = async (e: FormEvent): Promise<string | undefined> => {
-    console.log("cover already set", coverProfile);
     const data: AccountData = {
       name: (e.target as HTMLFormElement).accountName.value
         ? (e.target as HTMLFormElement).accountName.value
@@ -151,7 +150,11 @@ const useAccount = (): UseAccountResult => {
       bio: (e.target as HTMLFormElement).bio.value
         ? (e.target as HTMLFormElement).bio.value
         : null,
-      cover_picture: coverImage ? "ipfs://" + coverImage : null,
+      cover_picture: coverImage
+        ? "ipfs://" + coverImage
+        : (coverProfile as any)?.original?.url
+        ? (coverProfile as any)?.original?.url
+        : null,
       attributes: [
         {
           traitType: "string",
@@ -284,7 +287,6 @@ const useAccount = (): UseAccountResult => {
       } else {
         setTimeout(async () => {
           const result = await checkIndexed(res?.transactionHash);
-          console.log(result)
           if (result?.data?.hasTxHashBeenIndexed?.indexed) {
             setAccountLoading(false);
             const profile = await getDefaultProfile(address);
@@ -321,7 +323,6 @@ const useAccount = (): UseAccountResult => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log("writing");
       handleAccountWrite();
     }
   }, [isSuccess]);
