@@ -6,8 +6,7 @@ import { RootState } from "../../../../../../../redux/store";
 import {
   ApprovedAllowanceAmount,
   PaginatedResultInfo,
-  Post,
-  PublicationQueryRequest,
+  PublicationsQueryRequest,
 } from "../../../../../../Common/types/lens.types";
 import { UseMainResults } from "../types/feed.types";
 import lodash from "lodash";
@@ -17,16 +16,23 @@ import approvedModuleAllowance from "../../../../../../../graphql/queries/approv
 import approvedData from "../../../../../../../graphql/queries/approveData";
 import { setApprovalArgs } from "../../../../../../../redux/reducers/approvalArgsSlice";
 import feedTimeline from "../../../../../../../graphql/queries/feedTimeline";
+import exploreAuthPublications from "../../../../../../../graphql/queries/exploreAuth";
+import profilePublications from "../../../../../../../graphql/queries/profilePublication";
 
 const useMain = (): UseMainResults => {
   const [feedType, setFeedType] = useState<string[]>(["POST"]);
   const [sortCriteria, setSortCriteria] = useState<string>("LATEST");
+  const [didMirror, setDidMirror] = useState<any[]>([]);
+  const [mirrorPaginated, setMirrorPaginated] = useState<any>();
   const dispatch = useDispatch();
   const publicationModal = useSelector(
     (state: RootState) => state.app.publicationReducer.value
   );
   const reactionsModal = useSelector(
     (state: RootState) => state.app.reactionStateReducer
+  );
+  const layout = useSelector(
+    (state: RootState) => state.app.layoutReducer.value
   );
   const feedOrderState = useSelector(
     (state: RootState) => state.app.feedOrderReducer.value
@@ -47,8 +53,9 @@ const useMain = (): UseMainResults => {
     (state: RootState) => state.app.commentShowReducer.open
   );
   const [publicationsFeed, setPublicationsFeed] = useState<
-    PublicationQueryRequest[]
+    PublicationsQueryRequest[]
   >([]);
+  const [collectInfoLoading, setCollectInfoLoading] = useState<boolean>(false);
   const [paginatedResults, setPaginatedResults] =
     useState<PaginatedResultInfo>();
   const fetchPublications = async (): Promise<void> => {
@@ -71,13 +78,22 @@ const useMain = (): UseMainResults => {
       }
     }
     try {
-      const publicationsList = await explorePublications({
-        sources: "thedial",
-        publicationTypes: feedOrder,
-        limit: 20,
-        sortCriteria: sortCriteria,
-        noRandomize: true,
-      });
+      let publicationsList;
+      lensProfile
+        ? (publicationsList = await exploreAuthPublications({
+            sources: "thedial",
+            publicationTypes: feedOrder,
+            limit: 20,
+            sortCriteria: sortCriteria,
+            noRandomize: true,
+          }))
+        : (publicationsList = await explorePublications({
+            sources: "thedial",
+            publicationTypes: feedOrder,
+            limit: 20,
+            sortCriteria: sortCriteria,
+            noRandomize: true,
+          }));
       const arr: any[] = [...publicationsList?.data.explorePublications.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
@@ -85,7 +101,7 @@ const useMain = (): UseMainResults => {
       setPublicationsFeed(sortedArr);
       setPaginatedResults(publicationsList?.data.explorePublications.pageInfo);
     } catch (err: any) {
-      console.error(err.message);
+      console.error(err);
     }
   };
 
@@ -109,18 +125,28 @@ const useMain = (): UseMainResults => {
       }
     }
     try {
-      const morePublications = await explorePublications({
-        sources: "thedial",
-        publicationTypes: feedOrder,
-        limit: 20,
-        sortCriteria: sortCriteria,
-        noRandomize: true,
-        cursor: paginatedResults?.next,
-      });
-      const arr: PublicationQueryRequest[] = [
+      let morePublications;
+      lensProfile
+        ? (morePublications = await exploreAuthPublications({
+            sources: "thedial",
+            publicationTypes: feedOrder,
+            limit: 20,
+            sortCriteria: sortCriteria,
+            noRandomize: true,
+            paginatedResults: paginatedResults?.next,
+          }))
+        : (morePublications = await explorePublications({
+            sources: "thedial",
+            publicationTypes: feedOrder,
+            limit: 20,
+            sortCriteria: sortCriteria,
+            noRandomize: true,
+            paginatedResults: paginatedResults?.next,
+          }));
+      const arr: PublicationsQueryRequest[] = [
         ...morePublications?.data.explorePublications.items,
       ];
-      const sortedArr: PublicationQueryRequest[] = arr.sort(
+      const sortedArr: PublicationsQueryRequest[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       setPublicationsFeed([...publicationsFeed, ...sortedArr]);
@@ -155,14 +181,13 @@ const useMain = (): UseMainResults => {
       dispatch(
         setApprovalArgs(approvalArgs?.data?.generateModuleCurrencyApprovalData)
       );
-      console.log(response?.data?.approvedModuleAllowanceAmount[0]);
       return response?.data?.approvedModuleAllowanceAmount[0];
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
-  const fetchReactions = async (pubId: string): Promise<number | void> => {
+  const fetchReactions = async (pubId: string): Promise<any> => {
     try {
       const reactions = await whoReactedublications({
         publicationId: pubId,
@@ -171,10 +196,49 @@ const useMain = (): UseMainResults => {
         reactions?.data?.whoReactedPublication.items,
         (item) => item.reaction === "UPVOTE"
       );
-      const reactionArr = upvoteArr?.length;
-      return reactionArr;
+      return upvoteArr;
     } catch (err: any) {
       console.error(err.message);
+    }
+  };
+
+  const getMirrors = async () => {
+    try {
+      const { data } = await profilePublications({
+        profileId: lensProfile,
+        publicationTypes: ["MIRROR"],
+        limit: 50,
+      });
+      const arr = [...data.publications.items];
+      const sortedArr = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      console.log(sortedArr);
+      setDidMirror(sortedArr);
+      setMirrorPaginated(data?.publications?.pageInfo);
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  const getMoreMirrors = async () => {
+    try {
+      const { data } = await profilePublications({
+        profileId: lensProfile,
+        publicationTypes: ["MIRROR"],
+        limit: 50,
+        cursor: mirrorPaginated?.next,
+      });
+      const arr = [
+        ...data.publications.items,
+      ];
+      const sortedArr = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      setDidMirror([...didMirror, ...sortedArr]);
+      setMirrorPaginated(data?.publications?.pageInfo);
+    } catch (err: any) {
+      console.error(err);
     }
   };
 
@@ -200,8 +264,12 @@ const useMain = (): UseMainResults => {
   };
 
   const getCollectInfo = async (): Promise<void> => {
+    setCollectInfoLoading(true);
     try {
-      const { data } = await getPublication(reactionsModal.value);
+      const { data } = await getPublication({
+        publicationId: reactionsModal.value,
+      });
+      console.log(data);
       const collectModule = data?.publication?.collectModule;
       const convertedValue = await handleCoinUSDConversion(
         collectModule?.amount?.asset?.symbol,
@@ -246,6 +314,7 @@ const useMain = (): UseMainResults => {
     } catch (err: any) {
       console.error(err.message);
     }
+    setCollectInfoLoading(false);
   };
 
   const getFeedTimeline = async (): Promise<void> => {
@@ -270,13 +339,12 @@ const useMain = (): UseMainResults => {
       const morePublications = await feedTimeline({
         profileId: lensProfile,
         limit: 50,
-        noRandomize: true,
         cursor: paginatedResults?.next,
       });
-      const arr: PublicationQueryRequest[] = [
+      const arr: PublicationsQueryRequest[] = [
         ...morePublications?.data.feed.items,
       ];
-      const sortedArr: PublicationQueryRequest[] = arr.sort(
+      const sortedArr: PublicationsQueryRequest[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       setPublicationsFeed([...publicationsFeed, ...sortedArr]);
@@ -286,15 +354,11 @@ const useMain = (): UseMainResults => {
     }
   };
 
-  // useMemo(async () => {
-  //   if (reactionsModal.type === "collect") {
-  //     await getCollectInfo();
-  //   }
-  // }, [reactionsModal.open, reactionsModal.type]);
-
   useEffect(() => {
     if (lensProfile) {
-      getFeedTimeline();
+      fetchPublications();
+      getMirrors();
+      // getFeedTimeline();
     } else {
       fetchPublications();
     }
@@ -313,6 +377,8 @@ const useMain = (): UseMainResults => {
     feedOrderState,
     feedPriorityState,
     lensProfile,
+    isConnected,
+    layout,
   ]);
 
   return {
@@ -321,7 +387,10 @@ const useMain = (): UseMainResults => {
     fetchMorePublications,
     publicationsFeed,
     fetchReactions,
-    getMoreFeedTimeline
+    getMoreFeedTimeline,
+    collectInfoLoading,
+    didMirror,
+    getMoreMirrors,
   };
 };
 

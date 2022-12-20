@@ -9,9 +9,25 @@ const GET_PUBLICATION = `query Publication($request: PublicationQueryRequest!) {
       }
       ... on Comment {
         ...CommentFields
+        onChainContentURI
+        collectNftAddress
+        profile {
+          isFollowedByMe
+        }
+        referenceModule {
+          __typename
+        }
       }
       ... on Mirror {
         ...MirrorFields
+        onChainContentURI
+        collectNftAddress
+        profile {
+          isFollowedByMe
+        }
+        referenceModule {
+          __typename
+        }
       }
     }
   }
@@ -342,15 +358,15 @@ const GET_PUBLICATION = `query Publication($request: PublicationQueryRequest!) {
   }
   `;
 
-const getPublication = async (id?: string): Promise<ApolloQueryResult<any>> => {
+const getPublication = async (
+  request: any
+): Promise<ApolloQueryResult<any>> => {
   return apolloClient.query({
     query: gql(GET_PUBLICATION),
     variables: {
-      request: {
-        publicationId: id,
-      }
+      request: request,
     },
-    fetchPolicy: "no-cache"
+    fetchPolicy: "no-cache",
   });
 };
 

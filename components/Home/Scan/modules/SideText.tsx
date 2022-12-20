@@ -8,7 +8,7 @@ const SideText: FunctionComponent<SideTextProps> = ({
   currentSetting,
 }): JSX.Element => {
   return (
-    <div className="relative col-start-1 w-fit h-fit self-center justify-self-start grid grid-flow-row auto-rows-auto">
+    <div className="relative row-start-1 col-start-1 w-fit h-fit self-center justify-self-start grid grid-flow-row auto-rows-auto top-48 sm:top-28 md:top-0">
       <div className="relative w-fit h-fit row-start-1 text-white font-dosis text-xl text-left capitalize">
         {imageArtist[currentSetting]}
       </div>

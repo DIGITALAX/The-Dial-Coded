@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useMemo } from "react";
 import {
   BsSuitHeartFill,
   BsSuitHeart,
@@ -33,6 +33,8 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   heartValue,
   canCollect,
   hasCollected,
+  hasReacted,
+  hasMirrored,
 }): JSX.Element => {
   const inCommentBox = useSelector(
     (state: RootState) => state.app.commentShowReducer
@@ -55,10 +57,10 @@ const Reactions: FunctionComponent<ReactionProps> = ({
         }}
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
-          {heartAmount && heartAmount > 0 ? (
+          {heartAmount && heartAmount > 0 && hasReacted ? (
             <BsSuitHeartFill size={15} color={heartColor} />
           ) : (
-            <BsSuitHeart color={heartColor} size={15} />
+            <BsSuitHeart color="yellow" size={15} />
           )}
         </div>
         <div
@@ -112,7 +114,11 @@ const Reactions: FunctionComponent<ReactionProps> = ({
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
           <AiOutlineRetweet
-            color={mirrorAmount && mirrorAmount > 0 ? "red" : mirrorColor}
+            color={
+              mirrorAmount && mirrorAmount > 0 && hasMirrored
+                ? "red"
+                : mirrorColor
+            }
             size={15}
           />
         </div>
@@ -138,10 +144,10 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           }}
         >
           <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
-            {collectAmount && collectAmount > 0 ? (
+            {collectAmount && collectAmount > 0 && hasCollected ? (
               <BsFillCollectionFill size={15} color={collectColor} />
             ) : (
-              <BsCollection size={15} color={collectColor} />
+              <BsCollection size={15} color="yellow" />
             )}
           </div>
           <div

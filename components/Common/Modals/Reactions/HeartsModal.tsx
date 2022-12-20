@@ -137,7 +137,7 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
                     ? () => {
                         lensProfile
                           ? reactionPost()
-                          : dispatch(setSignIn(true)); dispatch(setLensProfile(undefined))
+                          : dispatch(setSignIn(true))
                       }
                     : openConnectModal
                 }

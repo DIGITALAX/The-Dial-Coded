@@ -36,21 +36,20 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
     if (imagePrefix?.original?.url.includes("http")) {
       profileImagePicture = imagePrefix?.original.url;
     } else {
-      const cut = imagePrefix?.original?.url.split("/");
-      profileImagePicture = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
+      const cut = imagePrefix?.original?.url.split("//");
+      profileImagePicture = `${INFURA_GATEWAY}/ipfs/${cut[1]}`;
     }
   } else {
     profileImagePicture = imagePrefix?.uri;
   }
 
-  console.log(profile)
   if (!coverPrefix?.original) {
     coverImagePicture = "";
   } else if (coverPrefix?.original) {
     if (coverPrefix?.original?.url.includes("http")) {
       coverImagePicture = coverPrefix?.original.url;
     } else {
-      const cut = imagePrefix?.original?.url.split("//");
+      const cut = coverPrefix?.original?.url.split("//");
       coverImagePicture = `${INFURA_GATEWAY}/ipfs/${cut[1]}`;
     }
   } else {

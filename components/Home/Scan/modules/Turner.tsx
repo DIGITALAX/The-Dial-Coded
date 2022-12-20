@@ -9,7 +9,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
   canvasURIs,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit col-start-2 grid grid-flow-row auto-rows-auto self-center justify-end gap-10 pr-10">
+    <div className="relative w-full h-fit col-start-1 row-start-2 md:row-start-1 md:col-start-2 grid grid-flow-row auto-rows-auto self-center sm:self-start md:self-center justify-center md:justify-end gap-10 pr-10 pt-8 sm:pt-16 top-24 lg:top-0 lg:pt-0">
       <div
         className="relative w-fit h-fit row-start-1 hover:rotate-3 active:rotate-6"
         onClick={() => handleCount(currentSetting)}

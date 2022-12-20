@@ -9,6 +9,8 @@ import usePost from "./hooks/usePost";
 import useMain from "./modules/Feed/hooks/useMain";
 import useHot from "./modules/Feed/hooks/useHot";
 import { Profile } from "../../../Common/types/lens.types";
+import useReactions from "../../../Common/Feed/hooks/useReactions";
+import useParameters from "./modules/Parameters/hooks/useParameters";
 
 const Post: FunctionComponent = (): JSX.Element => {
   const { openConnectModal } = useConnectModal();
@@ -22,7 +24,10 @@ const Post: FunctionComponent = (): JSX.Element => {
     getMoreFeedTimeline,
     publicationsFeed,
     fetchReactions,
+    didMirror,
+    getMoreMirrors
   } = useMain();
+  const { userSelectFeed, getMoreUserSelectFeed } = useParameters();
   const { topTrending, topMixtape, topTracks } = useHot();
   return (
     <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-white p-10 gap-10">
@@ -40,6 +45,10 @@ const Post: FunctionComponent = (): JSX.Element => {
         fetchMorePublications={fetchMorePublications}
         fetchReactions={fetchReactions}
         getMoreFeedTimeline={getMoreFeedTimeline}
+        userSelectFeed={userSelectFeed}
+        getMoreUserSelectFeed={getMoreUserSelectFeed}
+        didMirror={didMirror}
+        getMoreMirrors={getMoreMirrors}
       />
     </div>
   );

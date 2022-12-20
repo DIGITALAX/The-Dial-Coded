@@ -11,6 +11,7 @@ import {
 } from "../../../lib/lens/utils";
 import { setLayout } from "../../../redux/reducers/layoutSlice";
 import { setLensProfile } from "../../../redux/reducers/lensProfileSlice";
+import { setHamburger } from "../../../redux/reducers/hamburgerSlice";
 
 const useHeader = (): UseHeaderResult => {
   const dispatch = useDispatch();
@@ -20,9 +21,9 @@ const useHeader = (): UseHeaderResult => {
   );
   const { isConnected } = useAccount();
   const handleImageData = (): void => {
-    if (backgroundNumber < 18 && backgroundNumber > 4) {
+    if (backgroundNumber < 17 && backgroundNumber > 4) {
       dispatch(setBackground(backgroundNumber + 1));
-    } else if (backgroundNumber === 18 || backgroundNumber <= 4) {
+    } else if (backgroundNumber === 17 || backgroundNumber <= 4) {
       dispatch(setBackground(5));
     }
   };
@@ -33,6 +34,7 @@ const useHeader = (): UseHeaderResult => {
       behavior: "smooth",
     });
     dispatch(setLayout("Account"));
+    dispatch(setHamburger(false));
   };
 
   useEffect(() => {

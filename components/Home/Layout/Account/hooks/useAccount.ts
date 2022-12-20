@@ -30,6 +30,7 @@ import profileImageUpload from "../../../../../graphql/mutations/profileImage";
 import getDefaultProfile from "../../../../../graphql/queries/getDefaultProfile";
 import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
 import checkIndexed from "../../../../../graphql/queries/checkIndexed";
+import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = ["account", "profile feed", "stats"];
@@ -55,17 +56,17 @@ const useAccount = (): UseAccountResult => {
   const handleTapeSet = (title: string): void => {
     dispatch(setAccountPage(title));
   };
+  
   const {
     signTypedDataAsync,
-    isSuccess: signedSuccess,
-    error: signedError,
   } = useSignTypedData();
+  
   const { signTypedDataAsync: signProfileTypedDataAsync } =
     useProfileSignTypedData();
-  const {
+  
+    const {
     config,
     isSuccess,
-    error: configerror,
   } = usePrepareContractWrite({
     address: LENS_PERIPHERY_CONTRACT_MUMBAI,
     abi: LensHubPeriphery,
@@ -74,7 +75,7 @@ const useAccount = (): UseAccountResult => {
     args: [accountArgs],
   });
 
-  const { writeAsync } = useProfileContractWrite(config);
+  const { writeAsync, error } = useContractWrite(config);
 
   const { config: profileConfig, isSuccess: profileConfigSuccess } =
     useProfilePrepareContractWrite({
@@ -85,7 +86,8 @@ const useAccount = (): UseAccountResult => {
       args: [profileImageArgs],
     });
 
-  const { writeAsync: profilewriteAsync } = useContractWrite(profileConfig);
+  const { writeAsync: profilewriteAsync, error: writeErrorImage } =
+    useProfileContractWrite(profileConfig);
 
   const notificationImages: string[] = [
     "QmZS3Af6ypfwrPYg8w46kjpUR8REGuGb8bj98PukM7yu87",
@@ -280,24 +282,28 @@ const useAccount = (): UseAccountResult => {
     setAccountLoading(true);
     try {
       const tx = await writeAsync?.();
+      if (error) {
+        dispatch(setInsufficientFunds("failed"))
+        return;
+      }
       const res = await tx?.wait();
       if (res?.transactionHash === undefined) {
-        alert("Transaction Failed. Please Try Again.");
+        dispatch(setInsufficientFunds("failed"))
         setAccountLoading(false);
       } else {
-        setTimeout(async () => {
-          const result = await checkIndexed(res?.transactionHash);
-          if (result?.data?.hasTxHashBeenIndexed?.indexed) {
-            setAccountLoading(false);
+        const result = await checkIndexed(res?.transactionHash);
+        if (result?.data?.hasTxHashBeenIndexed?.indexed) {
+          setTimeout(async () => {
             const profile = await getDefaultProfile(address);
             dispatch(setLensProfile(profile.data.defaultProfile));
-          }
-        }, 10000);
+            setAccountLoading(false);
+          }, 5000);
+        }
       }
     } catch (err) {
       console.error(err);
       setAccountLoading(false);
-      alert("Transaction Failed. Please Try Again.");
+      dispatch(setInsufficientFunds("failed"))
     }
   };
 
@@ -305,19 +311,28 @@ const useAccount = (): UseAccountResult => {
     setProfileLoading(true);
     try {
       const tx = await profilewriteAsync?.();
+      if (writeErrorImage) {
+        dispatch(setInsufficientFunds("failed"))
+        return;
+      }
       const res = await tx?.wait();
       if (res?.transactionHash === undefined) {
-        alert("Transaction Failed. Please Try Again.");
+        dispatch(setInsufficientFunds("failed"))
         setProfileLoading(false);
       } else {
-        setTimeout(async () => {
-          setProfileLoading(false);
-        }, 6000);
+        const result = await checkIndexed(res?.transactionHash);
+        if (result?.data?.hasTxHashBeenIndexed?.indexed) {
+          setTimeout(async () => {
+            const profile = await getDefaultProfile(address);
+            dispatch(setLensProfile(profile.data.defaultProfile));
+            setProfileLoading(false);
+          }, 5000);
+        }
       }
     } catch (err) {
       console.error(err);
       setProfileLoading(false);
-      alert("Transaction Failed. Please Try Again.");
+      dispatch(setInsufficientFunds("failed"))
     }
   };
 

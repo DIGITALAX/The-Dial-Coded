@@ -27,7 +27,6 @@ const useScan = (): UseScanResult => {
     "QmRfz2Fp6E93mUuAH5mhYKpeVPJQAQkn7HLKkiSsWwtsd2",
     "QmWsyrjoizyX4GRYeGvJ3ecd7YDMkonDM2KBTW2bHH18VX",
     "QmP2fNq3YQ5RbeZitu8cRc1ajCeW8YbgZmkjV6Nn9VGenT",
-    // other images
     "QmYJ3bkG7b1EHr2sipLRX1NW8Szei8uizSGwohpTbTL5i7",
     "QmfVLPL7WG3QrgJ63bK33uzG5RCAntB734vo8J2JBGSYyr",
     "QmQVwiqRtAaTCFtmssBTghahs83xM2Fgs1F188Dt6pDiSi",

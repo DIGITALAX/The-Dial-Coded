@@ -62,7 +62,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
                 ? () => {
                     lensProfile
                       ? dispatch(setPublication(true))
-                      : dispatch(setSignIn(true)); dispatch(setLensProfile(undefined));
+                      : dispatch(setSignIn(true));
                   }
                 : openConnectModal
             }

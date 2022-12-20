@@ -15,6 +15,10 @@ const Feed: FunctionComponent<FeedProps> = ({
   fetchMorePublications,
   fetchReactions,
   getMoreFeedTimeline,
+  getMoreUserSelectFeed,
+  userSelectFeed,
+  didMirror,
+  getMoreMirrors
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -32,6 +36,10 @@ const Feed: FunctionComponent<FeedProps> = ({
           isOpen={isOpen}
           fetchReactions={fetchReactions}
           getMoreFeedTimeline={getMoreFeedTimeline}
+          getMoreUserSelectFeed={getMoreUserSelectFeed}
+          userSelectFeed={userSelectFeed}
+          didMirror={didMirror}
+          getMoreMirrors={getMoreMirrors}
         />
         <Hot
           topTrending={topTrending}

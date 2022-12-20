@@ -133,7 +133,7 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                 onClick={
                   isConnected
                     ? () => {
-                        lensProfile ? mirrorPost() : dispatch(setSignIn(true)); dispatch(setLensProfile(undefined));
+                        lensProfile ? mirrorPost() : dispatch(setSignIn(true));
                       }
                     : openConnectModal
                 }

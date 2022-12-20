@@ -11,6 +11,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   dispatch,
   fetchReactions,
 }): JSX.Element => {
+
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-6">   
       <div

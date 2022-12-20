@@ -11,7 +11,7 @@ handler.post(async (req: any, res: NextApiResponse<any>) => {
     const json = await results.json()
     return res.json({json});
   } catch (err: any) {
-    console.log(err.message);
+    console.error(err.message);
   }
 });
 

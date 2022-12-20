@@ -22,11 +22,11 @@ const Header: FunctionComponent = (): JSX.Element => {
     (state: RootState) => state.app.hamburgerReducer.value
   );
   return (
-    <div className="absolute w-full h-fit grid grid-flow-col auto-cols-auto justify-between py-10 px-6 z-20">
-      <div className="relative w-fit h-fit col-start-1 text-white font-dosis text-7xl">
+    <div className="absolute w-full h-fit grid grid-flow-col auto-cols-auto justify-between py-10 px-6 z-20 gap-10 sm:gap-0">
+      <div className="relative w-fit h-fit col-start-1 text-white font-dosis text-7xl row-start-1">
         THE DIAL
       </div>
-      <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-2 gap-6 place-self-center pr-4">
+      <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-1 sm:col-start-2 gap-6 justify-self-start self-center sm:justify-self-center pr-4 row-start-2 sm:row-start-1">
         <div
           className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60"
           onClick={() => dispatch(setVideo(!video))}

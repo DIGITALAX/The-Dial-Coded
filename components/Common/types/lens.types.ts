@@ -2000,7 +2000,7 @@ export type PublicationMetadataTagsFilter = {
   oneOf?: InputMaybe<Array<Scalars['String']>>;
 };
 
-export type PublicationQueryRequest = {
+export type PublicationsQueryRequest = {
   /** The publication id */
   publicationId?: InputMaybe<Scalars['InternalPublicationId']>;
   /** The tx hash */
@@ -2248,7 +2248,7 @@ export type QueryProfilesArgs = {
 };
 
 export type QueryPublicationArgs = {
-  request: PublicationQueryRequest;
+  request: PublicationsQueryRequest;
 };
 
 export type QueryPublicationRevenueArgs = {

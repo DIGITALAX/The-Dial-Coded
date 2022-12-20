@@ -7,10 +7,10 @@ const EXPLORE_PUBLICATIONS = `
       items {
         __typename 
         ... on Post {
-          ...PostFields
+          ...PostFields        
         }
         ... on Comment {
-          ...CommentFields
+          ...CommentFields        
         }
         ... on Mirror {
           ...MirrorFields
@@ -316,6 +316,7 @@ const explorePublications = (request: any) => {
       request: request,
     },
     fetchPolicy: "no-cache",
+    errorPolicy: 'all'
   });
 };
 
