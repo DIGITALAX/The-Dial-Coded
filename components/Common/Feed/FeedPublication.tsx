@@ -20,7 +20,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   fetchReactions,
   didMirror,
   type,
-  getMoreMirrors
+  getMoreMirrors,
 }): JSX.Element => {
   let imagePrefix: any;
   let profileImage: string;
@@ -56,14 +56,16 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   const [reaction, setReaction] = useState<number>();
   const [hasReacted, setHasReacted] = useState<any[]>([]);
   useMemo(async () => {
-    const reactionArr = await fetchReactions((publication as any)?.id);
-    const reactionLength = reactionArr.length;
-    setHasReacted(
-      lodash.filter(reactionArr, (arr) => arr.profile.id === profileId)
-    );
-    setReaction(reactionLength as number);
-    if (didMirror?.length === 50) {
-      await getMoreMirrors();
+    if (profileId) {
+      const reactionArr = await fetchReactions((publication as any)?.id);
+      const reactionLength = reactionArr?.length;
+      setHasReacted(
+        lodash.filter(reactionArr, (arr) => arr?.profile?.id === profileId)
+      );
+      setReaction(reactionLength as number);
+      if (didMirror?.length === 50 && profileId) {
+        await getMoreMirrors();
+      }
     }
   }, [reactionState, profileId, viewerOpen, didMirror]);
   return (
@@ -127,7 +129,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
             <div
               id="username"
               className={`relative w-fit h-fit ${
-                (publication as any).profile?.name
+                (publication as any)?.profile?.name
                   ? "row-start02"
                   : "row-start-1"
               } font-dosis text-base self-center`}
@@ -241,7 +243,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
           commentValue={(publication as any)?.id}
           heartValue={(publication as any)?.id}
           canCollect={
-            (publication as any).collectModule?.__typename !==
+            (publication as any)?.collectModule?.__typename !==
             "RevertCollectModuleSettings"
               ? true
               : false
@@ -261,19 +263,24 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               : false
           }
         />
-        <div
-          className="relative w-fit h-fit col-start-2 justify-self-end self-center text-white grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95"
-          onClick={() => {
-            viewerOpen ? {} : router.push(`/post/${(publication as any)?.id}`);
-          }}
-        >
-          <div className="relative w-fit h-fit col-start-1 text-sm">
-            {type === "post" ? "View Post" : "View Comment"}
-          </div>
-          <div className="relative w-fit h-fit col-start-2">
-            <AiFillEye color="white" size={20} />
-          </div>
-        </div>
+        {!router.asPath.includes("post") &&
+          !router.asPath.includes("profile") && (
+            <div
+              className="relative w-fit h-fit col-start-2 justify-self-end self-center text-white grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95"
+              onClick={() => {
+                viewerOpen
+                  ? {}
+                  : router.push(`/post/${(publication as any)?.id}`);
+              }}
+            >
+              <div className="relative w-fit h-fit col-start-1 text-sm">
+                {type === "Post" ? "View Post" : "View Comment"}
+              </div>
+              <div className="relative w-fit h-fit col-start-2">
+                <AiFillEye color="white" size={20} />
+              </div>
+            </div>
+          )}
       </div>
     </div>
   );

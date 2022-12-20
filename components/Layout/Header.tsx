@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setVideo } from "../../redux/reducers/videoSlice";
 import { RootState } from "../../redux/store";
@@ -9,6 +9,8 @@ import Connect from "../Common/Auth/modules/Connect";
 import Profile from "../Common/Auth/modules/Profile";
 import useLensSignIn from "../Common/Auth/hooks/useLensSignIn";
 import Disconnect from "../Common/Auth/modules/Disconnect";
+import { useRouter } from "next/router";
+import { setHamburger } from "../../redux/reducers/hamburgerSlice";
 
 const Header: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ const Header: FunctionComponent = (): JSX.Element => {
   const hamburger = useSelector(
     (state: RootState) => state.app.hamburgerReducer.value
   );
+  const router = useRouter();
   return (
     <div className="absolute w-full h-fit grid grid-flow-col auto-cols-auto justify-between py-10 px-6 z-20 gap-10 sm:gap-0">
       <div className="relative w-fit h-fit col-start-1 text-white font-dosis text-7xl row-start-1">
@@ -72,7 +75,24 @@ const Header: FunctionComponent = (): JSX.Element => {
               >
                 {authStatus ? "Account" : "Lens Sign In"}
               </div>
-              <div className="relative text-black row-start-2 w-fit h-fit place-self-center text-xs hover:opacity-60 cursor-pointer">
+              {authStatus && (
+                <div
+                  className="relative text-black row-start-2 w-fit h-fit place-self-center text-xs hover:opacity-60 cursor-pointer"
+                  onClick={() => {
+                    router.push(
+                      `/profile/${lensProfile?.handle.split(".test")[0]}`
+                    );
+                    dispatch(setHamburger(false));
+                  }}
+                >
+                  Profile Feed
+                </div>
+              )}
+              <div
+                className={`relative text-black row-start-3 w-fit h-fit place-self-center text-xs hover:opacity-60 cursor-pointer ${
+                  authStatus ? "row-start-3" : "row-start-2"
+                }`}
+              >
                 <Disconnect dispatch={dispatch} />
               </div>
             </div>

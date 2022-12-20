@@ -10,6 +10,8 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   userFeed,
   dispatch,
   fetchReactions,
+  didMirror,
+  getMoreMirrors
 }): JSX.Element => {
 
   return (
@@ -37,6 +39,8 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
                   key={index}
                   fetchReactions={fetchReactions}
                   type={"post"}
+                  didMirror={didMirror}
+                  getMoreMirrors={getMoreMirrors}
                 />
               );
             }

@@ -502,6 +502,8 @@ export type CommentsModalProps = {
   getMorePostComments: () => Promise<void>;
   commentPost: () => Promise<void>;
   commentLoading: boolean;
+  didMirror: any[];
+  getMoreMirrors: () => Promise<void>
 };
 
 export type UseReactionsResult = {

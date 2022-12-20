@@ -21,14 +21,14 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     accountLoading,
     setProfileData,
     profileImageSet,
-    profileLoading
+    profileLoading,
   } = useAccount();
   const dispatch = useDispatch();
   const { getMoreUserProfileFeed, userFeed } = useProfile();
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
-  const { fetchReactions } = useMain();
+  const { fetchReactions, didMirror, getMoreMirrors } = useMain();
   let action: string = "account";
   const decideStringAction = () => {
     if (profile) {
@@ -49,6 +49,8 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           userFeed={userFeed}
           fetchReactions={fetchReactions}
           dispatch={dispatch}
+          didMirror={didMirror}
+          getMoreMirrors={getMoreMirrors}
         />
       );
 

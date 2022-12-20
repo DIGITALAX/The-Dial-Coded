@@ -1,6 +1,4 @@
 import React, { FunctionComponent} from "react";
-import { ImCross } from "react-icons/im";
-import { setCollectOptionsModal } from "../../../../../redux/reducers/collectOptionsModalSlice";
 import CollectButton from "../../../Miscellaneous/CollectButton/CollectButton";
 import { CollectOptionsModalProps } from "../../../types/common.types";
 import CollectInput from "./CollectInput";
@@ -191,7 +189,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     <br />
                     {chargeCollect === "yes" && value > 0 && (
                       <p>
-                        You'll receive an award in{" "}
+                        You&apos;ll receive an award in{" "}
                         <a className="underline decoration-offBlue">
                           {enabledCurrency}
                         </a>{" "}
@@ -203,7 +201,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     <br />
                     {referral > 0 && (
                       <a>
-                        You'll pass on an award of{" "}
+                        You&apos;ll pass on an award of{" "}
                         <a className="underline decoration-offBlue">
                           {referral}%
                         </a>{" "}

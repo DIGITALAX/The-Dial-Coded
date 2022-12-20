@@ -12,8 +12,10 @@ import {
 import { setLayout } from "../../../redux/reducers/layoutSlice";
 import { setLensProfile } from "../../../redux/reducers/lensProfileSlice";
 import { setHamburger } from "../../../redux/reducers/hamburgerSlice";
+import { useRouter } from "next/router";
 
 const useHeader = (): UseHeaderResult => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const [connected, setConnected] = useState(false);
   const backgroundNumber: number = useSelector(
@@ -29,12 +31,15 @@ const useHeader = (): UseHeaderResult => {
   };
 
   const handleAccount = (): void => {
+    if (router.asPath.includes("post") || router.asPath.includes("profile")) {
+      router.push("/");
+    }
+    dispatch(setLayout("Account"));
+    dispatch(setHamburger(false));
     document.getElementById("account")?.scrollIntoView({
       block: "start",
       behavior: "smooth",
     });
-    dispatch(setLayout("Account"));
-    dispatch(setHamburger(false));
   };
 
   useEffect(() => {

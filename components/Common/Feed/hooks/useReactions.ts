@@ -276,6 +276,7 @@ const useReactions = (): UseReactionsResult => {
 
   const mirrorPost = async (): Promise<void> => {
     setMirrorLoading(true);
+    console.log("here in the function")
     try {
       const mirrorPost = await mirror({
         profileId: defaultProfile,
@@ -514,6 +515,8 @@ const useReactions = (): UseReactionsResult => {
       collectWrite();
     }
   }, [mirrorSuccess, collectSuccess]);
+
+  console.log("tying this out")
 
   return {
     collectors,
