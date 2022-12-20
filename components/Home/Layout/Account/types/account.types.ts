@@ -39,7 +39,7 @@ export type ProfileTabProps = {
   getMoreUserProfileFeed: () => Promise<void>;
   userFeed: PublicationsQueryRequest[];
   dispatch: Dispatch<AnyAction>;
-  fetchReactions: (id: string) => Promise<number | void>;
+  fetchReactions: (id: string) => Promise<any>;
 };
 
 export type StatsTabProps = {

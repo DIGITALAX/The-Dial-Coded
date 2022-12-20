@@ -17,7 +17,7 @@ import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import { setSignIn } from "../../../../../redux/reducers/signInSlice";
 import lodash from "lodash";
-import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
+import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 
 const usePublication = () => {
   const [postDescription, setPostDesription] = useState<string>("");
@@ -73,7 +73,7 @@ const usePublication = () => {
       method: "POST",
       body: JSON.stringify(searchGif),
     });
-    const allGifs = await getGifs.json()
+    const allGifs = await getGifs.json();
     setResults(allGifs?.json?.results);
   };
 
@@ -204,7 +204,7 @@ const usePublication = () => {
       setEnabled(true);
     } catch (err: any) {
       console.error(err.message);
-      dispatch(setLensProfile(undefined));
+      // dispatch(setLensProfile(undefined));
       dispatch(setSignIn(true));
     }
     setPostLoading(false);
@@ -222,23 +222,21 @@ const usePublication = () => {
       const tx = await writeAsync?.();
       const res = await tx?.wait();
       if (res?.transactionHash === undefined) {
-        alert("Transaction Failed. Please Try Again.");
+        dispatch(setInsufficientFunds("failed"))
         setPostLoading(false);
       } else {
-        setTimeout(async () => {
-          const result = await checkIndexed(res?.transactionHash);
-          if (result?.data?.hasTxHashBeenIndexed?.indexed) {
-            setPostLoading(false);
-            dispatch(setPublication(false));
-            setEnabled(false);
-            setPostDesription("");
-          }
-        }, 10000);
+        const result = await checkIndexed(res?.transactionHash);
+        if (result?.data?.hasTxHashBeenIndexed?.indexed) {
+          setPostLoading(false);
+          dispatch(setPublication(false));
+          setEnabled(false);
+          setPostDesription("");
+        }
       }
     } catch (err) {
       console.error(err);
       setPostLoading(false);
-      alert("Transaction Failed. Please Try Again.");
+      dispatch(setInsufficientFunds("failed"))
     }
   };
 

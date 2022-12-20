@@ -11,6 +11,8 @@ export type UseParametersResult = {
   setUserTypeOpen: (e: boolean) => void;
   userTypeOpen: boolean;
   userList: string[];
+  userSelectFeed: any[];
+  getMoreUserSelectFeed: () => Promise<void>;
 };
 
 export type OptionsProps = {

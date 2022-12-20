@@ -18,14 +18,14 @@ const Badges: FunctionComponent = (): JSX.Element => {
   } = useBadges();
   return (
     <div className="relative bg-white p-10 w-full h-full grid grid-flow-row auto-rows-auto gap-5 z-0">
-      <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto py-32">
+      <div className="relative w-full h-full row-start-1 col-start-1 grid grid-flow-col auto-cols-auto py-32">
         <div className="relative uppercase w-2/3 h-fit text-black font-digiB text-center text-3xl place-self-center leading-loose">
           Shrink the distance between drafts, awards winning creation, and
           casual reactions to your infinite record collection.
         </div>
       </div>
-      <div className="relative row-start-2 w-full h-full grid grid-flow-row auto-rows-auto gap-5 col-span-1">
-        <div className="relative w-fit h-full col-start-1 grid grid-flow-row auto-rows-auto gap-8 col-span-1">
+      <div className="relative row-start-2 w-fit lg:w-full h-full grid grid-flow-row auto-rows-auto gap-5">
+        <div className="relative w-fit h-full col-start-1 grid grid-flow-row auto-rows-auto gap-8 md:col-span-1 lg:row-start-1 row-start-2 lg:justify-self-start md:justify-self-center justify-self-start ">
           <Rewind
             row={"1"}
             handleValueChange={handlePageIncrease}
@@ -40,7 +40,7 @@ const Badges: FunctionComponent = (): JSX.Element => {
             currentValue={currentPage}
           />
         </div>
-        <div className="relative w-2/3 h-full py-3 place-self-center  col-start-2">
+        <div className="relative w-full lg:w-2/3 h-80 lg:h-full py-3 place-self-center col-start-1 lg:col-start-2 row-start-1 lg:col-span-1 col-span-3">
           <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
             <div className="absolute object-cover w-full h-full bg-black">
               <Image
@@ -51,7 +51,7 @@ const Badges: FunctionComponent = (): JSX.Element => {
                 className="opacity-60"
               />
             </div>
-            <div className="relative w-2/3 h-fit text-center text-[1.2vw] font-dosis text-white px-3 place-self-center">
+            <div className="relative w-2/3 h-fit text-center text-[1.3rem] lg:text-[1.2vw] font-dosis text-white px-3 place-self-center">
               Struck by the sheer number and size of the waves, we watched in
               fascination as one collector after another scanned the records.
               This machine transforming its contents into a dazzling display of
@@ -59,7 +59,7 @@ const Badges: FunctionComponent = (): JSX.Element => {
             </div>
           </div>
         </div>
-        <div className="relative col-start-3 w-fit h-full grid grid-cols-5 grid-flow-col-dense grid-rows-3 gap-3 justify-self-end">
+        <div className="lg:row-start-1 row-start-2 relative col-start-2 col-span-2 lg:col-span-1 lg:col-start-3 w-full md:w-fit h-full grid grid-cols-5 grid-flow-col-dense grid-rows-3 gap-3 justify-self-start md:justify-self-center lg:justify-self-end">
           {(currentPage === 1 ? badgeInfo : records)?.map(
             (image: string | BadgeInfo, index: number) => {
               return currentPage === 1 ? (

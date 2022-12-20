@@ -1,4 +1,4 @@
-import { authClient } from "../../lib/lens/client";
+import { apolloClient, authClient } from "../../lib/lens/client";
 import { gql } from "@apollo/client";
 
 const FEED_TIMELINE = `
@@ -732,7 +732,7 @@ fragment ReferenceModuleFields on ReferenceModule {
 `;
 
 export const feedTimeline = (request: any) => {
-  return authClient.query({
+  return apolloClient.query({
     query: gql(FEED_TIMELINE),
     variables: {
       request: request,

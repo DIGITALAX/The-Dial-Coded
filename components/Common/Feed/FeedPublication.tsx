@@ -12,12 +12,15 @@ import { AiFillEye, AiOutlineRetweet } from "react-icons/ai";
 import { setReactionState } from "../../../redux/reducers/reactionStateSlice";
 import { setCommentShow } from "../../../redux/reducers/commentShowSlice";
 import moment from "moment";
+import lodash from "lodash";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
   dispatch,
   fetchReactions,
+  didMirror,
   type,
+  getMoreMirrors
 }): JSX.Element => {
   let imagePrefix: any;
   let profileImage: string;
@@ -26,7 +29,6 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   } else {
     imagePrefix = (publication as any)?.profile?.picture;
   }
-
   if (!imagePrefix?.original) {
     profileImage = "";
   } else if (imagePrefix?.original) {
@@ -48,11 +50,22 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   const reactionState = useSelector(
     (state: RootState) => state.app.reactionStateReducer.open
   );
+  const profileId = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
   const [reaction, setReaction] = useState<number>();
+  const [hasReacted, setHasReacted] = useState<any[]>([]);
   useMemo(async () => {
-    const reactionLength = await fetchReactions((publication as any)?.id);
+    const reactionArr = await fetchReactions((publication as any)?.id);
+    const reactionLength = reactionArr.length;
+    setHasReacted(
+      lodash.filter(reactionArr, (arr) => arr.profile.id === profileId)
+    );
     setReaction(reactionLength as number);
-  }, [reactionState]);
+    if (didMirror?.length === 50) {
+      await getMoreMirrors();
+    }
+  }, [reactionState, profileId, viewerOpen, didMirror]);
   return (
     <div
       className={`relative w-full h-full rounded-md grid grid-flow-row auto-rows-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-6 border-2 border-black z-0`}
@@ -233,7 +246,20 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               ? true
               : false
           }
-          hasCollected={(publication as any)?.hasCollectedByMe}
+          hasCollected={
+            (publication as any)?.__typename === "Mirror"
+              ? (publication as any)?.mirrorOf?.hasCollectedByMe
+              : (publication as any)?.hasCollectedByMe
+          }
+          hasReacted={hasReacted.length > 0 ? true : false}
+          hasMirrored={
+            lodash.filter(
+              didMirror,
+              (mirror) => mirror.mirrorOf.id === (publication as any).id
+            )?.length > 0
+              ? true
+              : false
+          }
         />
         <div
           className="relative w-fit h-fit col-start-2 justify-self-end self-center text-white grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95"

@@ -38,6 +38,7 @@ import walletConnectedReducer from "./reducers/walletConnectedSlice";
 import approvalArgsReducer from "./reducers/approvalArgsSlice";
 import commentReducer from "./reducers/commentSlice";
 import fireReducer from "./reducers/fireSlice";
+import insufficientFundsReducer from "./reducers/insufficientFunds";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -77,7 +78,8 @@ const reducer = combineReducers({
   walletConnectedReducer,
   approvalArgsReducer,
   commentReducer,
-  fireReducer
+  fireReducer,
+  insufficientFundsReducer
 });
 
 export const store = configureStore({

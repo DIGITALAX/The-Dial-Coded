@@ -6,7 +6,6 @@ import {
   Post,
   Profile,
   ProfileQueryRequest,
-  PublicationQueryRequest,
   PublicationsQueryRequest,
   ReactionRequest,
   WhoCollectedPublicationRequest,
@@ -34,6 +33,8 @@ export type ReactionProps = {
   heartValue?: string;
   canCollect?: boolean;
   hasCollected?: boolean;
+  hasReacted?: boolean;
+  hasMirrored?: boolean;
 };
 
 export type InterfaceProps = {
@@ -110,8 +111,10 @@ export type PresetProps = {
 export type FeedPublicationProps = {
   publication: PublicationsQueryRequest;
   dispatch: Dispatch<AnyAction>;
-  fetchReactions: (id: string) => Promise<number | void>;
+  fetchReactions: (id: string) => Promise<any>;
   type?: string;
+  didMirror: any[];
+  getMoreMirrors: () => Promise<void>
 };
 
 export type OptionMenuProps = {
@@ -427,7 +430,6 @@ export type PostArgsType = {
   };
 };
 
-
 export interface CollectValueType {
   freeCollectModule?: {
     followerOnly: boolean;
@@ -480,8 +482,11 @@ export type DisconnectProps = {
 export type CollectsModalProps = {
   collectors: WhoCollectedPublicationRequest[];
   getMorePostCollects: () => Promise<void>;
-  handleApprove?: () => void;
+  approveCurrency?: () => void;
   handleCollect?: () => Promise<void>;
+  collectInfoLoading: boolean;
+  collectLoading: boolean;
+  approvalLoading: boolean;
 };
 
 export type MirrorsModalProps = {
@@ -493,7 +498,7 @@ export type MirrorsModalProps = {
 };
 
 export type CommentsModalProps = {
-  commentors: PublicationQueryRequest[];
+  commentors: PublicationsQueryRequest[];
   getMorePostComments: () => Promise<void>;
   commentPost: () => Promise<void>;
   commentLoading: boolean;
@@ -503,7 +508,7 @@ export type UseReactionsResult = {
   getMorePostReactions: () => Promise<void>;
   mirrorers: ProfileQueryRequest[];
   getMorePostMirrors: () => Promise<void>;
-  commentors: PublicationQueryRequest[];
+  commentors: PublicationsQueryRequest[];
   getMorePostComments: () => Promise<void>;
   collectors: WhoCollectedPublicationRequest[];
   getMorePostCollects: () => Promise<void>;
@@ -520,6 +525,7 @@ export type UseReactionsResult = {
   approvalLoading: boolean;
   collectLoading: boolean;
   commentLoading: boolean;
+  collectComplete: boolean;
 };
 
 export type ReactionModalProps = {
@@ -542,12 +548,18 @@ export type CollectInfoProps = {
   totalCollected?: number;
   canClick?: boolean;
   isApproved?: boolean;
-  handleApprove?: () => void;
+  approveCurrency?: () => void;
   handleCollect?: () => Promise<void>;
+  collectLoading: boolean;
+  approvalLoading?: boolean;
 };
 
 export interface ApprovalArgs {
-  to: string,
-  from: string,
-  data: string
+  to: string;
+  from: string;
+  data: string;
 }
+
+export type TransactionProps = {
+  inputText: string;
+};

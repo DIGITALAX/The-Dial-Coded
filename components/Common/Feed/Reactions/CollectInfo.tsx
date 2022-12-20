@@ -1,5 +1,5 @@
 import Image from "next/legacy/image";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { CollectInfoProps } from "../../types/common.types";
 import moment from "moment";
@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { setLensProfile } from "../../../../redux/reducers/lensProfileSlice";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const CollectInfo: FunctionComponent<CollectInfoProps> = ({
   showText,
@@ -23,7 +23,9 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
   canClick,
   isApproved,
   handleCollect,
-  handleApprove
+  approveCurrency,
+  collectLoading,
+  approvalLoading,
 }): JSX.Element => {
   const isConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
@@ -33,6 +35,9 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
   );
   const dispatch = useDispatch();
   const { openConnectModal } = useConnectModal();
+  useEffect(() => {
+    //collect refresh
+  }, [approvalLoading])
   return (
     <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3">
       {showText && (
@@ -60,9 +65,9 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
                 <div className="relative w-fit h-fit text-offBlack font-digiB text-4xl place-self-center row-start-1">
                   {value} {symbol}
                 </div>
-                <div className="relative w-fit h-fit text-offBlack/70 font-dosis text-sm place-self-center row-start-2 pr-2">
-                  ${String(usd).slice(0, 6)}
-                </div>
+               {usd && <div className="relative w-fit h-fit text-offBlack/70 font-dosis text-sm place-self-center row-start-2 pr-2">
+                  ${String(usd)?.slice(0, 6)}
+                </div>}
               </div>
               {(limit || time) && (
                 <div className="relative w-fit h-fit place-self-center row-start-2 grid grid-flow-row auto-rows-auto gap-2">
@@ -94,30 +99,44 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
         </div>
       </div>
       <div
-        className={`relative w-28 h-10 rounded-md bg-${buttonColor} grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center ${
+        className={`relative w-28 h-10 rounded-md bg-${buttonColor} grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center text-center ${
           canClick && "cursor-pointer hover:opacity-70 active:scale-95"
         } ${showText ? "row-start-3" : "row-start-2"}`}
-        onClick={
-          !canClick
-            ? () => {}
-            : isConnected
-            ? () => {
-                lensProfile
-                  ? isApproved
-                    ? handleCollect && handleCollect()
-                    : handleApprove && handleApprove()
-                  : dispatch(setSignIn(true)); dispatch(setLensProfile(undefined));
-              }
-            : openConnectModal
-        }
       >
-        <div className="relative w-fit h-fit col-start-1 place-self-center">
-          {!isConnected
-            ? "Connect"
-            : !lensProfile
-            ? "Sign In"
-            : `${buttonText}`}
-        </div>
+        {collectLoading || approvalLoading ? (
+          <div className="relative w-fit h-fit animate-spin col-start-1 place-self-center text-center">
+            <AiOutlineLoading color="white" size={15} />
+          </div>
+        ) : !canClick ? (
+          <div className="relative w-full h-fit col-start-1 place-self-center text-center">
+            {buttonText}
+          </div>
+        ) : !isConnected ? (
+          <div
+            className="relative w-full h-fit col-start-1 place-self-center text-center"
+            onClick={openConnectModal}
+          >
+            Connect
+          </div>
+        ) : !lensProfile ? (
+          <div
+            className="relative w-full h-fit col-start-1 place-self-center text-center"
+            onClick={() => dispatch(setSignIn(true))}
+          >
+            Sign In
+          </div>
+        ) : (
+          <div
+            className="relative w-full h-fit col-start-1 place-self-center text-center"
+            onClick={() => {
+              isApproved
+                ? handleCollect && handleCollect()
+                : approveCurrency && approveCurrency();
+            }}
+          >
+            {buttonText}
+          </div>
+        )}
       </div>
     </div>
   );

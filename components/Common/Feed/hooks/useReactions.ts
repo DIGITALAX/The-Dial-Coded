@@ -14,6 +14,8 @@ import {
   useSignTypedData,
   useSendTransaction,
   usePrepareSendTransaction,
+  useAccount,
+  useWaitForTransaction,
 } from "wagmi";
 import mirror from "../../../../graphql/mutations/mirror";
 import whoCollectedPublications from "../../../../graphql/queries/whoCollectPublications";
@@ -37,6 +39,8 @@ import {
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import lodash from "lodash";
 import comment from "../../../../graphql/mutations/comment";
+import collect from "../../../../graphql/mutations/collect";
+import { setInsufficientFunds } from "../../../../redux/reducers/insufficientFunds";
 
 const useReactions = (): UseReactionsResult => {
   const pubId = useSelector(
@@ -45,7 +49,6 @@ const useReactions = (): UseReactionsResult => {
   const approvalArgs = useSelector(
     (state: RootState) => state.app.approvalArgsReducer.args
   );
-  console.log(approvalArgs);
   const reactions = useSelector(
     (state: RootState) => state.app.reactionStateReducer
   );
@@ -55,8 +58,9 @@ const useReactions = (): UseReactionsResult => {
   const commentId = useSelector(
     (state: RootState) => state.app.commentShowReducer.value
   );
-  const [mirrorEnabled, setmirrorEnabled] = useState<boolean>(false);
-  const [args, setArgs] = useState<any>();
+  const [mirrorArgs, setMirrorArgs] = useState<any>();
+  const [commentArgs, setCommentArgs] = useState<any>();
+  const [collectArgs, setCollectArgs] = useState<any>();
   const [collectors, setCollectors] = useState<
     WhoCollectedPublicationRequest[]
   >([]);
@@ -77,7 +81,6 @@ const useReactions = (): UseReactionsResult => {
   const defaultProfile = useSelector(
     (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
   );
-  const [commentEnabled, setCommentEnabled] = useState<boolean>(false);
   const [approvalSendEnabled, setApprovalSendEnabled] =
     useState<boolean>(false);
   const {
@@ -88,22 +91,23 @@ const useReactions = (): UseReactionsResult => {
     request: {
       to: approvalArgs?.to as string,
       from: approvalArgs?.from as string,
-      value: approvalArgs?.data as string,
+      data: approvalArgs?.data as string,
     },
-    enabled: Boolean(approvalSendEnabled),
+    // enabled: Boolean(approvalSendEnabled),
   });
   const {
     sendTransactionAsync,
     isSuccess: approvalSuccess,
     error,
     data,
-  } = useSendTransaction({
-    mode: "recklesslyUnprepared",
-    to: approvalArgs?.to as string,
-    value: approvalArgs?.data as string,
-  });
+  } = useSendTransaction(approvalConfig);
+
+  const {} = useWaitForTransaction();
+
+  const { address } = useAccount();
 
   const { signTypedDataAsync } = useSignTypedData();
+
   const getPostCollects = async (): Promise<void> => {
     try {
       const collects = await whoCollectedPublications({
@@ -161,7 +165,7 @@ const useReactions = (): UseReactionsResult => {
 
   const getMorePostReactions = async (): Promise<void> => {
     try {
-      const reactions = await whoMirroredPublications({
+      const reactions = await whoReactedublications({
         publicationId: pubId,
         cursor: reactionPageInfo?.next,
       });
@@ -251,12 +255,24 @@ const useReactions = (): UseReactionsResult => {
       address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
       abi: LensHubProxy,
       functionName: "mirrorWithSig",
-      enabled: Boolean(mirrorEnabled),
-      args: [args],
+      enabled: Boolean(mirrorArgs),
+      args: [mirrorArgs],
     });
 
   const { writeAsync: mirrorWriteAsync, isSuccess: mirrorComplete } =
     useContractMirrorWrite(mirrorConfig);
+
+  const { config: collectConfig, isSuccess: collectSuccess } =
+    usePrepareContractCollectWrite({
+      address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
+      abi: LensHubProxy,
+      functionName: "collectWithSig",
+      enabled: Boolean(collectArgs),
+      args: [collectArgs],
+    });
+
+  const { writeAsync: collectWriteAsync, isSuccess: collectComplete } =
+    useContractCollectWrite(collectConfig);
 
   const mirrorPost = async (): Promise<void> => {
     setMirrorLoading(true);
@@ -291,8 +307,7 @@ const useReactions = (): UseReactionsResult => {
           deadline: typedData.value.deadline,
         },
       };
-      setArgs(mirrorArgs);
-      setmirrorEnabled(true);
+      setMirrorArgs(mirrorArgs);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -307,13 +322,13 @@ const useReactions = (): UseReactionsResult => {
     );
     try {
       if (voteWay.length === 0 || voteWay[0]?.reaction === "DOWNVOTE") {
-        const addReactionPost = await addReaction({
+        await addReaction({
           profileId: defaultProfile,
           reaction: "UPVOTE",
           publicationId: pubId,
         });
       } else {
-        const removeReactionPost = await removeReaction({
+        await removeReaction({
           profileId: defaultProfile,
           reaction: "DOWNVOTE",
           publicationId: pubId,
@@ -335,16 +350,46 @@ const useReactions = (): UseReactionsResult => {
   const collectPost = async (): Promise<void> => {
     setCollectLoading(true);
     try {
+      const collectPost = await collect({
+        publicationId: pubId,
+      });
+      const typedData: any = collectPost.data.createCollectTypedData.typedData;
+      const signature: any = await signTypedDataAsync({
+        domain: omit(typedData?.domain, ["__typename"]),
+        types: omit(typedData?.types, ["__typename"]) as any,
+        value: omit(typedData?.value, ["__typename"]) as any,
+      });
+      const { v, r, s } = splitSignature(signature);
+      const collectArgs = {
+        collector: address,
+        profileId: typedData.value.profileId,
+        pubId: typedData.value.pubId,
+        data: typedData.value.data,
+        sig: {
+          v,
+          r,
+          s,
+          deadline: typedData.value.deadline,
+        },
+      };
+      setCollectArgs(collectArgs);
     } catch (err: any) {
       console.error(err.message);
+      if (
+        err.message.includes(
+          "You do not have enough allowance to collect this publication."
+        )
+      ) {
+        dispatch(setInsufficientFunds("insufficient"));
+      }
     }
     setCollectLoading(false);
   };
 
   const callApprovalSign = async (): Promise<void> => {
     try {
-      await sendTransactionAsync?.();
-      console.log("waited", configerror);
+      const tx = await sendTransactionAsync?.();
+      await tx?.wait();
     } catch (err: any) {
       console.error(err.message);
     }
@@ -352,7 +397,7 @@ const useReactions = (): UseReactionsResult => {
 
   const approveCurrency = async (): Promise<void> => {
     setApprovalLoading(true);
-    setApprovalSendEnabled(true);
+    // setApprovalSendEnabled(true);
     try {
       await callApprovalSign();
     } catch (err: any) {
@@ -398,8 +443,7 @@ const useReactions = (): UseReactionsResult => {
           deadline: typedData.value.deadline,
         },
       };
-      setArgs(commentArgs);
-      setCommentEnabled(true);
+      setCommentArgs(commentArgs);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -424,8 +468,26 @@ const useReactions = (): UseReactionsResult => {
     }
   };
 
+  const collectWrite = async (): Promise<void> => {
+    setCollectLoading(true);
+    try {
+      const tx = await collectWriteAsync?.();
+      const res = await tx?.wait();
+      setCollectLoading(false);
+      dispatch(
+        setReactionState({
+          actionOpen: false,
+          actionType: "collect",
+          actionValue: pubId,
+        })
+      );
+    } catch (err: any) {
+      console.error(err.message);
+      setCollectLoading(false);
+    }
+  };
+
   useEffect(() => {
-    
     if (commentShow) {
       getPostComments();
     }
@@ -447,7 +509,11 @@ const useReactions = (): UseReactionsResult => {
     if (mirrorSuccess) {
       mirrorWrite();
     }
-  }, [mirrorSuccess]);
+
+    if (collectSuccess) {
+      collectWrite();
+    }
+  }, [mirrorSuccess, collectSuccess]);
 
   return {
     collectors,
@@ -463,6 +529,7 @@ const useReactions = (): UseReactionsResult => {
     mirrorLoading,
     reactionLoading,
     mirrorComplete,
+    collectComplete,
     approvalSuccess,
     approvalLoading,
     collectLoading,

@@ -16,6 +16,8 @@ import MirrorsModal from "../components/Common/Modals/Reactions/MirrorsModal";
 import useReactions from "../components/Common/Feed/hooks/useReactions";
 import CommentsModal from "../components/Common/Modals/Reactions/CommentsModal";
 import HeartsModal from "../components/Common/Modals/Reactions/HeartsModal";
+import useMain from "../components/Home/Layout/Post/modules/Feed/hooks/useMain";
+import Transaction from "../components/Common/Modals/Transactions/Transactions";
 
 const Home: NextPage = (): JSX.Element => {
   const makePublication = useSelector(
@@ -36,6 +38,9 @@ const Home: NextPage = (): JSX.Element => {
   const commentShow = useSelector(
     (state: RootState) => state.app.commentShowReducer
   );
+  const failed = useSelector(
+    (state: RootState) => state.app.insufficientFundsReducer.value
+  );
   const {
     collectors,
     mirrorers,
@@ -53,14 +58,17 @@ const Home: NextPage = (): JSX.Element => {
     approveCurrency,
     collectPost,
     commentPost,
-    commentLoading
+    commentLoading,
+    collectLoading,
+    approvalLoading,
   } = useReactions();
+  const { collectInfoLoading } = useMain();
   const streamLinks: string[] = [
-    "https://www.youtube.com/embed/2Sa8o39R0jY?controls=0?rel=0&autoplay=1&mute=1",
-    "https://www.youtube.com/embed/qaoyC8D5Kt0?controls=0?rel=0&autoplay=1&mute=1",
+    "https://www.youtube.com/embed/__PtdR1xZYY?controls=0?rel=0&autoplay=1&mute=1",
+    "https://www.youtube.com/embed/CqpU5vCQxGM?controls=0?rel=0&autoplay=1&mute=1",
   ];
   const [newLink, setNewLink] = useState<string>(
-    "https://www.youtube.com/embed/2Sa8o39R0jY?controls=0?rel=0&autoplay=1&mute=1"
+    "https://www.youtube.com/embed/__PtdR1xZYY?controls=0?rel=0&autoplay=1&mute=1"
   );
   const reactionModal = useSelector(
     (state: RootState) => state.app.reactionStateReducer
@@ -93,8 +101,11 @@ const Home: NextPage = (): JSX.Element => {
         <CollectsModal
           collectors={collectors}
           getMorePostCollects={getMorePostCollects}
-          handleApprove={approveCurrency}
+          approveCurrency={approveCurrency}
           handleCollect={collectPost}
+          collectInfoLoading={collectInfoLoading}
+          collectLoading={collectLoading}
+          approvalLoading={approvalLoading}
         />
       )}
       {reactionModal.open && reactionModal.type === "mirror" && (
@@ -120,6 +131,15 @@ const Home: NextPage = (): JSX.Element => {
           commentors={commentors}
           getMorePostComments={getMorePostComments}
           commentLoading={commentLoading}
+        />
+      )}
+      {(failed !== "" && failed !== undefined) && (
+        <Transaction
+          inputText={
+            failed === "insufficient"
+              ? "Insufficient Funds."
+              : "Transaction Failed. Please try again."
+          }
         />
       )}
     </div>

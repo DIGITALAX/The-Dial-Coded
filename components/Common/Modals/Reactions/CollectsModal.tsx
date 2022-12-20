@@ -1,6 +1,6 @@
 import Image from "next/legacy/image";
 import Link from "next/link";
-import React, { FunctionComponent, useEffect } from "react";
+import React, { FunctionComponent } from "react";
 import { ImCross } from "react-icons/im";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,12 +10,16 @@ import { RootState } from "../../../../redux/store";
 import { CollectsModalProps } from "../../types/common.types";
 import moment from "moment";
 import CollectInfo from "../../Feed/Reactions/CollectInfo";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const CollectsModal: FunctionComponent<CollectsModalProps> = ({
   collectors,
   getMorePostCollects,
-  handleApprove,
+  approveCurrency,
   handleCollect,
+  collectInfoLoading,
+  collectLoading,
+  approvalLoading,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
   const pubId = useSelector(
@@ -118,62 +122,74 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
               </div>
             )}
             <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto row-start-3">
-              {collectModuleValues?.canCollect ? (
-                <CollectInfo
-                  showText={false}
-                  buttonText={"Collected"}
-                  buttonColor={"heat"}
-                  type={collectModuleValues?.type}
-                  canClick={false}
-                />
+              {!collectInfoLoading ? (
+                collectModuleValues?.canCollect ? (
+                  <CollectInfo
+                    showText={false}
+                    buttonText={"Collected"}
+                    buttonColor={"heat"}
+                    type={collectModuleValues?.type}
+                    canClick={false}
+                    collectLoading={collectLoading}
+                  />
+                ) : (
+                  <CollectInfo
+                    approvalLoading={approvalLoading}
+                    showText={collectors.length > 0 ? false : true}
+                    buttonText={
+                      collectModuleValues?.type === "FreeCollectModule"
+                        ? "Collect"
+                        : (collectModuleValues?.endTime &&
+                            !moment(collectModuleValues?.endTime).isAfter()) ||
+                          collectModuleValues?.totalCollects ===
+                            Number(collectModuleValues?.limit)
+                        ? "Collect Period Over"
+                        : collectModuleValues?.isApproved &&
+                          !collectModuleValues?.canCollect
+                        ? "Collect"
+                        : "Approve"
+                    }
+                    buttonColor={
+                      (collectModuleValues?.endTime &&
+                        !moment(collectModuleValues?.endTime).isAfter()) ||
+                      (Number(collectModuleValues?.limit) > 0 &&
+                        Number(collectModuleValues?.totalCollects) ===
+                          Number(collectModuleValues?.limit))
+                        ? "heat"
+                        : "offBlue"
+                    }
+                    type={collectModuleValues?.type as string}
+                    symbol={collectModuleValues?.amount?.asset?.symbol}
+                    value={collectModuleValues?.amount?.value}
+                    usd={collectModuleValues?.usd}
+                    limit={collectModuleValues?.limit}
+                    time={collectModuleValues?.endTime}
+                    totalCollected={collectModuleValues?.totalCollects}
+                    canClick={
+                      (isConnected &&
+                        lensProfile &&
+                        collectModuleValues?.endTime &&
+                        !moment(collectModuleValues?.endTime).isAfter()) ||
+                      (isConnected &&
+                        lensProfile &&
+                        Number(collectModuleValues?.limit) > 0 &&
+                        Number(collectModuleValues?.totalCollects) ===
+                          Number(collectModuleValues?.limit))
+                        ? false
+                        : true
+                    }
+                    isApproved={collectModuleValues?.isApproved}
+                    approveCurrency={approveCurrency}
+                    handleCollect={handleCollect}
+                    collectLoading={collectLoading}
+                  />
+                )
               ) : (
-                <CollectInfo
-                  showText={collectors.length > 0 ? false : true}
-                  buttonText={
-                    collectModuleValues?.type === "FreeCollectModule"
-                      ? "Collect"
-                      : (collectModuleValues?.endTime &&
-                          !moment(collectModuleValues?.endTime).isAfter()) ||
-                        collectModuleValues?.totalCollects ===
-                          Number(collectModuleValues?.limit)
-                      ? "Collect Period Over"
-                      : collectModuleValues?.canCollect
-                      ? "Collect"
-                      : "Approve"
-                  }
-                  buttonColor={
-                    (collectModuleValues?.endTime &&
-                      !moment(collectModuleValues?.endTime).isAfter()) ||
-                    (Number(collectModuleValues?.limit) > 0 &&
-                      Number(collectModuleValues?.totalCollects) ===
-                        Number(collectModuleValues?.limit))
-                      ? "heat"
-                      : "offBlue"
-                  }
-                  type={collectModuleValues?.type as string}
-                  symbol={collectModuleValues?.amount?.asset?.symbol}
-                  value={collectModuleValues?.amount?.value}
-                  usd={collectModuleValues?.usd}
-                  limit={collectModuleValues?.limit}
-                  time={collectModuleValues?.endTime}
-                  totalCollected={collectModuleValues?.totalCollects}
-                  canClick={
-                    (isConnected &&
-                      lensProfile &&
-                      collectModuleValues?.endTime &&
-                      !moment(collectModuleValues?.endTime).isAfter()) ||
-                    (isConnected &&
-                      lensProfile &&
-                      Number(collectModuleValues?.limit) > 0 &&
-                      Number(collectModuleValues?.totalCollects) ===
-                        Number(collectModuleValues?.limit))
-                      ? false
-                      : true
-                  }
-                  isApproved={collectModuleValues?.isApproved}
-                  handleApprove={handleApprove}
-                  handleCollect={handleCollect}
-                />
+                <div className="relative w-full h-60 grid grid-flow-col auto-cols-auto">
+                  <div className="relative w-fit h-fit col-start-1 place-self-center animate-spin">
+                    <AiOutlineLoading color="black" size={20} />
+                  </div>
+                </div>
               )}
             </div>
           </div>

@@ -19,7 +19,7 @@ handler.post(async (req: any, res: NextApiResponse<Data>) => {
     const cid = await uploadToIPFS(req);
     return res.status(200).json({ cid: cid });
   } catch (err: any) {
-    console.log(err.message);
+    console.error(err.message);
   }
 });
 
@@ -35,7 +35,7 @@ const uploadToIPFS = async (file: any) => {
     const cid = added.path;
     return cid;
   } catch (err: any) {
-    console.log(err.message);
+    console.error(err.message);
   }
 };
 
