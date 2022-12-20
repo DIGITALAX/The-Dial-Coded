@@ -40,6 +40,8 @@ export type ProfileTabProps = {
   userFeed: PublicationsQueryRequest[];
   dispatch: Dispatch<AnyAction>;
   fetchReactions: (id: string) => Promise<any>;
+  didMirror: any[];
+  getMoreMirrors: () => Promise<void>
 };
 
 export type StatsTabProps = {

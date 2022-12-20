@@ -269,7 +269,6 @@ const useMain = (): UseMainResults => {
       const { data } = await getPublication({
         publicationId: reactionsModal.value,
       });
-      console.log(data);
       const collectModule = data?.publication?.collectModule;
       const convertedValue = await handleCoinUSDConversion(
         collectModule?.amount?.asset?.symbol,
@@ -391,6 +390,7 @@ const useMain = (): UseMainResults => {
     collectInfoLoading,
     didMirror,
     getMoreMirrors,
+    getMirrors
   };
 };
 

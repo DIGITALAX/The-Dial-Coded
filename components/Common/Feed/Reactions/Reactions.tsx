@@ -82,7 +82,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                   actionValue: commentValue,
                 })
               )
-            : router.push(`/comment/${inCommentBox?.value}`);
+            : router.push(`/post/${inCommentBox?.value}`);
         }}
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">

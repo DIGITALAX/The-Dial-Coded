@@ -18,8 +18,9 @@ import CommentsModal from "../components/Common/Modals/Reactions/CommentsModal";
 import HeartsModal from "../components/Common/Modals/Reactions/HeartsModal";
 import useMain from "../components/Home/Layout/Post/modules/Feed/hooks/useMain";
 import Transaction from "../components/Common/Modals/Transactions/Transactions";
+import { IndexProps } from "../types/page.types";
 
-const Home: NextPage = (): JSX.Element => {
+const Home: NextPage<IndexProps> = ({ mirrorPost }): JSX.Element => {
   const makePublication = useSelector(
     (state: RootState) => state.app.publicationReducer.value
   );
@@ -48,7 +49,6 @@ const Home: NextPage = (): JSX.Element => {
     getMorePostMirrors,
     getMorePostComments,
     getMorePostCollects,
-    mirrorPost,
     reacters,
     getMorePostReactions,
     reactionPost,
@@ -62,7 +62,7 @@ const Home: NextPage = (): JSX.Element => {
     collectLoading,
     approvalLoading,
   } = useReactions();
-  const { collectInfoLoading } = useMain();
+  const { collectInfoLoading, didMirror, getMoreMirrors } = useMain();
   const streamLinks: string[] = [
     "https://www.youtube.com/embed/__PtdR1xZYY?controls=0?rel=0&autoplay=1&mute=1",
     "https://www.youtube.com/embed/CqpU5vCQxGM?controls=0?rel=0&autoplay=1&mute=1",
@@ -131,9 +131,11 @@ const Home: NextPage = (): JSX.Element => {
           commentors={commentors}
           getMorePostComments={getMorePostComments}
           commentLoading={commentLoading}
+          didMirror={didMirror}
+          getMoreMirrors={getMoreMirrors}
         />
       )}
-      {(failed !== "" && failed !== undefined) && (
+      {failed !== "" && failed !== undefined && (
         <Transaction
           inputText={
             failed === "insufficient"

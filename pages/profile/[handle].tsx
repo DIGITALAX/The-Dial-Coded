@@ -1,56 +1,31 @@
 import { NextPage } from "next";
-import explorePublications from "../../graphql/queries/explorePublications";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import Banner from "../../components/Common/Profile/modules/Banner";
+import useProfilePage from "../../components/Home/Profile/hooks/useProfilePage";
 
-export const getStaticPaths = async () => {
-  const response = await explorePublications({
-    sources: "thedial",
-    publicationTypes: ["POST", "COMMENT", "MIRROR"],
-    limit: 20,
-    sortCriteria: sortCriteria,
-    noRandomize: true,
-  });
-  const product = await response.json();
-  const paths = product?.map((item) => {
-    return {
-      params: {
-        slug: item.slug,
-      },
-    };
-  });
+const Profile: NextPage = (): JSX.Element => {
+  const {
+    query: { handle },
+  } = useRouter();
 
-  return {
-    paths,
-    fallback: 'blocking'
-  };
-};
+  const { getProfileData, profileDataLoading, profileData } = useProfilePage();
 
-export const getStaticProps = async (context: any) => {
-  const productSlug: string = context.params.slug;
-  const response = await fetch(`${BASE_URL}/api/products/${productSlug}`);
-  const data: ProductInterface = await response.json();
-  return {
-    props: { item: data },
-    revalidate: 30,
-  };
-};
-
-const Handle: NextPage<HandleProps> = ({ item }): JSX.Element => {
-  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(
-      setCurrency({
-        actionSlug: item?.slug,
-      })
-    );
-    dispatch(setMain(item?.mainImage as string));
-    dispatch(setFeatured(item?.featuredImages as string[]));
-  }, []);
+    if (handle) {
+      getProfileData(handle as string);
+    }
+  }, [handle]);
 
   return (
-    <div className="relative h-full w-full bg-black grid grid-flow-row auto-rows-[auto auto] overflow-hidden">
-
+    <div className="relative h-screen w-full bg-black opacity-70 grid grid-flow-row auto-rows-[auto auto] overflow-hidden">
+      {!profileDataLoading || profileDataLoading !== undefined ? (
+        <Banner coverPicture={profileData?.coverPicture} />
+      ) : (
+        "loading page"
+      )}
     </div>
   );
 };
 
-export default Handle;
+export default Profile;

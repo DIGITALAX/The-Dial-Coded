@@ -36,6 +36,7 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
     mirrorers,
     (mirror) => (mirror as any)?.id === lensProfile
   );
+  console.log("here")
   const { openConnectModal } = useConnectModal();
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">

@@ -1,15 +1,18 @@
-import { Post, PublicationsQueryRequest } from "../../../../../../Common/types/lens.types";
+import {
+  Post,
+  PublicationsQueryRequest,
+} from "../../../../../../Common/types/lens.types";
 
 export type MainProps = {
   publicationsFeed: PublicationsQueryRequest[];
   fetchMorePublications: () => Promise<void>;
   isOpen: boolean;
   fetchReactions: (id: string) => Promise<any>;
-  getMoreFeedTimeline:  () => Promise<void>;
+  getMoreFeedTimeline: () => Promise<void>;
   userSelectFeed: any[];
   getMoreUserSelectFeed: () => Promise<void>;
   didMirror: any[];
-  getMoreMirrors: () => Promise<void>
+  getMoreMirrors: () => Promise<void>;
 };
 
 export type HotProps = {
@@ -31,10 +34,11 @@ export type UseMainResults = {
   fetchMorePublications: () => Promise<void>;
   publicationsFeed: PublicationsQueryRequest[];
   fetchReactions: (id: string) => Promise<any>;
-  getMoreFeedTimeline:  () => Promise<void>;
+  getMoreFeedTimeline: () => Promise<void>;
   collectInfoLoading: boolean;
   didMirror: any[];
-  getMoreMirrors: () => Promise<void>
+  getMoreMirrors: () => Promise<void>;
+  getMirrors: () => Promise<void>;
 };
 
 export type ParametersProps = {
