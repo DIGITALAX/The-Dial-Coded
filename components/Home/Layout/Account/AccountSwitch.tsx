@@ -63,6 +63,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           Please Connect to Lens to view your Account page.
         </div>
       );
+    
+    case undefined:
+      return <></>
 
     default:
       return (
