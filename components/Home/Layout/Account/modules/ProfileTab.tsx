@@ -38,7 +38,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
                   publication={publication}
                   key={index}
                   fetchReactions={fetchReactions}
-                  type={"post"}
+                  type={"Post"}
                   didMirror={didMirror}
                   getMoreMirrors={getMoreMirrors}
                 />

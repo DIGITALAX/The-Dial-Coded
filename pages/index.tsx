@@ -18,60 +18,14 @@ import CommentsModal from "../components/Common/Modals/Reactions/CommentsModal";
 import HeartsModal from "../components/Common/Modals/Reactions/HeartsModal";
 import useMain from "../components/Home/Layout/Post/modules/Feed/hooks/useMain";
 import Transaction from "../components/Common/Modals/Transactions/Transactions";
-import { IndexProps } from "../types/page.types";
 
-const Home: NextPage<IndexProps> = ({ mirrorPost }): JSX.Element => {
-  const makePublication = useSelector(
-    (state: RootState) => state.app.publicationReducer.value
-  );
-  const signInModal = useSelector(
-    (state: RootState) => state.app.signInReducer.value
-  );
-  const collectNotificationModal = useSelector(
-    (state: RootState) => state.app.collectNotificationReducer.open
-  );
-  const getProfileModal = useSelector(
-    (state: RootState) => state.app.getProfileModalReducer.value
-  );
-  const imageViewerModal = useSelector(
-    (state: RootState) => state.app.imageViewerReducer.open
-  );
-  const commentShow = useSelector(
-    (state: RootState) => state.app.commentShowReducer
-  );
-  const failed = useSelector(
-    (state: RootState) => state.app.insufficientFundsReducer.value
-  );
-  const {
-    collectors,
-    mirrorers,
-    commentors,
-    getMorePostMirrors,
-    getMorePostComments,
-    getMorePostCollects,
-    reacters,
-    getMorePostReactions,
-    reactionPost,
-    reactionLoading,
-    mirrorLoading,
-    mirrorComplete,
-    approveCurrency,
-    collectPost,
-    commentPost,
-    commentLoading,
-    collectLoading,
-    approvalLoading,
-  } = useReactions();
-  const { collectInfoLoading, didMirror, getMoreMirrors } = useMain();
+const Home: NextPage = (): JSX.Element => {
   const streamLinks: string[] = [
     "https://www.youtube.com/embed/__PtdR1xZYY?controls=0?rel=0&autoplay=1&mute=1",
     "https://www.youtube.com/embed/CqpU5vCQxGM?controls=0?rel=0&autoplay=1&mute=1",
   ];
   const [newLink, setNewLink] = useState<string>(
     "https://www.youtube.com/embed/__PtdR1xZYY?controls=0?rel=0&autoplay=1&mute=1"
-  );
-  const reactionModal = useSelector(
-    (state: RootState) => state.app.reactionStateReducer
   );
   useEffect(() => {
     const shuffledLinks: number[] = shuffle([0, 1]);
@@ -92,58 +46,6 @@ const Home: NextPage<IndexProps> = ({ mirrorPost }): JSX.Element => {
       </Head>
       <Scan newLink={newLink} />
       <LayoutSwitch />
-      {makePublication && <PublicationModal />}
-      {signInModal && <SignInModal />}
-      {getProfileModal && <GetProfileModal />}
-      {imageViewerModal && <ImageViewerModal />}
-      {collectNotificationModal && <CollectNotificationModal />}
-      {reactionModal.open && reactionModal.type === "collect" && (
-        <CollectsModal
-          collectors={collectors}
-          getMorePostCollects={getMorePostCollects}
-          approveCurrency={approveCurrency}
-          handleCollect={collectPost}
-          collectInfoLoading={collectInfoLoading}
-          collectLoading={collectLoading}
-          approvalLoading={approvalLoading}
-        />
-      )}
-      {reactionModal.open && reactionModal.type === "mirror" && (
-        <MirrorsModal
-          mirrorers={mirrorers}
-          getMorePostMirrors={getMorePostMirrors}
-          mirrorPost={mirrorPost}
-          mirrorLoading={mirrorLoading}
-          mirrorComplete={mirrorComplete}
-        />
-      )}
-      {reactionModal.open && reactionModal.type === "heart" && (
-        <HeartsModal
-          reacters={reacters}
-          getMorePostReactions={getMorePostReactions}
-          reactionPost={reactionPost}
-          reactionLoading={reactionLoading}
-        />
-      )}
-      {commentShow.open && (
-        <CommentsModal
-          commentPost={commentPost}
-          commentors={commentors}
-          getMorePostComments={getMorePostComments}
-          commentLoading={commentLoading}
-          didMirror={didMirror}
-          getMoreMirrors={getMoreMirrors}
-        />
-      )}
-      {failed !== "" && failed !== undefined && (
-        <Transaction
-          inputText={
-            failed === "insufficient"
-              ? "Insufficient Funds."
-              : "Transaction Failed. Please try again."
-          }
-        />
-      )}
     </div>
   );
 };

@@ -78,22 +78,13 @@ const useMain = (): UseMainResults => {
       }
     }
     try {
-      let publicationsList;
-      lensProfile
-        ? (publicationsList = await exploreAuthPublications({
-            sources: "thedial",
-            publicationTypes: feedOrder,
-            limit: 20,
-            sortCriteria: sortCriteria,
-            noRandomize: true,
-          }))
-        : (publicationsList = await explorePublications({
-            sources: "thedial",
-            publicationTypes: feedOrder,
-            limit: 20,
-            sortCriteria: sortCriteria,
-            noRandomize: true,
-          }));
+      const publicationsList = await explorePublications({
+        sources: "thedial",
+        publicationTypes: feedOrder,
+        limit: 20,
+        sortCriteria: sortCriteria,
+        noRandomize: true,
+      });
       const arr: any[] = [...publicationsList?.data.explorePublications.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
@@ -125,24 +116,13 @@ const useMain = (): UseMainResults => {
       }
     }
     try {
-      let morePublications;
-      lensProfile
-        ? (morePublications = await exploreAuthPublications({
-            sources: "thedial",
-            publicationTypes: feedOrder,
-            limit: 20,
-            sortCriteria: sortCriteria,
-            noRandomize: true,
-            paginatedResults: paginatedResults?.next,
-          }))
-        : (morePublications = await explorePublications({
-            sources: "thedial",
-            publicationTypes: feedOrder,
-            limit: 20,
-            sortCriteria: sortCriteria,
-            noRandomize: true,
-            paginatedResults: paginatedResults?.next,
-          }));
+      const morePublications = await explorePublications({
+        sources: "thedial",
+        publicationTypes: feedOrder,
+        limit: 20,
+        sortCriteria: sortCriteria,
+        paginatedResults: paginatedResults?.next,
+      });
       const arr: PublicationsQueryRequest[] = [
         ...morePublications?.data.explorePublications.items,
       ];
@@ -152,7 +132,7 @@ const useMain = (): UseMainResults => {
       setPublicationsFeed([...publicationsFeed, ...sortedArr]);
       setPaginatedResults(morePublications?.data.explorePublications.pageInfo);
     } catch (err: any) {
-      console.error(err.message);
+      console.error(err);
     }
   };
 
@@ -213,7 +193,6 @@ const useMain = (): UseMainResults => {
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      console.log(sortedArr);
       setDidMirror(sortedArr);
       setMirrorPaginated(data?.publications?.pageInfo);
     } catch (err: any) {
@@ -229,9 +208,7 @@ const useMain = (): UseMainResults => {
         limit: 50,
         cursor: mirrorPaginated?.next,
       });
-      const arr = [
-        ...data.publications.items,
-      ];
+      const arr = [...data.publications.items];
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
@@ -390,7 +367,7 @@ const useMain = (): UseMainResults => {
     collectInfoLoading,
     didMirror,
     getMoreMirrors,
-    getMirrors
+    getMirrors,
   };
 };
 

@@ -10,6 +10,7 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import useReactions from "../components/Common/Feed/hooks/useReactions";
+import Modals from "../components/Home/Modals/Modals";
 
 const { chains, provider } = configureChains(
   [chain.polygonMumbai],
@@ -38,7 +39,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <RainbowKitProvider chains={chains}>
           <div className="min-h-fit h-auto min-w-screen w-screen relative selection:bg-offBlue selection:text-midWhite">
             <Header />
-            <Component {...pageProps}/>
+            <Component {...pageProps} />
+            <Modals />
             <Badges />
             <Footer />
           </div>

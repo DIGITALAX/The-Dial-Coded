@@ -276,7 +276,6 @@ const useReactions = (): UseReactionsResult => {
 
   const mirrorPost = async (): Promise<void> => {
     setMirrorLoading(true);
-    console.log("here in the function")
     try {
       const mirrorPost = await mirror({
         profileId: defaultProfile,
@@ -393,6 +392,7 @@ const useReactions = (): UseReactionsResult => {
       await tx?.wait();
     } catch (err: any) {
       console.error(err.message);
+      dispatch(setInsufficientFunds("failed"))
     }
   };
 
@@ -485,6 +485,7 @@ const useReactions = (): UseReactionsResult => {
     } catch (err: any) {
       console.error(err.message);
       setCollectLoading(false);
+      dispatch(setInsufficientFunds("failed"))
     }
   };
 
@@ -515,8 +516,6 @@ const useReactions = (): UseReactionsResult => {
       collectWrite();
     }
   }, [mirrorSuccess, collectSuccess]);
-
-  console.log("tying this out")
 
   return {
     collectors,
