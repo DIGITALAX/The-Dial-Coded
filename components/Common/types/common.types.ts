@@ -1,6 +1,6 @@
 import { Dispatch, AnyAction } from "redux";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
-import { BadgeInfo } from "../../Home/Badges/types/badges.types";
+import { BadgeInfo } from "../../Layout/Badges/types/badges.types";
 import {
   Erc20,
   Post,
@@ -114,7 +114,7 @@ export type FeedPublicationProps = {
   fetchReactions: (id: string) => Promise<any>;
   type?: string;
   didMirror: any[];
-  getMoreMirrors: () => Promise<void>
+  getMoreMirrors: () => Promise<void>;
 };
 
 export type OptionMenuProps = {
@@ -499,19 +499,19 @@ export type MirrorsModalProps = {
 
 export type CommentsModalProps = {
   commentors: PublicationsQueryRequest[];
-  getMorePostComments: () => Promise<void>;
+  getMorePostComments: (pubId?: string) => Promise<void>;
   commentPost: () => Promise<void>;
   commentLoading: boolean;
   didMirror: any[];
-  getMoreMirrors: () => Promise<void>
+  getMoreMirrors: () => Promise<void>;
 };
 
 export type UseReactionsResult = {
   getMorePostReactions: () => Promise<void>;
   mirrorers: ProfileQueryRequest[];
-  getMorePostMirrors: () => Promise<void>;
+  getMorePostMirrors: (pubId?: string) => Promise<void>;
   commentors: PublicationsQueryRequest[];
-  getMorePostComments: () => Promise<void>;
+  getMorePostComments: (pubId?: string) => Promise<void>;
   collectors: WhoCollectedPublicationRequest[];
   getMorePostCollects: () => Promise<void>;
   mirrorPost: () => Promise<void>;
@@ -528,6 +528,7 @@ export type UseReactionsResult = {
   collectLoading: boolean;
   commentLoading: boolean;
   collectComplete: boolean;
+  getPostComments: (pubId?: string) => Promise<void>;
 };
 
 export type ReactionModalProps = {

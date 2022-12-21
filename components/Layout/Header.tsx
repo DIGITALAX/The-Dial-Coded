@@ -30,28 +30,34 @@ const Header: FunctionComponent = (): JSX.Element => {
         THE DIAL
       </div>
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-1 sm:col-start-2 gap-6 justify-self-start self-center sm:justify-self-center pr-4 row-start-2 sm:row-start-1">
-        <div
-          className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60"
-          onClick={() => dispatch(setVideo(!video))}
-        >
-          <Image
-            src={`${INFURA_GATEWAY}/ipfs/Qmb4h9vReob4VXMByg7Go1kUmacjuGAcTxft5Rq4SbSgXY`}
-            alt="headerIcon1"
-            width={50}
-            height={50}
-          />
-        </div>
-        <div
-          className="relative w-fit h-fit col-start-2 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60"
-          onClick={() => handleImageData(currentImage)}
-        >
-          <Image
-            src={`${INFURA_GATEWAY}/ipfs/QmTUha42rLj2Epo3XYMi5eAyKFryt2TFEhik7jFyfzh2dp`}
-            alt="headerIcon2"
-            width={50}
-            height={50}
-          />
-        </div>
+        {!router.asPath.includes("post") &&
+          (!router.asPath.includes("profile") && (
+            <div
+              className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60"
+              onClick={() => dispatch(setVideo(!video))}
+            >
+              <Image
+                src={`${INFURA_GATEWAY}/ipfs/Qmb4h9vReob4VXMByg7Go1kUmacjuGAcTxft5Rq4SbSgXY`}
+                alt="headerIcon1"
+                width={50}
+                height={50}
+              />
+            </div>
+          ))}
+        {!router.asPath.includes("post") &&
+          (!router.asPath.includes("profile") && (
+            <div
+              className="relative w-fit h-fit col-start-2 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60"
+              onClick={() => handleImageData(currentImage)}
+            >
+              <Image
+                src={`${INFURA_GATEWAY}/ipfs/QmTUha42rLj2Epo3XYMi5eAyKFryt2TFEhik7jFyfzh2dp`}
+                alt="headerIcon2"
+                width={50}
+                height={50}
+              />
+            </div>
+          ))}
         <div className="relative w-full h-full col-start-3 grid grid-flow-col auto-cols-auto">
           {!connected ? (
             <Connect />

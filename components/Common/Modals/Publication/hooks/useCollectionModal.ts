@@ -87,7 +87,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
           collectModuleType = {
             feeCollectModule: {
               amount: {
-                currency: setCurrency[0].address,
+                currency: setCurrency[0]?.address,
                 value: String(value),
               },
               recipient: address as string,
@@ -99,7 +99,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
           collectModuleType = {
             timedFeeCollectModule: {
               amount: {
-                currency: setCurrency[0].address,
+                currency: setCurrency[0]?.address,
                 value: String(value),
               },
               recipient: address as string,
@@ -112,7 +112,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
             limitedFeeCollectModule: {
               collectLimit: String(limit),
               amount: {
-                currency: setCurrency[0].address,
+                currency: setCurrency[0]?.address,
                 value: String(value),
               },
               recipient: address as string,
@@ -125,7 +125,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
             limitedTimedFeeCollectModule: {
               collectLimit: String(limit),
               amount: {
-                currency: setCurrency[0].address,
+                currency: setCurrency[0]?.address,
                 value: String(value),
               },
               recipient: address as string,
