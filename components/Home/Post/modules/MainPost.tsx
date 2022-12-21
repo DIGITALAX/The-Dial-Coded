@@ -11,8 +11,8 @@ const MainPost: FunctionComponent<MainPostProps> = ({
 }): JSX.Element => {
   const dispatch = useDispatch();
   return (
-    <div className="relative w-full h-screen col-start-1 grid grid-flow-col auto-cols-auto top-60 md:top-44 rounded-t-md bg-white/90 opacity-100">
-      <div className="relative w-4/5 h-fit col-start-1 justify-self-center top-20">
+    <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto">
+      <div className="relative w-4/5 h-fit col-start-1 justify-self-center">
         <FeedPublication
           dispatch={dispatch}
           publication={publicationData}

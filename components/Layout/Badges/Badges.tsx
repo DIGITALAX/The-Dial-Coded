@@ -17,7 +17,7 @@ const Badges: FunctionComponent = (): JSX.Element => {
     handlePageIncrease,
   } = useBadges();
   return (
-    <div className="relative bg-white p-10 w-full h-full grid grid-flow-row auto-rows-auto gap-5 z-0">
+    <div className="relative bg-white bottom-0 p-10 w-full h-full grid grid-flow-row auto-rows-auto gap-5 z-0 row-start-1">
       <div className="relative w-full h-full row-start-1 col-start-1 grid grid-flow-col auto-cols-auto py-32">
         <div className="relative uppercase w-2/3 h-fit text-black font-digiB text-center text-3xl place-self-center leading-loose">
           Shrink the distance between drafts, awards winning creation, and

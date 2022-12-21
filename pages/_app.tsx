@@ -3,13 +3,11 @@ import type { AppProps } from "next/app";
 import Header from "../components/Layout/Header";
 import { store } from "./../redux/store";
 import { Provider } from "react-redux";
-import Badges from "../components/Home/Badges/Badges";
 import Footer from "../components/Layout/Footer";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
-import useReactions from "../components/Common/Feed/hooks/useReactions";
 import Modals from "../components/Home/Modals/Modals";
 
 const { chains, provider } = configureChains(
@@ -41,7 +39,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Header />
             <Component {...pageProps} />
             <Modals />
-            <Badges />
             <Footer />
           </div>
         </RainbowKitProvider>

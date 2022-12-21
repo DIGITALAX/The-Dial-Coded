@@ -215,10 +215,10 @@ const useReactions = (): UseReactionsResult => {
     }
   };
 
-  const getPostComments = async (): Promise<void> => {
+  const getPostComments = async (pubId?: string): Promise<void> => {
     try {
       const comments = await whoCommentedPublications({
-        commentsOf: commentId,
+        commentsOf: pubId ? pubId : commentId,
         limit: 30,
       });
       const arr: any[] = [...comments.data.publications.items];
@@ -232,10 +232,10 @@ const useReactions = (): UseReactionsResult => {
     }
   };
 
-  const getMorePostComments = async (): Promise<void> => {
+  const getMorePostComments = async (pubId?: string): Promise<void> => {
     try {
       const comments = await whoCommentedPublications({
-        commentsOf: commentId,
+        commentsOf: pubId ? pubId : commentId,
         limit: 30,
         cursor: commentPageInfo?.next,
       });
@@ -392,7 +392,7 @@ const useReactions = (): UseReactionsResult => {
       await tx?.wait();
     } catch (err: any) {
       console.error(err.message);
-      dispatch(setInsufficientFunds("failed"))
+      dispatch(setInsufficientFunds("failed"));
     }
   };
 
@@ -485,7 +485,7 @@ const useReactions = (): UseReactionsResult => {
     } catch (err: any) {
       console.error(err.message);
       setCollectLoading(false);
-      dispatch(setInsufficientFunds("failed"))
+      dispatch(setInsufficientFunds("failed"));
     }
   };
 
@@ -539,6 +539,7 @@ const useReactions = (): UseReactionsResult => {
     collectPost,
     commentPost,
     commentLoading,
+    getPostComments,
   };
 };
 

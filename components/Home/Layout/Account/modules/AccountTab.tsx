@@ -63,7 +63,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
         onSubmit={(e: FormEvent) => setProfileData(e)}
       >
         <div className="relative justify-self-start self-center w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-4 pb-3">
-          <div className="relative w-fit h-fit col-start-1 grid grid-flow-cols auto-cols-auto gap-2">
+          <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-2">
             <div className="relative w-fit h-fit col-start-1 place-self-center">
               Profile Id:
             </div>
@@ -71,7 +71,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               {profile?.id}
             </div>
           </div>
-          <div className="relative w-fit h-fit col-start-2 grid-flow-cols auto-cols-auto grid gap-2">
+          <div className="relative w-fit h-fit col-start-2 grid-flow-col auto-cols-auto grid gap-2">
             <div className="relative w-fit h-fit col-start-1 place-self-center">
               Handle:
             </div>
@@ -79,7 +79,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               @{profile?.handle}
             </div>
           </div>
-          <div className="relative w-fit h-fit col-start-3 grid-flow-cols auto-cols-auto grid gap-2">
+          <div className="relative w-fit h-fit col-start-3 grid-flow-col auto-cols-auto grid gap-2">
             <div className="relative w-fit h-fit col-start-1 place-self-center">
               Name:
             </div>
@@ -92,7 +92,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
           </div>
         </div>
         <div className="relative justify-self-start self-center w-fit h-fit row-start-2 grid grid-flow-col auto-cols-auto gap-8 pb-8">
-          <div className="relative w-fit h-fit col-start-1 grid grid-flow-cols auto-cols-auto gap-2">
+          <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-2">
             <div className="relative w-fit h-fit col-start-1 place-self-center">
               Location:
             </div>
@@ -103,7 +103,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               defaultValue={location[0].value ? (location[0].value as any) : ""}
             />
           </div>
-          <div className="relative w-fit h-fit col-start-2 grid-flow-cols auto-cols-auto grid gap-2">
+          <div className="relative w-fit h-fit col-start-2 grid-flow-col auto-cols-auto grid gap-2">
             <div className="relative w-fit h-fit col-start-1 place-self-center">
               Website:
             </div>

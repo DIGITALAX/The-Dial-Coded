@@ -22,7 +22,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
           alt="dial"
         />
       </div>
-      <div className="relative w-full h-fit row-start-2 grid grid-flow-cols auto-cols-auto gap-6">
+      <div className="relative w-full h-fit row-start-2 grid grid-flow-col auto-cols-auto gap-6">
         <div className="relative w-full h-10 col-start-1 grid grid-flow-col auto-cols-auto rounded-lg border-2 border-white opacity-90 gap-3 pl-1 bg-bluey/30">
           <div className="relative col-start-1 w-fit h-fit place-self-center place-self-center grid grid-flow-col auto-cols-auto pl-2">
             <Image
