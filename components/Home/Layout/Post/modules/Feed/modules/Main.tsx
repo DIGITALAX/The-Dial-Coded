@@ -62,7 +62,7 @@ const Main: FunctionComponent<MainProps> = ({
               publication={publication}
               key={index}
               fetchReactions={fetchReactions}
-              type={"post"}
+              type={"Post"}
               didMirror={didMirror}
               getMoreMirrors={getMoreMirrors}
             />

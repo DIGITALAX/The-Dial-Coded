@@ -13,7 +13,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
   getMorePostComments,
   commentPost,
   didMirror,
-  getMoreMirrors
+  getMoreMirrors,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
   const pubId = useSelector((state: RootState) => state.app.commentShowReducer);
@@ -77,7 +77,16 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
               </div>
               <div
                 className="relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95"
-                onClick={() => router.push(`/post/${pubId?.value}`)}
+                onClick={() => {
+                  router.push(`/post/${pubId?.value}`);
+                  dispatch(
+                    setCommentShow({
+                      actionOpen: false,
+                      actionType: "comment",
+                      actionValue: pubId?.value,
+                    })
+                  );
+                }}
               >
                 <div className="relative w-fit h-fit col-start-1 place-self-center">
                   Comment
