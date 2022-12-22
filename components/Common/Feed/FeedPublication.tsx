@@ -70,7 +70,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   }, [reactionState, profileId, viewerOpen, didMirror]);
   return (
     <div
-      className={`relative w-full h-full rounded-md grid grid-flow-row auto-rows-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-6 border-2 border-black z-0`}
+      className={`relative w-full h-fit rounded-md grid grid-flow-row auto-rows-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-6 border-2 border-black z-0`}
     >
       {(publication as any)?.__typename === "Mirror" && (
         <div className="relative w-fit h-fit row-start-1 justify-self-end self-center grid grid-flow-col auto-cols-auto gap-2">
@@ -164,7 +164,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         </div>
       </div>
       <div
-        className={`relative -fit max-w-full h-fit rounded-lg overflow-x-scroll grid grid-flow-col auto-cols-auto gap-3 pl-6 z-10 ${
+        className={`relative w-fit max-w-full h-fit rounded-lg overflow-x-scroll grid grid-flow-col auto-cols-auto gap-3 pl-6 z-10 ${
           (publication as any)?.__typename === "Mirror"
             ? "row-start-4"
             : "row-start-3"
@@ -263,8 +263,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               : false
           }
         />
-        {!router.asPath.includes("post") &&
-          !router.asPath.includes("profile") && (
+        {!router.asPath.includes((publication as any)?.id) && (
             <div
               className="relative w-fit h-fit col-start-2 justify-self-end self-center text-white grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95"
               onClick={() => {

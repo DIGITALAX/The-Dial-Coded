@@ -1,30 +1,25 @@
 import { FunctionComponent } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import FeedPublication from "../../../../Common/Feed/FeedPublication";
-import { PublicationsQueryRequest } from "../../../../Common/types/lens.types";
-import { ProfileTabProps } from "../types/account.types";
+import FeedPublication from "../../../Common/Feed/FeedPublication";
+import { PublicationsQueryRequest } from "../../../Common/types/lens.types";
 
-const ProfileTab: FunctionComponent<ProfileTabProps> = ({
-  profile,
+const UserFeed: FunctionComponent = ({
+  dispatch,
   getMoreUserProfileFeed,
   userFeed,
-  dispatch,
   fetchReactions,
   didMirror,
   getMoreMirrors,
-  height,
 }): JSX.Element => {
   return (
-    <div
-      className={`relative w-full h-full grid grid-flow-row auto-rows-auto ${height !== undefined && "gap-6"}`}
-    >
+    <div className="col-start-2 relative w-full h-full grid grid-flow-row auto-rows-auto gap-6">
       <div
         className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto gap-5"
         id="targetDiv"
       >
         <InfiniteScroll
           scrollableTarget={"targetDiv"}
-          height={height}
+          height={undefined}
           loader={""}
           hasMore={true}
           next={getMoreUserProfileFeed}
@@ -53,4 +48,4 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   );
 };
 
-export default ProfileTab;
+export default UserFeed;

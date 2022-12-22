@@ -20,7 +20,7 @@ import lodash from "lodash";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 
 const usePublication = () => {
-  const [postDescription, setPostDesription] = useState<string>("");
+  const [postDescription, setPostDescription] = useState<string>("");
   const [hashtags, setHashtags] = useState<string>();
   const [urls, setUrls] = useState<string>();
   const [postLoading, setPostLoading] = useState<boolean>(false);
@@ -61,7 +61,7 @@ const usePublication = () => {
   // });
 
   const handleEmoji = (e: any): void => {
-    setPostDesription(postDescription + e.emoji);
+    setPostDescription(postDescription + e.emoji);
   };
 
   const handleGif = (e: FormEvent): void => {
@@ -230,7 +230,7 @@ const usePublication = () => {
           setPostLoading(false);
           dispatch(setPublication(false));
           setEnabled(false);
-          setPostDesription("");
+          setPostDescription("");
         }
       }
     } catch (err) {
@@ -241,7 +241,7 @@ const usePublication = () => {
   };
 
   const handlePostDescription = (e: FormEvent): void => {
-    setPostDesription((e.target as HTMLFormElement).value);
+    setPostDescription((e.target as HTMLFormElement).value);
     if ((e.target as HTMLFormElement).value.match(/^#[\w-]+(?:\s+#[\w-]+)*$/)) {
       setHashtags(
         (e.target as HTMLFormElement).value.match(/^#[\w-]+(?:\s+#[\w-]+)*$/)

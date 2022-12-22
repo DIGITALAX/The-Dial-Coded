@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import profilePublications from "../../../../../graphql/queries/profilePublication";
@@ -11,6 +12,7 @@ const useProfile = () => {
   const profileId = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
+  const router = useRouter();
   const [userFeed, setUserFeed] = useState<PublicationsQueryRequest[]>([]);
   const [paginatedResults, setPaginatedResults] = useState<any>();
 
@@ -53,7 +55,7 @@ const useProfile = () => {
   };
 
   useEffect(() => {
-    if (selectProfile === "profile feed") {
+    if (selectProfile === "profile feed" || router.asPath.includes("profile")) {
       getUserProfileFeed();
     }
   }, [selectProfile]);

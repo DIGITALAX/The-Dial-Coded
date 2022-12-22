@@ -21,7 +21,21 @@ const Post: NextPage = (): JSX.Element => {
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
   const { didMirror, getMoreMirrors, fetchReactions } = useMain();
-  const { getPostComments, getMorePostComments, commentors } = useReactions();
+  const {
+    getPostComments,
+    getMorePostComments,
+    commentors,
+    commentPost,
+    commentLoading,
+    commentDescription,
+    handleCommentDescription,
+    handleSetGif,
+    handleEmoji,
+    handleGif,
+    handleGifSubmit,
+    results,
+    searchGif,
+  } = useReactions();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -42,7 +56,7 @@ const Post: NextPage = (): JSX.Element => {
         !publicationData ? (
           <div className="relative w-full h-screen col-start-1 grid grid-flow-col auto-cols-auto"></div>
         ) : (
-          <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto col-start-1 pt-20">
+          <div className="relative w-4/5 h-fit grid grid-flow-row auto-rows-auto col-start-1 pt-20 justify-self-center">
             <MainPost
               publicationData={publicationData}
               didMirror={didMirror}
@@ -57,6 +71,16 @@ const Post: NextPage = (): JSX.Element => {
               getMoreMirrors={getMoreMirrors}
               lensProfile={lensProfile}
               isConnected={isConnected as boolean}
+              commentPost={commentPost}
+              commentLoading={commentLoading}
+              commentDescription={commentDescription}
+              handleCommentDescription={handleCommentDescription}
+              handleEmoji={handleEmoji}
+              handleGif={handleGif}
+              handleGifSubmit={handleGifSubmit}
+              handleSetGif={handleSetGif}
+              results={results}
+              searchGif={searchGif}
             />
           </div>
         )}

@@ -1,5 +1,6 @@
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { FunctionComponent } from "react";
+import { FormEvent, FunctionComponent } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
@@ -7,7 +8,6 @@ import { RootState } from "../../../../redux/store";
 import FeedPublication from "../../../Common/Feed/FeedPublication";
 import useCollectionModal from "../../../Common/Modals/Publication/hooks/useCollectionModal";
 import useImageUpload from "../../../Common/Modals/Publication/hooks/useImageUpload";
-import usePublication from "../../../Common/Modals/Publication/hooks/usePublication";
 import CollectOptionsModal from "../../../Common/Modals/Publication/modules/CollectOptionsModal";
 import ImagePicker from "../../../Common/Modals/Publication/modules/ImagePicker";
 import ImageUploads from "../../../Common/Modals/Publication/modules/ImageUploads";
@@ -22,6 +22,16 @@ const Comments: FunctionComponent<CommentsProps> = ({
   getMoreMirrors,
   lensProfile,
   isConnected,
+  commentPost,
+  commentLoading,
+  handleCommentDescription,
+  commentDescription,
+  handleEmoji,
+  handleGif,
+  handleSetGif,
+  results,
+  searchGif,
+  handleGifSubmit,
 }): JSX.Element => {
   const { openConnectModal } = useConnectModal();
   const collectOptionsModal = useSelector(
@@ -71,25 +81,8 @@ const Comments: FunctionComponent<CommentsProps> = ({
     mappedFeaturedFiles,
     handleRemoveImage,
   } = useImageUpload();
-  const {
-    handlePostDescription,
-    hashtags,
-    urls,
-    handleEmoji,
-    postDescription,
-    handlePost,
-    postLoading,
-    isSuccess,
-    handleGif,
-    handleGifSubmit,
-    results,
-    searchGif,
-    handleSetGif,
-    handleRemoveGif,
-    gifs,
-  } = usePublication();
   return (
-    <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto pt-4">
+    <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto pt-4 gap-4">
       {collectOptionsModal && (
         <CollectOptionsModal
           handleSetCollectValues={handleSetCollectValues}
@@ -132,7 +125,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
         <ImageUploads
           mappedFeaturedFiles={mappedFeaturedFiles}
           handleRemoveImage={handleRemoveImage}
-          postLoading={postLoading}
+          postLoading={commentLoading}
         />
       )}
       {imagePickerModal !== "" && (
@@ -146,7 +139,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
           handleSetGif={handleSetGif}
         />
       )}
-      <div className="relative w-4/5 h-full grid grid-flow-col auto-cols-auto place-self-center font-dosis text-offBlack text-lg bg-offBlue p-2 rounded-xl drop-shadow-lg">
+      <div className="relative w-full h-full grid grid-flow-col auto-cols-auto place-self-center font-dosis text-offBlack text-lg bg-offBlue p-2 rounded-xl drop-shadow-lg">
         {!lensProfile ? (
           <div>
             <div className="w-full h-48 place-self-center col-start-1 bg-white/90 rounded-xl grid grid-flow-row auto-rows-auto">
@@ -170,12 +163,12 @@ const Comments: FunctionComponent<CommentsProps> = ({
         ) : (
           <div className="relative w-full h-full place-self-center col-start-1 grid grid-flow-row auto-rows-auto gap-2">
             <textarea
-              // onChange={(e: FormEvent) => handleCommentDescription(e)}
+              onChange={(e: FormEvent) => handleCommentDescription(e)}
               style={{ resize: "none" }}
-            //   value={postDescription} //comment description
+              value={commentDescription}
               placeholder="Have something to share..."
               className={`relative w-full h-48 overflow-y-scroll row-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-4 place-self-center drop-shadow-lg`}
-              // disabled={postLoading ? true : false}
+              disabled={commentLoading ? true : false}
             ></textarea>
             <div className="relative w-full h-full grid grid-flow-col auto-cols-auto row-start-2">
               <PostOptions
@@ -183,11 +176,22 @@ const Comments: FunctionComponent<CommentsProps> = ({
                 imagePicker={imagePickerModal}
                 uploadImage={uploadImage}
                 imageUploading={imageUploading}
-                postLoading={postLoading}
+                postLoading={commentLoading}
               />
-              <div className="relative w-32 h-10 px-3 py-1 justify-self-end self-center grid grid-flow-col auto-cols-auto bg-white/95 rounded-md col-start-2">
-                <div className="relative w-fit h-fit col-start-1 place-self-center">
-                  Comment
+              <div
+                className="relative w-32 h-10 px-3 py-1 justify-self-end self-center grid grid-flow-col auto-cols-auto bg-white/95 rounded-md col-start-2 cursor-pointer hover:opacity-70 active:scale-95"
+                onClick={(e: FormEvent) => commentPost(e)}
+              >
+                <div
+                  className={`relative w-fit h-fit col-start-1 place-self-center ${
+                    commentLoading && "animate-spin"
+                  }`}
+                >
+                  {commentLoading ? (
+                    <AiOutlineLoading color="black" size={20} />
+                  ) : (
+                    "Comment"
+                  )}
                 </div>
               </div>
             </div>
@@ -195,14 +199,13 @@ const Comments: FunctionComponent<CommentsProps> = ({
         )}
       </div>
       {commentors.length > 0 && (
-        <div className="relative w-4/5 h-fit grid grid-flow-row auto-rows-auto place-self-center">
+        <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto place-self-center">
           <InfiniteScroll
             hasMore={true}
             dataLength={commentors.length}
             next={getMorePostComments}
             loader={""}
-            height={"100rem"}
-            className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4 gap-3"
+            className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto gap-3"
           >
             {commentors?.map((commentor: any, index: number) => {
               return (

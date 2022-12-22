@@ -282,3 +282,18 @@ div::-webkit-scrollbar-thumb:active {
 textarea::placeholder {
   color: #131313 !important;
 }
+
+#profile {
+  background: linear-gradient(
+    -86deg,
+    #000000,
+    #131313,
+    #000000,
+    #0a15c7,
+    #000000,
+    #131313,
+    #000000
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

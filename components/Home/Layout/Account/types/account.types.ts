@@ -41,7 +41,8 @@ export type ProfileTabProps = {
   dispatch: Dispatch<AnyAction>;
   fetchReactions: (id: string) => Promise<any>;
   didMirror: any[];
-  getMoreMirrors: () => Promise<void>
+  getMoreMirrors: () => Promise<void>;
+  height: string | undefined;
 };
 
 export type StatsTabProps = {

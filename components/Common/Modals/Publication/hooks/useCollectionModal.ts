@@ -43,11 +43,14 @@ const useCollectionModal = (): UseCollectionModalResults => {
   const publicationModuleOpen = useSelector(
     (state: RootState) => state.app.publicationReducer.value
   );
+  const reactionState = useSelector(
+    (state: RootState) => state.app.collectOptionsReducer.value
+  );
   useMemo(() => {
-    if (publicationModuleOpen) {
+    if (publicationModuleOpen || reactionState) {
       availableCurrencies();
     }
-  }, [publicationModuleOpen]);
+  }, [publicationModuleOpen, reactionState]);
 
   const handleSetCollectValues = (): void => {
     if (value <= 0 && chargeCollect === "yes") {
