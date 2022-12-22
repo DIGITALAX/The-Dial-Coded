@@ -129,9 +129,7 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
                   : "This post has no reactions. Will you be first?"}
               </div>
               <div
-                className={`relative w-20 h-10 rounded-md bg-${
-                  hasReacted?.length > 0 ? "heat" : "offBlue"
-                } cursor-pointer hover:opacity-70 active:scale-95 grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center `}
+                className={`relative w-20 h-10 rounded-md bg-offBlue cursor-pointer hover:opacity-70 active:scale-95 grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center `}
                 onClick={
                   isConnected
                     ? () => {

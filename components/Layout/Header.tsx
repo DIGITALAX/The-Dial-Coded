@@ -26,7 +26,7 @@ const Header: FunctionComponent = (): JSX.Element => {
   const router = useRouter();
   return (
     <div className="absolute w-full h-fit grid grid-flow-col auto-cols-auto justify-between py-10 px-6 z-20 gap-10 sm:gap-0">
-      <div className="relative w-fit h-fit col-start-1 text-white font-dosis text-7xl row-start-1">
+      <div className="relative w-fit h-fit col-start-1 text-white font-dosis text-7xl row-start-1 cursor-pointer active:scale-95" onClick={() => router.push("/")}>
         THE DIAL
       </div>
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-1 sm:col-start-2 gap-6 justify-self-start self-center sm:justify-self-center pr-4 row-start-2 sm:row-start-1">
@@ -72,7 +72,7 @@ const Header: FunctionComponent = (): JSX.Element => {
             )
           )}
           {hamburger && (
-            <div className="absolute row-start-2 bg-white w-fit h-fit font-dosis grid grid-flow-row auto-rows-auto gap-3 p-2 z-10 justify-self-center top-2 whitespace-nowrap">
+            <div className="absolute row-start-2 bg-white w-fit h-fit font-dosis grid grid-flow-row auto-rows-auto gap-3 p-2 z-10 justify-self-center top-2 whitespace-nowrap rounded-md">
               <div
                 className="relative text-black row-start-1 w-fit h-fit place-self-center text-xs hover:opacity-60 cursor-pointer"
                 onClick={() => {

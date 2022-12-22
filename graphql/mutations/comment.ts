@@ -35,7 +35,7 @@ export const COMMENT_POST = `mutation CreateCommentTypedData($request: CreatePub
   }
 }`;
 
-const comment = (CreateCommentTypedData: any) => {
+const CreateCommentTypedData = (CreateCommentTypedData: any) => {
   return apolloClient.mutate({
     mutation: gql(COMMENT_POST),
     variables: {
@@ -44,4 +44,4 @@ const comment = (CreateCommentTypedData: any) => {
   });
 };
 
-export default comment;
+export default CreateCommentTypedData;

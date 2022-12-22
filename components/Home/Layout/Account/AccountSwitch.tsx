@@ -51,6 +51,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           dispatch={dispatch}
           didMirror={didMirror}
           getMoreMirrors={getMoreMirrors}
+          height={"44rem"}
         />
       );
 
@@ -63,9 +64,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           Please Connect to Lens to view your Account page.
         </div>
       );
-    
+
     case undefined:
-      return <></>
+      return <></>;
 
     default:
       return (

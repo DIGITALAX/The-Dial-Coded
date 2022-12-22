@@ -6,8 +6,8 @@ export const ADD_REACTION = `mutation AddReaction($request: ReactionRequest!) {
   }`;
 
 export const REMOVE_REACTION = `mutation AddReaction($request: ReactionRequest!) {
-    addReaction(request: $request)
-  }`;
+  addReaction(request: $request)
+}`;
 
 export const addReaction = (request: any) => {
   return apolloClient.mutate({

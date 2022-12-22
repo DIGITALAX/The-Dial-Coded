@@ -127,7 +127,6 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                   <CollectInfo
                     showText={false}
                     buttonText={"Collected"}
-                    buttonColor={"heat"}
                     type={collectModuleValues?.type}
                     canClick={false}
                     collectLoading={collectLoading}
@@ -148,15 +147,6 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                           !collectModuleValues?.canCollect
                         ? "Collect"
                         : "Approve"
-                    }
-                    buttonColor={
-                      (collectModuleValues?.endTime &&
-                        !moment(collectModuleValues?.endTime).isAfter()) ||
-                      (Number(collectModuleValues?.limit) > 0 &&
-                        Number(collectModuleValues?.totalCollects) ===
-                          Number(collectModuleValues?.limit))
-                        ? "heat"
-                        : "offBlue"
                     }
                     type={collectModuleValues?.type as string}
                     symbol={collectModuleValues?.amount?.asset?.symbol}

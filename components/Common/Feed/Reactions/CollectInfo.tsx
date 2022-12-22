@@ -12,7 +12,6 @@ import { AiOutlineLoading } from "react-icons/ai";
 const CollectInfo: FunctionComponent<CollectInfoProps> = ({
   showText,
   buttonText,
-  buttonColor,
   type,
   symbol,
   value,
@@ -99,7 +98,7 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
         </div>
       </div>
       <div
-        className={`relative w-28 h-10 rounded-md bg-${buttonColor} grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center text-center ${
+        className={`relative w-28 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center text-center ${
           canClick && "cursor-pointer hover:opacity-70 active:scale-95"
         } ${showText ? "row-start-3" : "row-start-2"}`}
       >

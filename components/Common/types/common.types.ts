@@ -517,7 +517,7 @@ export type UseReactionsResult = {
   mirrorPost: () => Promise<void>;
   reacters: ReactionRequest[];
   reactionPost: () => Promise<void>;
-  commentPost: () => Promise<void>;
+  commentPost: (e: FormEvent) => Promise<void>;
   mirrorLoading: boolean;
   reactionLoading: boolean;
   mirrorComplete: boolean;
@@ -529,6 +529,14 @@ export type UseReactionsResult = {
   commentLoading: boolean;
   collectComplete: boolean;
   getPostComments: (pubId?: string) => Promise<void>;
+  handleCommentDescription: (e: FormEvent) => void;
+  commentDescription: string;
+  handleEmoji: (e: FormEvent) => void;
+  handleGif: (e: FormEvent) => void;
+  handleSetGif: (result: any) => void;
+  results: any;
+  searchGif: string | undefined;
+  handleGifSubmit: (e: any) => Promise<void>;
 };
 
 export type ReactionModalProps = {
@@ -541,7 +549,6 @@ export type ReactionModalProps = {
 export type CollectInfoProps = {
   buttonText: string;
   showText: boolean;
-  buttonColor: string;
   type?: string;
   symbol?: string;
   value?: string;

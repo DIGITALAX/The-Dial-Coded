@@ -127,9 +127,7 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                   : `This post hasn't been mirrored. Will you be first?`}
               </div>
               <div
-                className={`relative w-20 h-10 rounded-md bg-${
-                  hasMirrored?.length > 0 ? "heat" : "offBlue"
-                } grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95 `}
+                className={`relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95 `}
                 onClick={
                   isConnected
                     ? () => {

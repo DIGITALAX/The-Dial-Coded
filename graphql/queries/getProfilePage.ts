@@ -14,6 +14,7 @@ query Profile($request: SingleProfileQueryRequest!) {
       value
     }
     followNftAddress
+    isFollowedByMe
     metadata
     isDefault
     picture {

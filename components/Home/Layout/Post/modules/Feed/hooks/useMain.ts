@@ -167,7 +167,7 @@ const useMain = (): UseMainResults => {
     }
   };
 
-  const fetchReactions = async (pubId: string): Promise<any> => {
+  const fetchReactions = async (pubId: string): Promise<any> => { 
     try {
       const reactions = await whoReactedublications({
         publicationId: pubId,

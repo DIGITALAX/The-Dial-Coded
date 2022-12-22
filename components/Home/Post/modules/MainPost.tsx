@@ -12,7 +12,7 @@ const MainPost: FunctionComponent<MainPostProps> = ({
   const dispatch = useDispatch();
   return (
     <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto">
-      <div className="relative w-4/5 h-fit col-start-1 justify-self-center">
+      <div className="relative w-full h-fit col-start-1 justify-self-center">
         <FeedPublication
           dispatch={dispatch}
           publication={publicationData}
