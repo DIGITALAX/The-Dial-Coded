@@ -352,7 +352,7 @@ query Publications($request: PublicationsQueryRequest!) {
   }
 `;
 
-const profilePublications = (request: any) => {
+export const profilePublicationsAuth = (request: any) => {
   return apolloClient.query({
     query: gql(PROFILE_PUBLICATION),
     variables: {
@@ -363,4 +363,14 @@ const profilePublications = (request: any) => {
   });
 };
 
-export default profilePublications;
+export const profilePublications = (request: any) => {
+  return authClient.query({
+    query: gql(PROFILE_PUBLICATION),
+    variables: {
+      request: request,
+    },
+    fetchPolicy: "no-cache",
+    errorPolicy: 'all'
+  });
+};
+

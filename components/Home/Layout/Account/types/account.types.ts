@@ -2,6 +2,8 @@ import { FormEvent } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Attribute,
+  PaginatedFollowersResult,
+  PaginatedFollowingResult,
   Profile,
   PublicationsQueryRequest,
 } from "../../../../Common/types/lens.types";
@@ -35,19 +37,23 @@ export type AccountTabProps = {
 };
 
 export type ProfileTabProps = {
-  profile: Profile | undefined;
   getMoreUserProfileFeed: () => Promise<void>;
   userFeed: PublicationsQueryRequest[];
   dispatch: Dispatch<AnyAction>;
   height: string | undefined;
-  hasMirrored: boolean[]
-  hasCommented: boolean[]
-  hasReacted: boolean[]
-  reactionsFeed: any[]
+  hasMirrored: boolean[];
+  hasCommented: boolean[];
+  hasReacted: boolean[];
+  reactionsFeed: any[];
+  profileDataLoading?: boolean;
 };
 
 export type StatsTabProps = {
   profile: Profile | undefined;
+  userFollowers: PaginatedFollowersResult[];
+  userFollowing: PaginatedFollowingResult[];
+  getMoreFollowing: () => Promise<void>;
+  getMoreFollowers: () => Promise<void>;
 };
 
 export interface AccountData {
@@ -81,4 +87,8 @@ export type ImageArgsType = {
     s: string;
     deadline: number;
   };
+};
+
+export type FollowProps = {
+  follow: any;
 };

@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { authClient } from "../../lib/lens/client";
+import { apolloClient, authClient } from "../../lib/lens/client";
 
 const EXPLORE_PUBLICATIONS = `
   query($request: ExplorePublicationRequest!) {
@@ -309,7 +309,7 @@ const EXPLORE_PUBLICATIONS = `
   }
 `;
 
-const explorePublications = (request: any) => {
+export const explorePublications = (request: any) => {
   return authClient.query({
     query: gql(EXPLORE_PUBLICATIONS),
     variables: {
@@ -319,4 +319,12 @@ const explorePublications = (request: any) => {
   });
 };
 
-export default explorePublications;
+export const explorePublicationsAuth = (request: any) => {
+  return apolloClient.query({
+    query: gql(EXPLORE_PUBLICATIONS),
+    variables: {
+      request: request,
+    },
+    fetchPolicy: "no-cache",
+  });
+};
