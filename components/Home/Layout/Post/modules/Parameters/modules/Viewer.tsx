@@ -115,11 +115,6 @@ const Viewer: FunctionComponent<ViewerProps> = ({
       </div>
       <div
         className="relative w-fit h-fit col-start-2 row-start-1 cursor-pointer active:scale-95 justify-self-end self-center"
-        onClick={() =>
-          dispatch(
-            setFire(!fireCount ? 0 : fireCount === 5 ? 0 : fireCount + 1)
-          )
-        }
       >
         <Image
           src={`${INFURA_GATEWAY}/ipfs/QmfNvhTRhR7ginJh2pHTEPTNthM6GWhp8NpfuA9LggqgYQ`}
@@ -130,11 +125,12 @@ const Viewer: FunctionComponent<ViewerProps> = ({
       </div>
       <div
         className="relative w-fit h-fit row-start-2 col-start-2 cursor-pointer active:scale-95 justify-self-end self-center"
-        onClick={() =>
-          dispatch(
-            setFire(!fireCount ? 0 : fireCount === 5 ? 0 : fireCount + 1)
-          )
-        }
+        // onClick={() =>
+        //   {console.log(fireCount)
+        //   dispatch(
+        //     setFire(fireCount && fireCount === 5 ? 0 : fireCount + 1)
+        //   )}
+        // }
       >
         <Image
           src={`${INFURA_GATEWAY}/ipfs/QmUbXpg43xj51Lvj9uDswhvkBZfXVnwWmaJfwp9jYgRMUT`}

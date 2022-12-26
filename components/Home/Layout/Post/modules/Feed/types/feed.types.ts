@@ -13,6 +13,7 @@ export type MainProps = {
   getMoreUserSelectFeed: () => Promise<void>;
   didMirror: any[];
   getMoreMirrors: () => Promise<void>;
+  viewerFeed: string;
 };
 
 export type HotProps = {

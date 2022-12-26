@@ -316,7 +316,6 @@ const explorePublications = (request: any) => {
       request: request,
     },
     fetchPolicy: "no-cache",
-    errorPolicy: 'all'
   });
 };
 
