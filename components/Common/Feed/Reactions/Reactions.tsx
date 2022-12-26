@@ -35,6 +35,8 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   hasCollected,
   hasReacted,
   hasMirrored,
+  hasCommented,
+  id,
 }): JSX.Element => {
   const inCommentBox = useSelector(
     (state: RootState) => state.app.commentShowReducer
@@ -44,23 +46,39 @@ const Reactions: FunctionComponent<ReactionProps> = ({
     <div className="relative w-fit h-fit col-start-1 justify-self-start self-center grid grid-flow-col auto-cols-auto gap-4">
       <div
         className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-2 place-self-center"
-        onClick={() => {
-          heartExpand &&
-            dispatch &&
-            dispatch(
-              heartExpand({
-                actionOpen: true,
-                actionType: "heart",
-                actionValue: heartValue,
-              })
-            );
-        }}
+        onClick={
+          inCommentBox.open
+            ? () => {
+                router.push(`/post/${id}`);
+                commentExpand &&
+                  dispatch &&
+                  dispatch(
+                    commentExpand({
+                      actionOpen: false,
+                      actionType: "comment",
+                      actionValue: commentValue,
+                    })
+                  );
+              }
+            : () => {
+                heartExpand &&
+                  dispatch &&
+                  dispatch(
+                    heartExpand({
+                      actionOpen: true,
+                      actionType: "heart",
+                      actionValue: heartValue,
+                      actionResponseReact: hasReacted,
+                    })
+                  );
+              }
+        }
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
           {heartAmount && heartAmount > 0 && hasReacted ? (
             <BsSuitHeartFill size={15} color={heartColor} />
           ) : (
-            <BsSuitHeart color="yellow" size={15} />
+            <BsSuitHeart color={heartColor} size={15} />
           )}
         </div>
         <div
@@ -71,22 +89,35 @@ const Reactions: FunctionComponent<ReactionProps> = ({
       </div>
       <div
         className={`relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
-        onClick={() => {
-          !inCommentBox?.open
-            ? commentExpand &&
-              dispatch &&
-              dispatch(
-                commentExpand({
-                  actionOpen: true,
-                  actionType: "comment",
-                  actionValue: commentValue,
-                })
-              )
-            : router.push(`/post/${inCommentBox?.value}`);
-        }}
+        onClick={
+          router.asPath.includes("post") || inCommentBox?.open
+            ? () => {
+                router.push(`/post/${id}`);
+                commentExpand &&
+                  dispatch &&
+                  dispatch(
+                    commentExpand({
+                      actionOpen: false,
+                      actionType: "comment",
+                      actionValue: commentValue,
+                    })
+                  );
+              }
+            : () => {
+                commentExpand &&
+                  dispatch &&
+                  dispatch(
+                    commentExpand({
+                      actionOpen: true,
+                      actionType: "comment",
+                      actionValue: commentValue,
+                    })
+                  );
+              }
+        }
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
-          {commentAmount && commentAmount > 0 ? (
+          {commentAmount && commentAmount > 0 && hasCommented ? (
             <FaCommentDots size={15} color={commentColor} />
           ) : (
             <FaRegCommentDots color={commentColor} size={15} />
@@ -100,17 +131,33 @@ const Reactions: FunctionComponent<ReactionProps> = ({
       </div>
       <div
         className={`relative w-fit h-fit col-start-3 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
-        onClick={() => {
-          mirrorExpand &&
-            dispatch &&
-            dispatch(
-              mirrorExpand({
-                actionOpen: true,
-                actionType: "mirror",
-                actionValue: mirrorValue,
-              })
-            );
-        }}
+        onClick={
+          inCommentBox.open
+            ? () => {
+                router.push(`/post/${id}`);
+                commentExpand &&
+                  dispatch &&
+                  dispatch(
+                    commentExpand({
+                      actionOpen: false,
+                      actionType: "comment",
+                      actionValue: commentValue,
+                    })
+                  );
+              }
+            : () => {
+                mirrorExpand &&
+                  dispatch &&
+                  dispatch(
+                    mirrorExpand({
+                      actionOpen: true,
+                      actionType: "mirror",
+                      actionValue: mirrorValue,
+                      actionResponseMirror: hasMirrored,
+                    })
+                  );
+              }
+        }
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
           <AiOutlineRetweet
@@ -131,23 +178,38 @@ const Reactions: FunctionComponent<ReactionProps> = ({
       {canCollect && (
         <div
           className={`relative w-fit h-fit col-start-4 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
-          onClick={() => {
-            collectExpand &&
-              dispatch &&
-              dispatch(
-                collectExpand({
-                  actionOpen: true,
-                  actionType: "collect",
-                  actionValue: collectValue,
-                })
-              );
-          }}
+          onClick={
+            inCommentBox.open
+              ? () => {
+                  router.push(`/post/${id}`);
+                  commentExpand &&
+                    dispatch &&
+                    dispatch(
+                      commentExpand({
+                        actionOpen: false,
+                        actionType: "comment",
+                        actionValue: commentValue,
+                      })
+                    );
+                }
+              : () => {
+                  collectExpand &&
+                    dispatch &&
+                    dispatch(
+                      collectExpand({
+                        actionOpen: true,
+                        actionType: "collect",
+                        actionValue: collectValue,
+                      })
+                    );
+                }
+          }
         >
           <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
             {collectAmount && collectAmount > 0 && hasCollected ? (
               <BsFillCollectionFill size={15} color={collectColor} />
             ) : (
-              <BsCollection size={15} color="yellow" />
+              <BsCollection size={15} color={collectColor} />
             )}
           </div>
           <div

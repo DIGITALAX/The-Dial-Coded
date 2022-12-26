@@ -8,8 +8,6 @@ const UserFeed: FunctionComponent = ({
   getMoreUserProfileFeed,
   userFeed,
   fetchReactions,
-  didMirror,
-  getMoreMirrors,
 }): JSX.Element => {
   return (
     <div className="col-start-2 relative w-full h-full grid grid-flow-row auto-rows-auto gap-6">
@@ -34,10 +32,7 @@ const UserFeed: FunctionComponent = ({
                   dispatch={dispatch}
                   publication={publication}
                   key={index}
-                  fetchReactions={fetchReactions}
                   type={"Post"}
-                  didMirror={didMirror}
-                  getMoreMirrors={getMoreMirrors}
                 />
               );
             }

@@ -5,9 +5,10 @@ import { MainPostProps } from "../types/post.types";
 
 const MainPost: FunctionComponent<MainPostProps> = ({
   publicationData,
-  fetchReactions,
-  didMirror,
-  getMoreMirrors,
+  hasPostMirrored,
+  hasPostCommented,
+  hasPostReacted,
+  reactionsPostFeed,
 }): JSX.Element => {
   const dispatch = useDispatch();
   return (
@@ -16,10 +17,13 @@ const MainPost: FunctionComponent<MainPostProps> = ({
         <FeedPublication
           dispatch={dispatch}
           publication={publicationData}
-          fetchReactions={fetchReactions}
           type={publicationData?.__typename === "Post" ? "Post" : "Mirror"}
-          didMirror={didMirror}
-          getMoreMirrors={getMoreMirrors}
+          hasMirrored={hasPostMirrored?.length > 0 && hasPostMirrored[0]}
+          hasCommented={hasPostCommented?.length > 0 && hasPostCommented[0]}
+          hasReacted={hasPostReacted?.length > 0 && hasPostReacted[0]}
+          reactionsFeed={
+            reactionsPostFeed?.length > 0 && reactionsPostFeed[0]
+          }
         />
       </div>
     </div>

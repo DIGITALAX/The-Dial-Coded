@@ -4,17 +4,16 @@ import { PublicationsQueryRequest } from "../../../Common/types/lens.types";
 
 export type MainPostProps = {
   publicationData: any;
-  fetchReactions: (id: string) => Promise<any>;
-  didMirror: any[];
-  getMoreMirrors: () => Promise<void>;
+  hasPostMirrored: boolean[];
+  hasPostCommented: boolean[];
+  hasPostReacted: boolean[];
+  reactionsPostFeed: any[];
 };
 
 export type CommentsProps = {
   commentors: PublicationsQueryRequest[];
-  getMorePostComments: (pubId?: string) => Promise<void>;
+  getMorePostComments: () => Promise<void>;
   dispatch: Dispatch<AnyAction>;
-  didMirror: any[];
-  getMoreMirrors: () => Promise<void>;
   lensProfile: string;
   isConnected: boolean;
   commentPost: (e: FormEvent) => Promise<void>;
@@ -27,4 +26,11 @@ export type CommentsProps = {
   searchGif: string | undefined;
   handleGifSubmit: (e: FormEvent) => Promise<void>;
   commentDescription: string;
+  commentSuccess: boolean;
+  hasMirrored: boolean[];
+  hasReacted: boolean[];
+  hasCommented: boolean[];
+  handleRemoveGif: (result: any) => void;
+  gifs: string[];
+  reactionsFeed: any[];
 };

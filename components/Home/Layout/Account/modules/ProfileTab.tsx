@@ -5,18 +5,20 @@ import { PublicationsQueryRequest } from "../../../../Common/types/lens.types";
 import { ProfileTabProps } from "../types/account.types";
 
 const ProfileTab: FunctionComponent<ProfileTabProps> = ({
-  profile,
   getMoreUserProfileFeed,
   userFeed,
   dispatch,
-  fetchReactions,
-  didMirror,
-  getMoreMirrors,
   height,
+  hasMirrored,
+  hasCommented,
+  hasReacted,
+  reactionsFeed,
 }): JSX.Element => {
   return (
     <div
-      className={`relative w-full h-full grid grid-flow-row auto-rows-auto ${height !== undefined && "gap-6"}`}
+      className={`relative w-full h-full grid grid-flow-row auto-rows-auto ${
+        height !== undefined && "gap-6"
+      }`}
     >
       <div
         className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto gap-5"
@@ -39,10 +41,13 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
                   dispatch={dispatch}
                   publication={publication}
                   key={index}
-                  fetchReactions={fetchReactions}
                   type={"Post"}
-                  didMirror={didMirror}
-                  getMoreMirrors={getMoreMirrors}
+                  hasMirrored={hasMirrored?.length > 0 && hasMirrored[index]}
+                  hasCommented={hasCommented?.length > 0 && hasCommented[index]}
+                  hasReacted={hasReacted?.length > 0 && hasReacted[index]}
+                  reactionsFeed={
+                    reactionsFeed?.length > 0 && reactionsFeed[index]
+                  }
                 />
               );
             }

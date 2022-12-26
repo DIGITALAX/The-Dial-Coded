@@ -1,5 +1,5 @@
 import Image from "next/legacy/image";
-import { FunctionComponent, useMemo, useState } from "react";
+import { FunctionComponent } from "react";
 import Reactions from "./Reactions/Reactions";
 import { FeedPublicationProps } from "../types/common.types";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
@@ -12,15 +12,15 @@ import { AiFillEye, AiOutlineRetweet } from "react-icons/ai";
 import { setReactionState } from "../../../redux/reducers/reactionStateSlice";
 import { setCommentShow } from "../../../redux/reducers/commentShowSlice";
 import moment from "moment";
-import lodash from "lodash";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
   dispatch,
-  fetchReactions,
-  didMirror,
   type,
-  getMoreMirrors,
+  hasReacted,
+  reactionsFeed,
+  hasMirrored,
+  hasCommented,
 }): JSX.Element => {
   let imagePrefix: any;
   let profileImage: string;
@@ -47,27 +47,6 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   const viewerOpen = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
   );
-  const reactionState = useSelector(
-    (state: RootState) => state.app.reactionStateReducer.open
-  );
-  const profileId = useSelector(
-    (state: RootState) => state.app.lensProfileReducer.profile?.id
-  );
-  const [reaction, setReaction] = useState<number>();
-  const [hasReacted, setHasReacted] = useState<any[]>([]);
-  useMemo(async () => {
-    if (profileId) {
-      const reactionArr = await fetchReactions((publication as any)?.id);
-      const reactionLength = reactionArr?.length;
-      setHasReacted(
-        lodash.filter(reactionArr, (arr) => arr?.profile?.id === profileId)
-      );
-      setReaction(reactionLength as number);
-      if (didMirror?.length === 50 && profileId) {
-        await getMoreMirrors();
-      }
-    }
-  }, [reactionState, profileId, viewerOpen, didMirror]);
   return (
     <div
       className={`relative w-full h-fit rounded-md grid grid-flow-row auto-rows-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-6 border-2 border-black z-0`}
@@ -218,6 +197,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         } grid grid-flow-col auto-cols-auto pl-6`}
       >
         <Reactions
+          id={(publication as any)?.id}
           textColor={"white"}
           commentColor={"#FBEED1"}
           mirrorColor={"#FEEA66"}
@@ -232,7 +212,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
           commentAmount={Number(
             (publication as any)?.stats?.totalAmountOfComments
           )}
-          heartAmount={reaction}
+          heartAmount={reactionsFeed}
           heartExpand={setReactionState}
           mirrorExpand={setReactionState}
           collectExpand={setReactionState}
@@ -253,33 +233,27 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               ? (publication as any)?.mirrorOf?.hasCollectedByMe
               : (publication as any)?.hasCollectedByMe
           }
-          hasReacted={hasReacted.length > 0 ? true : false}
-          hasMirrored={
-            lodash.filter(
-              didMirror,
-              (mirror) => mirror.mirrorOf.id === (publication as any).id
-            )?.length > 0
-              ? true
-              : false
-          }
+          hasReacted={hasReacted}
+          hasMirrored={hasMirrored}
+          hasCommented={hasCommented}
         />
         {!router.asPath.includes((publication as any)?.id) && (
-            <div
-              className="relative w-fit h-fit col-start-2 justify-self-end self-center text-white grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95"
-              onClick={() => {
-                viewerOpen
-                  ? {}
-                  : router.push(`/post/${(publication as any)?.id}`);
-              }}
-            >
-              <div className="relative w-fit h-fit col-start-1 text-sm">
-                {type === "Post" ? "View Post" : "View Comment"}
-              </div>
-              <div className="relative w-fit h-fit col-start-2">
-                <AiFillEye color="white" size={20} />
-              </div>
+          <div
+            className="relative w-fit h-fit col-start-2 justify-self-end self-center text-white grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95"
+            onClick={() => {
+              viewerOpen
+                ? {}
+                : router.push(`/post/${(publication as any)?.id}`);
+            }}
+          >
+            <div className="relative w-fit h-fit col-start-1 text-sm">
+              {type === "Post" ? "View Post" : "View Comment"}
             </div>
-          )}
+            <div className="relative w-fit h-fit col-start-2">
+              <AiFillEye color="white" size={20} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

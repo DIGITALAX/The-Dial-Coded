@@ -39,10 +39,11 @@ export type ProfileTabProps = {
   getMoreUserProfileFeed: () => Promise<void>;
   userFeed: PublicationsQueryRequest[];
   dispatch: Dispatch<AnyAction>;
-  fetchReactions: (id: string) => Promise<any>;
-  didMirror: any[];
-  getMoreMirrors: () => Promise<void>;
   height: string | undefined;
+  hasMirrored: boolean[]
+  hasCommented: boolean[]
+  hasReacted: boolean[]
+  reactionsFeed: any[]
 };
 
 export type StatsTabProps = {

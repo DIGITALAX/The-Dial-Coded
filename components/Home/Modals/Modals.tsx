@@ -1,17 +1,19 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import useReactions from "../../Common/Feed/hooks/useReactions";
+import useCollected from "../../Common/Feed/hooks/useCollected";
+import useHearted from "../../Common/Feed/hooks/useHearted";
+import useMirrored from "../../Common/Feed/hooks/useMirrored";
 import CollectNotificationModal from "../../Common/Modals/CollectNotification/CollectNotificationModal";
 import GetProfileModal from "../../Common/Modals/GetProfile/GetProfileModal";
 import ImageViewerModal from "../../Common/Modals/ImageViewer/ImageViewer";
-import PublicationModal from "../../Common/Modals/Publication/PublicationModal";
+import PublicationModal from "../../Common/Modals/Publications/PublicationModal";
 import CollectsModal from "../../Common/Modals/Reactions/CollectsModal";
-import CommentsModal from "../../Common/Modals/Reactions/CommentsModal";
+import CommentsModal from "../../Common/Modals/Publications/CommentsModal";
 import HeartsModal from "../../Common/Modals/Reactions/HeartsModal";
 import MirrorsModal from "../../Common/Modals/Reactions/MirrorsModal";
 import SignInModal from "../../Common/Modals/SignIn/SignInModal";
 import Transaction from "../../Common/Modals/Transactions/Transactions";
-import useMain from "../Layout/Post/modules/Feed/hooks/useMain";
+import useMainFeed from "../Layout/Publish/modules/Feed/hooks/useMainFeed";
 
 const Modals = () => {
   const makePublication = useSelector(
@@ -39,27 +41,42 @@ const Modals = () => {
     (state: RootState) => state.app.signInReducer.value
   );
   const {
-    collectors,
-    mirrorers,
-    commentors,
+    mirrorInfoLoading,
+    mirrorLoading,
+    mirrorPost,
     getMorePostMirrors,
-    getMorePostComments,
-    getMorePostCollects,
-    reacters,
-    getMorePostReactions,
+    mirrorers,
+  } = useMirrored();
+
+  const {
     reactionPost,
     reactionLoading,
-    mirrorLoading,
-    mirrorComplete,
-    approveCurrency,
-    collectPost,
-    commentPost,
-    commentLoading,
+    getMorePostReactions,
+    reactionInfoLoading,
+    reacters,
+  } = useHearted();
+
+  const {
     collectLoading,
+    collectInfoLoading,
+    postCollectInfoLoading,
+    getMorePostCollects,
     approvalLoading,
-    mirrorPost,
-  } = useReactions();
-  const { collectInfoLoading, didMirror, getMoreMirrors } = useMain();
+    collectPost,
+    approveCurrency,
+    collectors,
+  } = useCollected();
+
+  const {
+    commentInfoLoading,
+    commentors,
+    getMorePostComments,
+    hasCommented,
+    hasMirrored,
+    hasReacted,
+    reactionsFeed,
+  } = useMainFeed();
+
   return (
     <>
       {makePublication && <PublicationModal />}
@@ -74,6 +91,7 @@ const Modals = () => {
           approveCurrency={approveCurrency}
           handleCollect={collectPost}
           collectInfoLoading={collectInfoLoading}
+          postCollectInfoLoading={postCollectInfoLoading}
           collectLoading={collectLoading}
           approvalLoading={approvalLoading}
         />
@@ -84,7 +102,7 @@ const Modals = () => {
           getMorePostMirrors={getMorePostMirrors}
           mirrorPost={mirrorPost}
           mirrorLoading={mirrorLoading}
-          mirrorComplete={mirrorComplete}
+          mirrorInfoLoading={mirrorInfoLoading}
         />
       )}
       {reactionModal.open && reactionModal.type === "heart" && (
@@ -93,16 +111,18 @@ const Modals = () => {
           getMorePostReactions={getMorePostReactions}
           reactionPost={reactionPost}
           reactionLoading={reactionLoading}
+          reactionInfoLoading={reactionInfoLoading}
         />
       )}
       {commentShow.open && (
         <CommentsModal
-          commentPost={commentPost}
           commentors={commentors}
+          commentInfoLoading={commentInfoLoading}
           getMorePostComments={getMorePostComments}
-          commentLoading={commentLoading}
-          didMirror={didMirror}
-          getMoreMirrors={getMoreMirrors}
+          hasMirrored={hasMirrored}
+          hasReacted={hasReacted}
+          hasCommented={hasCommented}
+          reactionsFeed={reactionsFeed}
         />
       )}
       {failed !== "" && failed !== undefined && (

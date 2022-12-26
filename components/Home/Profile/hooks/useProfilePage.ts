@@ -14,6 +14,7 @@ import createUnFollowTypedData from "../../../../graphql/mutations/unfollow";
 import getProfilePage from "../../../../graphql/queries/getProfilePage";
 import followingData from "../../../../graphql/queries/profileData";
 import profilePublicationsNoAuth from "../../../../graphql/queries/profilePublicationNoAuth";
+import whoCommentedPublications from "../../../../graphql/queries/whoCommentedPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
 import { omit, splitSignature } from "../../../../lib/lens/helpers";
 import { setInsufficientFunds } from "../../../../redux/reducers/insufficientFunds";
@@ -21,16 +22,191 @@ import { RootState } from "../../../../redux/store";
 import { PublicationsQueryRequest } from "../../../Common/types/lens.types";
 import { FollowArgs, UseProfilePageResults } from "../types/profile.types";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
+import lodash from "lodash";
+import whoReactedublications from "../../../../graphql/queries/whoReactedPublication";
+import profilePublications from "../../../../graphql/queries/profilePublication";
 
 const useProfilePage = (): UseProfilePageResults => {
+  const router = useRouter();
   const [profileDataLoading, setProfileDataLoading] = useState<any>();
   const [profileData, setProfileData] = useState<any>();
   const [followLoading, setFollowLoading] = useState<boolean>(false);
   const [followArgs, setFollowArgs] = useState<FollowArgs>();
   const [unfollowArgs, setUnfollowArgs] = useState<any[]>([]);
+  const [userFeed, setUserFeed] = useState<PublicationsQueryRequest[]>([]);
+  const [paginatedResults, setPaginatedResults] = useState<any>();
   const { address } = useAccount();
   const { signTypedDataAsync } = useSignTypedData();
   const dispatch = useDispatch();
+  const [isFollowedByMe, setIsFollowedByMe] = useState<boolean>(false);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [hasMirrored, setHasMirrored] = useState<boolean[]>([]);
+  const [hasCommented, setHasCommented] = useState<boolean[]>([]);
+  const [hasReacted, setHasReacted] = useState<boolean[]>([]);
+  const [reactionsFeed, setReactionsFeed] = useState<any[]>([]);
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
+  const isConnected = useSelector(
+    (state: RootState) => state.app.walletConnectedReducer.value
+  );
+
+  const fetchReactions = async (pubId: string): Promise<any> => {
+    try {
+      const reactions = await whoReactedublications({
+        publicationId: pubId,
+      });
+      const upvoteArr = lodash.filter(
+        reactions?.data?.whoReactedPublication.items,
+        (item) => item.reaction === "UPVOTE"
+      );
+      return upvoteArr;
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const checkPostReactions = async (arr: any[]): Promise<any> => {
+    let reactionsFeedArr: any[] = [];
+    let hasReactedArr: any[] = [];
+    try {
+      for (let pub = 0; pub < arr?.length; pub++) {
+        const reactions = await fetchReactions(arr[pub]?.id);
+        reactionsFeedArr.push(reactions.length);
+        const checkReacted = lodash.filter(
+          reactions,
+          (arr) => arr?.profile?.id === lensProfile
+        );
+        hasReactedArr.push(checkReacted?.length > 0 ? true : false);
+      }
+      return { hasReactedArr, reactionsFeedArr };
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  // did mirror
+  const checkIfMirrored = async (arr: any[]): Promise<any> => {
+    try {
+      const { data } = await profilePublications({
+        profileId: lensProfile,
+        publicationTypes: ["MIRROR"],
+        limit: 50,
+      });
+      const array_data = [...data.publications.items];
+      const sortedArr = array_data.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      let mirroredArray: any[] = sortedArr;
+      let loopMirroredArray: any[] = sortedArr;
+      let pageData: any;
+      while (loopMirroredArray?.length === 50) {
+        const { mirroredValues, paginatedData } = await checkIfMoreMirrored(
+          pageData ? pageData : data?.publications?.pageInfo
+        );
+        loopMirroredArray = mirroredValues;
+        pageData = paginatedData;
+        mirroredArray = [...mirroredArray, ...mirroredValues];
+      }
+      let hasMirroredArr: boolean[] = [];
+      for (let i = 0; i < arr?.length; i++) {
+        const mirrorLength = lodash.filter(
+          mirroredArray,
+          (mirror) => mirror?.mirrorOf?.id === arr[i]?.id
+        );
+        if (mirrorLength?.length > 0) {
+          hasMirroredArr.push(true);
+        } else {
+          hasMirroredArr.push(false);
+        }
+      }
+      return hasMirroredArr;
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  const checkIfMoreMirrored = async (pageData: any): Promise<any> => {
+    try {
+      const { data } = await profilePublicationsNoAuth({
+        profileId: lensProfile,
+        publicationTypes: ["MIRROR"],
+        limit: 50,
+        cursor: pageData?.next,
+      });
+      const arr = [...data.publications.items];
+      const mirroredValues = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      const paginatedData = data?.publications?.pageInfo;
+      return { mirroredValues, paginatedData };
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  //did comment
+  const checkIfCommented = async (inputArr: any[]): Promise<any> => {
+    let hasCommentedArr: boolean[] = [];
+    try {
+      for (let i = 0; i < inputArr?.length; i++) {
+        const comments = await whoCommentedPublications({
+          commentsOf: inputArr[i]?.id,
+          limit: 50,
+        });
+        const arr: any[] = [...comments.data.publications.items];
+        const sortedArr: any[] = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        let commentedArray: any[] = sortedArr;
+        let loopCommentedArray: any[] = sortedArr;
+        let pageData: any;
+        while (loopCommentedArray?.length === 50) {
+          const { commentedValues, paginatedData } = await checkIfMoreCommented(
+            pageData ? pageData : comments?.data?.publications?.pageInfo,
+            inputArr[i]?.id
+          );
+          loopCommentedArray = commentedValues;
+          pageData = paginatedData;
+          commentedArray = [...commentedArray, ...commentedValues];
+        }
+        const commentLength = lodash.filter(
+          commentedArray,
+          (comment) => comment?.profile.id === lensProfile
+        );
+        if (commentLength?.length > 0) {
+          hasCommentedArr.push(true);
+        } else {
+          hasCommentedArr.push(false);
+        }
+      }
+      return hasCommentedArr;
+    } catch (err: any) {
+      console.error(err.any);
+    }
+  };
+
+  const checkIfMoreCommented = async (
+    pageData: any,
+    id: string
+  ): Promise<any> => {
+    try {
+      const comments = await whoCommentedPublications({
+        commentsOf: id,
+        limit: 30,
+        cursor: pageData?.next,
+      });
+      const arr: any[] = [...comments.data.publications.items];
+      const commentedValues: any[] = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      const paginatedData = comments.data.publications.pageInfo;
+      return { commentedValues, paginatedData };
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   const { config, isSuccess } = usePrepareContractWrite({
     address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
     abi: LensHubProxy,
@@ -49,11 +225,7 @@ const useProfilePage = (): UseProfilePageResults => {
     enabled: Boolean(unfollowArgs),
     args: unfollowArgs,
   });
-  const [isFollowedByMe, setIsFollowedByMe] = useState<boolean>(false);
-  const [isFollowing, setIsFollowing] = useState<boolean>(false);
-  const lensProfile = useSelector(
-    (state: RootState) => state.app.lensProfileReducer.profile?.id
-  );
+
   const { writeAsync, isSuccess: followComplete } = useContractWrite(config);
   const { writeAsync: unfollowWriteAsync, isSuccess: unfollowComplete } =
     useUnfollowContractWrite(unfollowConfig);
@@ -70,7 +242,7 @@ const useProfilePage = (): UseProfilePageResults => {
         ],
       });
 
-      const typedData: any = response.data.createFollowTypedData.typedData;
+      const typedData: any = response?.data.createFollowTypedData.typedData;
 
       const signature: any = await signTypedDataAsync({
         domain: omit(typedData?.domain, ["__typename"]),
@@ -104,7 +276,7 @@ const useProfilePage = (): UseProfilePageResults => {
         profile: profileData?.id,
       });
 
-      const typedData: any = response.data.createUnfollowTypedData.typedData;
+      const typedData: any = response?.data.createUnfollowTypedData.typedData;
       const signature: any = await signTypedDataAsync({
         domain: omit(typedData?.domain, ["__typename"]),
         types: omit(typedData?.types, ["__typename"]) as any,
@@ -148,43 +320,95 @@ const useProfilePage = (): UseProfilePageResults => {
     }
   };
 
-  const router = useRouter();
-  const [userFeed, setUserFeed] = useState<PublicationsQueryRequest[]>([]);
-  const [paginatedResults, setPaginatedResults] = useState<any>();
-
   const getUserProfileFeed = async () => {
+    let sortedArr: any[];
+    let pageData: any;
     try {
-      const { data } = await profilePublicationsNoAuth({
-        profileId: profileData?.id,
-        publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 30,
-      });
-      const arr: any[] = [...data?.publications?.items];
-      const sortedArr: any[] = arr.sort(
-        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-      );
+      if (!lensProfile) {
+        const { data } = await profilePublicationsNoAuth({
+          profileId: profileData?.id,
+          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          limit: 30,
+        });
+        const arr: any[] = [...data?.publications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.publications?.pageInfo;
+      } else {
+        const { data } = await profilePublications({
+          profileId: profileData?.id,
+          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          limit: 30,
+        });
+        const arr: any[] = [...data?.publications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.publications?.pageInfo;
+      }
       setUserFeed(sortedArr);
-      setPaginatedResults(data?.publications?.pageInfo);
+      setPaginatedResults(pageData);
+      const response = await checkPostReactions(
+        sortedArr,
+      );
+      setHasReacted(response?.hasReactedArr);
+      if (lensProfile) {
+        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        setHasMirrored(hasMirroredArr);
+        const hasCommentedArr = await checkIfCommented(sortedArr);
+        setHasCommented(hasCommentedArr);
+      }
+      setReactionsFeed(response?.reactionsFeedArr);
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
   const getMoreUserProfileFeed = async (): Promise<void> => {
+    let sortedArr: any[];
+    let pageData: any;
     try {
-      const { data } = await profilePublicationsNoAuth({
-        profileId: profileData?.id,
-        publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 30,
-        cursor: paginatedResults?.next,
-      });
+      if (!lensProfile) {
+        const { data } = await profilePublicationsNoAuth({
+          profileId: profileData?.id,
+          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          limit: 30,
+          cursor: paginatedResults?.next,
+        });
 
-      const arr: any[] = [...data?.publications?.items];
-      const sortedArr: any[] = arr.sort(
-        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-      );
+        const arr: any[] = [...data?.publications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.publications?.pageInfo;
+      } else {
+        const { data } = await profilePublications({
+          profileId: profileData?.id,
+          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          limit: 30,
+          cursor: paginatedResults?.next,
+        });
+
+        const arr: any[] = [...data?.publications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.publications?.pageInfo;
+      }
       setUserFeed(sortedArr);
-      setPaginatedResults(data?.publications?.pageInfo);
+      setPaginatedResults(pageData);
+      const response = await checkPostReactions(
+        sortedArr
+      );
+      setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
+      if (lensProfile) {
+        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        setHasMirrored([...hasMirrored, ...hasMirroredArr]);
+        const hasCommentedArr = await checkIfCommented(sortedArr);
+        setHasCommented([...hasCommented, ...hasCommentedArr]);
+        setHasReacted([...hasReacted, ...response?.hasReactedArr]);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -229,7 +453,7 @@ const useProfilePage = (): UseProfilePageResults => {
       getUserProfileFeed();
       handleFollowingData();
     }
-  }, [profileData, router.asPath]);
+  }, [profileData, router.asPath, lensProfile, isConnected]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -253,6 +477,10 @@ const useProfilePage = (): UseProfilePageResults => {
     dispatch,
     isFollowedByMe,
     isFollowing,
+    hasMirrored,
+    hasCommented,
+    hasReacted,
+    reactionsFeed,
   };
 };
 

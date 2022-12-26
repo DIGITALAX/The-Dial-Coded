@@ -12,13 +12,13 @@ import { ReactionModalProps } from "../../types/common.types";
 import lodash from "lodash";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
-import { setLensProfile } from "../../../../redux/reducers/lensProfileSlice";
 
 const HeartsModal: FunctionComponent<ReactionModalProps> = ({
   reacters,
   getMorePostReactions,
   reactionLoading,
   reactionPost,
+  reactionInfoLoading,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
   const pubId = useSelector(
@@ -54,107 +54,120 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
             >
               <ImCross color="black" size={15} />
             </div>
-            {reacters?.length > 0 && (
-              <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto">
-                <InfiniteScroll
-                  hasMore={true}
-                  dataLength={reacters?.length}
-                  next={getMorePostReactions}
-                  loader={""}
-                  height={"10rem"}
-                  className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4"
-                >
-                  {reacters?.map((reacter: any, index: number) => {
-                    let profileImage: string;
-                    if (!(reacter?.profile?.picture as any)?.original) {
-                      profileImage = "";
-                    } else if ((reacter?.profile?.picture as any)?.original) {
-                      if (
-                        (
-                          reacter?.profile?.picture as any
-                        )?.original?.url?.includes("http")
-                      ) {
-                        profileImage = (reacter?.profile?.picture as any)
-                          ?.original?.url;
-                      } else {
-                        const cut = (
-                          reacter?.profile?.picture as any
-                        )?.original?.url?.split("/");
-                        profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-                      }
-                    } else {
-                      profileImage = (reacter?.profile?.picture as any)?.uri;
-                    }
-                    return (
-                      <Link
-                        href={`/profile/${
-                          reacter?.profile?.handle?.split("lens")[0]
-                        }`}
-                        key={index}
-                        className="relative w-full h-fit p-2 drop-shadow-lg grid grid-flow-col bg-gray-50 auto-cols-auto rounded-lg border border-gray-50"
-                      >
-                        <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-1 gap-6">
-                          <div className="relative w-8 h-8 rounded-full bg-offBlue col-start-1">
-                            <Image
-                              src={profileImage}
-                              objectFit="cover"
-                              layout="fill"
-                              alt="pfp"
-                              className="relative w-fit h-fit rounded-full self-center"
-                            />
-                          </div>
-                          <div
-                            id="handle"
-                            className="relative w-fit h-fit place-self-center col-start-2"
+            {!reactionInfoLoading ? (
+              <>
+                {reacters?.length > 0 && (
+                  <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto">
+                    <InfiniteScroll
+                      hasMore={true}
+                      dataLength={reacters?.length}
+                      next={getMorePostReactions}
+                      loader={""}
+                      height={"10rem"}
+                      className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4"
+                    >
+                      {reacters?.map((reacter: any, index: number) => {
+                        let profileImage: string;
+                        if (!(reacter?.profile?.picture as any)?.original) {
+                          profileImage = "";
+                        } else if (
+                          (reacter?.profile?.picture as any)?.original
+                        ) {
+                          if (
+                            (
+                              reacter?.profile?.picture as any
+                            )?.original?.url?.includes("http")
+                          ) {
+                            profileImage = (reacter?.profile?.picture as any)
+                              ?.original?.url;
+                          } else {
+                            const cut = (
+                              reacter?.profile?.picture as any
+                            )?.original?.url?.split("/");
+                            profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
+                          }
+                        } else {
+                          profileImage = (reacter?.profile?.picture as any)
+                            ?.uri;
+                        }
+                        return (
+                          <Link
+                            href={`/profile/${
+                              reacter?.profile?.handle?.split("lens")[0]
+                            }`}
+                            key={index}
+                            className="relative w-full h-fit p-2 drop-shadow-lg grid grid-flow-col bg-gray-50 auto-cols-auto rounded-lg border border-gray-50"
                           >
-                            @{reacter?.profile?.handle}
-                          </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </InfiniteScroll>
-              </div>
-            )}
-            <div
-              className={`relative w-full h-fit ${
-                reacters?.length > 0 ? "row-start-3" : "row-start-2"
-              } grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3`}
-            >
-              <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
-                {reacters?.length > 0
-                  ? hasReacted.length > 0
-                    ? "Remove heart?"
-                    : "Heart this post?"
-                  : "This post has no reactions. Will you be first?"}
-              </div>
-              <div
-                className={`relative w-20 h-10 rounded-md bg-offBlue cursor-pointer hover:opacity-70 active:scale-95 grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center `}
-                onClick={
-                  isConnected
-                    ? () => {
-                        lensProfile
-                          ? reactionPost()
-                          : dispatch(setSignIn(true))
-                      }
-                    : openConnectModal
-                }
-              >
+                            <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-1 gap-6">
+                              <div className="relative w-8 h-8 rounded-full bg-offBlue col-start-1">
+                                <Image
+                                  src={profileImage}
+                                  objectFit="cover"
+                                  layout="fill"
+                                  alt="pfp"
+                                  className="relative w-fit h-fit rounded-full self-center"
+                                />
+                              </div>
+                              <div
+                                id="handle"
+                                className="relative w-fit h-fit place-self-center col-start-2"
+                              >
+                                @{reacter?.profile?.handle}
+                              </div>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </InfiniteScroll>
+                  </div>
+                )}
                 <div
-                  className={`relative w-fit h-fit col-start-1 place-self-center ${
-                    reactionLoading && "animate-spin"
-                  }`}
+                  className={`relative w-full h-fit ${
+                    reacters?.length > 0 ? "row-start-3" : "row-start-2"
+                  } grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3`}
                 >
-                  {reactionLoading ? (
-                    <AiOutlineLoading color="white" size={20} />
-                  ) : hasReacted?.length > 0 ? (
-                    "Remove"
-                  ) : (
-                    "Heart"
-                  )}
+                  <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
+                    {reacters?.length > 0
+                      ? hasReacted.length > 0
+                        ? "Remove heart?"
+                        : "Heart this post?"
+                      : "This post has no reactions. Will you be first?"}
+                  </div>
+                  <div
+                    className={`relative w-20 h-10 rounded-md bg-offBlue cursor-pointer hover:opacity-70 active:scale-95 grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center `}
+                    onClick={
+                      isConnected
+                        ? () => {
+                            lensProfile
+                              ? reactionPost()
+                              : dispatch(setSignIn(true));
+                          }
+                        : openConnectModal
+                    }
+                  >
+                    <div
+                      className={`relative w-fit h-fit col-start-1 place-self-center ${
+                        reactionLoading && "animate-spin"
+                      }`}
+                    >
+                      {reactionLoading ? (
+                        <AiOutlineLoading color="white" size={20} />
+                      ) : hasReacted?.length > 0 ? (
+                        "Remove"
+                      ) : (
+                        "Heart"
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="relative w-full h-60 grid grid-flow-col auto-cols-auto">
+                <div className="relative w-fit h-fit col-start-1 place-self-center animate-spin">
+                  <AiOutlineLoading color="black" size={20} />
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import Image from "next/legacy/image";
 import Banner from "../../components/Common/Profile/modules/Banner";
-import useMain from "../../components/Home/Layout/Post/modules/Feed/hooks/useMain";
 import useProfilePage from "../../components/Home/Profile/hooks/useProfilePage";
 import SideBar from "../../components/Home/Profile/modules/SideBar";
 import { INFURA_GATEWAY } from "../../lib/lens/constants";
@@ -19,9 +18,11 @@ const Profile: NextPage = (): JSX.Element => {
     dispatch,
     isFollowedByMe,
     isFollowing,
+    hasMirrored,
+    hasCommented,
+    hasReacted,
+    reactionsFeed,
   } = useProfilePage();
-
-  const { fetchReactions, didMirror, getMoreMirrors } = useMain();
 
   let profileImage: string;
   if (!(profileData?.picture as any)?.original) {
@@ -40,7 +41,8 @@ const Profile: NextPage = (): JSX.Element => {
   return (
     <div className="relative h-full w-full bg-black/70 grid grid-flow-col auto-col-auto overflow-hidden">
       {(profileDataLoading || profileDataLoading === undefined) &&
-      !profileData ? (
+      !profileData &&
+      reactionsFeed?.length === 0 ? (
         <div className="relative w-full h-screen col-start-1 grid grid-flow-col auto-cols-auto"></div>
       ) : (
         <div className="relative w-full h-full grid grid-flow-row auto-rows-auto col-start-1">
@@ -70,11 +72,12 @@ const Profile: NextPage = (): JSX.Element => {
                 profile={profileData}
                 getMoreUserProfileFeed={getMoreUserProfileFeed}
                 userFeed={userFeed}
-                fetchReactions={fetchReactions}
                 dispatch={dispatch}
-                didMirror={didMirror}
-                getMoreMirrors={getMoreMirrors}
                 height={undefined}
+                hasMirrored={hasMirrored}
+                hasCommented={hasCommented}
+                hasReacted={hasReacted}
+                reactionsFeed={reactionsFeed}
               />
             </div>
           </div>
