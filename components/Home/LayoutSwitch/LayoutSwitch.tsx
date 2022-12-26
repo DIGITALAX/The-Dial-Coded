@@ -4,7 +4,7 @@ import { RootState } from "../../../redux/store";
 import Account from "../Layout/Account/Account";
 import Canvas from "../Layout/Canvas/Canvas";
 import Mixtape from "../Layout/Mixtape/Mixtape";
-import Post from "../Layout/Post/Post";
+import Post from "../Layout/Publish/Post";
 import Slider from "../Layout/Slider/Slider";
 
 const LayoutSwitch: FunctionComponent = (): JSX.Element => {

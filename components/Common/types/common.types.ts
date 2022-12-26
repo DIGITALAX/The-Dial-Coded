@@ -13,6 +13,7 @@ import {
 import { FormEvent } from "react";
 
 export type ReactionProps = {
+  id?: string;
   textColor: string;
   commentColor: string;
   mirrorColor: string;
@@ -35,6 +36,7 @@ export type ReactionProps = {
   hasCollected?: boolean;
   hasReacted?: boolean;
   hasMirrored?: boolean;
+  hasCommented?: boolean;
 };
 
 export type InterfaceProps = {
@@ -111,10 +113,11 @@ export type PresetProps = {
 export type FeedPublicationProps = {
   publication: PublicationsQueryRequest;
   dispatch: Dispatch<AnyAction>;
-  fetchReactions: (id: string) => Promise<any>;
   type?: string;
-  didMirror: any[];
-  getMoreMirrors: () => Promise<void>;
+  hasReacted?: boolean | undefined;
+  reactionsFeed?: number;
+  hasMirrored?: boolean | undefined;
+  hasCommented?: boolean | undefined;
 };
 
 export type OptionMenuProps = {
@@ -485,6 +488,7 @@ export type CollectsModalProps = {
   approveCurrency?: () => void;
   handleCollect?: () => Promise<void>;
   collectInfoLoading: boolean;
+  postCollectInfoLoading: boolean;
   collectLoading: boolean;
   approvalLoading: boolean;
 };
@@ -494,49 +498,17 @@ export type MirrorsModalProps = {
   getMorePostMirrors: () => Promise<void>;
   mirrorPost: () => Promise<void>;
   mirrorLoading: boolean;
-  mirrorComplete: boolean;
+  mirrorInfoLoading: boolean;
 };
 
 export type CommentsModalProps = {
   commentors: PublicationsQueryRequest[];
-  getMorePostComments: (pubId?: string) => Promise<void>;
-  commentPost: () => Promise<void>;
-  commentLoading: boolean;
-  didMirror: any[];
-  getMoreMirrors: () => Promise<void>;
-};
-
-export type UseReactionsResult = {
-  getMorePostReactions: () => Promise<void>;
-  mirrorers: ProfileQueryRequest[];
-  getMorePostMirrors: (pubId?: string) => Promise<void>;
-  commentors: PublicationsQueryRequest[];
-  getMorePostComments: (pubId?: string) => Promise<void>;
-  collectors: WhoCollectedPublicationRequest[];
-  getMorePostCollects: () => Promise<void>;
-  mirrorPost: () => Promise<void>;
-  reacters: ReactionRequest[];
-  reactionPost: () => Promise<void>;
-  commentPost: (e: FormEvent) => Promise<void>;
-  mirrorLoading: boolean;
-  reactionLoading: boolean;
-  mirrorComplete: boolean;
-  approveCurrency?: () => void;
-  collectPost?: () => Promise<void>;
-  approvalSuccess: boolean;
-  approvalLoading: boolean;
-  collectLoading: boolean;
-  commentLoading: boolean;
-  collectComplete: boolean;
-  getPostComments: (pubId?: string) => Promise<void>;
-  handleCommentDescription: (e: FormEvent) => void;
-  commentDescription: string;
-  handleEmoji: (e: FormEvent) => void;
-  handleGif: (e: FormEvent) => void;
-  handleSetGif: (result: any) => void;
-  results: any;
-  searchGif: string | undefined;
-  handleGifSubmit: (e: any) => Promise<void>;
+  getMorePostComments: () => Promise<void>;
+  hasMirrored: boolean[];
+  hasReacted: boolean[];
+  commentInfoLoading: boolean;
+  hasCommented: boolean[];
+  reactionsFeed: any[];
 };
 
 export type ReactionModalProps = {
@@ -544,6 +516,7 @@ export type ReactionModalProps = {
   reacters: ReactionRequest[];
   reactionPost: () => Promise<void>;
   reactionLoading: boolean;
+  reactionInfoLoading: boolean;
 };
 
 export type CollectInfoProps = {

@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { apolloClient } from "../../lib/lens/client";
+import { apolloClient, authClient } from "../../lib/lens/client";
 
 const PROFILE_PUBLICATION = `
 query Publications($request: PublicationsQueryRequest!) {
@@ -353,7 +353,7 @@ query Publications($request: PublicationsQueryRequest!) {
 `;
 
 const profilePublications = (request: any) => {
-  return apolloClient.query({
+  return authClient.query({
     query: gql(PROFILE_PUBLICATION),
     variables: {
       request: request,

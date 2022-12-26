@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
+import { setFeedOrder } from "../../../redux/reducers/feedOrderSlice";
+import { setFeedPriority } from "../../../redux/reducers/feedPrioritySlice";
 import { setMixtapePage } from "../../../redux/reducers/mixtapePageSlice";
 import { PanelOptionProps } from "../types/common.types";
 

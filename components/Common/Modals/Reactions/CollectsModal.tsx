@@ -18,6 +18,7 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
   approveCurrency,
   handleCollect,
   collectInfoLoading,
+  postCollectInfoLoading,
   collectLoading,
   approvalLoading,
 }): JSX.Element | null => {
@@ -53,7 +54,7 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
             >
               <ImCross color="black" size={15} />
             </div>
-            {collectors.length > 0 && (
+            {!postCollectInfoLoading && collectors.length > 0 && (
               <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto">
                 <InfiniteScroll
                   hasMore={true}

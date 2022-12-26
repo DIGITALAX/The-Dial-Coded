@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import useMain from "../Post/modules/Feed/hooks/useMain";
 import useAccount from "./hooks/useAccount";
 import useProfile from "./hooks/useProfile";
 import AccountTab from "./modules/AccountTab";
@@ -28,7 +27,6 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
-  const { fetchReactions, didMirror, getMoreMirrors } = useMain();
   let action: string = "account";
   const decideStringAction = () => {
     if (profile) {
@@ -44,14 +42,14 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     case "profile feed":
       return (
         <ProfileTab
-          profile={profile}
           getMoreUserProfileFeed={getMoreUserProfileFeed}
           userFeed={userFeed}
-          fetchReactions={fetchReactions}
           dispatch={dispatch}
-          didMirror={didMirror}
-          getMoreMirrors={getMoreMirrors}
           height={"44rem"}
+          hasMirrored={hasMirrored}
+          hasCommented={hasCommented}
+          hasReacted={hasReacted}
+          feedReactions={feedReactions}
         />
       );
 

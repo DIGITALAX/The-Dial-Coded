@@ -38,4 +38,8 @@ export type UseProfilePageResults = {
   dispatch: Dispatch<AnyAction>;
   isFollowedByMe: boolean;
   isFollowing: boolean;
+  hasMirrored: boolean[];
+  hasCommented: boolean[];
+  hasReacted: boolean[];
+  reactionsFeed: any[];
 };

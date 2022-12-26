@@ -1,4 +1,5 @@
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import Image from "next/legacy/image";
 import { FormEvent, FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -6,20 +7,18 @@ import { useSelector } from "react-redux";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { RootState } from "../../../../redux/store";
 import FeedPublication from "../../../Common/Feed/FeedPublication";
-import useCollectionModal from "../../../Common/Modals/Publication/hooks/useCollectionModal";
-import useImageUpload from "../../../Common/Modals/Publication/hooks/useImageUpload";
-import CollectOptionsModal from "../../../Common/Modals/Publication/modules/CollectOptionsModal";
-import ImagePicker from "../../../Common/Modals/Publication/modules/ImagePicker";
-import ImageUploads from "../../../Common/Modals/Publication/modules/ImageUploads";
-import PostOptions from "../../../Common/Modals/Publication/modules/PostOptions";
+import useCollectionModal from "../../../Common/Modals/Publications/hooks/useCollectionModal";
+import useImageUpload from "../../../Common/Modals/Publications/hooks/useImageUpload";
+import CollectOptionsModal from "../../../Common/Modals/Publications/modules/CollectOptionsModal";
+import ImagePicker from "../../../Common/Modals/Publications/modules/ImagePicker";
+import ImageUploads from "../../../Common/Modals/Publications/modules/ImageUploads";
+import PostOptions from "../../../Common/Modals/Publications/modules/PostOptions";
 import { CommentsProps } from "../types/post.types";
 
 const Comments: FunctionComponent<CommentsProps> = ({
   commentors,
   getMorePostComments,
   dispatch,
-  didMirror,
-  getMoreMirrors,
   lensProfile,
   isConnected,
   commentPost,
@@ -32,6 +31,13 @@ const Comments: FunctionComponent<CommentsProps> = ({
   results,
   searchGif,
   handleGifSubmit,
+  hasMirrored,
+  hasReacted,
+  hasCommented,
+  commentSuccess,
+  reactionsFeed,
+  gifs,
+  handleRemoveGif,
 }): JSX.Element => {
   const { openConnectModal } = useConnectModal();
   const collectOptionsModal = useSelector(
@@ -171,15 +177,34 @@ const Comments: FunctionComponent<CommentsProps> = ({
               disabled={commentLoading ? true : false}
             ></textarea>
             <div className="relative w-full h-full grid grid-flow-col auto-cols-auto row-start-2">
-              <PostOptions
-                dispatch={dispatch}
-                imagePicker={imagePickerModal}
-                uploadImage={uploadImage}
-                imageUploading={imageUploading}
-                postLoading={commentLoading}
-              />
+              <div className="relative w-full h-fit col-start-1 pl-2 place-self-center">
+                <PostOptions
+                  dispatch={dispatch}
+                  imagePicker={imagePickerModal}
+                  uploadImage={uploadImage}
+                  imageUploading={imageUploading}
+                  postLoading={commentLoading}
+                />
+              </div>
+              {gifs && (
+                <div className="relative w-28 h-full justify-self-end col-start-2 grid grid-flow-col auto-cols overflow-x-scroll gap-2">
+                  {gifs?.map((gif: any, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className={`col-start-${index} relative w-6 h-full cursor-pointer scale:active-95`}
+                        onClick={() => handleRemoveGif(gif)}
+                      >
+                        <Image src={gif} objectFit="cover" layout="fill" />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
               <div
-                className="relative w-32 h-10 px-3 py-1 justify-self-end self-center grid grid-flow-col auto-cols-auto bg-white/95 rounded-md col-start-2 cursor-pointer hover:opacity-70 active:scale-95"
+                className={`relative w-32 h-10 px-3 py-1 justify-self-end self-center grid grid-flow-col auto-cols-auto bg-white/95 rounded-md ${
+                  gifs ? "col-start-3" : "col-start-2"
+                } cursor-pointer hover:opacity-70 active:scale-95`}
                 onClick={(e: FormEvent) => commentPost(e)}
               >
                 <div
@@ -213,10 +238,11 @@ const Comments: FunctionComponent<CommentsProps> = ({
                   dispatch={dispatch}
                   publication={commentor}
                   key={index}
-                  fetchReactions={getMorePostComments}
                   type={"comment"}
-                  didMirror={didMirror}
-                  getMoreMirrors={getMoreMirrors}
+                  hasMirrored={hasMirrored?.length > 0 && hasMirrored[index]}
+                  hasReacted={hasReacted?.length > 0 && hasReacted[index]}
+                  reactionsFeed={reactionsFeed.length > 0 && reactionsFeed[index]}
+                  hasCommented={hasCommented?.length > 0 && hasCommented[index]}
                 />
               );
             })}

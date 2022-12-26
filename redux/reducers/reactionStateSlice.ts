@@ -4,12 +4,16 @@ export interface ReactionStateState {
   open: boolean;
   type?: string;
   value?: any;
+  mirror?: boolean;
+  react?: boolean;
 }
 
 const initialReactionStateState: ReactionStateState = {
   open: false,
   type: undefined,
-  value: undefined
+  value: undefined,
+  mirror: undefined,
+  react: undefined,
 };
 
 export const reactionStateSlice = createSlice({
@@ -18,11 +22,21 @@ export const reactionStateSlice = createSlice({
   reducers: {
     setReactionState: (
       state: ReactionStateState,
-      { payload: { actionOpen, actionType, actionValue } }
+      {
+        payload: {
+          actionOpen,
+          actionType,
+          actionValue,
+          actionResponseMirror,
+          actionResponseReact,
+        },
+      }
     ) => {
       state.open = actionOpen;
       state.type = actionType;
       state.value = actionValue;
+      (state.mirror = actionResponseMirror),
+        (state.react = actionResponseReact);
     },
   },
 });
