@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import useProfilePage from "../../Profile/hooks/useProfilePage";
 import useAccount from "./hooks/useAccount";
 import useProfile from "./hooks/useProfile";
 import AccountTab from "./modules/AccountTab";
@@ -23,7 +24,19 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     profileLoading,
   } = useAccount();
   const dispatch = useDispatch();
-  const { getMoreUserProfileFeed, userFeed } = useProfile();
+  const {
+    profileDataLoading,
+    getMoreUserProfileFeed,
+    userFeed,
+    hasMirrored,
+    hasCommented,
+    hasReacted,
+    reactionsFeed,
+    userFollowers,
+    userFollowing,
+    getMoreFollowers,
+    getMoreFollowing,
+  } = useProfile();
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
@@ -49,12 +62,21 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           hasMirrored={hasMirrored}
           hasCommented={hasCommented}
           hasReacted={hasReacted}
-          feedReactions={feedReactions}
+          reactionsFeed={reactionsFeed}
+          profileDataLoading={profileDataLoading}
         />
       );
 
     case "stats":
-      return <StatsTab profile={profile} />;
+      return (
+        <StatsTab
+          profile={profile}
+          userFollowing={userFollowing}
+          userFollowers={userFollowers}
+          getMoreFollowers={getMoreFollowers}
+          getMoreFollowing={getMoreFollowing}
+        />
+      );
 
     case "no profile":
       return (

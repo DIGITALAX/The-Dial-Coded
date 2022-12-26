@@ -13,7 +13,6 @@ import createFollowTypedData from "../../../../graphql/mutations/follow";
 import createUnFollowTypedData from "../../../../graphql/mutations/unfollow";
 import getProfilePage from "../../../../graphql/queries/getProfilePage";
 import followingData from "../../../../graphql/queries/profileData";
-import profilePublicationsNoAuth from "../../../../graphql/queries/profilePublicationNoAuth";
 import whoCommentedPublications from "../../../../graphql/queries/whoCommentedPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
 import { omit, splitSignature } from "../../../../lib/lens/helpers";
@@ -24,7 +23,10 @@ import { FollowArgs, UseProfilePageResults } from "../types/profile.types";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
 import lodash from "lodash";
 import whoReactedublications from "../../../../graphql/queries/whoReactedPublication";
-import profilePublications from "../../../../graphql/queries/profilePublication";
+import {
+  profilePublications,
+  profilePublicationsAuth,
+} from "../../../../graphql/queries/profilePublication";
 
 const useProfilePage = (): UseProfilePageResults => {
   const router = useRouter();
@@ -128,7 +130,7 @@ const useProfilePage = (): UseProfilePageResults => {
 
   const checkIfMoreMirrored = async (pageData: any): Promise<any> => {
     try {
-      const { data } = await profilePublicationsNoAuth({
+      const { data } = await profilePublications({
         profileId: lensProfile,
         publicationTypes: ["MIRROR"],
         limit: 50,
@@ -325,7 +327,7 @@ const useProfilePage = (): UseProfilePageResults => {
     let pageData: any;
     try {
       if (!lensProfile) {
-        const { data } = await profilePublicationsNoAuth({
+        const { data } = await profilePublications({
           profileId: profileData?.id,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 30,
@@ -336,7 +338,7 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         pageData = data?.publications?.pageInfo;
       } else {
-        const { data } = await profilePublications({
+        const { data } = await profilePublicationsAuth({
           profileId: profileData?.id,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 30,
@@ -349,9 +351,7 @@ const useProfilePage = (): UseProfilePageResults => {
       }
       setUserFeed(sortedArr);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(
-        sortedArr,
-      );
+      const response = await checkPostReactions(sortedArr);
       setHasReacted(response?.hasReactedArr);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr);
@@ -370,7 +370,7 @@ const useProfilePage = (): UseProfilePageResults => {
     let pageData: any;
     try {
       if (!lensProfile) {
-        const { data } = await profilePublicationsNoAuth({
+        const { data } = await profilePublications({
           profileId: profileData?.id,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 30,
@@ -383,7 +383,7 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         pageData = data?.publications?.pageInfo;
       } else {
-        const { data } = await profilePublications({
+        const { data } = await profilePublicationsAuth({
           profileId: profileData?.id,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 30,
@@ -398,9 +398,7 @@ const useProfilePage = (): UseProfilePageResults => {
       }
       setUserFeed(sortedArr);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(
-        sortedArr
-      );
+      const response = await checkPostReactions(sortedArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr);

@@ -17,13 +17,17 @@ const MainPost: FunctionComponent<MainPostProps> = ({
         <FeedPublication
           dispatch={dispatch}
           publication={publicationData}
-          type={publicationData?.__typename === "Post" ? "Post" : "Mirror"}
+          type={
+            publicationData?.__typename === "Post"
+              ? "Post"
+              : publicationData?.__typename === "Mirror"
+              ? "Mirror"
+              : "Comment"
+          }
           hasMirrored={hasPostMirrored?.length > 0 && hasPostMirrored[0]}
           hasCommented={hasPostCommented?.length > 0 && hasPostCommented[0]}
           hasReacted={hasPostReacted?.length > 0 && hasPostReacted[0]}
-          reactionsFeed={
-            reactionsPostFeed?.length > 0 && reactionsPostFeed[0]
-          }
+          reactionsFeed={reactionsPostFeed?.length > 0 && reactionsPostFeed[0]}
         />
       </div>
     </div>

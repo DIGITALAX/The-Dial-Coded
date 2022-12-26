@@ -1,4 +1,4 @@
-import { apolloClient, authClient } from "../../lib/lens/client";
+import { apolloClient } from "../../lib/lens/client";
 import { gql } from "@apollo/client";
 
 const FEED_TIMELINE = `

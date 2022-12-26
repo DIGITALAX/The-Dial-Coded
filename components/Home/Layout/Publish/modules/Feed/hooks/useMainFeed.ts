@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import explorePublications from "../../../../../../../graphql/queries/explorePublications";
+import {
+  explorePublications,
+  explorePublicationsAuth,
+} from "../../../../../../../graphql/queries/explorePublications";
 import { RootState } from "../../../../../../../redux/store";
 import {
   PaginatedResultInfo,
@@ -8,10 +11,11 @@ import {
 } from "../../../../../../Common/types/lens.types";
 import lodash from "lodash";
 import whoReactedublications from "../../../../../../../graphql/queries/whoReactedPublication";
-import profilePublications from "../../../../../../../graphql/queries/profilePublication";
-import profilePublicationsNoAuth from "../../../../../../../graphql/queries/profilePublicationNoAuth";
+import {
+  profilePublicationsAuth,
+  profilePublications,
+} from "../../../../../../../graphql/queries/profilePublication";
 import feedTimeline from "../../../../../../../graphql/queries/feedTimeline";
-import exploreAuthPublications from "../../../../../../../graphql/queries/exploreAuth";
 import whoCommentedPublications from "../../../../../../../graphql/queries/whoCommentedPublications";
 import { useRouter } from "next/router";
 
@@ -267,7 +271,7 @@ const useMainFeed = () => {
     let pageData: any;
     try {
       if (!lensProfile) {
-        const { data } = await profilePublicationsNoAuth({
+        const { data } = await profilePublications({
           profileId: "0x454c",
           publicationTypes: feedOrder,
           limit: 20,
@@ -278,7 +282,7 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       } else {
-        const { data } = await profilePublications({
+        const { data } = await profilePublicationsAuth({
           profileId: "0x454c",
           publicationTypes: feedOrder,
           limit: 20,
@@ -291,9 +295,7 @@ const useMainFeed = () => {
       }
       setPublicationsFeed(sortedArr);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(
-        sortedArr
-      );
+      const response = await checkPostReactions(sortedArr);
       setReactionsFeed(response?.reactionsFeedArr);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr);
@@ -319,7 +321,7 @@ const useMainFeed = () => {
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       if (sortedArr.length < 1) {
-        const authPub = await exploreAuthPublications({
+        const authPub = await explorePublicationsAuth({
           sources: "thedial",
           publicationTypes: feedOrder,
           limit: 20,
@@ -332,9 +334,7 @@ const useMainFeed = () => {
         );
         setPublicationsFeed(auth_sortedArr);
         setPaginatedResults(authPub.data.explorePublications.pageInfo);
-        const response = await checkPostReactions(
-          auth_sortedArr
-        );
+        const response = await checkPostReactions(auth_sortedArr);
         setHasReacted(response?.hasReactedArr);
         setReactionsFeed(response?.reactionsFeedArr);
         const hasMirroredArr = await checkIfMirrored(auth_sortedArr);
@@ -345,9 +345,7 @@ const useMainFeed = () => {
         // add in feed order sort options here manually
         setPublicationsFeed(sortedArr);
         setPaginatedResults(data.feed.pageInfo);
-        const response = await checkPostReactions(
-          sortedArr
-        );
+        const response = await checkPostReactions(sortedArr);
         setHasReacted(response?.hasReactedArr);
         setReactionsFeed(response?.reactionsFeedArr);
         const hasMirroredArr = await checkIfMirrored(sortedArr);
@@ -402,7 +400,7 @@ const useMainFeed = () => {
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       if (sortedArr.length < 1) {
-        const authPub = await exploreAuthPublications({
+        const authPub = await explorePublicationsAuth({
           sources: "thedial",
           publicationTypes: feedOrder,
           limit: 20,
@@ -418,9 +416,7 @@ const useMainFeed = () => {
         );
         setPublicationsFeed([...publicationsFeed, ...auth_sortedArr]);
         setPaginatedResults(authPub?.data.explorePublications.pageInfo);
-        const response = await checkPostReactions(
-          auth_sortedArr
-        );
+        const response = await checkPostReactions(auth_sortedArr);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
         setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
         const hasMirroredArr = await checkIfMirrored(auth_sortedArr);
@@ -431,9 +427,7 @@ const useMainFeed = () => {
         // add in feed order sort options here manually
         setPublicationsFeed([...publicationsFeed, ...sortedArr]);
         setPaginatedResults(morePublications?.data.feed.pageInfo);
-        const response = await checkPostReactions(
-          sortedArr
-        );
+        const response = await checkPostReactions(sortedArr);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
         setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
         const hasMirroredArr = await checkIfMirrored(sortedArr);
@@ -464,7 +458,7 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       } else {
-        const { data } = await profilePublicationsNoAuth({
+        const { data } = await profilePublicationsAuth({
           profileId: "0x454c",
           publicationTypes: feedOrder,
           limit: 20,
@@ -478,9 +472,7 @@ const useMainFeed = () => {
       }
       setPublicationsFeed(sortedArr);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(
-        sortedArr
-      );
+      const response = await checkPostReactions(sortedArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr);
@@ -520,9 +512,7 @@ const useMainFeed = () => {
       console.log(sortedArr);
       setCommentors(sortedArr);
       setCommentPageInfo(comments.data.publications.pageInfo);
-      const response = await checkPostReactions(
-        sortedArr
-      );
+      const response = await checkPostReactions(sortedArr);
       setReactionsFeed(response?.reactionsFeedArr);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr);
@@ -550,9 +540,7 @@ const useMainFeed = () => {
       );
       setCommentors([...commentors, ...sortedArr]);
       setCommentPageInfo(comments.data.publications.pageInfo);
-      const response = await checkPostReactions(
-        sortedArr
-      );
+      const response = await checkPostReactions(sortedArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr);

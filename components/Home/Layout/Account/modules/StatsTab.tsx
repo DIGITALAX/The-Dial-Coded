@@ -1,38 +1,61 @@
 import { FunctionComponent } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import FeedPublication from "../../../../Common/Feed/FeedPublication";
-import { PublicationsQueryRequest } from "../../../../Common/types/lens.types";
 import { StatsTabProps } from "../types/account.types";
+import Follows from "./Follows";
 
 const StatsTab: FunctionComponent<StatsTabProps> = ({
   profile,
+  userFollowing,
+  userFollowers,
+  getMoreFollowers,
+  getMoreFollowing,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-6">
-      <div className="relative w-fit h-fit row-start-1 grid grid-flow-row auto-rows-auto place-self-start gap-4">
-        <div className="relative w-fit h-fit row-start-1 col-start-1 text-offBlack text-md grid grid-flow-row auto-rows-auto justify-self-start self-center gap-2">
-          <div className="relative w-fit h-fit row-start-1 place-self-center font-digiR">
-            Total Followers
+      <div className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto place-self-start gap-4">
+        <div className="relative w-full h-fit row-start-1 col-start-1 text-offBlack text-xl grid grid-flow-row auto-rows-auto justify-self-start self-center gap-2">
+          <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-3">
+            <div className="relative w-fit h-fit place-self-center font-digiR col-start-1">
+              Total Followers:
+            </div>
+            <div className="relative w-fit h-fit place-self-center font-digiB col-start-2">
+              {profile?.stats?.totalFollowers}
+            </div>
           </div>
-          <div className="relative w-fit h-fit row-start-1 place-self-center font-digiB">
-            {profile?.stats?.totalFollowers}
-          </div>
+          <InfiniteScroll
+            hasMore={true}
+            dataLength={userFollowers?.length}
+            next={getMoreFollowers}
+            loader={""}
+            height={"25rem"}
+            className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto gap-3 pt-3 pr-3"
+          >
+            {userFollowers?.map((follow: any, index: number) => {
+              return <Follows key={index} follow={follow?.wallet?.defaultProfile} />;
+            })}
+          </InfiniteScroll>
         </div>
-        <div className="relative w-fit h-fit row-start-1 col-start-2 text-offBlack text-md grid grid-flow-row auto-rows-auto justify-self-start self-center gap-2">
-          <div className="relative w-fit h-fit row-start-1 place-self-center font-digiR">
-            Total Following
+        <div className="relative w-full h-fit row-start-1 col-start-2 text-offBlack text-xl grid grid-flow-row auto-rows-auto justify-self-start self-center gap-2">
+          <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-3">
+            <div className="relative w-fit h-fit place-self-center font-digiR col-start-1">
+              Total Following:
+            </div>
+            <div className="relative w-fit h-fit place-self-center font-digiB col-start-2">
+              {profile?.stats?.totalFollowing}
+            </div>
           </div>
-          <div className="relative w-fit h-fit row-start-1 place-self-center font-digiB">
-            {profile?.stats?.totalFollowing}
-          </div>
-        </div>
-        <div className="relative w-fit h-fit row-start-2 text-offBlack text-md grid grid-flow-row auto-rows-auto justify-self-start self-center gap-2">
-          <div className="relative w-fit h-fit row-start-1 place-self-center font-digiR">
-            Total Following
-          </div>
-          <div className="relative w-fit h-fit row-start-1 place-self-center font-digiB">
-            {profile?.stats?.totalFollowing}
-          </div>
+          <InfiniteScroll
+            hasMore={true}
+            dataLength={userFollowing?.length}
+            next={getMoreFollowing}
+            loader={""}
+            height={"25rem"}
+            className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto pt-3 pr-3 gap-3"
+          >
+            {userFollowing?.map((follow: any, index: number) => {
+              return <Follows key={index} follow={follow?.profile} />;
+            })}
+          </InfiniteScroll>
         </div>
       </div>
     </div>
