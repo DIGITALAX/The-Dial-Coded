@@ -28,6 +28,7 @@ const useMain = (): UseMainResults => {
   const publicationModal = useSelector(
     (state: RootState) => state.app.publicationReducer.value
   );
+  const fire = useSelector((state: RootState) => state.app.fireReducer.value);
   const reactionsModal = useSelector(
     (state: RootState) => state.app.reactionStateReducer
   );
@@ -58,6 +59,7 @@ const useMain = (): UseMainResults => {
   const [collectInfoLoading, setCollectInfoLoading] = useState<boolean>(false);
   const [paginatedResults, setPaginatedResults] =
     useState<PaginatedResultInfo>();
+
   const fetchPublications = async (): Promise<void> => {
     let feedOrder: string[];
     if (!feedOrderState && !feedPriorityState) {
@@ -101,14 +103,14 @@ const useMain = (): UseMainResults => {
     if (!feedOrderState && !feedPriorityState) {
       feedOrder = feedType;
     } else {
-      if (!feedPriorityState) {
+      if (feedPriorityState === "interests") {
         if (feedOrderState === "chrono") {
           feedOrder = ["POST"];
         } else {
           feedOrder = ["POST", "COMMENT", "MIRROR"];
         }
       } else {
-        if (feedOrderState === "chrono" && feedPriorityState === "reactions") {
+        if (feedOrderState === "algo") {
           feedOrder = ["COMMENT", "MIRROR"];
         } else {
           feedOrder = ["COMMENT"];
@@ -118,10 +120,11 @@ const useMain = (): UseMainResults => {
     try {
       const morePublications = await explorePublications({
         sources: "thedial",
-        publicationTypes: feedOrder,
-        limit: 20,
+        publicationTypes: feedType,
+        limit: 30,
         sortCriteria: sortCriteria,
-        paginatedResults: paginatedResults?.next,
+        noRandomize: true,
+        cursor: paginatedResults?.next,
       });
       const arr: PublicationsQueryRequest[] = [
         ...morePublications?.data.explorePublications.items,
@@ -167,7 +170,7 @@ const useMain = (): UseMainResults => {
     }
   };
 
-  const fetchReactions = async (pubId: string): Promise<any> => { 
+  const fetchReactions = async (pubId: string): Promise<any> => {
     try {
       const reactions = await whoReactedublications({
         publicationId: pubId,
@@ -294,23 +297,76 @@ const useMain = (): UseMainResults => {
   };
 
   const getFeedTimeline = async (): Promise<void> => {
+    let feedOrder: string[];
+    if (!feedOrderState && !feedPriorityState) {
+      feedOrder = feedType;
+    } else {
+      if (feedPriorityState === "interests") {
+        if (feedOrderState === "chrono") {
+          feedOrder = ["POST"];
+        } else {
+          feedOrder = ["POST", "COMMENT", "MIRROR"];
+        }
+      } else {
+        if (feedOrderState === "algo") {
+          feedOrder = ["COMMENT", "MIRROR"];
+        } else {
+          feedOrder = ["COMMENT"];
+        }
+      }
+    }
     try {
-      const publicationsList = await feedTimeline({
+      const { data } = await feedTimeline({
         profileId: lensProfile,
         limit: 50,
       });
-      const arr: any[] = [...publicationsList?.data.feed.items];
+      const arr: any[] = [...data.feed.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      setPublicationsFeed(sortedArr);
-      setPaginatedResults(publicationsList?.data.feed.pageInfo);
+      if (sortedArr.length < 1) {
+        const authPub = await exploreAuthPublications({
+          sources: "thedial",
+          publicationTypes: feedOrder,
+          limit: 20,
+          sortCriteria: sortCriteria,
+          noRandomize: true,
+        });
+        const auth_arr: any[] = [...authPub?.data.explorePublications.items];
+        const auth_sortedArr: any[] = auth_arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        setPublicationsFeed(auth_sortedArr);
+        setPaginatedResults(authPub.data.explorePublications.pageInfo);
+      } else {
+        setPublicationsFeed(sortedArr);
+        setPaginatedResults(data.feed.pageInfo);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
   const getMoreFeedTimeline = async (): Promise<void> => {
+    let feedOrder: string[];
+    if (!feedOrderState && !feedPriorityState) {
+      feedOrder = feedType;
+    } else {
+      if (feedPriorityState === "interests") {
+        if (feedOrderState === "chrono") {
+          feedOrder = ["POST"];
+        } else {
+          feedOrder = ["POST", "COMMENT", "MIRROR"];
+        }
+      } else {
+        if (feedOrderState === "algo") {
+          feedOrder = ["COMMENT", "MIRROR"];
+        } else {
+          feedOrder = ["COMMENT"];
+        }
+      }
+    }
+
     try {
       const morePublications = await feedTimeline({
         profileId: lensProfile,
@@ -323,19 +379,37 @@ const useMain = (): UseMainResults => {
       const sortedArr: PublicationsQueryRequest[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      setPublicationsFeed([...publicationsFeed, ...sortedArr]);
-      setPaginatedResults(morePublications?.data.feed.pageInfo);
+      if (sortedArr.length < 1) {
+        const authPub = await exploreAuthPublications({
+          sources: "thedial",
+          publicationTypes: feedOrder,
+          limit: 20,
+          sortCriteria: sortCriteria,
+          noRandomize: true,
+          cursor: paginatedResults?.next,
+        });
+        const auth_arr: PublicationsQueryRequest[] = [
+          ...authPub?.data.explorePublications.items,
+        ];
+        const auth_sortedArr: PublicationsQueryRequest[] = auth_arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        setPublicationsFeed([...publicationsFeed, ...auth_sortedArr]);
+        setPaginatedResults(authPub?.data.explorePublications.pageInfo);
+      } else {
+        setPublicationsFeed([...publicationsFeed, ...sortedArr]);
+        setPaginatedResults(morePublications?.data.feed.pageInfo);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
   useEffect(() => {
-    if (lensProfile) {
-      fetchPublications();
+    if (lensProfile && userView === "Select User") {
       getMirrors();
-      // getFeedTimeline();
-    } else {
+      getFeedTimeline();
+    } else if (userView === "Select User" && !lensProfile) {
       fetchPublications();
     }
 
@@ -355,6 +429,8 @@ const useMain = (): UseMainResults => {
     lensProfile,
     isConnected,
     layout,
+    userView,
+    fire
   ]);
 
   return {

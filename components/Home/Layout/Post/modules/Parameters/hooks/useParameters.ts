@@ -32,9 +32,11 @@ const useParameters = (): UseParametersResult => {
       const { data } = await profilePublications({
         profileId: userId[indexOf(userList, userViewer)],
         publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 30,
+        limit: 20,
       });
+      console.log("in select user")
       const arr: any[] = [...data?.publications?.items];
+      console.log(arr.length)
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
@@ -50,11 +52,12 @@ const useParameters = (): UseParametersResult => {
       const { data } = await profilePublications({
         profileId: userId[indexOf(userList, userViewer)],
         publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 30,
+        limit: 20,
         cursor: userPaginatedResults?.next,
       });
-
+      console.log("in more select user")
       const arr: any[] = [...data?.publications?.items];
+      console.log(arr.length)
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );

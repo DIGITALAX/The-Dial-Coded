@@ -18,7 +18,7 @@ const Feed: FunctionComponent<FeedProps> = ({
   getMoreUserSelectFeed,
   userSelectFeed,
   didMirror,
-  getMoreMirrors
+  getMoreMirrors,
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -26,6 +26,9 @@ const Feed: FunctionComponent<FeedProps> = ({
   );
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
+  const viewerFeed = useSelector(
+    (state: RootState) => state.app.userViewerReducer.value
   );
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-3 gap-3">
@@ -40,6 +43,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           userSelectFeed={userSelectFeed}
           didMirror={didMirror}
           getMoreMirrors={getMoreMirrors}
+          viewerFeed={viewerFeed}
         />
         <Hot
           topTrending={topTrending}
@@ -52,11 +56,11 @@ const Feed: FunctionComponent<FeedProps> = ({
         className="relative row-start-2 p-4 w-full h-fit grid grid-flow-col auto-cols-auto bg-offBlue/60 hover:opacity-70 active:scale-95 cursor-pointer"
         onClick={() => {
           dispatch(setMoreFeed(!isOpen));
-          if (lensProfile) {
-            getMoreFeedTimeline();
-          } else {
-            fetchMorePublications();
-          }
+          lensProfile && viewerFeed === "Select User"
+            ? getMoreFeedTimeline()
+            : viewerFeed !== "Select User"
+            ? getMoreUserSelectFeed()
+            : !lensProfile && fetchMorePublications();
         }}
       >
         <div className="relative w-fit h-fit place-self-center col-start-1 ">

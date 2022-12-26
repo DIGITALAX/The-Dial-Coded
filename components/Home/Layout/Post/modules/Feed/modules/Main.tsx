@@ -18,14 +18,12 @@ const Main: FunctionComponent<MainProps> = ({
   getMoreUserSelectFeed,
   userSelectFeed,
   didMirror,
-  getMoreMirrors
+  getMoreMirrors,
+  viewerFeed,
 }): JSX.Element => {
   const dispatch = useDispatch();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
-  );
-  const viewerFeed = useSelector(
-    (state: RootState) => state.app.userViewerReducer.value
   );
   return (
     <div
@@ -38,11 +36,11 @@ const Main: FunctionComponent<MainProps> = ({
         loader={""}
         hasMore={true}
         next={
-          !lensProfile
-            ? fetchMorePublications
+          lensProfile && viewerFeed === "Select User"
+            ? getMoreFeedTimeline
             : viewerFeed !== "Select User"
             ? getMoreUserSelectFeed
-            : getMoreFeedTimeline
+            : fetchMorePublications
         }
         dataLength={
           viewerFeed !== "Select User"
