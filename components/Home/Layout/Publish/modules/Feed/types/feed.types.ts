@@ -1,10 +1,10 @@
 import {
   Post,
-  PublicationsQueryRequest,
+  PublicationSearchResult,
 } from "../../../../../../Common/types/lens.types";
 
 export type MainProps = {
-  publicationsFeed: PublicationsQueryRequest[];
+  publicationsFeed: PublicationSearchResult[];
   fetchMore: () => Promise<void>;
   isOpen: boolean;
   viewerFeed: string;
@@ -31,7 +31,7 @@ export type UseMainResults = {
   setFeedType: (e: string[]) => void;
   setSortCriteria: (e: string) => void;
   fetchMorePublications: () => Promise<void>;
-  publicationsFeed: PublicationsQueryRequest[];
+  publicationsFeed: PublicationSearchResult[];
   fetchReactions: (id: string) => Promise<any>;
   getMoreFeedTimeline: () => Promise<void>;
   collectInfoLoading: boolean;

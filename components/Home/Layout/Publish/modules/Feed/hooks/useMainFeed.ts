@@ -7,7 +7,7 @@ import {
 import { RootState } from "../../../../../../../redux/store";
 import {
   PaginatedResultInfo,
-  PublicationsQueryRequest,
+  PublicationSearchResult,
 } from "../../../../../../Common/types/lens.types";
 import lodash from "lodash";
 import whoReactedublications from "../../../../../../../graphql/queries/whoReactedPublication";
@@ -46,7 +46,7 @@ const useMainFeed = () => {
     (state: RootState) => state.app.reactionStateReducer
   );
   const [publicationsFeed, setPublicationsFeed] = useState<
-    PublicationsQueryRequest[]
+    PublicationSearchResult[]
   >([]);
   const commentId = useSelector(
     (state: RootState) => state.app.commentShowReducer?.value
@@ -56,7 +56,7 @@ const useMainFeed = () => {
   );
   const [paginatedResults, setPaginatedResults] =
     useState<PaginatedResultInfo>();
-  const [commentors, setCommentors] = useState<PublicationsQueryRequest[]>([]);
+  const [commentors, setCommentors] = useState<PublicationSearchResult[]>([]);
   const [commentPageInfo, setCommentPageInfo] = useState<PaginatedResultInfo>();
   const [reactionsFeed, setReactionsFeed] = useState<any[]>([]);
   const [hasReacted, setHasReacted] = useState<boolean[]>([]);
@@ -84,6 +84,44 @@ const useMainFeed = () => {
       }
     }
     return feedOrder;
+  };
+
+  const orderFeedManual = (
+    arr: PublicationSearchResult[]
+  ): PublicationSearchResult[] => {
+    let orderedArr: PublicationSearchResult[];
+    if (!feedOrderState && !feedPriorityState) {
+      orderedArr = lodash.filter(
+        arr,
+        (item) => (item?.__typename as string) === "Post"
+      );
+    } else {
+      if (feedPriorityState === "interests") {
+        if (feedOrderState === "chrono") {
+          orderedArr = lodash.filter(
+            arr,
+            (item) => (item?.__typename as string) === "Post"
+          );
+        } else {
+          orderedArr = arr;
+        }
+      } else {
+        if (feedOrderState === "algo") {
+          orderedArr = lodash.filter(
+            arr,
+            (item) =>
+              (item?.__typename as string) === "Comment" ||
+              (item?.__typename as string) === "Mirror"
+          );
+        } else {
+          orderedArr = lodash.filter(
+            arr,
+            (item) => (item?.__typename as string) === "Comment"
+          );
+        }
+      }
+    }
+    return orderedArr;
   };
 
   const fetchReactions = async (pubId: string): Promise<any> => {
@@ -293,14 +331,15 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       }
-      setPublicationsFeed(sortedArr);
+      const orderedArr = orderFeedManual(sortedArr);
+      setPublicationsFeed(orderedArr);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(sortedArr);
+      const response = await checkPostReactions(orderedArr);
       setReactionsFeed(response?.reactionsFeedArr);
       if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr);
         setHasMirrored(hasMirroredArr);
-        const hasCommentedArr = await checkIfCommented(sortedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr);
         setHasCommented(hasCommentedArr);
         setHasReacted(response?.hasReactedArr);
       }
@@ -332,25 +371,26 @@ const useMainFeed = () => {
         const auth_sortedArr: any[] = auth_arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
-        setPublicationsFeed(auth_sortedArr);
+        const orderedArr = orderFeedManual(auth_sortedArr);
+        setPublicationsFeed(orderedArr);
         setPaginatedResults(authPub.data.explorePublications.pageInfo);
-        const response = await checkPostReactions(auth_sortedArr);
+        const response = await checkPostReactions(orderedArr);
         setHasReacted(response?.hasReactedArr);
         setReactionsFeed(response?.reactionsFeedArr);
-        const hasMirroredArr = await checkIfMirrored(auth_sortedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr);
         setHasMirrored(hasMirroredArr);
-        const hasCommentedArr = await checkIfCommented(auth_sortedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr);
         setHasCommented(hasCommentedArr);
       } else {
-        // add in feed order sort options here manually
-        setPublicationsFeed(sortedArr);
+        const orderedArr = orderFeedManual(sortedArr);
+        setPublicationsFeed(orderedArr);
         setPaginatedResults(data.feed.pageInfo);
-        const response = await checkPostReactions(sortedArr);
+        const response = await checkPostReactions(orderedArr);
         setHasReacted(response?.hasReactedArr);
         setReactionsFeed(response?.reactionsFeedArr);
-        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr);
         setHasMirrored(hasMirroredArr);
-        const hasCommentedArr = await checkIfCommented(sortedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr);
         setHasCommented(hasCommentedArr);
       }
     } catch (err: any) {
@@ -370,10 +410,10 @@ const useMainFeed = () => {
         noRandomize: true,
         cursor: paginatedResults?.next,
       });
-      const arr: PublicationsQueryRequest[] = [
+      const arr: PublicationSearchResult[] = [
         ...morePublications?.data.explorePublications.items,
       ];
-      const sortedArr: PublicationsQueryRequest[] = arr.sort(
+      const sortedArr: PublicationSearchResult[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       setPublicationsFeed([...publicationsFeed, ...sortedArr]);
@@ -393,10 +433,10 @@ const useMainFeed = () => {
         limit: 50,
         cursor: paginatedResults?.next,
       });
-      const arr: PublicationsQueryRequest[] = [
+      const arr: PublicationSearchResult[] = [
         ...morePublications?.data.feed.items,
       ];
-      const sortedArr: PublicationsQueryRequest[] = arr.sort(
+      const sortedArr: PublicationSearchResult[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       if (sortedArr.length < 1) {
@@ -408,31 +448,32 @@ const useMainFeed = () => {
           noRandomize: true,
           cursor: paginatedResults?.next,
         });
-        const auth_arr: PublicationsQueryRequest[] = [
+        const auth_arr: PublicationSearchResult[] = [
           ...authPub?.data.explorePublications.items,
         ];
-        const auth_sortedArr: PublicationsQueryRequest[] = auth_arr.sort(
+        const auth_sortedArr: PublicationSearchResult[] = auth_arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
-        setPublicationsFeed([...publicationsFeed, ...auth_sortedArr]);
+        const orderedArr = orderFeedManual(auth_sortedArr);
+        setPublicationsFeed([...publicationsFeed, ...orderedArr]);
         setPaginatedResults(authPub?.data.explorePublications.pageInfo);
-        const response = await checkPostReactions(auth_sortedArr);
+        const response = await checkPostReactions(orderedArr);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
         setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
-        const hasMirroredArr = await checkIfMirrored(auth_sortedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr);
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
-        const hasCommentedArr = await checkIfCommented(auth_sortedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
       } else {
-        // add in feed order sort options here manually
-        setPublicationsFeed([...publicationsFeed, ...sortedArr]);
+        const orderedArr = orderFeedManual(sortedArr);
+        setPublicationsFeed([...publicationsFeed, ...orderedArr]);
         setPaginatedResults(morePublications?.data.feed.pageInfo);
-        const response = await checkPostReactions(sortedArr);
+        const response = await checkPostReactions(orderedArr);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
         setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
-        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr);
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
-        const hasCommentedArr = await checkIfCommented(sortedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
       }
     } catch (err: any) {
@@ -470,14 +511,15 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       }
-      setPublicationsFeed(sortedArr);
+      const orderedArr = orderFeedManual(sortedArr);
+      setPublicationsFeed(orderedArr);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(sortedArr);
+      const response = await checkPostReactions(orderedArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
       if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr);
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
-        const hasCommentedArr = await checkIfCommented(sortedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
       }

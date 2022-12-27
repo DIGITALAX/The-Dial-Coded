@@ -8,7 +8,7 @@ import {
   Post,
   Profile,
   ProfileQueryRequest,
-  PublicationsQueryRequest,
+  PublicationSearchResult,
   ReactionRequest,
   WhoCollectedPublicationRequest,
 } from "./lens.types";
@@ -113,7 +113,7 @@ export type PresetProps = {
 };
 
 export type FeedPublicationProps = {
-  publication: PublicationsQueryRequest;
+  publication: PublicationSearchResult;
   dispatch: Dispatch<AnyAction>;
   type?: string;
   hasReacted?: boolean | undefined;
@@ -504,7 +504,7 @@ export type MirrorsModalProps = {
 };
 
 export type CommentsModalProps = {
-  commentors: PublicationsQueryRequest[];
+  commentors: PublicationSearchResult[];
   getMorePostComments: () => Promise<void>;
   hasMirrored: boolean[];
   hasReacted: boolean[];

@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FeedPublication from "../../../../Common/Feed/FeedPublication";
-import { PublicationsQueryRequest } from "../../../../Common/types/lens.types";
+import { PublicationSearchResult } from "../../../../Common/types/lens.types";
 import { ProfileTabProps } from "../types/account.types";
 
 const ProfileTab: FunctionComponent<ProfileTabProps> = ({
@@ -38,7 +38,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
             style={{ color: "#131313", fontFamily: "Digi Reg" }}
           >
             {userFeed?.map(
-              (publication: PublicationsQueryRequest, index: number) => {
+              (publication: PublicationSearchResult, index: number) => {
                 return (
                   <FeedPublication
                     dispatch={dispatch}

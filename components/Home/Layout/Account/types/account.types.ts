@@ -5,7 +5,7 @@ import {
   PaginatedFollowersResult,
   PaginatedFollowingResult,
   Profile,
-  PublicationsQueryRequest,
+  PublicationSearchResult,
 } from "../../../../Common/types/lens.types";
 
 export type UseAccountResult = {
@@ -38,7 +38,7 @@ export type AccountTabProps = {
 
 export type ProfileTabProps = {
   getMoreUserProfileFeed: () => Promise<void>;
-  userFeed: PublicationsQueryRequest[];
+  userFeed: PublicationSearchResult[];
   dispatch: Dispatch<AnyAction>;
   height: string | undefined;
   hasMirrored: boolean[];

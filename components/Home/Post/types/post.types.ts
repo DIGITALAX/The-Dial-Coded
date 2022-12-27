@@ -1,6 +1,6 @@
 import { FormEvent } from "react";
 import { AnyAction, Dispatch } from "redux";
-import { PublicationsQueryRequest } from "../../../Common/types/lens.types";
+import { PublicationSearchResult } from "../../../Common/types/lens.types";
 
 export type MainPostProps = {
   publicationData: any;
@@ -11,7 +11,7 @@ export type MainPostProps = {
 };
 
 export type CommentsProps = {
-  commentors: PublicationsQueryRequest[];
+  commentors: PublicationSearchResult[];
   getMorePostComments: () => Promise<void>;
   dispatch: Dispatch<AnyAction>;
   lensProfile: string;
