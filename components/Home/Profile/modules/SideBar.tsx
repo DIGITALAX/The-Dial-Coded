@@ -5,7 +5,6 @@ import {
   AiOutlineUsergroupAdd,
   AiOutlineUsergroupDelete,
 } from "react-icons/ai";
-import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { SideBarProps } from "../types/profile.types";
 import lodash from "lodash";
 import { FaWpexplorer } from "react-icons/fa";
@@ -13,6 +12,8 @@ import { SlLocationPin } from "react-icons/sl";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
 import { setFollowModal } from "../../../../redux/reducers/followModalSlice";
+import { setSignIn } from "../../../../redux/reducers/signInSlice";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 const SideBar: FunctionComponent<SideBarProps> = ({
   profileData,
@@ -23,19 +24,6 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   isFollowing,
   dispatch,
 }): JSX.Element => {
-  let profileImage: string;
-  if (!(profileData?.picture as any)?.original) {
-    profileImage = "";
-  } else if ((profileData?.picture as any)?.original) {
-    if ((profileData?.picture as any)?.original?.url.includes("http")) {
-      profileImage = (profileData?.picture as any)?.original.url;
-    } else {
-      const cut = (profileData?.picture as any)?.original?.url.split("//");
-      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[1]}`;
-    }
-  } else {
-    profileImage = (profileData?.picture as any)?.uri;
-  }
 
   const location = lodash.filter(
     profileData?.attributes,
@@ -48,7 +36,10 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
-
+  const isConnected = useSelector(
+    (state: RootState) => state.app.walletConnectedReducer.value
+  );
+  const { openConnectModal } = useConnectModal();
   return (
     <div className="col-start-1 relative w-full h-full grid grid-flow-row auto-rows-auto bg-offWhite/95 row-start-1 px-14 pt-40 pb-10 col-span-1 pr-4">
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto row-start-1 self-start">
@@ -69,13 +60,19 @@ const SideBar: FunctionComponent<SideBarProps> = ({
               !followLoading &&
               "cursor-pointer active:scale-95 hover:opacity-80"
             } relative w-fit h-fit py-2 px-5 row-start-2 justify-self-start self-center rounded-lg bg-offBlue/80 grid grid-flow-col auto-cols-auto`}
-            onClick={() => {
+            onClick={
               followLoading
-                ? {}
-                : isFollowedByMe
-                ? unFollowProfile()
-                : followProfile();
-            }}
+                ? () => {}
+                : !isConnected
+                ? openConnectModal
+                : () => {
+                    !lensProfile
+                      ? dispatch(setSignIn(true))
+                      : isFollowedByMe
+                      ? unFollowProfile()
+                      : followProfile();
+                  }
+            }
           >
             <div className="relative w-fit h-fit place-self-center text-white font-dosis grid grid-flow-col auto-cols-auto gap-1">
               <div

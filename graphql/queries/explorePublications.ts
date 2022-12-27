@@ -56,19 +56,6 @@ const EXPLORE_PUBLICATIONS = `
         }
       }
     }
-    coverPicture {
-      ... on NftImage {
-        contractAddress
-        tokenId
-        uri
-        verified
-      }
-      ... on MediaSet {
-        original {
-          ...MediaFields
-        }
-      }
-    }
     ownedBy
     dispatcher {
       address

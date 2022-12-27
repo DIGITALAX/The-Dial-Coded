@@ -46,34 +46,6 @@ const FOLLOWING = `query Following($request: FollowingRequest!) {
               }
             }
           }
-          coverPicture {
-            ... on NftImage {
-              contractAddress
-              tokenId
-              uri
-              verified
-            }
-            ... on MediaSet {
-              original {
-                url
-                width
-                height
-                mimeType
-              }
-              small {
-                width
-                url
-                height
-                mimeType
-              }
-              medium {
-                url
-                width
-                height
-                mimeType
-              }
-            }
-          }
           ownedBy
           dispatcher {
             address

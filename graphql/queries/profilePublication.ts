@@ -374,3 +374,11 @@ export const profilePublications = (request: any) => {
   });
 };
 
+export const whoCommentedPublications = (request: any) => {
+  return authClient.query({
+    query: gql(PROFILE_PUBLICATION),
+    variables: {
+      request: request,
+    },
+  });
+};

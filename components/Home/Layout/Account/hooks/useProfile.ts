@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { profilePublicationsAuth } from "../../../../../graphql/queries/profilePublication";
+import { profilePublicationsAuth, whoCommentedPublications } from "../../../../../graphql/queries/profilePublication";
 import whoReactedublications from "../../../../../graphql/queries/whoReactedPublication";
 import { RootState } from "../../../../../redux/store";
 import {
@@ -9,7 +9,6 @@ import {
   PublicationSearchResult,
 } from "../../../../Common/types/lens.types";
 import lodash from "lodash";
-import whoCommentedPublications from "../../../../../graphql/queries/whoCommentedPublications";
 import followers from "../../../../../graphql/queries/followers";
 import following from "../../../../../graphql/queries/following";
 import { useAccount } from "wagmi";

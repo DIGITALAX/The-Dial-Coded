@@ -26,8 +26,8 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
             </div>
           </div>
           {followersLoading ? (
-            <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto self-start">
-              <div className="relative w-fit h-fit place-self-center animate-spin">
+            <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto self-center pt-3">
+              <div className="relative w-fit h-fit justify-self-center animate-spin self-center">
                 <AiOutlineLoading size={15} color="black" />
               </div>
             </div>
@@ -51,7 +51,7 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
             </InfiniteScroll>
           )}
         </div>
-        <div className="relative w-full h-fit row-start-1 col-start-2 text-offBlack text-xl grid grid-flow-row auto-rows-auto justify-self-start self-center gap-2">
+        <div className="relative w-full h-fit row-start-1 col-start-2 text-offBlack text-xl grid grid-flow-row auto-rows-auto justify-self-start self-start gap-2">
           <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-3">
             <div className="relative w-fit h-fit place-self-center font-digiR col-start-1">
               Total Following:
@@ -60,10 +60,9 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
               {profile?.stats?.totalFollowing}
             </div>
           </div>
-
           {followingLoading ? (
-            <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto self-start">
-              <div className="relative w-fit h-fit place-self-center animate-spin">
+            <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto self-center pt-3">
+              <div className="relative w-fit h-fit justify-self-center animate-spin self-center">
                 <AiOutlineLoading size={15} color="black" />
               </div>
             </div>

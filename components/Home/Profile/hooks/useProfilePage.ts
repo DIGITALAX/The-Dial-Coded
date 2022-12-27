@@ -13,7 +13,6 @@ import createFollowTypedData from "../../../../graphql/mutations/follow";
 import createUnFollowTypedData from "../../../../graphql/mutations/unfollow";
 import getProfilePage from "../../../../graphql/queries/getProfilePage";
 import followingData from "../../../../graphql/queries/profileData";
-import whoCommentedPublications from "../../../../graphql/queries/whoCommentedPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
 import { omit, splitSignature } from "../../../../lib/lens/helpers";
 import { setInsufficientFunds } from "../../../../redux/reducers/insufficientFunds";
@@ -30,6 +29,7 @@ import whoReactedublications from "../../../../graphql/queries/whoReactedPublica
 import {
   profilePublications,
   profilePublicationsAuth,
+  whoCommentedPublications,
 } from "../../../../graphql/queries/profilePublication";
 import following from "../../../../graphql/queries/following";
 import followers from "../../../../graphql/queries/followers";

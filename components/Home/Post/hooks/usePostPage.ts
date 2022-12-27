@@ -1,11 +1,10 @@
 import { useState } from "react";
 import getPublication from "../../../../graphql/queries/getPublication";
-import whoCommentedPublications from "../../../../graphql/queries/whoCommentedPublications";
 import lodash from "lodash";
 import whoReactedublications from "../../../../graphql/queries/whoReactedPublication";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import {profilePublications} from "../../../../graphql/queries/profilePublication";
+import {profilePublications, whoCommentedPublications} from "../../../../graphql/queries/profilePublication";
 
 const usePostPage = () => {
   const [publicationDataLoading, setPublicationDataLoading] = useState<any>();
