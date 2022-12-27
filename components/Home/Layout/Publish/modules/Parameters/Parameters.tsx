@@ -14,9 +14,13 @@ const Parameters: FunctionComponent = (): JSX.Element => {
     setTypeDrop,
     orderDrop,
     setOrderDrop,
-    userList,
-    setUserTypeOpen,
     userTypeOpen,
+    searchProfiles,
+    profileSearch,
+    searchLoading,
+    handleChosenProfile,
+    getMoreProfiles,
+    chosenProfile,
   } = useParameters();
 
   return (
@@ -33,9 +37,13 @@ const Parameters: FunctionComponent = (): JSX.Element => {
         setOrderDrop={setOrderDrop}
       />
       <Viewer
-        userList={userList}
-        setUserTypeOpen={setUserTypeOpen}
+        searchProfiles={searchProfiles}
+        profileSearch={profileSearch}
         userTypeOpen={userTypeOpen}
+        searchLoading={searchLoading}
+        handleChosenProfile={handleChosenProfile}
+        getMoreProfiles={getMoreProfiles}
+        chosenProfile={chosenProfile}
       />
     </div>
   );

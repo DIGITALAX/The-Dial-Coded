@@ -16,7 +16,8 @@ const Feed: FunctionComponent<FeedProps> = ({
   hasReacted,
   reactionsFeed,
   hasMirrored,
-  hasCommented
+  hasCommented,
+  noUserData
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -37,6 +38,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           reactionsFeed={reactionsFeed}
           hasMirrored={hasMirrored}
           hasCommented={hasCommented}
+          noUserData={noUserData}
         />
         <Hot
           topTrending={topTrending}

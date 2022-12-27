@@ -15,6 +15,9 @@ const Post: FunctionComponent = (): JSX.Element => {
   const lensProfile: Profile | undefined = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
+  const noUserData = useSelector(
+    (state: RootState) => state.app.noUserDataReducer.value
+  );
   const { connected } = usePost();
   const {
     publicationsFeed,
@@ -22,7 +25,7 @@ const Post: FunctionComponent = (): JSX.Element => {
     hasReacted,
     reactionsFeed,
     hasMirrored,
-    hasCommented
+    hasCommented,
   } = useMainFeed();
   const { topTrending, topMixtape, topTracks } = useHot();
   return (
@@ -43,6 +46,7 @@ const Post: FunctionComponent = (): JSX.Element => {
         reactionsFeed={reactionsFeed}
         hasMirrored={hasMirrored}
         hasCommented={hasCommented}
+        noUserData={noUserData}
       />
     </div>
   );

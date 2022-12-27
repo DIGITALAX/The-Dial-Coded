@@ -1,5 +1,5 @@
 import {
-  Post,
+  Profile,
   PublicationSearchResult,
 } from "../../../../../../Common/types/lens.types";
 
@@ -7,11 +7,12 @@ export type MainProps = {
   publicationsFeed: PublicationSearchResult[];
   fetchMore: () => Promise<void>;
   isOpen: boolean;
-  viewerFeed: string;
+  viewerFeed: Profile | undefined;
   hasReacted: boolean[];
   reactionsFeed: any[];
   hasMirrored: boolean[];
-  hasCommented: boolean[]
+  hasCommented: boolean[];
+  noUserData: boolean;
 };
 
 export type HotProps = {

@@ -32,6 +32,9 @@ const Post: NextPage = (): JSX.Element => {
   const indexerModal = useSelector(
     (state: RootState) => state.app.indexModalReducer
   );
+  const hearted = useSelector(
+    (state: RootState) => state.app.heartedReducer?.direction
+  );
   const {
     commentPost,
     commentLoading,
@@ -70,6 +73,7 @@ const Post: NextPage = (): JSX.Element => {
     commentSuccess,
     indexerModal.value,
     indexerModal.message,
+    hearted
   ]);
   const { isConnected } = useAccount();
   useEffect(() => {

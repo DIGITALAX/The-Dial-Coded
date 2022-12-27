@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   explorePublications,
   explorePublicationsAuth,
@@ -18,9 +18,11 @@ import {
 } from "../../../../../../../graphql/queries/profilePublication";
 import feedTimeline from "../../../../../../../graphql/queries/feedTimeline";
 import { useRouter } from "next/router";
+import { setNoUserData } from "../../../../../../../redux/reducers/noUserDataSlice";
 
 const useMainFeed = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
@@ -35,6 +37,9 @@ const useMainFeed = () => {
   );
   const layout = useSelector(
     (state: RootState) => state.app.layoutReducer?.value
+  );
+  const hearted = useSelector(
+    (state: RootState) => state.app.heartedReducer?.direction
   );
   const isConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer?.value
@@ -313,10 +318,16 @@ const useMainFeed = () => {
     try {
       if (!lensProfile) {
         const { data } = await profilePublications({
-          profileId: "0x454c",
+          profileId: userView?.id,
           publicationTypes: feedOrder,
           limit: 20,
         });
+        if (!data) {
+          dispatch(setNoUserData(true));
+          return;
+        } else {
+          dispatch(setNoUserData(false));
+        }
         const arr: any[] = [...data?.publications?.items];
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
@@ -324,10 +335,16 @@ const useMainFeed = () => {
         pageData = data?.publications?.pageInfo;
       } else {
         const { data } = await profilePublicationsAuth({
-          profileId: "0x454c",
+          profileId: userView?.id,
           publicationTypes: feedOrder,
           limit: 20,
         });
+        if (!data) {
+          dispatch(setNoUserData(true));
+          return;
+        } else {
+          dispatch(setNoUserData(false));
+        }
         const arr: any[] = [...data?.publications?.items];
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
@@ -491,7 +508,7 @@ const useMainFeed = () => {
     try {
       if (!lensProfile) {
         const { data } = await profilePublications({
-          profileId: "0x454c",
+          profileId: userView?.id,
           publicationTypes: feedOrder,
           limit: 20,
           cursor: paginatedResults?.next,
@@ -503,7 +520,7 @@ const useMainFeed = () => {
         pageData = data?.publications?.pageInfo;
       } else {
         const { data } = await profilePublicationsAuth({
-          profileId: "0x454c",
+          profileId: userView?.id,
           publicationTypes: feedOrder,
           limit: 20,
           cursor: paginatedResults?.next,
@@ -532,7 +549,7 @@ const useMainFeed = () => {
   };
 
   const fetchMoreFeed = async (): Promise<void> => {
-    if (userView !== "Select User") {
+    if (userView) {
       await getMoreUserSelectFeed();
     } else {
       if (!lensProfile) {
@@ -611,7 +628,7 @@ const useMainFeed = () => {
   ]);
 
   useEffect(() => {
-    if (userView !== "Select User") {
+    if (userView?.handle) {
       getUserSelectFeed();
     } else {
       if (!lensProfile) {
@@ -633,6 +650,7 @@ const useMainFeed = () => {
     commentShow,
     indexerModal.message,
     indexerModal.value,
+    hearted,
   ]);
 
   return {

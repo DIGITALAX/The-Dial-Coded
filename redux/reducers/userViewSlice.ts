@@ -1,18 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Profile } from "../../components/Common/types/lens.types";
 
 export interface UserViewerState {
-  value: string;
+  value?: Profile | undefined;
 }
 
 const initialUserViewerState: UserViewerState = {
-  value: "Select User",
+  value: undefined,
 };
 
 export const userViewerSlice = createSlice({
   name: "userViewer",
   initialState: initialUserViewerState,
   reducers: {
-    setUserViewer: (state: UserViewerState, action: PayloadAction<string>) => {
+    setUserViewer: (
+      state: UserViewerState,
+      action: PayloadAction<Profile | undefined>
+    ) => {
       state.value = action.payload;
     },
   },

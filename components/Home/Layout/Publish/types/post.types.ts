@@ -23,4 +23,5 @@ export type FeedProps = {
   reactionsFeed: any[];
   hasMirrored: boolean[];
   hasCommented: boolean[];
+  noUserData: boolean;
 };

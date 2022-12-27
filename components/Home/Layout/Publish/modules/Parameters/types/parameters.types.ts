@@ -1,3 +1,6 @@
+import { FormEvent } from "react";
+import { Profile } from "../../../../../../Common/types/lens.types";
+
 export type UseParametersResult = {
   feedOrder: string[];
   feedType: string[];
@@ -8,9 +11,13 @@ export type UseParametersResult = {
   setTypeDrop: (e: boolean) => void;
   orderDrop: boolean;
   setOrderDrop: (e: boolean) => void;
-  setUserTypeOpen: (e: boolean) => void;
   userTypeOpen: boolean;
-  userList: string[];
+  profileSearch: any[];
+  searchProfiles: (e: FormEvent) => Promise<void>;
+  searchLoading: boolean;
+  handleChosenProfile: (user: Profile) => void;
+  getMoreProfiles: () => Promise<void>;
+  chosenProfile: any;
 };
 
 export type OptionsProps = {
@@ -26,7 +33,11 @@ export type OptionsProps = {
 };
 
 export type ViewerProps = {
-  setUserTypeOpen: (e: boolean) => void;
   userTypeOpen: boolean;
-  userList: string[];
+  searchProfiles: (e: FormEvent) => Promise<void>;
+  profileSearch: any[];
+  searchLoading: boolean;
+  handleChosenProfile: (user: Profile) => void;
+  getMoreProfiles: () => Promise<void>;
+  chosenProfile: any;
 };

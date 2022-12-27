@@ -26,6 +26,9 @@ const useProfile = () => {
   const indexerModal = useSelector(
     (state: RootState) => state.app.indexModalReducer
   );
+  const hearted = useSelector(
+    (state: RootState) => state.app.heartedReducer?.direction
+  );
   const { address } = useAccount();
   const [userFeed, setUserFeed] = useState<PublicationSearchResult[]>([]);
   const [hasMirrored, setHasMirrored] = useState<boolean[]>([]);
@@ -323,7 +326,7 @@ const useProfile = () => {
       getFollowing();
       getFollowers();
     }
-  }, [selectProfile, indexerModal.value, indexerModal.message]);
+  }, [selectProfile, indexerModal.value, indexerModal.message, hearted]);
 
   return {
     profileDataLoading,
