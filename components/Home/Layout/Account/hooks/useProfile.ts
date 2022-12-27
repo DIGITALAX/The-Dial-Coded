@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { profilePublicationsAuth, whoCommentedPublications } from "../../../../../graphql/queries/profilePublication";
+import {
+  profilePublicationsAuth,
+  whoCommentedPublications,
+} from "../../../../../graphql/queries/profilePublication";
 import whoReactedublications from "../../../../../graphql/queries/whoReactedPublication";
 import { RootState } from "../../../../../redux/store";
 import {
@@ -20,7 +23,10 @@ const useProfile = () => {
   const profileId = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
-  const {address} = useAccount();
+  const indexerModal = useSelector(
+    (state: RootState) => state.app.indexModalReducer
+  );
+  const { address } = useAccount();
   const [userFeed, setUserFeed] = useState<PublicationSearchResult[]>([]);
   const [hasMirrored, setHasMirrored] = useState<boolean[]>([]);
   const [hasCommented, setHasCommented] = useState<boolean[]>([]);
@@ -317,7 +323,7 @@ const useProfile = () => {
       getFollowing();
       getFollowers();
     }
-  }, [selectProfile]);
+  }, [selectProfile, indexerModal.value, indexerModal.message]);
 
   return {
     profileDataLoading,
@@ -332,7 +338,7 @@ const useProfile = () => {
     getMoreFollowers,
     getMoreFollowing,
     followersLoading,
-    followingLoading
+    followingLoading,
   };
 };
 

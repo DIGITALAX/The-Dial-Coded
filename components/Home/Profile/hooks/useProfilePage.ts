@@ -54,6 +54,9 @@ const useProfilePage = (): UseProfilePageResults => {
   const [hasCommented, setHasCommented] = useState<boolean[]>([]);
   const [hasReacted, setHasReacted] = useState<boolean[]>([]);
   const [reactionsFeed, setReactionsFeed] = useState<any[]>([]);
+  const indexerModal = useSelector(
+    (state: RootState) => state.app.indexModalReducer
+  );
   const [followersLoading, setFollowersLoading] = useState<boolean>(false);
   const [followingLoading, setFollowingLoading] = useState<boolean>(false);
   const [userFollowing, setUserFollowing] = useState<
@@ -434,10 +437,12 @@ const useProfilePage = (): UseProfilePageResults => {
     setFollowLoading(true);
     try {
       const tx = await writeAsync?.();
-      dispatch(setIndexModal({
-        actionValue: true,
-        actionMessage: "Indexing Interaction",
-      }));
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Indexing Interaction",
+        })
+      );
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
       if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
@@ -587,7 +592,14 @@ const useProfilePage = (): UseProfilePageResults => {
       getFollowing();
       getFollowers();
     }
-  }, [profileData, router.asPath, lensProfile, isConnected]);
+  }, [
+    profileData,
+    router.asPath,
+    lensProfile,
+    isConnected,
+    indexerModal.message,
+    indexerModal.value,
+  ]);
 
   useEffect(() => {
     if (isSuccess) {

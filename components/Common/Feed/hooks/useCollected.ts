@@ -296,29 +296,37 @@ const useCollected = () => {
           actionValue: id ? id : pubId,
         })
       );
-      dispatch(setIndexModal({
-        actionValue: true,
-        actionMessage: "Indexing Interaction",
-      }));
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Indexing Interaction",
+        })
+      );
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
       if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
-        dispatch(setIndexModal({
-          actionValue: true,
-          actionMessage: "Successfully Indexed"
-        }));
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
       } else {
-        dispatch(setIndexModal({
-          actionValue: true,
-          actionMessage: "Collect Unsuccessful, Please Try Again"
-        }));
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Collect Unsuccessful, Please Try Again",
+          })
+        );
       }
       setTimeout(() => {
-        dispatch(setIndexModal({
-          actionValue: false,
-          actionMessage: undefined
-        }));
-      }, 3000)
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: undefined,
+          })
+        );
+      }, 3000);
     } catch (err: any) {
       console.error(err.message);
       setCollectLoading(false);
@@ -331,7 +339,12 @@ const useCollected = () => {
       getPostCollects();
       getCollectInfo();
     }
-  }, [reactions.type, reactions.open, id, pubId]);
+  }, [
+    reactions.type,
+    reactions.open,
+    id,
+    pubId,
+  ]);
 
   useEffect(() => {
     if (isSuccess) {
