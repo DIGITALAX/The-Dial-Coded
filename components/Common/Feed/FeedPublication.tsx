@@ -84,16 +84,15 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         >
           <div className="relative w-full h-full col-start-1 self-center justify-self-start grid grid-flow-col auto-cols-auto">
             <div
-              className={`relative rounded-full flex bg-white w-fit h-fit place-self-center col-start-1 ${
-                profileImage !== "" ? "w-fit h-fit" : "w-6 h-6"
-              }`}
+              className={`relative rounded-full flex bg-white w-6 h-6 place-self-center col-start-1`}
+              id="crt"
             >
               {profileImage !== "" && (
                 <Image
                   src={profileImage}
-                  width={25}
-                  height={25}
+                  objectFit="cover"
                   alt="pfp"
+                  layout="fill"
                   className="relative w-fit h-fit rounded-full self-center"
                 />
               )}

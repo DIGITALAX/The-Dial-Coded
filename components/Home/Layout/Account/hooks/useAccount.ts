@@ -32,6 +32,7 @@ import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
 import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
+import { setNotifications } from "../../../../../redux/reducers/notificationsSlice";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = [
@@ -61,6 +62,9 @@ const useAccount = (): UseAccountResult => {
   );
   const handleTapeSet = (title: string): void => {
     dispatch(setAccountPage(title));
+    if (title === "notifications") {
+      dispatch(setNotifications(false));
+    }
   };
 
   const { signTypedDataAsync } = useSignTypedData();

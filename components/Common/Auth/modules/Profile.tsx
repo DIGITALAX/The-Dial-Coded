@@ -10,7 +10,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
   dispatch,
   lensProfile,
   authStatus,
-  handleAccount,
+  newNotifications,
 }): JSX.Element => {
   let profileImage: string;
   if (!(lensProfile?.picture as any)?.original) {
@@ -37,6 +37,11 @@ const Profile: FunctionComponent<ProfileProps> = ({
         )
       }
     >
+      {newNotifications && (
+        <div className="absolute w-3 h-3 bg-offBlue z-10 rounded-full grid grid-flow-col auto-cols-auto justify-self-end">
+          <div className="w-3 h-3 bg-offBlue rounded-full col-start-1 place-self-center animate-ping"></div>
+        </div>
+      )}
       <div
         className="relative w-10 h-10 rounded-full col-start-1 place-self-center"
         id={"crt"}
