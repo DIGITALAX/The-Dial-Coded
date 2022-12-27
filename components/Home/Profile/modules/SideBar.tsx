@@ -12,6 +12,7 @@ import { FaWpexplorer } from "react-icons/fa";
 import { SlLocationPin } from "react-icons/sl";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
+import { setFollowModal } from "../../../../redux/reducers/followModalSlice";
 
 const SideBar: FunctionComponent<SideBarProps> = ({
   profileData,
@@ -19,7 +20,8 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   followProfile,
   unFollowProfile,
   isFollowedByMe,
-  isFollowing
+  isFollowing,
+  dispatch,
 }): JSX.Element => {
   let profileImage: string;
   if (!(profileData?.picture as any)?.original) {
@@ -43,7 +45,9 @@ const SideBar: FunctionComponent<SideBarProps> = ({
     profileData?.attributes,
     (attribute) => attribute?.key === "website"
   );
-  const lensProfile = useSelector((state: RootState) => state.app.lensProfileReducer.profile?.id)
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
 
   return (
     <div className="col-start-1 relative w-full h-full grid grid-flow-row auto-rows-auto bg-offWhite/95 row-start-1 px-14 pt-40 pb-10 col-span-1 pr-4">
@@ -59,50 +63,73 @@ const SideBar: FunctionComponent<SideBarProps> = ({
             @{profileData?.handle}
           </div>
         </div>
-        { profileData?.id !== lensProfile  && <div
-          className={`${
-            !followLoading && "cursor-pointer active:scale-95 hover:opacity-80"
-          } relative w-fit h-fit py-2 px-5 row-start-2 justify-self-start self-center rounded-lg bg-offBlue/80 grid grid-flow-col auto-cols-auto`}
-          onClick={() => {
-            followLoading
-              ? {}
-              : isFollowedByMe
-              ? unFollowProfile()
-              : followProfile();
-          }}
-        >
-          <div className="relative w-fit h-fit place-self-center text-white font-dosis grid grid-flow-col auto-cols-auto gap-1">
-            <div
-              className={`relative w-fit h-fit col-start-1 place-self-center ${
-                followLoading && "animate-spin"
-              }`}
-            >
-              {followLoading ? (
-                <AiOutlineLoading color="white" size={17} />
-              ) : isFollowedByMe ? (
-                <AiOutlineUsergroupDelete color="white" size={17} />
-              ) : (
-                <AiOutlineUsergroupAdd color="white" size={17} />
-              )}
-            </div>
-            <div className="relative w-fit h-fit col-start-2 place-self-center text-sm">
-              {isFollowedByMe ? "Unfollow" : "Follow"}
+        {profileData?.id !== lensProfile && (
+          <div
+            className={`${
+              !followLoading &&
+              "cursor-pointer active:scale-95 hover:opacity-80"
+            } relative w-fit h-fit py-2 px-5 row-start-2 justify-self-start self-center rounded-lg bg-offBlue/80 grid grid-flow-col auto-cols-auto`}
+            onClick={() => {
+              followLoading
+                ? {}
+                : isFollowedByMe
+                ? unFollowProfile()
+                : followProfile();
+            }}
+          >
+            <div className="relative w-fit h-fit place-self-center text-white font-dosis grid grid-flow-col auto-cols-auto gap-1">
+              <div
+                className={`relative w-fit h-fit col-start-1 place-self-center ${
+                  followLoading && "animate-spin"
+                }`}
+              >
+                {followLoading ? (
+                  <AiOutlineLoading color="white" size={17} />
+                ) : isFollowedByMe ? (
+                  <AiOutlineUsergroupDelete color="white" size={17} />
+                ) : (
+                  <AiOutlineUsergroupAdd color="white" size={17} />
+                )}
+              </div>
+              <div className="relative w-fit h-fit col-start-2 place-self-center text-sm">
+                {isFollowedByMe ? "Unfollow" : "Follow"}
+              </div>
             </div>
           </div>
-        </div>}
+        )}
         <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-3 pt-6">
           <div className="relative w-fit h-fit col-start-1 font-dosis text-offBlack justify-self-start text-left self-center">
             {profileData?.bio}
           </div>
         </div>
         <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-4 text-offBlack font-dosis text-lg gap-4 pt-4 pb-4">
-          <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-2">
+          <div
+            className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-2 cursor-pointer"
+            onClick={() =>
+              dispatch(
+                setFollowModal({
+                  actionOpen: true,
+                  actionType: "following",
+                })
+              )
+            }
+          >
             <div className="relative w-fit h-fit col-start-1">
               {profileData?.stats?.totalFollowing}
             </div>
             <div className="relative w-fit h-fit col-start-2">Following</div>
           </div>
-          <div className="relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto gap-2">
+          <div
+            className="relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto gap-2 cursor-pointer"
+            onClick={() =>
+              dispatch(
+                setFollowModal({
+                  actionOpen: true,
+                  actionType: "followers",
+                })
+              )
+            }
+          >
             <div className="relative w-fit h-fit col-start-1">
               {profileData?.stats?.totalFollowers}
             </div>

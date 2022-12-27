@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import useCollected from "../../Common/Feed/hooks/useCollected";
 import useHearted from "../../Common/Feed/hooks/useHearted";
@@ -14,8 +14,11 @@ import MirrorsModal from "../../Common/Modals/Reactions/MirrorsModal";
 import SignInModal from "../../Common/Modals/SignIn/SignInModal";
 import Transaction from "../../Common/Modals/Transactions/Transactions";
 import useMainFeed from "../Layout/Publish/modules/Feed/hooks/useMainFeed";
+import FollowsModal from "../../Common/Modals/Follows/FollowsModal";
+import useProfilePage from "../Profile/hooks/useProfilePage";
 
 const Modals = () => {
+  const dispatch = useDispatch();
   const makePublication = useSelector(
     (state: RootState) => state.app.publicationReducer.value
   );
@@ -24,6 +27,9 @@ const Modals = () => {
   );
   const getProfileModal = useSelector(
     (state: RootState) => state.app.getProfileModalReducer.value
+  );
+  const follow = useSelector(
+    (state: RootState) => state.app.followModalReducer
   );
   const imageViewerModal = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
@@ -77,6 +83,15 @@ const Modals = () => {
     reactionsFeed,
   } = useMainFeed();
 
+  const {
+    getMoreFollowers,
+    getMoreFollowing,
+    userFollowers,
+    userFollowing,
+    followingLoading,
+    followersLoading,
+  } = useProfilePage();
+
   return (
     <>
       {makePublication && <PublicationModal />}
@@ -123,6 +138,18 @@ const Modals = () => {
           hasReacted={hasReacted}
           hasCommented={hasCommented}
           reactionsFeed={reactionsFeed}
+        />
+      )}
+      {follow?.open && (
+        <FollowsModal
+          dispatch={dispatch}
+          followersLoading={followersLoading}
+          followingLoading={followingLoading}
+          getMoreFollowers={getMoreFollowers}
+          getMoreFollowing={getMoreFollowing}
+          userFollowing={userFollowing}
+          userFollowers={userFollowers}
+          type={follow?.type}
         />
       )}
       {failed !== "" && failed !== undefined && (

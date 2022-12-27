@@ -66,6 +66,7 @@ const Profile: NextPage = (): JSX.Element => {
               unFollowProfile={unFollowProfile}
               isFollowedByMe={isFollowedByMe}
               isFollowing={isFollowing}
+              dispatch={dispatch}
             />
             <div className="relative w-full h-full col-start-2 col-span-4 grid grid-flow-col auto-cols-auto px-24 py-4 bg-offWhite/90">
               <ProfileTab

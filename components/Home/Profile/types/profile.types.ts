@@ -1,5 +1,7 @@
 import { AnyAction, Dispatch } from "redux";
 import {
+  PaginatedFollowersResult,
+  PaginatedFollowingResult,
   Profile,
   PublicationsQueryRequest,
 } from "../../../Common/types/lens.types";
@@ -11,6 +13,7 @@ export type SideBarProps = {
   unFollowProfile: () => Promise<void>;
   isFollowedByMe: boolean;
   isFollowing: boolean;
+  dispatch: Dispatch<AnyAction>;
 };
 
 export interface FollowArgs {
@@ -42,4 +45,10 @@ export type UseProfilePageResults = {
   hasCommented: boolean[];
   hasReacted: boolean[];
   reactionsFeed: any[];
+  followersLoading: boolean;
+  followingLoading: boolean;
+  userFollowing: PaginatedFollowingResult[];
+  userFollowers: PaginatedFollowersResult[];
+  getMoreFollowers: () => Promise<void>;
+  getMoreFollowing: () => Promise<void>;
 };

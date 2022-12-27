@@ -54,6 +54,8 @@ export type StatsTabProps = {
   userFollowing: PaginatedFollowingResult[];
   getMoreFollowing: () => Promise<void>;
   getMoreFollowers: () => Promise<void>;
+  followersLoading: boolean;
+  followingLoading: boolean;
 };
 
 export interface AccountData {

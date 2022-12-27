@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import useProfilePage from "../../Profile/hooks/useProfilePage";
 import useAccount from "./hooks/useAccount";
 import useProfile from "./hooks/useProfile";
 import AccountTab from "./modules/AccountTab";
@@ -36,6 +35,8 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     userFollowing,
     getMoreFollowers,
     getMoreFollowing,
+    followersLoading,
+    followingLoading,
   } = useProfile();
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
@@ -75,6 +76,8 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           userFollowers={userFollowers}
           getMoreFollowers={getMoreFollowers}
           getMoreFollowing={getMoreFollowing}
+          followersLoading={followersLoading}
+          followingLoading={followingLoading}
         />
       );
 

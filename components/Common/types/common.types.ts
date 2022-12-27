@@ -3,6 +3,8 @@ import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { BadgeInfo } from "../../Layout/Badges/types/badges.types";
 import {
   Erc20,
+  PaginatedFollowersResult,
+  PaginatedFollowingResult,
   Post,
   Profile,
   ProfileQueryRequest,
@@ -545,4 +547,15 @@ export interface ApprovalArgs {
 
 export type TransactionProps = {
   inputText: string;
+};
+
+export type FollowModalProps = {
+  dispatch: Dispatch<AnyAction>;
+  followersLoading: boolean;
+  followingLoading: boolean;
+  userFollowing: PaginatedFollowingResult[];
+  userFollowers: PaginatedFollowersResult[];
+  getMoreFollowers: () => Promise<void>;
+  type: string | undefined;
+  getMoreFollowing: () => Promise<void>;
 };

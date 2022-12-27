@@ -18,7 +18,11 @@ import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
 import { omit, splitSignature } from "../../../../lib/lens/helpers";
 import { setInsufficientFunds } from "../../../../redux/reducers/insufficientFunds";
 import { RootState } from "../../../../redux/store";
-import { PublicationsQueryRequest } from "../../../Common/types/lens.types";
+import {
+  PaginatedFollowersResult,
+  PaginatedFollowingResult,
+  PublicationsQueryRequest,
+} from "../../../Common/types/lens.types";
 import { FollowArgs, UseProfilePageResults } from "../types/profile.types";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
 import lodash from "lodash";
@@ -27,6 +31,8 @@ import {
   profilePublications,
   profilePublicationsAuth,
 } from "../../../../graphql/queries/profilePublication";
+import following from "../../../../graphql/queries/following";
+import followers from "../../../../graphql/queries/followers";
 
 const useProfilePage = (): UseProfilePageResults => {
   const router = useRouter();
@@ -46,6 +52,16 @@ const useProfilePage = (): UseProfilePageResults => {
   const [hasCommented, setHasCommented] = useState<boolean[]>([]);
   const [hasReacted, setHasReacted] = useState<boolean[]>([]);
   const [reactionsFeed, setReactionsFeed] = useState<any[]>([]);
+  const [followersLoading, setFollowersLoading] = useState<boolean>(false);
+  const [followingLoading, setFollowingLoading] = useState<boolean>(false);
+  const [userFollowing, setUserFollowing] = useState<
+    PaginatedFollowingResult[]
+  >([]);
+  const [userFollowers, setUserFollowers] = useState<
+    PaginatedFollowersResult[]
+  >([]);
+  const [paginatedFollowers, setPaginatedFollowers] = useState<any>();
+  const [paginatedFollowing, setPaginatedFollowing] = useState<any>();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
@@ -436,6 +452,64 @@ const useProfilePage = (): UseProfilePageResults => {
     setFollowLoading(false);
   };
 
+  const getFollowers = async (): Promise<void> => {
+    setFollowersLoading(true);
+    try {
+      const { data } = await followers({
+        profileId: profileData?.id,
+        limit: 50,
+      });
+      setUserFollowers(data?.followers?.items);
+      setPaginatedFollowers(data?.followers?.pageInfo);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setFollowersLoading(false);
+  };
+
+  const getFollowing = async (): Promise<void> => {
+    setFollowingLoading(true);
+    try {
+      const { data } = await following({
+        address: profileData?.ownedBy,
+        limit: 50,
+      });
+      setUserFollowing(data?.following?.items);
+      setPaginatedFollowing(data?.following?.pageInfo);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setFollowingLoading(false);
+  };
+
+  const getMoreFollowers = async (): Promise<void> => {
+    try {
+      const { data } = await followers({
+        profileId: profileData?.id,
+        limit: 50,
+        cursor: paginatedFollowers?.next,
+      });
+      setUserFollowers([...userFollowers, ...data?.followers?.items]);
+      setPaginatedFollowers(data?.followers?.pageInfo);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const getMoreFollowing = async (): Promise<void> => {
+    try {
+      const { data } = await following({
+        address: profileData?.ownedBy,
+        limit: 50,
+        cursor: paginatedFollowing?.next,
+      });
+      setUserFollowing([...userFollowing, ...data?.following?.items]);
+      setPaginatedFollowing(data?.following?.pageInfo);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   const {
     query: { handle },
   } = useRouter();
@@ -450,6 +524,8 @@ const useProfilePage = (): UseProfilePageResults => {
     if (profileData) {
       getUserProfileFeed();
       handleFollowingData();
+      getFollowing();
+      getFollowers();
     }
   }, [profileData, router.asPath, lensProfile, isConnected]);
 
@@ -479,6 +555,12 @@ const useProfilePage = (): UseProfilePageResults => {
     hasCommented,
     hasReacted,
     reactionsFeed,
+    followersLoading,
+    followingLoading,
+    userFollowing,
+    userFollowers,
+    getMoreFollowers,
+    getMoreFollowing,
   };
 };
 

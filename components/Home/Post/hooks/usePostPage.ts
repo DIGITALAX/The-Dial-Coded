@@ -5,7 +5,7 @@ import lodash from "lodash";
 import whoReactedublications from "../../../../graphql/queries/whoReactedPublication";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import profilePublications from "../../../../graphql/queries/profilePublication";
+import {profilePublications} from "../../../../graphql/queries/profilePublication";
 
 const usePostPage = () => {
   const [publicationDataLoading, setPublicationDataLoading] = useState<any>();
@@ -185,7 +185,6 @@ const usePostPage = () => {
 
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored([data?.publication]);
-        console.log(hasMirroredArr);
         setHasPostMirrored(hasMirroredArr);
         const hasCommentedArr = await checkIfCommented([data?.publication]);
         setHasPostCommented(hasCommentedArr);
