@@ -40,6 +40,7 @@ import commentReducer from "./reducers/commentSlice";
 import fireReducer from "./reducers/fireSlice";
 import insufficientFundsReducer from "./reducers/insufficientFunds";
 import followModalReducer from "./reducers/followModalSlice";
+import indexModalReducer from "./reducers/indexModalSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -82,6 +83,7 @@ const reducer = combineReducers({
   fireReducer,
   insufficientFundsReducer,
   followModalReducer,
+  indexModalReducer,
 });
 
 export const store = configureStore({

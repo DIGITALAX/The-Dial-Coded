@@ -16,6 +16,7 @@ import Transaction from "../../Common/Modals/Transactions/Transactions";
 import useMainFeed from "../Layout/Publish/modules/Feed/hooks/useMainFeed";
 import FollowsModal from "../../Common/Modals/Follows/FollowsModal";
 import useProfilePage from "../Profile/hooks/useProfilePage";
+import IndexingModal from "../../Common/Modals/Indexing/IndexingModal";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -45,6 +46,9 @@ const Modals = () => {
   );
   const signInModal = useSelector(
     (state: RootState) => state.app.signInReducer.value
+  );
+  const indexingModal = useSelector(
+    (state: RootState) => state.app.indexModalReducer.value
   );
   const {
     mirrorInfoLoading,
@@ -152,6 +156,7 @@ const Modals = () => {
           type={follow?.type}
         />
       )}
+      {indexingModal && <IndexingModal />}
       {failed !== "" && failed !== undefined && (
         <Transaction
           inputText={

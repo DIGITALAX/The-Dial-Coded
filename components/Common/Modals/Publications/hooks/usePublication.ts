@@ -22,6 +22,7 @@ import lodash from "lodash";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 import CreateCommentTypedData from "../../../../../graphql/mutations/comment";
 import { useRouter } from "next/router";
+import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 
 const usePublication = () => {
   const {
@@ -263,19 +264,39 @@ const usePublication = () => {
     setPostLoading(true);
     try {
       const tx = await writeAsync?.();
+      dispatch(setPublication(false));
+      setPostLoading(false);
+      setEnabled(false);
+      dispatch(setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      }));
+      setPostDescription("");
       const res = await tx?.wait();
-      if (res?.transactionHash === undefined) {
-        dispatch(setInsufficientFunds("failed"));
-        setPostLoading(false);
+      const indexedStatus = await checkIndexed(res?.transactionHash);
+      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
       } else {
-        const result = await checkIndexed(res?.transactionHash);
-        if (result?.data?.hasTxHashBeenIndexed?.indexed) {
-          setPostLoading(false);
-          dispatch(setPublication(false));
-          setEnabled(false);
-          setPostDescription("");
-        }
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Post Unsuccessful, Please Try Again",
+          })
+        );
       }
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: undefined,
+          })
+        );
+      }, 3000);
     } catch (err) {
       console.error(err);
       setPostLoading(false);
@@ -287,17 +308,37 @@ const usePublication = () => {
     setCommentLoading(true);
     try {
       const tx = await commentWriteAsync?.();
+      setCommentLoading(false);
+      setPostDescription("");
+      dispatch(setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      }));
       const res = await tx?.wait();
-      if (res?.transactionHash === undefined) {
-        dispatch(setInsufficientFunds("failed"));
-        setCommentLoading(false);
+      const indexedStatus = await checkIndexed(res?.transactionHash);
+      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
       } else {
-        const result = await checkIndexed(res?.transactionHash);
-        if (result?.data?.hasTxHashBeenIndexed?.indexed) {
-          setCommentLoading(false);
-          setPostDescription("");
-        }
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Comment Unsuccessful, Please Try Again",
+          })
+        );
       }
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: undefined,
+          })
+        );
+      }, 3000);
     } catch (err) {
       console.error(err);
       setCommentLoading(false);
@@ -335,7 +376,7 @@ const usePublication = () => {
     handleRemoveGif,
     commentLoading,
     commentSuccess,
-    commentPost
+    commentPost,
   };
 };
 

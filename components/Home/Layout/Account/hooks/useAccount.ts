@@ -31,6 +31,7 @@ import getDefaultProfile from "../../../../../graphql/queries/getDefaultProfile"
 import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
 import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
+import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = ["account", "profile feed", "stats"];
@@ -56,18 +57,13 @@ const useAccount = (): UseAccountResult => {
   const handleTapeSet = (title: string): void => {
     dispatch(setAccountPage(title));
   };
-  
-  const {
-    signTypedDataAsync,
-  } = useSignTypedData();
-  
+
+  const { signTypedDataAsync } = useSignTypedData();
+
   const { signTypedDataAsync: signProfileTypedDataAsync } =
     useProfileSignTypedData();
-  
-    const {
-    config,
-    isSuccess,
-  } = usePrepareContractWrite({
+
+  const { config, isSuccess } = usePrepareContractWrite({
     address: LENS_PERIPHERY_CONTRACT_MUMBAI,
     abi: LensHubPeriphery,
     functionName: "setProfileMetadataURIWithSig",
@@ -283,27 +279,50 @@ const useAccount = (): UseAccountResult => {
     try {
       const tx = await writeAsync?.();
       if (error) {
-        dispatch(setInsufficientFunds("failed"))
+        dispatch(setInsufficientFunds("failed"));
         return;
       }
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Indexing Interaction",
+        })
+      );
       const res = await tx?.wait();
-      if (res?.transactionHash === undefined) {
-        dispatch(setInsufficientFunds("failed"))
-        setAccountLoading(false);
+      const result = await checkIndexed(res?.transactionHash);
+      if (result?.data?.hasTxHashBeenIndexed?.indexed) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+        setTimeout(async () => {
+          const profile = await getDefaultProfile(address);
+          dispatch(setLensProfile(profile.data.defaultProfile));
+          setAccountLoading(false);
+        }, 5000);
       } else {
-        const result = await checkIndexed(res?.transactionHash);
-        if (result?.data?.hasTxHashBeenIndexed?.indexed) {
-          setTimeout(async () => {
-            const profile = await getDefaultProfile(address);
-            dispatch(setLensProfile(profile.data.defaultProfile));
-            setAccountLoading(false);
-          }, 5000);
-        }
+        setAccountLoading(false);
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Update Unsuccessful, Please Try Again",
+          })
+        );
       }
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: undefined,
+          })
+        );
+      }, 3000);
     } catch (err) {
       console.error(err);
       setAccountLoading(false);
-      dispatch(setInsufficientFunds("failed"))
+      dispatch(setInsufficientFunds("failed"));
     }
   };
 
@@ -312,27 +331,51 @@ const useAccount = (): UseAccountResult => {
     try {
       const tx = await profilewriteAsync?.();
       if (writeErrorImage) {
-        dispatch(setInsufficientFunds("failed"))
+        dispatch(setInsufficientFunds("failed"));
         return;
       }
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Indexing Interaction",
+        })
+      );
+
       const res = await tx?.wait();
-      if (res?.transactionHash === undefined) {
-        dispatch(setInsufficientFunds("failed"))
-        setProfileLoading(false);
+      const result = await checkIndexed(res?.transactionHash);
+      if (result?.data?.hasTxHashBeenIndexed?.indexed) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+        setTimeout(async () => {
+          const profile = await getDefaultProfile(address);
+          dispatch(setLensProfile(profile.data.defaultProfile));
+          setProfileLoading(false);
+        }, 5000);
       } else {
-        const result = await checkIndexed(res?.transactionHash);
-        if (result?.data?.hasTxHashBeenIndexed?.indexed) {
-          setTimeout(async () => {
-            const profile = await getDefaultProfile(address);
-            dispatch(setLensProfile(profile.data.defaultProfile));
-            setProfileLoading(false);
-          }, 5000);
-        }
+        setProfileLoading(false);
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Update Unsuccessful, Please Try Again",
+          })
+        );
       }
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: undefined,
+          })
+        );
+      }, 3000);
     } catch (err) {
       console.error(err);
       setProfileLoading(false);
-      dispatch(setInsufficientFunds("failed"))
+      dispatch(setInsufficientFunds("failed"));
     }
   };
 

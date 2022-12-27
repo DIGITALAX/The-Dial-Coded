@@ -7,9 +7,11 @@ import {
   useSignTypedData,
 } from "wagmi";
 import mirror from "../../../../graphql/mutations/mirror";
+import checkIndexed from "../../../../graphql/queries/checkIndexed";
 import whoMirroredPublications from "../../../../graphql/queries/whoMirroredPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
 import { omit, splitSignature } from "../../../../lib/lens/helpers";
+import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
 import { setInsufficientFunds } from "../../../../redux/reducers/insufficientFunds";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import { RootState } from "../../../../redux/store";
@@ -142,7 +144,35 @@ const useMirrored = () => {
           actionValue: id ? id : pubId,
         })
       );
+      dispatch(setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      }));
       const res = await tx?.wait();
+      const indexedStatus = await checkIndexed(res?.transactionHash);
+      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+      } else {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Mirror Unsuccessful, Please Try Again",
+          })
+        );
+      }
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: undefined,
+          })
+        );
+      }, 3000);
     } catch (err: any) {
       dispatch(setInsufficientFunds("failed"));
       console.error(err.message);
