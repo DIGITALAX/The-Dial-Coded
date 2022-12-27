@@ -33,6 +33,8 @@ import {
 } from "../../../../graphql/queries/profilePublication";
 import following from "../../../../graphql/queries/following";
 import followers from "../../../../graphql/queries/followers";
+import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
+import checkIndexed from "../../../../graphql/queries/checkIndexed";
 
 const useProfilePage = (): UseProfilePageResults => {
   const router = useRouter();
@@ -432,7 +434,35 @@ const useProfilePage = (): UseProfilePageResults => {
     setFollowLoading(true);
     try {
       const tx = await writeAsync?.();
-      await tx?.wait();
+      dispatch(setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      }));
+      const res = await tx?.wait();
+      const indexedStatus = await checkIndexed(res?.transactionHash);
+      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+      } else {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Follow Unsuccessful, Please Try Again",
+          })
+        );
+      }
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: undefined,
+          })
+        );
+      }, 3000);
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));
@@ -444,7 +474,37 @@ const useProfilePage = (): UseProfilePageResults => {
     setFollowLoading(true);
     try {
       const tx = await unfollowWriteAsync?.();
-      await tx?.wait();
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Indexing Interaction",
+        })
+      );
+      const res = await tx?.wait();
+      const indexedStatus = await checkIndexed(res?.transactionHash);
+      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+      } else {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Unfollow Unsuccessful, Please Try Again",
+          })
+        );
+      }
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: undefined,
+          })
+        );
+      }, 3000);
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));

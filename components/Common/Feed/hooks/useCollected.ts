@@ -28,6 +28,8 @@ import {
 } from "../../types/lens.types";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
 import lodash from "lodash";
+import checkIndexed from "../../../../graphql/queries/checkIndexed";
+import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
 
 const useCollected = () => {
   const {
@@ -275,11 +277,7 @@ const useCollected = () => {
       setCollectArgs(collectArgs);
     } catch (err: any) {
       console.error(err.message);
-      if (
-        err.message.includes(
-          "You do not have enough"
-        )
-      ) {
+      if (err.message.includes("You do not have enough")) {
         dispatch(setInsufficientFunds("insufficient"));
       }
     }
@@ -290,7 +288,6 @@ const useCollected = () => {
     setCollectLoading(true);
     try {
       const tx = await writeAsync?.();
-      const res = await tx?.wait();
       setCollectLoading(false);
       dispatch(
         setReactionState({
@@ -299,6 +296,29 @@ const useCollected = () => {
           actionValue: id ? id : pubId,
         })
       );
+      dispatch(setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      }));
+      const res = await tx?.wait();
+      const indexedStatus = await checkIndexed(res?.transactionHash);
+      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+        dispatch(setIndexModal({
+          actionValue: true,
+          actionMessage: "Successfully Indexed"
+        }));
+      } else {
+        dispatch(setIndexModal({
+          actionValue: true,
+          actionMessage: "Collect Unsuccessful, Please Try Again"
+        }));
+      }
+      setTimeout(() => {
+        dispatch(setIndexModal({
+          actionValue: false,
+          actionMessage: undefined
+        }));
+      }, 3000)
     } catch (err: any) {
       console.error(err.message);
       setCollectLoading(false);
