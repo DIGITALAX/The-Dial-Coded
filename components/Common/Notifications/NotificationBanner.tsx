@@ -35,9 +35,16 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
   } else {
     profileImage = prefix?.picture?.uri;
   }
+
   return (
     <Link
-      href=""
+      href={
+        type === "react"
+          ? `/post/${notification?.publication?.id}`
+          : type === "collect"
+          ? `/post/${notification?.collectedPublication?.id}`
+          : `/profile/${prefix?.id}`
+      }
       className="relative w-full h-fit rounded-md grid grid-flow-cols auto-cols-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-6 border-2 border-black cursor-pointer"
     >
       <div className="relative justify-self-start self-center col-start-1 grid grid-flow-col auto-cols-auto gap-3">
