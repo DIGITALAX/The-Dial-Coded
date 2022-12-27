@@ -21,7 +21,7 @@ const Follows: FunctionComponent<FollowProps> = ({ follow }): JSX.Element => {
   return (
     <Link
       href={`/profile/${follow.handle?.split("lens")[0]}`}
-      className="relative w-4/5 h-fit p-2 drop-shadow-lg grid grid-flow-col bg-gray-50/50 auto-cols-auto rounded-lg border border-gray-50"
+      className="relative w-4/5 h-fit p-2 drop-shadow-lg grid grid-flow-col bg-gray-50/50 auto-cols-auto rounded-lg border border-gray-50 justify-self-center"
     >
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-1 gap-6">
         <div className="relative w-8 h-8 rounded-full bg-offBlue col-start-1">

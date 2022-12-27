@@ -39,6 +39,7 @@ import approvalArgsReducer from "./reducers/approvalArgsSlice";
 import commentReducer from "./reducers/commentSlice";
 import fireReducer from "./reducers/fireSlice";
 import insufficientFundsReducer from "./reducers/insufficientFunds";
+import followModalReducer from "./reducers/followModalSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -79,7 +80,8 @@ const reducer = combineReducers({
   approvalArgsReducer,
   commentReducer,
   fireReducer,
-  insufficientFundsReducer
+  insufficientFundsReducer,
+  followModalReducer,
 });
 
 export const store = configureStore({

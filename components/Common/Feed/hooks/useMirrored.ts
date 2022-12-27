@@ -7,7 +7,6 @@ import {
   useSignTypedData,
 } from "wagmi";
 import mirror from "../../../../graphql/mutations/mirror";
-import profilePublications from "../../../../graphql/queries/profilePublication";
 import whoMirroredPublications from "../../../../graphql/queries/whoMirroredPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
 import { omit, splitSignature } from "../../../../lib/lens/helpers";
@@ -53,7 +52,6 @@ const useMirrored = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      console.log(sortedArr)
       setMirrorers(sortedArr);
       setMirrorPageInfo(mirrors?.data.profiles.pageInfo);
     } catch (err: any) {
@@ -89,7 +87,7 @@ const useMirrored = () => {
     args: [mirrorArgs],
   });
 
-  const { writeAsync, isSuccess: mirrorComplete} = useContractWrite(config);
+  const { writeAsync, isSuccess: mirrorComplete } = useContractWrite(config);
 
   const mirrorPost = async (): Promise<void> => {
     setMirrorLoading(true);
@@ -164,7 +162,13 @@ const useMirrored = () => {
     }
   }, [isSuccess]);
 
-  return { mirrorInfoLoading, mirrorLoading, mirrorPost, getMorePostMirrors, mirrorers };
+  return {
+    mirrorInfoLoading,
+    mirrorLoading,
+    mirrorPost,
+    getMorePostMirrors,
+    mirrorers,
+  };
 };
 
 export default useMirrored;

@@ -509,7 +509,6 @@ const useMainFeed = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      console.log(sortedArr);
       setCommentors(sortedArr);
       setCommentPageInfo(comments.data.publications.pageInfo);
       const response = await checkPostReactions(sortedArr);
