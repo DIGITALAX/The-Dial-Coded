@@ -4,6 +4,7 @@ import {
   Attribute,
   PaginatedFollowersResult,
   PaginatedFollowingResult,
+  PaginatedNotificationResult,
   Profile,
   PublicationSearchResult,
 } from "../../../../Common/types/lens.types";
@@ -93,4 +94,10 @@ export type ImageArgsType = {
 
 export type FollowProps = {
   follow: any;
+};
+
+export type NotificationsProps = {
+  getMoreNotifications: () => Promise<void>;
+  notificationsList: any[];
+  notificationsLoading: boolean;
 };

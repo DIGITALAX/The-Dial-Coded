@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setVideo } from "../../redux/reducers/videoSlice";
 import { RootState } from "../../redux/store";
@@ -11,6 +11,7 @@ import useLensSignIn from "../Common/Auth/hooks/useLensSignIn";
 import Disconnect from "../Common/Auth/modules/Disconnect";
 import { useRouter } from "next/router";
 import { setHamburger } from "../../redux/reducers/hamburgerSlice";
+import useNotifications from "../Home/Layout/Account/hooks/useNotifications";
 
 const Header: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -18,20 +19,32 @@ const Header: FunctionComponent = (): JSX.Element => {
   const currentImage = useSelector(
     (state: RootState) => state.app.backgroundReducer.value
   );
+  const newNotifications = useSelector(
+    (state: RootState) => state.app.notificationsReducer.value
+  );
   const { handleImageData, connected, handleAccount } = useHeader();
   const { authStatus, lensProfile, handleLensLogin } = useLensSignIn();
   const hamburger = useSelector(
     (state: RootState) => state.app.hamburgerReducer.value
   );
+  const { getShortNotifications } = useNotifications();
+  useEffect(() => {
+    if (lensProfile && authStatus) {
+      getShortNotifications();
+    }
+  }, [lensProfile]);
   const router = useRouter();
   return (
     <div className="absolute w-full h-fit grid grid-flow-col auto-cols-auto justify-between py-10 px-6 z-20 gap-10 sm:gap-0">
-      <div className="relative w-fit h-fit col-start-1 text-white font-dosis text-7xl row-start-1 cursor-pointer active:scale-95" onClick={() => router.push("/")}>
+      <div
+        className="relative w-fit h-fit col-start-1 text-white font-dosis text-7xl row-start-1 cursor-pointer active:scale-95"
+        onClick={() => router.push("/")}
+      >
         THE DIAL
       </div>
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-1 sm:col-start-2 gap-6 justify-self-start self-center sm:justify-self-center pr-4 row-start-2 sm:row-start-1">
         {!router.asPath.includes("post") &&
-          (!router.asPath.includes("profile") && (
+          !router.asPath.includes("profile") && (
             <div
               className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60"
               onClick={() => dispatch(setVideo(!video))}
@@ -43,9 +56,9 @@ const Header: FunctionComponent = (): JSX.Element => {
                 height={50}
               />
             </div>
-          ))}
+          )}
         {!router.asPath.includes("post") &&
-          (!router.asPath.includes("profile") && (
+          !router.asPath.includes("profile") && (
             <div
               className="relative w-fit h-fit col-start-2 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60"
               onClick={() => handleImageData(currentImage)}
@@ -57,7 +70,7 @@ const Header: FunctionComponent = (): JSX.Element => {
                 height={50}
               />
             </div>
-          ))}
+          )}
         <div className="relative w-full h-full col-start-3 grid grid-flow-col auto-cols-auto">
           {!connected ? (
             <Connect />
@@ -67,7 +80,7 @@ const Header: FunctionComponent = (): JSX.Element => {
                 dispatch={dispatch}
                 lensProfile={lensProfile}
                 authStatus={authStatus}
-                handleAccount={handleAccount}
+                newNotifications={newNotifications}
               />
             )
           )}

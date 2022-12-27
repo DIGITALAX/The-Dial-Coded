@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import useAccount from "./hooks/useAccount";
@@ -8,6 +8,8 @@ import ProfileTab from "./modules/ProfileTab";
 import StatsTab from "./modules/StatsTab";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import Notifications from "./modules/Notifications";
+import useNotifications from "./hooks/useNotifications";
 
 const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const accountType: string | undefined = useSelector(
@@ -40,6 +42,8 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     followersLoading,
     followingLoading,
   } = useProfile();
+  const { getMoreNotifications, notificationsList, notificationsLoading } =
+    useNotifications();
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
@@ -84,6 +88,15 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           getMoreFollowing={getMoreFollowing}
           followersLoading={followersLoading}
           followingLoading={followingLoading}
+        />
+      );
+
+    case "notifications":
+      return (
+        <Notifications
+          getMoreNotifications={getMoreNotifications}
+          notificationsList={notificationsList}
+          notificationsLoading={notificationsLoading}
         />
       );
 

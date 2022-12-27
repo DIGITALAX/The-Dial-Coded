@@ -273,7 +273,7 @@ export type ProfileProps = {
   dispatch: Dispatch<AnyAction>;
   lensProfile: Profile | undefined;
   authStatus: boolean;
-  handleAccount: () => void;
+  newNotifications: boolean;
 };
 
 export type PostOptionsProps = {
@@ -562,4 +562,8 @@ export type FollowModalProps = {
 
 export type IndexingModalProps = {
   message: string | undefined;
+};
+
+export type NotificationBannerProps = {
+  notification: any;
 };

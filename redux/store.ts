@@ -43,6 +43,7 @@ import followModalReducer from "./reducers/followModalSlice";
 import indexModalReducer from "./reducers/indexModalSlice";
 import heartedReducer from "./reducers/heartedSlice";
 import noUserDataReducer from "./reducers/noUserDataSlice";
+import notificationsReducer from "./reducers/notificationsSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -87,7 +88,8 @@ const reducer = combineReducers({
   followModalReducer,
   indexModalReducer,
   heartedReducer,
-  noUserDataReducer
+  noUserDataReducer,
+  notificationsReducer
 });
 
 export const store = configureStore({

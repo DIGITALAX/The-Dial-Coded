@@ -338,13 +338,50 @@ const NOTIFICATIONS = `query Notifications($request: NotificationRequest!) {
     }
   }`;
 
-const notifications = (request: any) => {
+const SHORT_NOTIF = `query Notifications($request: NotificationRequest!) {
+  result: notifications(request: $request) {
+    items {
+      ... on NewFollowerNotification {
+        notificationId
+      }
+
+      ... on NewMirrorNotification {
+        notificationId
+      }
+
+      ... on NewCollectNotification {
+        notificationId
+      }
+
+      ... on NewCommentNotification {
+        notificationId
+      }
+      
+      ... on NewMentionNotification {
+        notificationId
+      }
+      ... on NewReactionNotification {
+        notificationId
+      }
+    }
+  }
+}`;
+
+export const shortNotifications = (request: any) => {
   return apolloClient.query({
-    query: gql(NOTIFICATIONS),
+    query: gql(SHORT_NOTIF),
     variables: {
       request: request,
     },
   });
 };
 
-export default notifications;
+export const notifications = (request: any) => {
+  return apolloClient.query({
+    query: gql(NOTIFICATIONS),
+    variables: {
+      request: request,
+    },
+    fetchPolicy: "no-cache",
+  });
+};
