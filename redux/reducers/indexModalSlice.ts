@@ -6,7 +6,7 @@ export interface IndexModalState {
 }
 
 const initialIndexModalState: IndexModalState = {
-  value: false,
+  value: true,
   message: undefined,
 };
 

@@ -559,3 +559,7 @@ export type FollowModalProps = {
   type: string | undefined;
   getMoreFollowing: () => Promise<void>;
 };
+
+export type IndexingModalProps = {
+  message: string | undefined;
+};

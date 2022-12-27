@@ -48,7 +48,7 @@ const Modals = () => {
     (state: RootState) => state.app.signInReducer.value
   );
   const indexingModal = useSelector(
-    (state: RootState) => state.app.indexModalReducer.value
+    (state: RootState) => state.app.indexModalReducer
   );
   const {
     mirrorInfoLoading,
@@ -156,7 +156,9 @@ const Modals = () => {
           type={follow?.type}
         />
       )}
-      {indexingModal && <IndexingModal />}
+      {indexingModal?.value && (
+        <IndexingModal message={indexingModal?.message} />
+      )}
       {failed !== "" && failed !== undefined && (
         <Transaction
           inputText={

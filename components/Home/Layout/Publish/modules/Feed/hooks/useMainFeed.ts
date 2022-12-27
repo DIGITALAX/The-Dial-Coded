@@ -45,6 +45,9 @@ const useMainFeed = () => {
   const reactions = useSelector(
     (state: RootState) => state.app.reactionStateReducer
   );
+  const indexerModal = useSelector(
+    (state: RootState) => state.app.indexModalReducer
+  );
   const [publicationsFeed, setPublicationsFeed] = useState<
     PublicationSearchResult[]
   >([]);
@@ -628,6 +631,8 @@ const useMainFeed = () => {
     feedOrderState,
     feedPriorityState,
     commentShow,
+    indexerModal.message,
+    indexerModal.value,
   ]);
 
   return {

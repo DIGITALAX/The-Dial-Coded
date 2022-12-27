@@ -29,6 +29,9 @@ const Post: NextPage = (): JSX.Element => {
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
+  const indexerModal = useSelector(
+    (state: RootState) => state.app.indexModalReducer
+  );
   const {
     commentPost,
     commentLoading,
@@ -61,7 +64,13 @@ const Post: NextPage = (): JSX.Element => {
       getPublicationData(id as string);
       getPostComments(id as string);
     }
-  }, [id, lensProfile, commentSuccess]);
+  }, [
+    id,
+    lensProfile,
+    commentSuccess,
+    indexerModal.value,
+    indexerModal.message,
+  ]);
   const { isConnected } = useAccount();
   useEffect(() => {
     dispatch(setWalletConnected(isConnected));
