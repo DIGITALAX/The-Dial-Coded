@@ -3,7 +3,7 @@ import {
   PaginatedFollowersResult,
   PaginatedFollowingResult,
   Profile,
-  PublicationsQueryRequest,
+  PublicationSearchResult,
 } from "../../../Common/types/lens.types";
 
 export type SideBarProps = {
@@ -36,7 +36,7 @@ export type UseProfilePageResults = {
   profileDataLoading: boolean;
   getProfileData: (handle: string) => Promise<void>;
   getMoreUserProfileFeed: () => Promise<void>;
-  userFeed: PublicationsQueryRequest[];
+  userFeed: PublicationSearchResult[];
   followArgs: FollowArgs | undefined;
   dispatch: Dispatch<AnyAction>;
   isFollowedByMe: boolean;

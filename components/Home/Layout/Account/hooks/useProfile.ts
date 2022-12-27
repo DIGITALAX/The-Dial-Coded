@@ -6,7 +6,7 @@ import { RootState } from "../../../../../redux/store";
 import {
   PaginatedFollowersResult,
   PaginatedFollowingResult,
-  PublicationsQueryRequest,
+  PublicationSearchResult,
 } from "../../../../Common/types/lens.types";
 import lodash from "lodash";
 import whoCommentedPublications from "../../../../../graphql/queries/whoCommentedPublications";
@@ -22,7 +22,7 @@ const useProfile = () => {
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
   const {address} = useAccount();
-  const [userFeed, setUserFeed] = useState<PublicationsQueryRequest[]>([]);
+  const [userFeed, setUserFeed] = useState<PublicationSearchResult[]>([]);
   const [hasMirrored, setHasMirrored] = useState<boolean[]>([]);
   const [hasCommented, setHasCommented] = useState<boolean[]>([]);
   const [hasReacted, setHasReacted] = useState<boolean[]>([]);

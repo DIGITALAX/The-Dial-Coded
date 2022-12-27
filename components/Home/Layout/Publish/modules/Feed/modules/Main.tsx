@@ -1,8 +1,8 @@
 import { FunctionComponent } from "react";
 import { MainProps } from "../types/feed.types";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import FeedPublication from "../../../../../../Common/Feed/FeedPublication";
-import { PublicationsQueryRequest } from "../../../../../../Common/types/lens.types";
+import { PublicationSearchResult } from "../../../../../../Common/types/lens.types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { RootState } from "../../../../../../../redux/store";
 
@@ -32,7 +32,7 @@ const Main: FunctionComponent<MainProps> = ({
         style={{ color: "#131313", fontFamily: "Digi Reg" }}
       >
         {publicationsFeed?.map(
-          (publication: PublicationsQueryRequest, index: number) => {
+          (publication: PublicationSearchResult, index: number) => {
             return (
               <FeedPublication
                 dispatch={dispatch}

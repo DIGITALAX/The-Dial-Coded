@@ -21,7 +21,7 @@ import { RootState } from "../../../../redux/store";
 import {
   PaginatedFollowersResult,
   PaginatedFollowingResult,
-  PublicationsQueryRequest,
+  PublicationSearchResult,
 } from "../../../Common/types/lens.types";
 import { FollowArgs, UseProfilePageResults } from "../types/profile.types";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
@@ -41,7 +41,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const [followLoading, setFollowLoading] = useState<boolean>(false);
   const [followArgs, setFollowArgs] = useState<FollowArgs>();
   const [unfollowArgs, setUnfollowArgs] = useState<any[]>([]);
-  const [userFeed, setUserFeed] = useState<PublicationsQueryRequest[]>([]);
+  const [userFeed, setUserFeed] = useState<PublicationSearchResult[]>([]);
   const [paginatedResults, setPaginatedResults] = useState<any>();
   const { address } = useAccount();
   const { signTypedDataAsync } = useSignTypedData();
