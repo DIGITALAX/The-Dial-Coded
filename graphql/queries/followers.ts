@@ -34,20 +34,6 @@ const FOLLOWERS = `query Followers($request: FollowersRequest!) {
                 }
               }
             }
-            coverPicture {
-              ... on NftImage {
-                contractAddress
-                tokenId
-                uri
-                verified
-              }
-              ... on MediaSet {
-                original {
-                  url
-                  mimeType
-                }
-              }
-            }
             ownedBy
             dispatcher {
               address

@@ -1,9 +1,12 @@
 import { NextPage } from "next";
 import Image from "next/legacy/image";
+import { useEffect } from "react";
+import { useAccount } from "wagmi";
 import Banner from "../../components/Common/Profile/modules/Banner";
 import useProfilePage from "../../components/Home/Profile/hooks/useProfilePage";
 import SideBar from "../../components/Home/Profile/modules/SideBar";
 import { INFURA_GATEWAY } from "../../lib/lens/constants";
+import { setWalletConnected } from "../../redux/reducers/walletConnectedSlice";
 import ProfileTab from "./../../components/Home/Layout/Account/modules/ProfileTab";
 
 const Profile: NextPage = (): JSX.Element => {
@@ -23,6 +26,10 @@ const Profile: NextPage = (): JSX.Element => {
     hasReacted,
     reactionsFeed,
   } = useProfilePage();
+  const { isConnected } = useAccount();
+  useEffect(() => {
+    dispatch(setWalletConnected(isConnected));
+  }, [isConnected]);
 
   let profileImage: string;
   if (!(profileData?.picture as any)?.original) {

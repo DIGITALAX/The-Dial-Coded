@@ -277,7 +277,7 @@ const useCollected = () => {
       console.error(err.message);
       if (
         err.message.includes(
-          "You do not have enough allowance to collect this publication."
+          "You do not have enough"
         )
       ) {
         dispatch(setInsufficientFunds("insufficient"));

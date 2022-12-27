@@ -14,9 +14,9 @@ import whoReactedublications from "../../../../../../../graphql/queries/whoReact
 import {
   profilePublicationsAuth,
   profilePublications,
+  whoCommentedPublications,
 } from "../../../../../../../graphql/queries/profilePublication";
 import feedTimeline from "../../../../../../../graphql/queries/feedTimeline";
-import whoCommentedPublications from "../../../../../../../graphql/queries/whoCommentedPublications";
 import { useRouter } from "next/router";
 
 const useMainFeed = () => {

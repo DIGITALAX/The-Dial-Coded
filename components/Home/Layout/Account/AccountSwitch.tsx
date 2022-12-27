@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import useAccount from "./hooks/useAccount";
@@ -6,6 +6,8 @@ import useProfile from "./hooks/useProfile";
 import AccountTab from "./modules/AccountTab";
 import ProfileTab from "./modules/ProfileTab";
 import StatsTab from "./modules/StatsTab";
+import { setSignIn } from "../../../../redux/reducers/signInSlice";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const accountType: string | undefined = useSelector(
@@ -41,9 +43,13 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
+  const isConnected = useSelector(
+    (state: RootState) => state.app.walletConnectedReducer.value
+  );
+  const { openConnectModal } = useConnectModal();
   let action: string = "account";
   const decideStringAction = () => {
-    if (profile) {
+    if (profile && isConnected) {
       action = accountType as string;
     } else {
       action = "no profile";
@@ -83,7 +89,12 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
 
     case "no profile":
       return (
-        <div className="relative w-fit h-fit place-self-center font-dosis text-offBlack text-base">
+        <div
+          className="relative w-fit h-fit place-self-center font-dosis text-offBlack text-base cursor-pointer"
+          onClick={
+            !isConnected ? openConnectModal : () => dispatch(setSignIn(true))
+          }
+        >
           Please Connect to Lens to view your Account page.
         </div>
       );

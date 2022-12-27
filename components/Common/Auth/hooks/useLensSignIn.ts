@@ -15,6 +15,7 @@ import { setHamburger } from "../../../../redux/reducers/hamburgerSlice";
 import { setLensProfile } from "../../../../redux/reducers/lensProfileSlice";
 import { setSignInSettled } from "../../../../redux/reducers/signInSettledSlice";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
+import { setWalletConnected } from "../../../../redux/reducers/walletConnectedSlice";
 import { RootState } from "../../../../redux/store";
 import { useLensSignInResults } from "../../types/common.types";
 
@@ -57,7 +58,8 @@ const useLensSignIn = (): useLensSignInResults => {
           dispatch(setLensProfile(profile.data.defaultProfile));
           dispatch(setAuthStatus(true));
           dispatch(setSignIn(false));
-          dispatch(setAccountPage("account"))
+          dispatch(setWalletConnected(true));
+          dispatch(setAccountPage("account"));
           dispatch(setHamburger(false));
         } else {
           dispatch(setGetProfileModal(true));
