@@ -73,6 +73,9 @@ const useProfilePage = (): UseProfilePageResults => {
   const isConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
   );
+  const hearted = useSelector(
+    (state: RootState) => state.app.heartedReducer?.direction
+  );
 
   const fetchReactions = async (pubId: string): Promise<any> => {
     try {
@@ -599,6 +602,7 @@ const useProfilePage = (): UseProfilePageResults => {
     isConnected,
     indexerModal.message,
     indexerModal.value,
+    hearted
   ]);
 
   useEffect(() => {

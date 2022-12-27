@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import {
   BsSuitHeartFill,
   BsSuitHeart,
@@ -41,6 +41,20 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   const inCommentBox = useSelector(
     (state: RootState) => state.app.commentShowReducer
   );
+  // const hearted = useSelector((state: RootState) => state.app.heartedReducer);
+  // const [heartAmountAdded, setHeartAmountAdded] = useState<number>(
+  //   heartAmount && (heartAmount as number) > 0 ? (heartAmount as number) : 0
+  // );
+  // useEffect(() => {
+  //   if (hearted.id === id) {
+  //     let heartCount = heartAmountAdded;
+  //     if (hearted?.direction === "down") {
+  //       setHeartAmountAdded((heartCount -= 1));
+  //     } else {
+  //       setHeartAmountAdded((heartCount += 1));
+  //     }
+  //   }
+  // }, [hearted.direction, hearted.id]);
   const router = useRouter();
   return (
     <div className="relative w-fit h-fit col-start-1 justify-self-start self-center grid grid-flow-col auto-cols-auto gap-4">
@@ -84,7 +98,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
         <div
           className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center`}
         >
-          {heartAmount ? heartAmount : 0}
+          {!heartAmount ? 0 : heartAmount}
         </div>
       </div>
       <div

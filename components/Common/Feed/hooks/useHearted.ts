@@ -10,6 +10,7 @@ import {
   removeReaction,
 } from "../../../../graphql/mutations/react";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
+import { setHearted } from "../../../../redux/reducers/heartedSlice";
 
 const useHearted = () => {
   const {
@@ -86,12 +87,20 @@ const useHearted = () => {
           reaction: "UPVOTE",
           publicationId: id ? id : pubId,
         });
+        dispatch(setHearted({
+          actionDirection: "up",
+          actionId: id ? id : pubId
+        }));
       } else {
         const remove = await removeReaction({
           profileId: profileId,
           reaction: "DOWNVOTE",
           publicationId: id ? id : pubId,
         });
+        dispatch(setHearted({
+          actionDirection: "down",
+          actionId: id ? id : pubId
+        }));
       }
     } catch (err: any) {
       console.error(err.message);
@@ -117,7 +126,7 @@ const useHearted = () => {
     reactionLoading,
     getMorePostReactions,
     reactionInfoLoading,
-    reacters
+    reacters,
   };
 };
 

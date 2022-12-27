@@ -222,6 +222,11 @@ const useCollected = () => {
     try {
       const tx = await sendTransactionAsync?.();
       await tx?.wait();
+      const indexedStatus = await checkIndexed(tx?.hash);
+      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+        // re-get collect info
+        getCollectInfo();
+      }
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));
@@ -339,12 +344,7 @@ const useCollected = () => {
       getPostCollects();
       getCollectInfo();
     }
-  }, [
-    reactions.type,
-    reactions.open,
-    id,
-    pubId,
-  ]);
+  }, [reactions.type, reactions.open, id, pubId]);
 
   useEffect(() => {
     if (isSuccess) {

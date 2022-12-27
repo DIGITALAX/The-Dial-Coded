@@ -41,6 +41,8 @@ import fireReducer from "./reducers/fireSlice";
 import insufficientFundsReducer from "./reducers/insufficientFunds";
 import followModalReducer from "./reducers/followModalSlice";
 import indexModalReducer from "./reducers/indexModalSlice";
+import heartedReducer from "./reducers/heartedSlice";
+import noUserDataReducer from "./reducers/noUserDataSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -84,6 +86,8 @@ const reducer = combineReducers({
   insufficientFundsReducer,
   followModalReducer,
   indexModalReducer,
+  heartedReducer,
+  noUserDataReducer
 });
 
 export const store = configureStore({

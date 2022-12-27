@@ -34,7 +34,12 @@ import { setInsufficientFunds } from "../../../../../redux/reducers/insufficient
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 
 const useAccount = (): UseAccountResult => {
-  const accountTitles: string[] = ["account", "profile feed", "stats"];
+  const accountTitles: string[] = [
+    "account",
+    "profile feed",
+    "stats",
+    "notifications",
+  ];
   const dispatch = useDispatch();
   const { address } = useAccountWagmi();
   const [accountLoading, setAccountLoading] = useState<boolean>(false);
