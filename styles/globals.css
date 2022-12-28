@@ -283,6 +283,11 @@ textarea::placeholder {
   color: #131313 !important;
 }
 
+input:focus {
+  caret-color: black;
+  outline: 0
+}
+
 #profile {
   background: linear-gradient(
     -86deg,

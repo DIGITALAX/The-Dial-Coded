@@ -20,7 +20,7 @@ const MixInput: FunctionComponent<MixInputProps> = ({
         <div className="relative w-full h-full bg-white grid grid-flow-row auto-rows-auto rounded-md p-1 col-start-1">
           <input
             name={name}
-            className="relative w-full h-full p-2 text-black font-dosis rounded-md row-start-1"
+            className="relative w-full h-full p-2 text-black font-dosis rounded-md row-start-1 caret-transparent"
           />
           <div className="relative h-1 w-full bg-offBlack/80 row-start-2 rounded-md"></div>
         </div>

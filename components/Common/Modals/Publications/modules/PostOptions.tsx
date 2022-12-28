@@ -33,6 +33,7 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
           id="files"
           multiple={true}
           name="images"
+          className="caret-transparent"
           disabled={(imageUploading || postLoading) ? true : false}
         />
       </label>

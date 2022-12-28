@@ -26,7 +26,7 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
         <div className="relative w-[40vw] h-fit col-start-1 p-px bg-lB rounded-md">
           <input
             name={"trackName"}
-            className="relative w-full h-full p-2 text-black font-digiR rounded-md row-start-1"
+            className="relative w-full h-full p-2 text-black font-digiR rounded-md row-start-1 caret-transparent"
             placeholder="TRACK NAME | SOURCE (shortened)"
             defaultValue={"TRACK NAME | SOURCE (shortened)"}
           />

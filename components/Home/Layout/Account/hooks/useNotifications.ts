@@ -7,6 +7,10 @@ import {
 import { setNotifications } from "../../../../../redux/reducers/notificationsSlice";
 import { RootState } from "../../../../../redux/store";
 import lodash from "lodash";
+import {
+  getNotificationLength,
+  setNotificationLength,
+} from "../../../../../lib/lens/utils";
 
 const useNotifications = () => {
   const dispatch = useDispatch();
@@ -27,9 +31,17 @@ const useNotifications = () => {
         profileId: lensProfileId,
         limit: 50,
       });
-      if (data?.result?.items?.length > 0) {
-        dispatch(setNotifications(true));
+      const previousNotifications = getNotificationLength()?.notifLength;
+      if (!previousNotifications) {
+        if (data?.result?.items?.length > 0) {
+          dispatch(setNotifications(true));
+        }
+      } else {
+        if (data?.result?.items?.length > (previousNotifications as number)) {
+          dispatch(setNotifications(true));
+        }
       }
+      setNotificationLength(data?.result?.items?.length);
     } catch (err: any) {
       console.error(err.message);
     }

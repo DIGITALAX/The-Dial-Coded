@@ -23,6 +23,7 @@ import { setInsufficientFunds } from "../../../../../redux/reducers/insufficient
 import CreateCommentTypedData from "../../../../../graphql/mutations/comment";
 import { useRouter } from "next/router";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
+import search from "../../../../../graphql/queries/search";
 
 const usePublication = () => {
   const {
@@ -345,7 +346,15 @@ const usePublication = () => {
     }
   };
 
-  const handlePostDescription = (e: FormEvent): void => {
+  const handlePostDescription = async (e: FormEvent): Promise<void> => {
+    if ((e.target as HTMLFormElement).value === "@") {
+      const profiles = await search({
+        query: (e.target as HTMLFormElement).value,
+        type: "PROFILE",
+        limit: 50,
+      });
+    }
+
     setPostDescription((e.target as HTMLFormElement).value);
   };
 

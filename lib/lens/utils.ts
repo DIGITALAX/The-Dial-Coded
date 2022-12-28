@@ -1,6 +1,7 @@
 import refresh from "../../graphql/mutations/refresh";
 
-const STORAGE_KEY = "LH_STORAGE_KEY";
+const AUTH_STORAGE_KEY = "LH_STORAGE_KEY";
+const NOTIF_STORAGE_KEY = "LH_NOTIFICATIONS";
 
 interface authToken {
   token: {
@@ -14,7 +15,7 @@ export const setAuthenticationToken = ({ token }: authToken) => {
 
   if (typeof window !== "undefined") {
     localStorage.setItem(
-      STORAGE_KEY,
+      AUTH_STORAGE_KEY,
       JSON.stringify({ accessToken, refreshToken, exp })
     );
     return;
@@ -23,7 +24,7 @@ export const setAuthenticationToken = ({ token }: authToken) => {
 
 export const getAuthenticationToken = () => {
   if (typeof window !== "undefined") {
-    const data = localStorage.getItem(STORAGE_KEY);
+    const data = localStorage.getItem(AUTH_STORAGE_KEY);
 
     if (!data) return null;
 
@@ -37,7 +38,7 @@ export const getAuthenticationToken = () => {
 
 export const removeAuthenticationToken = () => {
   if (typeof window !== "undefined") {
-    sessionStorage.removeItem(STORAGE_KEY);
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
   }
 };
 
@@ -74,5 +75,24 @@ export const refreshAuth = async (): Promise<string | undefined | null> => {
     return response?.data?.refresh?.accessToken;
   } catch (err: any) {
     console.error(err.message);
+  }
+};
+
+export const setNotificationLength = (notifLength: number) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify({ notifLength }));
+    return;
+  }
+};
+
+export const getNotificationLength = () => {
+  if (typeof window !== "undefined") {
+    const data = localStorage.getItem(NOTIF_STORAGE_KEY);
+
+    if (!data) return null;
+
+    return JSON.parse(data) as {
+      notifLength: number;
+    };
   }
 };

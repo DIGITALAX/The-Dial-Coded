@@ -31,7 +31,7 @@ const CollectInput: FunctionComponent<CollectInputProps> = ({
         step={step}
         defaultValue={defaultValue}
         placeholder={placeholder}
-        className="relative w-20 h-10 bg-offBlue row-start-2 rounded-md p-1.5 text-white font-dosis justify-self-start self-center"
+        className="relative w-20 h-10 bg-offBlue row-start-2 rounded-md p-1.5 text-white font-dosis justify-self-start self-center caret-transparent"
         onChange={(e: FormEvent) =>
           handleValueChange((e.target as HTMLFormElement)?.value)
         }

@@ -13,7 +13,7 @@ const Grid: FunctionComponent<GridProps> = ({
   return (
     <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
       <input
-        className="relative row-start-1 col-start-1 w-96 h-10 bg-white font-dosis text-offBlack p-2 rounded-md"
+        className="relative row-start-1 col-start-1 w-96 h-10 bg-white font-dosis text-offBlack p-2 rounded-md caret-transparent"
         name="gif"
         onChange={(e: FormEvent) => handleGif(e)}
       />
