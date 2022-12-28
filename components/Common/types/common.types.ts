@@ -257,6 +257,7 @@ export type useLensSignInResults = {
   isError: boolean;
   isSuccess: boolean;
   lensProfile: Profile | undefined;
+  handleRefreshProfile: () => Promise<void>;
 };
 
 export type LensSignInProps = {

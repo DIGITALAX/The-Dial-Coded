@@ -16,10 +16,8 @@ const Disconnect: FunctionComponent<DisconnectProps> = ({
       style={{ display: "flex", gap: 1, zIndex: "30" }}
       onClick={() => {
         disconnect();
-        dispatch(setLensProfile(undefined));
         dispatch(setWalletConnected(false));
         dispatch(setHamburger(false));
-        removeAuthenticationToken();
       }}
     >
       Disconnect Wallet
