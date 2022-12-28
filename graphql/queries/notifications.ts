@@ -28,6 +28,7 @@ const NOTIFICATIONS = `query Notifications($request: NotificationRequest!) {
           notificationId
           ...NewMentionNotificationFields
         }
+        
         ... on NewReactionNotification {
           notificationId
           ...NewReactionNotificationFields

@@ -32,3 +32,7 @@ export const removeAuthenticationToken = async () => {
     sessionStorage.removeItem("refresh_token");
   }
 };
+
+export const parseJWT = () => {
+  
+}

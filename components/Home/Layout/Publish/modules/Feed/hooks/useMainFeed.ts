@@ -318,11 +318,11 @@ const useMainFeed = () => {
     try {
       if (!lensProfile) {
         const { data } = await profilePublications({
-          profileId: userView?.id,
+          profileId: (userView as any)?.profileId,
           publicationTypes: feedOrder,
           limit: 20,
         });
-        if (!data) {
+        if (data?.publications?.items?.length < 1) {
           dispatch(setNoUserData(true));
           return;
         } else {
@@ -339,7 +339,7 @@ const useMainFeed = () => {
           publicationTypes: feedOrder,
           limit: 20,
         });
-        if (!data) {
+        if (data?.publications?.items?.length < 1) {
           dispatch(setNoUserData(true));
           return;
         } else {
@@ -508,7 +508,7 @@ const useMainFeed = () => {
     try {
       if (!lensProfile) {
         const { data } = await profilePublications({
-          profileId: userView?.id,
+          profileId: (userView as any)?.profileId,
           publicationTypes: feedOrder,
           limit: 20,
           cursor: paginatedResults?.next,
@@ -520,7 +520,7 @@ const useMainFeed = () => {
         pageData = data?.publications?.pageInfo;
       } else {
         const { data } = await profilePublicationsAuth({
-          profileId: userView?.id,
+          profileId: (userView as any)?.profileId,
           publicationTypes: feedOrder,
           limit: 20,
           cursor: paginatedResults?.next,
