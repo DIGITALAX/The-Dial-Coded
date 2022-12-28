@@ -155,7 +155,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   style={{ resize: "none" }}
                   value={postDescription}
                   placeholder="Have something to share..."
-                  className={`relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 place-self-center`}
+                  className={`relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 place-self-center caret-transparent focus:caret-transparent`}
                   disabled={postLoading ? true : false}
                 ></textarea>
               </div>

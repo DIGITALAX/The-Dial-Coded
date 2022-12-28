@@ -84,7 +84,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               Name:
             </div>
             <input
-              className="relative w-40 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center"
+              className="relative w-40 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent"
               name="accountName"
               type={"text"}
               defaultValue={profile?.name ? profile?.name : ""}
@@ -97,7 +97,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               Location:
             </div>
             <input
-              className="relative w-32 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center"
+              className="relative w-32 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent"
               name="location"
               type={"text"}
               defaultValue={location[0].value ? (location[0].value as any) : ""}
@@ -108,7 +108,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               Website:
             </div>
             <input
-              className="relative w-48 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center"
+              className="relative w-48 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent"
               name="website"
               type={"text"}
               defaultValue={website[0].value ? (website[0].value as any) : ""}
@@ -124,7 +124,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               defaultValue={profile?.bio ? profile?.bio : ""}
               style={{ resize: "none" }}
               name="bio"
-              className={`relative w-full h-32 overflow-y-scroll row-start-2 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 justify-self-start self-center`}
+              className={`relative w-full h-32 overflow-y-scroll row-start-2 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 justify-self-start self-center caret-transparent focus:caret-transparent`}
             ></textarea>
           </div>
           <div className="relative w-full h-fit col-start-2 grid grid-flow-row auto-rows-auto gap-1">
@@ -148,6 +148,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
                   id="files"
                   multiple={false}
                   name="cover"
+                  className="caret-transparent"
                   disabled={
                     coverImageUploading || accountLoading ? true : false
                   }
@@ -236,6 +237,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
                 id="files"
                 multiple={false}
                 name="profile"
+                className="caret-transparent"
                 disabled={
                   profileImageUploading || accountLoading ? true : false
                 }

@@ -28,7 +28,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
             <input
               placeholder="search profile"
               value={chosenProfile ? chosenProfile : undefined}
-              className="relative col-start-1 place-self-center w-full h-full rounded-lg pl-px text-offBlack font-dosis"
+              className="relative col-start-1 place-self-center w-full h-full rounded-lg pl-px text-offBlack font-dosis caret-transparent"
               onChange={(e: FormEvent) => searchProfiles(e)}
             />
           </div>
