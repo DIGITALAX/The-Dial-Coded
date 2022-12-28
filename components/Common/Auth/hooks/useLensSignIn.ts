@@ -35,15 +35,14 @@ const useLensSignIn = (): useLensSignInResults => {
     onError(error) {
       dispatch(setGetProfileModal(true));
       dispatch(setAuthStatus(false));
-      removeAuthenticationToken();
       dispatch(setHamburger(false));
     },
   });
 
   const handleLensLogin = async (): Promise<void> => {
-    removeAuthenticationToken();
     try {
       const challengeResponse = await generateChallenge(address);
+      console.log(challengeResponse, "challenge response");
       const signature = await signMessageAsync({
         message: challengeResponse.data.challenge.text,
       });
@@ -52,7 +51,7 @@ const useLensSignIn = (): useLensSignInResults => {
         signature as string
       );
       if (accessTokens) {
-        await setAuthenticationToken({ token: accessTokens.data.authenticate });
+        setAuthenticationToken({ token: accessTokens.data.authenticate });
         const profile = await getDefaultProfile(address);
         if (profile.data.defaultProfile !== null) {
           dispatch(setLensProfile(profile.data.defaultProfile));
@@ -77,6 +76,27 @@ const useLensSignIn = (): useLensSignInResults => {
     }
   };
 
+  const handleRefreshProfile = async (): Promise<void> => {
+    try {
+      const profile = await getDefaultProfile(address);
+      if (profile.data.defaultProfile !== null) {
+        dispatch(setLensProfile(profile.data.defaultProfile));
+        dispatch(setAuthStatus(true));
+        dispatch(setSignIn(false));
+        dispatch(setWalletConnected(true));
+        dispatch(setAccountPage("account"));
+        dispatch(setHamburger(false));
+      } else {
+        dispatch(setGetProfileModal(true));
+        dispatch(setAuthStatus(false));
+        removeAuthenticationToken();
+        dispatch(setHamburger(false));
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   useEffect(() => {
     if (isSuccess) {
       dispatch(setSignIn(false));
@@ -90,6 +110,7 @@ const useLensSignIn = (): useLensSignInResults => {
     isError,
     isSuccess,
     lensProfile,
+    handleRefreshProfile
   };
 };
 

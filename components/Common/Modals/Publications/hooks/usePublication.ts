@@ -254,7 +254,6 @@ const usePublication = () => {
       setEnabled(true);
     } catch (err: any) {
       console.error(err.message);
-      // dispatch(setLensProfile(undefined));
       dispatch(setSignIn(true));
     }
     setPostLoading(false);
