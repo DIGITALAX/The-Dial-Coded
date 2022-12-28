@@ -3,6 +3,8 @@ import { FunctionComponent } from "react";
 import { TapeProps } from "../types/common.types";
 import { RiLock2Fill } from "react-icons/ri";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 const Tape: FunctionComponent<TapeProps> = ({
   bgColor,
@@ -14,6 +16,9 @@ const Tape: FunctionComponent<TapeProps> = ({
   locked,
   handleTapeSet,
 }): JSX.Element => {
+  const notifications = useSelector(
+    (state: RootState) => state.app.notificationsReducer.value
+  );
   return (
     <div
       key={index}
@@ -39,9 +44,7 @@ const Tape: FunctionComponent<TapeProps> = ({
       {backgroundImages && (
         <div className="absolute w-full h-full mix-blend-hard-light">
           <Image
-            src={`${INFURA_GATEWAY}/ipfs/${
-              backgroundImages[index + 1]
-            }`}
+            src={`${INFURA_GATEWAY}/ipfs/${backgroundImages[index + 1]}`}
             layout="fill"
             priority
             objectFit="cover"
@@ -57,11 +60,15 @@ const Tape: FunctionComponent<TapeProps> = ({
         <div
           className={`relative ${
             sideImage ? "w-52" : "w-fit"
-          } h-10 rounded-tl-2xl bg-white font-digiB text-black text-2xl grid grid-flow-col auto-cols-auto border border-bright whitespace-nowrap`}
+          } h-10 rounded-tl-2xl font-digiB text-black text-2xl grid grid-flow-col auto-cols-auto border border-bright whitespace-nowrap ${
+            notifications && title === "notifications"
+              ? "bg-offBlue animate-pulse"
+              : "bg-white"
+          }`}
         >
-          <div className="relative w-fit h-fit place-self-center p-1">
+          <div className={`relative w-fit h-fit place-self-center p-1`}>
             {mixtape ? (
-              `mixtape vol ${index+1} - ${title}`
+              `mixtape vol ${index + 1} - ${title}`
             ) : locked ? (
               <RiLock2Fill color="black" size={20} />
             ) : (
