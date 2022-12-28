@@ -322,7 +322,7 @@ const useMainFeed = () => {
           publicationTypes: feedOrder,
           limit: 20,
         });
-        if (data?.publications?.items?.length < 1) {
+        if (data?.publications?.items?.length < 1 || !data) {
           dispatch(setNoUserData(true));
           return;
         } else {
@@ -335,11 +335,11 @@ const useMainFeed = () => {
         pageData = data?.publications?.pageInfo;
       } else {
         const { data } = await profilePublicationsAuth({
-          profileId: userView?.id,
+          profileId: (userView as any)?.profileId,
           publicationTypes: feedOrder,
           limit: 20,
         });
-        if (data?.publications?.items?.length < 1) {
+        if (data?.publications?.items?.length < 1 || !data) {
           dispatch(setNoUserData(true));
           return;
         } else {

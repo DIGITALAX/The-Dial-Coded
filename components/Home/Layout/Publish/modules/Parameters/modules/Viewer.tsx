@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { FormEvent, FunctionComponent } from "react";
 import { ViewerProps } from "../types/parameters.types";
 import { BsFillEyeFill } from "react-icons/bs";
@@ -13,7 +13,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
   searchLoading,
   handleChosenProfile,
   getMoreProfiles,
-  chosenProfile
+  searchTarget,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-full grid grid-flow-row auto-rows-auto col-start-2 gap-6 justify-self-end self-start">
@@ -27,7 +27,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
           <div className="relative w-full h-full col-start-2 text-black font-dosis lowercase place-self-center grid grid-flow-col auto-cols-auto whitespace-nowrap">
             <input
               placeholder="search profile"
-              value={chosenProfile ? chosenProfile : undefined}
+              value={searchTarget}
               className="relative col-start-1 place-self-center w-full h-full rounded-lg pl-px text-offBlack font-dosis caret-transparent"
               onChange={(e: FormEvent) => searchProfiles(e)}
             />
@@ -59,6 +59,19 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                   className="relative w-full h-fit"
                 >
                   {profileSearch?.map((user: any, index: number) => {
+                    let profileImage: string;
+                    if (!user?.picture?.original) {
+                      profileImage = "";
+                    } else if (user?.picture?.original) {
+                      if (user?.picture?.original?.url.includes("http")) {
+                        profileImage = user?.picture?.original.url;
+                      } else {
+                        const cut = user?.picture?.original?.url.split("/");
+                        profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
+                      }
+                    } else {
+                      profileImage = user?.picture?.uri;
+                    }
                     return (
                       <div
                         key={index}
@@ -67,8 +80,22 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                           handleChosenProfile(user);
                         }}
                       >
-                        <div className="relative w-fit h-fit col-start-1 text-black font-dosis lowercase place-self-center grid grid-flow-col auto-cols-auto">
-                          <div className="relative col-start-1 place-self-center w-fit h-fit text-sm">
+                        <div className="relative w-fit h-fit col-start-1 text-black font-dosis lowercase place-self-center grid grid-flow-col auto-cols-auto gap-2">
+                          <div
+                            className={`relative rounded-full flex bg-white w-5 h-5 place-self-center col-start-1`}
+                            id="crt"
+                          >
+                            {profileImage !== "" && (
+                              <Image
+                                src={profileImage}
+                                objectFit="cover"
+                                alt="pfp"
+                                layout="fill"
+                                className="relative w-fit h-fit rounded-full self-center"
+                              />
+                            )}
+                          </div>
+                          <div className="relative col-start-2 place-self-center w-fit h-fit text-sm">
                             @{user?.handle}
                           </div>
                         </div>

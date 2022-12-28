@@ -17,12 +17,13 @@ const useParameters = (): UseParametersResult => {
   const feedPriority: string[] = ["interests", "reactions"];
   const [profileSearch, setProfileSearch] = useState<any[]>([]);
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
-  const [searchTarget, setSearchTarget] = useState<string>();
+  const [searchTarget, setSearchTarget] = useState<string>("");
   const [pageCursor, setPageCursor] = useState<any>();
   const [chosenProfile, setChosenProfile] = useState<any>();
   const dispatch = useDispatch();
 
   const searchProfiles = async (e: FormEvent): Promise<void> => {
+    setSearchTarget("");
     setChosenProfile(undefined);
     setSearchLoading(true);
     setUserTypeOpen(true);
@@ -72,6 +73,7 @@ const useParameters = (): UseParametersResult => {
   };
 
   const handleChosenProfile = (user: Profile): void => {
+    setSearchTarget(user?.handle);
     setChosenProfile(user?.handle);
     setUserTypeOpen(false);
     dispatch(setUserViewer(user));
@@ -93,7 +95,7 @@ const useParameters = (): UseParametersResult => {
     searchLoading,
     handleChosenProfile,
     getMoreProfiles,
-    chosenProfile,
+    searchTarget,
   };
 };
 
