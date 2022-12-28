@@ -17,7 +17,7 @@ export type UseParametersResult = {
   searchLoading: boolean;
   handleChosenProfile: (user: Profile) => void;
   getMoreProfiles: () => Promise<void>;
-  chosenProfile: any;
+  searchTarget: string | undefined;
 };
 
 export type OptionsProps = {
@@ -39,5 +39,5 @@ export type ViewerProps = {
   searchLoading: boolean;
   handleChosenProfile: (user: Profile) => void;
   getMoreProfiles: () => Promise<void>;
-  chosenProfile: any;
+  searchTarget: string | undefined;
 };

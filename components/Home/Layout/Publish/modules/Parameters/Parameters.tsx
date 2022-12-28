@@ -20,7 +20,7 @@ const Parameters: FunctionComponent = (): JSX.Element => {
     searchLoading,
     handleChosenProfile,
     getMoreProfiles,
-    chosenProfile,
+    searchTarget
   } = useParameters();
 
   return (
@@ -43,7 +43,7 @@ const Parameters: FunctionComponent = (): JSX.Element => {
         searchLoading={searchLoading}
         handleChosenProfile={handleChosenProfile}
         getMoreProfiles={getMoreProfiles}
-        chosenProfile={chosenProfile}
+        searchTarget={searchTarget}
       />
     </div>
   );
