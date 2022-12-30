@@ -21,7 +21,8 @@ const PanelOption: FunctionComponent<PanelOptionProps> = ({
       key={index}
       onClick={() => {
         dispatch(setLayout(layoutType[index]));
-        layoutType[index] === "Mixtape" && dispatch(setMixtapePage("Create"));
+        layoutType[index] === "Mixtape" &&
+          dispatch(setMixtapePage("Add New Mixtape"));
       }}
     >
       <div className="relative w-fit h-fit col-start-1 place-self-center">

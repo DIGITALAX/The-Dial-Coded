@@ -1,35 +1,174 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  explorePublications,
+  explorePublicationsAuth,
+} from "../../../../../../../graphql/queries/explorePublications";
+import { RootState } from "../../../../../../../redux/store";
+import { PublicationsQueryRequest } from "../../../../../../Common/types/lens.types";
 import { UseHotResults } from "../types/feed.types";
+import useMainFeed from "./useMainFeed";
 
 const useHot = (): UseHotResults => {
-  const topTrending: string[] = [
-    "QmcDKJt29aMZeFpHtv61R4TZU1MbBXeb5RzfdoY6Ee2hsY",
-    "QmcuNti3wRdtbwmHGXg1S6oExw4mn2DRmK1QqkWrMh97AW",
-    "QmRfz2Fp6E93mUuAH5mhYKpeVPJQAQkn7HLKkiSsWwtsd2",
-    "QmWsyrjoizyX4GRYeGvJ3ecd7YDMkonDM2KBTW2bHH18VX",
-    "QmP2fNq3YQ5RbeZitu8cRc1ajCeW8YbgZmkjV6Nn9VGenT",
-  ];
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
+  const isConnected = useSelector(
+    (state: RootState) => state.app.walletConnectedReducer?.value
+  );
+  const mixtapeAdded = useSelector(
+    (state: RootState) => state.app.mixtapePageReducer.value
+  );
+  const commentShow = useSelector(
+    (state: RootState) => state.app.commentShowReducer?.open
+  );
+  const indexerModal = useSelector(
+    (state: RootState) => state.app.indexModalReducer
+  );
+  const [hotFeed, setHotFeed] = useState<PublicationsQueryRequest[]>([]);
+  const [paginatedResults, setPaginatedResults] = useState<any>();
+  const { checkPostReactions, checkIfMirrored, checkIfCommented } =
+    useMainFeed();
+  const [hotReactionsFeed, setHotReactionsFeed] = useState<any[]>([]);
+  const [hasHotReacted, setHotHasReacted] = useState<boolean[]>([]);
+  const [hasHotMirrored, setHotHasMirrored] = useState<boolean[]>([]);
+  const [hasHotCommented, setHotHasCommented] = useState<boolean[]>([]);
 
-  const topMixtape: string[] = [
-    "QmRfz2Fp6E93mUuAH5mhYKpeVPJQAQkn7HLKkiSsWwtsd2",
-    "QmWsyrjoizyX4GRYeGvJ3ecd7YDMkonDM2KBTW2bHH18VX",
-  ];
+  const fetchMixtapes = async (): Promise<void> => {
+    let sortedArr: any[];
+    let pageData: any;
+    try {
+      if (!lensProfile) {
+        const { data } = await explorePublications({
+          sources: "thedial",
+          publicationTypes: ["POST"],
+          limit: 20,
+          sortCriteria: "LATEST",
+          metadata: {
+            tags: {
+              all: ["mixtape"],
+            },
+          },
+          noRandomize: true,
+        });
+        const arr: any[] = [...data?.explorePublications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.explorePublications?.pageInfo;
+      } else {
+        const { data } = await explorePublicationsAuth({
+          sources: "thedial",
+          publicationTypes: ["POST"],
+          limit: 20,
+          sortCriteria: "LATEST",
+          metadata: {
+            tags: {
+              all: ["mixtape"],
+            },
+          },
+          noRandomize: true,
+        });
+        const arr: any[] = [...data?.explorePublications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.explorePublications?.pageInfo;
+      }
+      setHotFeed(sortedArr);
+      setPaginatedResults(pageData);
+      const response = await checkPostReactions(sortedArr);
+      setHotReactionsFeed(response?.reactionsFeedArr);
+      if (lensProfile) {
+        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        setHotHasMirrored(hasMirroredArr);
+        const hasCommentedArr = await checkIfCommented(sortedArr);
+        setHotHasCommented(hasCommentedArr);
+        setHotHasReacted(response?.hasReactedArr);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
 
-  const topTracks: string[] = [
-    "QmcDKJt29aMZeFpHtv61R4TZU1MbBXeb5RzfdoY6Ee2hsY",
-    "QmcuNti3wRdtbwmHGXg1S6oExw4mn2DRmK1QqkWrMh97AW",
-    "QmRfz2Fp6E93mUuAH5mhYKpeVPJQAQkn7HLKkiSsWwtsd2",
-    "QmWsyrjoizyX4GRYeGvJ3ecd7YDMkonDM2KBTW2bHH18VX",
-    "QmP2fNq3YQ5RbeZitu8cRc1ajCeW8YbgZmkjV6Nn9VGenT",
-    "QmWkJaHuQv9LWUDE4eqDPWx4vdq55Ug5gKhHpBnLP6jex4",
-    "QmfVLPL7WG3QrgJ63bK33uzG5RCAntB734vo8J2JBGSYyr",
-    "QmVQDYFT9A98on8BHdDRNsnXV5e55XTurDYHg52Z6ui7CF",
-    "QmbfZrJ79XhFTgBTzTb4CaZwM59EgnPuPYMcx7gtazxcdE",
-    "QmUECY83LZx8eYsZ4XUNVYMQDF5Cm8iowrVTYi1vpi1Ajo",
-    "QmQ4y8wbehLHjhfdp6P9VZQ88ArC7wYYe6wVXs7Di9MTzm",
-    "Qma8CDZVUg5BHYzeB1PeTephfPUx8MWt7jm71YTAKS5tt3",
-  ];
+  const fetchMoreMixtapes = async (): Promise<void> => {
+    let sortedArr: any[];
+    let pageData: any;
+    try {
+      if (!lensProfile) {
+        const { data } = await explorePublications({
+          sources: "thedial",
+          publicationTypes: ["POST"],
+          limit: 20,
+          sortCriteria: "LATEST",
+          metadata: {
+            tags: {
+              all: ["mixtape"],
+            },
+          },
+          noRandomize: true,
+          cursor: paginatedResults?.next,
+        });
+        const arr: any[] = [...data?.explorePublications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.explorePublications?.pageInfo;
+      } else {
+        const { data } = await explorePublicationsAuth({
+          sources: "thedial",
+          publicationTypes: ["POST"],
+          limit: 20,
+          sortCriteria: "LATEST",
+          metadata: {
+            tags: {
+              all: ["mixtape"],
+            },
+          },
+          noRandomize: true,
+        });
+        const arr: any[] = [...data?.explorePublications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.explorePublications?.pageInfo;
+      }
+      setHotFeed([...hotFeed, ...sortedArr]);
+      setPaginatedResults(pageData);
+      const response = await checkPostReactions(sortedArr);
+      setHotReactionsFeed([...hotReactionsFeed, ...response?.reactionsFeedArr]);
+      if (lensProfile) {
+        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        setHotHasMirrored([...hasHotMirrored, ...hasMirroredArr]);
+        const hasCommentedArr = await checkIfCommented(sortedArr);
+        setHotHasCommented([...hasHotCommented, ...hasCommentedArr]);
+        setHotHasReacted([...hasHotReacted, ...response?.hasReactedArr]);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
 
-  return { topMixtape, topTracks, topTrending };
+  useEffect(() => {
+    fetchMixtapes();
+  }, [
+    isConnected,
+    lensProfile,
+    mixtapeAdded,
+    commentShow,
+    indexerModal.message,
+    indexerModal.value,
+    // hearted,
+  ]);
+
+  return {
+    hotFeed,
+    hasHotReacted,
+    hasHotCommented,
+    hasHotMirrored,
+    hotReactionsFeed,
+    fetchMoreMixtapes,
+  };
 };
 
 export default useHot;

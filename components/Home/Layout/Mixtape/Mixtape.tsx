@@ -4,11 +4,12 @@ import useMixtape from "./hooks/useMixtape";
 
 const Mixtape: FunctionComponent = (): JSX.Element => {
   const {
-    mixtapeTitles,
     handleTapeSet,
     notificationImages,
-    backgroundImages,
     message,
+    mixtapeBackgrounds,
+    mixtapeTitles,
+    getMixLoading
   } = useMixtape();
   return (
     <div className="relative w-full h-full row-start-2 bg-white grid grid-flow-col auto-cols-auto">
@@ -17,9 +18,10 @@ const Mixtape: FunctionComponent = (): JSX.Element => {
         tapeTitles={mixtapeTitles}
         handleTapeSet={handleTapeSet}
         images={notificationImages}
-        backgroundImages={backgroundImages}
+        backgroundImages={mixtapeBackgrounds}
         mixtape={true}
         message={message}
+        loader={getMixLoading}
       />
     </div>
   );

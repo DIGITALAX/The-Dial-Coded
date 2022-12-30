@@ -25,12 +25,15 @@ import {
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../../lib/lens/constants";
 import LensHubProxy from "../../../../../abis/LensHubProxy.json";
 import { setCollectValueType } from "../../../../../redux/reducers/collectValueTypeSlice";
+import useCollectionModal from "../../../../Common/Modals/Publications/hooks/useCollectionModal";
+import lodash from "lodash";
 
 const useCreateMixtape = (): UseCreateMixtapeResults => {
   const [valueClicked, setValueClicked] = useState<boolean>(false);
   const defaultProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
+  const { handleSetCollectValues } = useCollectionModal();
   const [mixtapeLoading, setMixtapeLoading] = useState<boolean>(false);
   const [args, setArgs] = useState<any>();
   const arrays = useSelector((state: RootState) => state.app.addTrackReducer);
@@ -58,7 +61,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     args: [args],
   });
 
-  const { writeAsync } = useContractWrite(config);
+  const { writeAsync, error } = useContractWrite(config);
 
   const checkValues: string[] = [
     "lens post url",
@@ -94,8 +97,17 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
   };
 
   const uploadContent = async (): Promise<string | undefined> => {
+    const titleFiltered = lodash.filter(
+      arrays?.title,
+      (title) => title !== ("" || "TRACK NAME | SOURCE (shortened)")
+    );
+    const imageFiltered = lodash.filter(
+      arrays?.imageURI,
+      (image) => image !== ""
+    );
+
     let newImages: PostImage[] = [];
-    arrays?.imageURI?.forEach((image) => {
+    imageFiltered?.forEach((image) => {
       newImages.push({
         item: "ipfs://" + image,
         type: "image/png",
@@ -106,10 +118,10 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     const data = {
       version: "2.0.0",
       metadata_id: uuidv4(),
-      description: mixTapeTitle,
-      content: mixtapeSource + "\n\n" + checkValues + "\n\n" + arrays?.title,
+      description: mixtapeSource + "\n\n" + check + "\n\n" + titleFiltered,
+      content: mixtapeSource + "\n\n" + check + "\n\n" + titleFiltered,
       external_url: "https://www.thedial.xyz/",
-      image: "ipfs://" + (arrays?.imageURI as string[])[0],
+      image: "ipfs://" + (imageFiltered as string[])[0],
       imageMimeType: "image/png",
       name: mixTapeTitle?.slice(0, 20),
       mainContentFocus: "IMAGE",
@@ -123,7 +135,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
       ],
       media: newImages,
       locale: "en",
-      postTags: ["mixtape", mixTapeTitle],
+      tags: ["mixtape"],
       createdOn: new Date(),
       appId: "thedial",
     };
@@ -146,6 +158,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
   };
 
   const generateMixtape = async (): Promise<void> => {
+    handleSetCollectValues();
     setMixtapeLoading(true);
     try {
       const contentURI = await uploadContent();
@@ -216,7 +229,10 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
       );
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+      if (
+        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS"
+      ) {
         dispatch(
           setIndexModal({
             actionValue: true,

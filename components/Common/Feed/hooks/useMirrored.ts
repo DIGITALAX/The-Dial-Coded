@@ -152,7 +152,8 @@ const useMirrored = () => {
       );
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+      if ( indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS") {
         dispatch(
           setIndexModal({
             actionValue: true,

@@ -27,7 +27,14 @@ const Post: FunctionComponent = (): JSX.Element => {
     hasMirrored,
     hasCommented,
   } = useMainFeed();
-  const { topTrending, topMixtape, topTracks } = useHot();
+  const {
+    hotFeed,
+    hasHotReacted,
+    hasHotCommented,
+    hasHotMirrored,
+    hotReactionsFeed,
+    fetchMoreMixtapes,
+  } = useHot();
   return (
     <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-white p-10 gap-10">
       <PostBox
@@ -37,9 +44,12 @@ const Post: FunctionComponent = (): JSX.Element => {
       />
       <Parameters />
       <Feed
-        topTrending={topTrending}
-        topMixtape={topMixtape}
-        topTracks={topTracks}
+        hotFeed={hotFeed}
+        hasHotReacted={hasHotReacted}
+        hasHotCommented={hasHotCommented}
+        hasHotMirrored={hasHotMirrored}
+        hotReactionsFeed={hotReactionsFeed}
+        fetchMoreMixtapes={fetchMoreMixtapes}
         publicationsFeed={publicationsFeed}
         fetchMore={fetchMoreFeed}
         hasReacted={hasReacted}

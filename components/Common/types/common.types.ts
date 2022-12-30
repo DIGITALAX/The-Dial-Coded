@@ -50,6 +50,7 @@ export type InterfaceProps = {
   backgroundImages?: string[];
   sideImage?: string;
   mixtape?: boolean;
+  loader?: boolean;
 };
 
 export type BoxProps = {
@@ -154,6 +155,7 @@ export type TapeProps = {
   mixtape?: boolean;
   index: number;
   handleTapeSet?: (title: string) => void;
+  loader?: boolean;
 };
 
 export type MainDisplayProps = {
@@ -166,6 +168,7 @@ export type MainDisplayProps = {
   message?: Message;
   backgroundImages?: string[];
   sideImage?: string;
+  loader?: boolean;
 };
 
 export type ButtonIconProps = {
@@ -207,20 +210,24 @@ export type MixButtonProps = {
   width: string;
   border?: boolean;
   clickHandle?: () => Promise<void>;
+  loader?: boolean;
 };
 
 export type MixInputProps = {
-  row: string;
+  col: string;
   name: string;
   title: string;
   handleChange: (e: FormEvent) => void;
-  value: string
+  value: string;
+  loader?: boolean;
+  editValues: string;
 };
 
 export type MixCheckProps = {
-  value: string;
   handleClicked: (valueClicked: boolean, value: string) => void;
   valueClicked: boolean;
+  value: string;
+  loader?: boolean;
 };
 
 export type UseMixtapeImagesResults = {
@@ -259,16 +266,11 @@ export type CreateMixtapeProps = {
   handleRemoveTrack: (index: number) => void;
   generateMixtape: () => Promise<void>;
   enabledCurrencies: Erc20[];
-  audienceTypes: string[];
   setAudienceType: (e: string) => void;
   audienceType: string;
   setEnabledCurrency: (e: string) => void;
   enabledCurrency: string | undefined;
-  setChargeCollectDropDown: (e: boolean) => void;
-  setAudienceDropDown: (e: boolean) => void;
   setCurrencyDropDown: (e: boolean) => void;
-  chargeCollectDropDown: boolean;
-  audienceDropDown: boolean;
   currencyDropDown: boolean;
   referral: number;
   setReferral: (e: number) => void;
@@ -276,28 +278,22 @@ export type CreateMixtapeProps = {
   setLimit: (e: number) => void;
   value: number;
   setValue: (e: number) => void;
-  collectibleDropDown: boolean;
-  setCollectibleDropDown: (e: boolean) => void;
   collectible: string;
   setCollectible: (e: string) => void;
   chargeCollect: string;
   setChargeCollect: (e: string) => void;
-  limitedDropDown: boolean;
-  setLimitedDropDown: (e: boolean) => void;
   limitedEdition: string;
   setLimitedEdition: (e: string) => void;
   setTimeLimit: (e: string) => void;
   timeLimit: string;
-  timeLimitDropDown: boolean;
-  setTimeLimitDropDown: (e: boolean) => void;
   handleSetCollectValues: () => void;
   titleValue: string;
   sourceValue: string;
+  updateMix: any;
 };
 
 export type TrackInputProps = {
   index: number;
-  mixtapeLoading: boolean;
   uploadImage: (e: FormEvent, index: number) => Promise<void>;
   handleRemoveImage: (index: number) => void;
   imageLoading: boolean[];
@@ -305,6 +301,7 @@ export type TrackInputProps = {
   imageArray: string[];
   handleTrackTitle: (e: FormEvent, index: number) => void;
   handleRemoveTrack: (index: number) => void;
+  mixtapeLoading: boolean;
 };
 
 export type RecordProps = {
@@ -387,6 +384,7 @@ export type CollectButtonProps = {
   selectValue: string | undefined;
   selectFunction: (e: string) => void;
   label: string;
+  mixtape?: boolean;
 };
 
 export type UseCollectionModalResults = {
@@ -475,6 +473,7 @@ export type CollectInputProps = {
   label?: string;
   valueChange: number;
   handleValueChange: (e: number) => void;
+  mixtape?: boolean;
 };
 
 export interface PostImage {
@@ -629,4 +628,50 @@ export type IndexingModalProps = {
 
 export type NotificationBannerProps = {
   notification: any;
+};
+
+export type CollectOptionsMixtapeProps = {
+  enabledCurrencies: Erc20[];
+  setAudienceType: (e: string) => void;
+  audienceType: string;
+  setEnabledCurrency: (e: string) => void;
+  enabledCurrency: string | undefined;
+  setCurrencyDropDown: (e: boolean) => void;
+  currencyDropDown: boolean;
+  referral: number;
+  setReferral: (e: number) => void;
+  limit: number;
+  setLimit: (e: number) => void;
+  value: number;
+  setValue: (e: number) => void;
+  collectible: string;
+  setCollectible: (e: string) => void;
+  chargeCollect: string;
+  setChargeCollect: (e: string) => void;
+  limitedEdition: string;
+  setLimitedEdition: (e: string) => void;
+  setTimeLimit: (e: string) => void;
+  timeLimit: string;
+  handleSetCollectValues: () => void;
+};
+
+export type MixCheckCollectProps = {
+  handleClicked: (e: string) => void;
+  valueClicked: string | string[];
+  label: string;
+  col: string;
+  row: string;
+};
+
+export type HotPublicationProps = {
+  height: string;
+  width?: string;
+  data: any;
+  index: number;
+  image: string;
+  hasReacted?: boolean | undefined;
+  reactionsFeed?: number;
+  hasMirrored?: boolean | undefined;
+  hasCommented?: boolean | undefined;
+  dispatch: Dispatch<AnyAction>;
 };

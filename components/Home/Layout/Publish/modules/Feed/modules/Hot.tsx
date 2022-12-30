@@ -1,14 +1,18 @@
-import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { HotProps } from "../types/feed.types";
-import Reactions from "../../../../../../Common/Feed/Reactions/Reactions";
-import { INFURA_GATEWAY } from "../../../../../../../lib/lens/constants";
+import lodash from "lodash";
+import HotPublication from "../../../../../../Common/Feed/modules/HotPublication";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Hot: FunctionComponent<HotProps> = ({
-  topMixtape,
-  topTracks,
-  topTrending,
+  hotFeed,
+  hasHotReacted,
+  hasHotCommented,
+  hasHotMirrored,
+  hotReactionsFeed,
+  fetchMoreMixtapes,
   isOpen,
+  dispatch,
 }): JSX.Element => {
   return (
     <div
@@ -17,97 +21,85 @@ const Hot: FunctionComponent<HotProps> = ({
       } col-start-2 grid grid-flow-row auto-rows-auto gap-10`}
     >
       <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto overflow-x-scroll gap-4">
-        {topTrending?.map((image: string, index: number) => {
-          return (
-            <div
-              key={index}
-              className="relative w-full h-80 border-2 border-black rounded-md p-4 grid grid-flow-col auto-cols-auto"
-            >
-              <Image
-                src={`${INFURA_GATEWAY}/ipfs/${image}`}
-                layout="fill"
-                alt={image}
-                objectFit="cover"
-                objectPosition={"center"}
-                className="rounded absolute"
+        {(hotFeed[0]?.metadata as any)?.media?.map(
+          (image: any, index: number) => {
+            return (
+              <HotPublication
+                height={"80"}
+                data={hotFeed[0]}
+                image={image?.original?.url?.split("//")[1]}
+                index={index}
+                key={index}
+                dispatch={dispatch}
+                reactionsFeed={hotReactionsFeed[0]}
+                hasReacted={hasHotReacted[0]}
+                hasMirrored={hasHotMirrored[0]}
+                hasCommented={hasHotCommented[0]}
               />
-              <div
-                id="hot"
-                className="relative w-full h-fit rounded-lg grid grid-flow-col auto-cols-auto p-2 col-start-1 self-end"
-              >
-                <Reactions
-                  textColor={"black"}
-                  commentColor={"black"}
-                  mirrorColor={"black"}
-                  collectColor={"black"}
-                  heartColor={"black"}
-                />
-              </div>
-            </div>
-          );
-        })}
+            );
+          }
+        )}
       </div>
       <div className="relative w-full h-fit row-start-2 grid grid-flow-col auto-cols-auto gap-10 overflow-x-scroll">
-        {topMixtape?.map((image: string, index: number) => {
-          return (
-            <div
-              key={index}
-              className="relative w-96 h-60 border-2 border-black rounded-md p-4 grid grid-flow-col auto-cols-auto"
-            >
-              <Image
-                src={`${INFURA_GATEWAY}/ipfs/${image}`}
-                layout="fill"
-                alt={image}
-                objectFit="cover"
-                objectPosition={"center"}
-                className="rounded absolute"
+        {(hotFeed[1]?.metadata as any)?.media?.map(
+          (image: any, index: number) => {
+            return (
+              <HotPublication
+                height={"60"}
+                width={"96"}
+                data={hotFeed[1]}
+                image={image?.original?.url?.split("//")[1]}
+                index={index}
+                key={index}
+                dispatch={dispatch}
+                reactionsFeed={hotReactionsFeed[1]}
+                hasReacted={hasHotReacted[1]}
+                hasMirrored={hasHotMirrored[1]}
+                hasCommented={hasHotCommented[1]}
               />
-              <div
-                id="hot"
-                className="relative w-full h-fit rounded-lg grid grid-flow-col auto-cols-auto p-2 col-start-1 self-end"
-              >
-                <Reactions
-                  textColor={"black"}
-                  commentColor={"black"}
-                  mirrorColor={"black"}
-                  collectColor={"black"}
-                  heartColor={"black"}
-                />
-              </div>
-            </div>
-          );
-        })}
+            );
+          }
+        )}
       </div>
-      <div className="relative w-full h-full row-start-3 grid grid-flow-row auto-rows-auto overflow-x-scroll gap-6">
-        {topTracks?.map((image: string, index: number) => {
-          return (
-            <div
-              key={index}
-              className="relative w-full h-80 border-2 border-black rounded-md p-4 grid grid-flow-col auto-cols-auto"
-            >
-              <Image
-                src={`${INFURA_GATEWAY}/ipfs/${image}`}
-                layout="fill"
-                alt={image}
-                objectFit="cover"
-                objectPosition={"center"}
-                className="rounded absolute"
-              />
+      <div className="relative w-full h-full row-start-3 grid grid-flow-row auto-rows-auto overflow-x-scroll">
+        <InfiniteScroll
+          scrollableTarget={"targetDiv"}
+          height={isOpen ? undefined : "100rem"}
+          loader={""}
+          hasMore={true}
+          next={fetchMoreMixtapes}
+          dataLength={lodash.drop(hotFeed, 2)?.length}
+          className={`relative row-start-1 w-full h-full overflow-y-scroll grid grid-flow-row auto-rows-auto gap-3`}
+          style={{ color: "#131313", fontFamily: "Digi Reg" }}
+        >
+          {lodash.drop(hotFeed, 2)?.map((mixtape: any, indexOne: number) => {
+            return (
               <div
-                id="hot"
-                className="relative w-full h-fit rounded-lg grid grid-flow-col auto-cols-auto p-2 col-start-1 self-end"
+                key={indexOne}
+                className={
+                  "relative w-full h-full gap-2 grid grid-flow-row auto-rows-auto"
+                }
               >
-                <Reactions
-                  textColor={"black"}
-                  commentColor={"black"}
-                  mirrorColor={"black"}
-                  collectColor={"black"}
-                  heartColor={"black"}
-                />
+                {mixtape?.metadata?.media?.map((image: any, indexTwo: number) => {
+                  return (
+                    <HotPublication
+                      height="72"
+                      key={indexTwo}
+                      index={indexTwo}
+                      data={mixtape}
+                      image={image?.original?.url?.split("//")[1]}
+                      dispatch={dispatch}
+                      reactionsFeed={hotReactionsFeed[indexOne]}
+                      hasReacted={hasHotReacted[indexOne]}
+                      hasMirrored={hasHotMirrored[indexOne]}
+                      hasCommented={hasHotCommented[indexOne]}
+                    />
+                  );
+                })}
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </InfiniteScroll>
       </div>
     </div>
   );

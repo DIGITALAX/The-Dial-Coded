@@ -42,7 +42,6 @@ const useLensSignIn = (): useLensSignInResults => {
   const handleLensLogin = async (): Promise<void> => {
     try {
       const challengeResponse = await generateChallenge(address);
-      console.log(challengeResponse, "challenge response");
       const signature = await signMessageAsync({
         message: challengeResponse.data.challenge.text,
       });

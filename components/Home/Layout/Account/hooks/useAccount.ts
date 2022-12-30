@@ -299,7 +299,9 @@ const useAccount = (): UseAccountResult => {
       );
       const res = await tx?.wait();
       const result = await checkIndexed(res?.transactionHash);
-      if (result?.data?.hasTxHashBeenIndexed?.indexed) {
+      if (
+        result?.data?.hasTxHashBeenIndexed?.metadataStatus?.status === "SUCCESS"
+      ) {
         dispatch(
           setIndexModal({
             actionValue: true,
@@ -352,7 +354,8 @@ const useAccount = (): UseAccountResult => {
 
       const res = await tx?.wait();
       const result = await checkIndexed(res?.transactionHash);
-      if (result?.data?.hasTxHashBeenIndexed?.indexed) {
+      if ( result?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS") {
         dispatch(
           setIndexModal({
             actionValue: true,

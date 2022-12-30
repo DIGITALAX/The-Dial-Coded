@@ -99,26 +99,13 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
               }
             />
           </label>
-          {/* <div
-            className={`relative w-fit h-fit place-self-center cursor-pointer active:scale-95 ${
-              imageArray[index] ? "col-start-4" : "col-start-3"
-            }`}
-          >
-            <div className="relative w-fit h-fit col-start-1 place-self-center flex">
-              <Image
-                src={`${INFURA_GATEWAY}/ipfs/QmTZmuX3ZiDXHTaFcB31yf6cFC98xPZSAciDC7GhmDgDYq`}
-                alt="edit"
-                width={20}
-                height={20}
-                className="relative w-fit h-fit"
-              />
-            </div>
-          </div> */}
           <div
             className={`relative w-fit h-fit ${
               imageArray[index] ? "col-start-4" : "col-start-3"
-            } place-self-center cursor-pointer active:scale-95 grid grid-flow-col auto-cols-auto`}
-            onClick={() => handleRemoveTrack(index)}
+            } place-self-center ${
+              !mixtapeLoading && "cursor-pointer active:scale-95"
+            } grid grid-flow-col auto-cols-auto`}
+            onClick={mixtapeLoading ? () => {} : () => handleRemoveTrack(index)}
           >
             <div className="relative w-fit h-fit col-start-1 place-self-center flex">
               <Image

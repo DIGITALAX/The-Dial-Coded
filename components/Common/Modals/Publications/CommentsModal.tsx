@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCommentShow } from "../../../../redux/reducers/commentShowSlice";
 import { RootState } from "../../../../redux/store";
 import { CommentsModalProps } from "../../types/common.types";
-import FeedPublication from "../../Feed/FeedPublication";
+import FeedPublication from "../../Feed/modules/FeedPublication";
 import { useRouter } from "next/router";
 import { AiOutlineLoading } from "react-icons/ai";
 

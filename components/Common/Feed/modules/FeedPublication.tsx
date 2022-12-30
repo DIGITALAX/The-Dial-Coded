@@ -1,16 +1,16 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import Reactions from "./Reactions/Reactions";
-import { FeedPublicationProps } from "../types/common.types";
-import { INFURA_GATEWAY } from "../../../lib/lens/constants";
-import { MediaSet } from "../types/lens.types";
-import { setImageViewer } from "../../../redux/reducers/imageViewerSlice";
+import Reactions from "../Reactions/Reactions";
+import { FeedPublicationProps } from "../../types/common.types";
+import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
+import { MediaSet } from "../../types/lens.types";
+import { setImageViewer } from "../../../../redux/reducers/imageViewerSlice";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
+import { RootState } from "../../../../redux/store";
 import { AiFillEye, AiOutlineRetweet } from "react-icons/ai";
-import { setReactionState } from "../../../redux/reducers/reactionStateSlice";
-import { setCommentShow } from "../../../redux/reducers/commentShowSlice";
+import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
+import { setCommentShow } from "../../../../redux/reducers/commentShowSlice";
 import moment from "moment";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({

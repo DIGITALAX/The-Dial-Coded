@@ -5,7 +5,6 @@ import ButtonIcon from "./ButtonIcon";
 import Line from "./Line";
 import Panel from "./Panel";
 import Tape from "./Tape";
-import { IoMdArrowDropdown } from "react-icons/io";
 import NotificationsBar from "./Notifications/NotificationsBar";
 import MixtapeSwitch from "../../Home/Layout/Mixtape/MixtapeSwitch";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
@@ -21,10 +20,11 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   sideImage,
   backgroundImages,
   mixtape,
+  loader
 }): JSX.Element => {
   return (
     <div
-      className={`relative row-start-${row} bg-white w-[80vw] h-full rounded-lg p-1 grid grid-flow-col auto-cols-auto`}
+      className={`relative row-start-${row} bg-white w-full h-full rounded-lg p-1 grid grid-flow-col auto-cols-auto`}
     >
       <div className="col-start-1 relative w-full h-full bg-comp p-4 grid grid-flow-row auto-rows-auto self-start gap-4 rounded">
         <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-4">
@@ -76,14 +76,14 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                 <Panel col={"1"} />
                 <Panel col={"2"} />
               </div>
-              <div className="relative w-[50vw] h-full grid grid-flow-col auto-cols-auto p-4 self-start">
+              <div className="relative w-[55vw] h-full grid grid-flow-col auto-cols-auto p-4 self-start">
                 {mixtape ? <MixtapeSwitch /> : <AccountSwitch />}
               </div>
             </div>
             <div
-              className={`relative col-start-11 w-full h-full grid grid-flow-row auto-rows-auto border-y-4 border-l-4 border-black justify-self-end`}
+              className={`relative col-start-11 w-full h-full grid grid-flow-row auto-rows-auto border-y-4 border-l-4 border-black justify-self-end bg-offBlack`}
             >
-              <div className="relative w-full h-[50rem] grid grid-flow-row auto-rows-auto row-start-1 overflow-y-scroll overflow-x-clip">
+              <div className="relative w-full max-h-[54rem] h-full grid grid-flow-row auto-rows-auto row-start-1 overflow-y-scroll overflow-x-clip bg-comp">
                 {mixtape && (
                   <Tape
                     title="Add New Mixtape"
@@ -104,6 +104,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                       sideImage={sideImage}
                       backgroundImages={backgroundImages}
                       mixtape={mixtape}
+                      loader={loader}
                     />
                   );
                 })}
@@ -125,19 +126,11 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                             sideImage={
                               "QmRFAf3en6jmyETP2bh2e4nDjmQsxjv7vU7m7q9VhF88Rd"
                             }
+                            loader={loader}
                           />
                         );
                       }
                     )}
-                  </div>
-                )}
-              </div>
-              <div
-                className={`relative w-full h-full h-10 bg-black grid grid-flow-col auto-cols-auto row-start-2`}
-              >
-                {tapeTitles.length > 9 && (
-                  <div className="relative w-fit h-fit place-self-center">
-                    <IoMdArrowDropdown size={30} color="#FCDB8F" />
                   </div>
                 )}
               </div>

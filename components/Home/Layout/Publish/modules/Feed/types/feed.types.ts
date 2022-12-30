@@ -1,6 +1,8 @@
+import { AnyAction, Dispatch } from "redux";
 import {
   Profile,
   PublicationSearchResult,
+  PublicationsQueryRequest,
 } from "../../../../../../Common/types/lens.types";
 
 export type MainProps = {
@@ -16,16 +18,23 @@ export type MainProps = {
 };
 
 export type HotProps = {
-  topMixtape: string[];
-  topTracks: string[];
-  topTrending: string[];
   isOpen: boolean;
+  hotFeed: PublicationsQueryRequest[];
+  hasHotReacted: boolean[];
+  hasHotCommented: boolean[];
+  hasHotMirrored: boolean[];
+  hotReactionsFeed: any[];
+  fetchMoreMixtapes: () => Promise<void>;
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type UseHotResults = {
-  topMixtape: string[];
-  topTracks: string[];
-  topTrending: string[];
+  hotFeed: PublicationsQueryRequest[];
+  hasHotReacted: boolean[];
+  hasHotCommented: boolean[];
+  hasHotMirrored: boolean[];
+  hotReactionsFeed: any[];
+  fetchMoreMixtapes: () => Promise<void>;
 };
 
 export type UseMainResults = {

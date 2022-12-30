@@ -5,7 +5,7 @@ export interface MixtapePageState {
 }
 
 const initialMixtapePageState: MixtapePageState = {
-  value: "Create",
+  value: "Add New Mixtape",
 };
 
 export const mixtapePageSlice = createSlice({

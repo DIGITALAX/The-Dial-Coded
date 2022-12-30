@@ -25,16 +25,11 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
   handleRemoveTrack,
   generateMixtape,
   enabledCurrencies,
-  audienceTypes,
   setAudienceType,
   audienceType,
   setEnabledCurrency,
   enabledCurrency,
-  setChargeCollectDropDown,
-  setAudienceDropDown,
   setCurrencyDropDown,
-  chargeCollectDropDown,
-  audienceDropDown,
   currencyDropDown,
   referral,
   setReferral,
@@ -44,25 +39,20 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
   setValue,
   collectible,
   setCollectible,
-  collectibleDropDown,
-  setCollectibleDropDown,
   chargeCollect,
   setChargeCollect,
   limitedEdition,
   setLimitedEdition,
-  limitedDropDown,
-  setLimitedDropDown,
   setTimeLimit,
   timeLimit,
-  timeLimitDropDown,
-  setTimeLimitDropDown,
   handleSetCollectValues,
   titleValue,
-  sourceValue
+  sourceValue,
+  updateMix,
 }): JSX.Element => {
   return (
     <div className="relative col-start-1 w-full h-fit grid grid-flow-row auto-rows-auto self-start gap-10">
-      <div className="relative justify-self-start self-center w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-4 pb-8">
+      <div className="relative justify-self-start self-center w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-4">
         <MixButton
           col={"1"}
           bgColor={"create"}
@@ -71,47 +61,46 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
           width={"fit"}
           border={true}
           clickHandle={generateMixtape}
+          loader={mixtapeLoading}
         />
         {/* can this be sent as an xmtp ?? private message ?*/}
         <MixSave col={"2"} />
       </div>
-      <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto row-start-2 gap-6 ">
+      <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto row-start-2 gap-6 ">
         <MixInput
-          row={"1"}
+          col={"1"}
           name={"mixtapeName"}
           title={"Mixtape Name"}
           handleChange={handleTitle}
           value={titleValue}
+          loader={mixtapeLoading}
+          editValues={updateMix?.metadata?.name}
         />
         <MixInput
-          row={"2"}
+          col={"2"}
           name={"source"}
           title={"Source"}
           handleChange={handleSource}
           value={sourceValue}
+          loader={mixtapeLoading}
+          editValues={(updateMix?.metadata?.content)?.split("\n\n")[0]}
         />
       </div>
-      <div className="relative row-start-3 w-full h-fit grid grid-flow gap-2 ">
+      <div className="relative row-start-4 w-full h-fit grid grid-flow gap-3 pb-6">
         <div className="relative w-fit h-fit row-start-1 font-digiB text-xl text-black place-self-start">
           SET COLLECT OPTIONS:
         </div>
         <div className="relative w-fit h-fit row-start-2">
           <CollectOptions
-            dispatch={dispatch}
             handleSetCollectValues={handleSetCollectValues}
             chargeCollect={chargeCollect}
             setChargeCollect={setChargeCollect}
             enabledCurrencies={enabledCurrencies}
-            audienceTypes={audienceTypes}
-            setAudienceType={setAudienceType}
             audienceType={audienceType}
+            setAudienceType={setAudienceType}
             setEnabledCurrency={setEnabledCurrency}
             enabledCurrency={enabledCurrency}
-            setChargeCollectDropDown={setChargeCollectDropDown}
-            setAudienceDropDown={setAudienceDropDown}
             setCurrencyDropDown={setCurrencyDropDown}
-            chargeCollectDropDown={chargeCollectDropDown}
-            audienceDropDown={audienceDropDown}
             currencyDropDown={currencyDropDown}
             value={value}
             setValue={setValue}
@@ -121,24 +110,18 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
             setReferral={setReferral}
             collectible={collectible}
             setCollectible={setCollectible}
-            collectibleDropDown={collectibleDropDown}
-            setCollectibleDropDown={setCollectibleDropDown}
             limitedEdition={limitedEdition}
             setLimitedEdition={setLimitedEdition}
-            limitedDropDown={limitedDropDown}
-            setLimitedDropDown={setLimitedDropDown}
             timeLimit={timeLimit}
             setTimeLimit={setTimeLimit}
-            timeLimitDropDown={timeLimitDropDown}
-            setTimeLimitDropDown={setTimeLimitDropDown}
           />
         </div>
       </div>
-      <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto row-start-4 gap-2 ">
+      <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto row-start-3 gap-2">
         <div className="relative w-fit h-fit col-start-1 font-digiB text-xl text-black place-self-start">
           SELECT ONE:
         </div>
-        <div className="relative w-fit h-fit col-start-2 gap-2 grid grid-cols-3 grid-rows-2 grid-rows-dense justify-self-end self-center">
+        <div className="relative w-fit h-fit col-start-2 grid grid-cols-3 grid-rows-2 grid-rows-dense justify-self-end self-center gap-2">
           {checkValues?.map((value: string, index: number) => {
             return (
               <MixCheck
@@ -146,6 +129,7 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
                 value={value}
                 handleClicked={handleClicked}
                 valueClicked={valueClicked}
+                loader={mixtapeLoading}
               />
             );
           })}
@@ -159,7 +143,6 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
               <TrackInput
                 key={index}
                 index={index}
-                mixtapeLoading={mixtapeLoading}
                 uploadImage={uploadImage}
                 handleRemoveImage={handleRemoveImage}
                 imageLoading={imageLoading}
@@ -167,6 +150,7 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
                 imageArray={imageArray as string[]}
                 handleTrackTitle={handleTrackTitle}
                 handleRemoveTrack={handleRemoveTrack}
+                mixtapeLoading={mixtapeLoading}
               />
             );
           })}
@@ -188,6 +172,7 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
           text={"Add new track"}
           textSize={"sm"}
           width={"fit"}
+          loader={mixtapeLoading}
         />
       </div>
     </div>

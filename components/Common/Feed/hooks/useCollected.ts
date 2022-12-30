@@ -223,7 +223,8 @@ const useCollected = () => {
       const tx = await sendTransactionAsync?.();
       await tx?.wait();
       const indexedStatus = await checkIndexed(tx?.hash);
-      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+      if ( indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS") {
         // re-get collect info
         getCollectInfo();
       }
@@ -309,7 +310,8 @@ const useCollected = () => {
       );
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+      if ( indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS") {
         dispatch(
           setIndexModal({
             actionValue: true,
