@@ -352,6 +352,7 @@ const useProfilePage = (): UseProfilePageResults => {
     try {
       if (!lensProfile) {
         const { data } = await profilePublications({
+          sources: "thedial",
           profileId: profileData?.id,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 30,
@@ -363,6 +364,7 @@ const useProfilePage = (): UseProfilePageResults => {
         pageData = data?.publications?.pageInfo;
       } else {
         const { data } = await profilePublicationsAuth({
+          sources: "thedial",
           profileId: profileData?.id,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 30,
@@ -395,6 +397,7 @@ const useProfilePage = (): UseProfilePageResults => {
     try {
       if (!lensProfile) {
         const { data } = await profilePublications({
+          sources: "thedial",
           profileId: profileData?.id,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 30,

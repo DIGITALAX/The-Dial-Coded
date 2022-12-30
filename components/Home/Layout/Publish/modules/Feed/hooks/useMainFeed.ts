@@ -318,6 +318,7 @@ const useMainFeed = () => {
     try {
       if (!lensProfile) {
         const { data } = await profilePublications({
+          sources: "thedial",
           profileId: (userView as any)?.profileId,
           publicationTypes: feedOrder,
           limit: 20,
@@ -335,10 +336,12 @@ const useMainFeed = () => {
         pageData = data?.publications?.pageInfo;
       } else {
         const { data } = await profilePublicationsAuth({
+          sources: "thedial",
           profileId: (userView as any)?.profileId,
           publicationTypes: feedOrder,
           limit: 20,
         });
+        console.log(data)
         if (data?.publications?.items?.length < 1 || !data) {
           dispatch(setNoUserData(true));
           return;
@@ -508,6 +511,7 @@ const useMainFeed = () => {
     try {
       if (!lensProfile) {
         const { data } = await profilePublications({
+          sources: "thedial",
           profileId: (userView as any)?.profileId,
           publicationTypes: feedOrder,
           limit: 20,
@@ -520,6 +524,7 @@ const useMainFeed = () => {
         pageData = data?.publications?.pageInfo;
       } else {
         const { data } = await profilePublicationsAuth({
+          sources: "thedial",
           profileId: (userView as any)?.profileId,
           publicationTypes: feedOrder,
           limit: 20,
