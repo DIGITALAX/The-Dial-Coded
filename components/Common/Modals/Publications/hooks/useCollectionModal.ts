@@ -43,14 +43,18 @@ const useCollectionModal = (): UseCollectionModalResults => {
   const publicationModuleOpen = useSelector(
     (state: RootState) => state.app.publicationReducer.value
   );
+  const mixtapePage = useSelector(
+    (state: RootState) => state.app.mixtapePageReducer.value
+  );
   const reactionState = useSelector(
     (state: RootState) => state.app.collectOptionsReducer.value
   );
   useMemo(() => {
-    if (publicationModuleOpen || reactionState) {
+    if (publicationModuleOpen || reactionState || mixtapePage) {
       availableCurrencies();
+      console.log("her")
     }
-  }, [publicationModuleOpen, reactionState]);
+  }, [publicationModuleOpen, reactionState, mixtapePage]);
 
   const handleSetCollectValues = (): void => {
     if (value <= 0 && chargeCollect === "yes") {

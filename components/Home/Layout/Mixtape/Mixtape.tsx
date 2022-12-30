@@ -9,7 +9,8 @@ const Mixtape: FunctionComponent = (): JSX.Element => {
     message,
     mixtapeBackgrounds,
     mixtapeTitles,
-    getMixLoading
+    getMixLoading,
+    getMoreMixtapes
   } = useMixtape();
   return (
     <div className="relative w-full h-full row-start-2 bg-white grid grid-flow-col auto-cols-auto">
@@ -22,6 +23,7 @@ const Mixtape: FunctionComponent = (): JSX.Element => {
         mixtape={true}
         message={message}
         loader={getMixLoading}
+        more={getMoreMixtapes}
       />
     </div>
   );

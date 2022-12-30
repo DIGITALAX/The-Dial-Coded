@@ -9,6 +9,7 @@ import NotificationsBar from "./Notifications/NotificationsBar";
 import MixtapeSwitch from "../../Home/Layout/Mixtape/MixtapeSwitch";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import AccountSwitch from "../../Home/Layout/Account/AccountSwitch";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   row,
@@ -20,7 +21,8 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   sideImage,
   backgroundImages,
   mixtape,
-  loader
+  loader,
+  more,
 }): JSX.Element => {
   return (
     <div
@@ -93,21 +95,31 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                     bgColor={"record10"}
                   />
                 )}
-                {tapeTitles?.map((title: string, index: number) => {
-                  return (
-                    <Tape
-                      handleTapeSet={handleTapeSet}
-                      key={index}
-                      bgColor={"feedBackground"}
-                      title={title}
-                      index={index}
-                      sideImage={sideImage}
-                      backgroundImages={backgroundImages}
-                      mixtape={mixtape}
-                      loader={loader}
-                    />
-                  );
-                })}
+                <InfiniteScroll
+                  // height={"55vw"}
+                  loader={""}
+                  hasMore={mixtape ? true : false}
+                  next={more ? more : () => {}}
+                  dataLength={tapeTitles.length}
+                  className={`relative w-full h-fit overflow-y-scroll grid grid-flow-row auto-rows-auto`}
+                  style={{ color: "#131313", fontFamily: "Digi Reg" }}
+                >
+                  {tapeTitles?.map((title: string, index: number) => {
+                    return (
+                      <Tape
+                        handleTapeSet={handleTapeSet}
+                        key={index}
+                        bgColor={"feedBackground"}
+                        title={title}
+                        index={index}
+                        sideImage={sideImage}
+                        backgroundImages={backgroundImages}
+                        mixtape={mixtape}
+                        loader={loader}
+                      />
+                    );
+                  })}
+                </InfiniteScroll>
                 {tapeTitles.length < 9 && (
                   <div
                     className={`relative w-full h-full row-start-${

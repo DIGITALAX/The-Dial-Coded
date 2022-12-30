@@ -51,6 +51,7 @@ export type InterfaceProps = {
   sideImage?: string;
   mixtape?: boolean;
   loader?: boolean;
+  more?: () => Promise<void>;
 };
 
 export type BoxProps = {
@@ -169,6 +170,7 @@ export type MainDisplayProps = {
   backgroundImages?: string[];
   sideImage?: string;
   loader?: boolean;
+  more?: () => Promise<void>;
 };
 
 export type ButtonIconProps = {

@@ -17,6 +17,7 @@ import useMainFeed from "../Layout/Publish/modules/Feed/hooks/useMainFeed";
 import FollowsModal from "../../Common/Modals/Follows/FollowsModal";
 import useProfilePage from "../Profile/hooks/useProfilePage";
 import IndexingModal from "../../Common/Modals/Indexing/IndexingModal";
+import CompleteTrack from "../../Common/Modals/CompleteTrack/CompleteTrackModal";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,9 @@ const Modals = () => {
   );
   const indexingModal = useSelector(
     (state: RootState) => state.app.indexModalReducer
+  );
+  const completeTrackModal = useSelector(
+    (state: RootState) => state.app.completeTrackReducer.value
   );
   const {
     mirrorInfoLoading,
@@ -155,6 +159,9 @@ const Modals = () => {
           userFollowers={userFollowers}
           type={follow?.type}
         />
+      )}
+      {completeTrackModal && (
+        <CompleteTrack inputText="Fill Out both the title and image of your track!" />
       )}
       {indexingModal?.value && (
         <IndexingModal message={indexingModal?.message} />
