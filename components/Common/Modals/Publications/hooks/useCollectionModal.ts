@@ -52,7 +52,6 @@ const useCollectionModal = (): UseCollectionModalResults => {
   useMemo(() => {
     if (publicationModuleOpen || reactionState || mixtapePage) {
       availableCurrencies();
-      console.log("her")
     }
   }, [publicationModuleOpen, reactionState, mixtapePage]);
 

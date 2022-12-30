@@ -120,7 +120,13 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
       version: "2.0.0",
       metadata_id: uuidv4(),
       description: mixtapeSource + "\n\n" + check + "\n\n" + titleFiltered,
-      content: mixtapeSource + "\n\n" + check + "\n\n" + titleFiltered,
+      content:
+        mixtapeSource +
+        "\n\n" +
+        check +
+        "\n\n" +
+        titleFiltered +
+        "\n\n*Dial Mixtape*",
       external_url: "https://www.thedial.xyz/",
       image: "ipfs://" + (imageFiltered as string[])[0],
       imageMimeType: "image/png",

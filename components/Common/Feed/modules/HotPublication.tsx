@@ -117,7 +117,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
           }}
         >
           <div className="relative w-fit h-fit col-start-1 place-self-center whitespace-nowrap">
-            Src: {(data?.metadata?.content).split("\n\n")[0]} //{" "}
+            Src: {(data?.metadata?.content).split("\n\n")[0]} ——{" "}
             {(data?.metadata?.content).split("\n\n")[1]}
           </div>
         </div>
