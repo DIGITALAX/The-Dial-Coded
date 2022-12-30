@@ -14,11 +14,8 @@ import moreFeedReducer from "./reducers/moreFeedSlice";
 import accountPageReducer from "./reducers/accountPageSlice";
 import mixtapePageReducer from "./reducers/mixtapePageSlice";
 import mixtapeCheckReducer from "./reducers/mixtapeCheckSlice";
-import addMixtapeReducer from "./reducers/addMixtapeSlice";
 import saveMixtapeReducer from "./reducers/saveMixtapeSlice";
 import addTrackReducer from "./reducers/addTrackSlice";
-import editTrackReducer from "./reducers/editTrackSlice";
-import deleteTrackReducer from "./reducers/deleteTrackSlice";
 import lensProfileReducer from "./reducers/lensProfileSlice";
 import getProfileModalReducer from "./reducers/getProfileModalSlice";
 import signInReducer from "./reducers/signInSlice";
@@ -44,6 +41,8 @@ import indexModalReducer from "./reducers/indexModalSlice";
 import heartedReducer from "./reducers/heartedSlice";
 import noUserDataReducer from "./reducers/noUserDataSlice";
 import notificationsReducer from "./reducers/notificationsSlice";
+import mixtapeTitleReducer from "./reducers/mixtapeTitleSlice";
+import mixtapeSourceReducer from "./reducers/mixtapeSourceSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -60,11 +59,8 @@ const reducer = combineReducers({
   accountPageReducer,
   mixtapePageReducer,
   mixtapeCheckReducer,
-  addMixtapeReducer,
   saveMixtapeReducer,
   addTrackReducer,
-  editTrackReducer,
-  deleteTrackReducer,
   lensProfileReducer,
   getProfileModalReducer,
   signInReducer,
@@ -89,7 +85,9 @@ const reducer = combineReducers({
   indexModalReducer,
   heartedReducer,
   noUserDataReducer,
-  notificationsReducer
+  notificationsReducer,
+  mixtapeSourceReducer,
+  mixtapeTitleReducer
 });
 
 export const store = configureStore({

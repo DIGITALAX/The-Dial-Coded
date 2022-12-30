@@ -288,6 +288,12 @@ input:focus {
   outline: 0
 }
 
+textarea:focus {
+  caret-color: black;
+  outline: 0
+}
+
+
 #profile {
   background: linear-gradient(
     -86deg,

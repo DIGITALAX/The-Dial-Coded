@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   useContractWrite,
   usePrepareContractWrite,
@@ -23,12 +23,12 @@ import { setInsufficientFunds } from "../../../../../redux/reducers/insufficient
 import CreateCommentTypedData from "../../../../../graphql/mutations/comment";
 import { useRouter } from "next/router";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
-import search from "../../../../../graphql/queries/search";
 
 const usePublication = () => {
   const {
     query: { id },
   } = useRouter();
+  // const postboxRef = useRef(null);
   const [postDescription, setPostDescription] = useState<string>("");
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [contentURI, setContentURI] = useState<string | undefined>();
@@ -53,7 +53,6 @@ const usePublication = () => {
     (state: RootState) => state?.app?.collectValueTypeReducer?.type
   );
   const [gifs, setGifs] = useState<string[]>([]);
-
   const { config, isSuccess: postSuccess } = usePrepareContractWrite({
     address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
     abi: LensHubProxy,
@@ -267,10 +266,12 @@ const usePublication = () => {
       dispatch(setPublication(false));
       setPostLoading(false);
       setEnabled(false);
-      dispatch(setIndexModal({
-        actionValue: true,
-        actionMessage: "Indexing Interaction",
-      }));
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Indexing Interaction",
+        })
+      );
       setPostDescription("");
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
@@ -310,10 +311,12 @@ const usePublication = () => {
       const tx = await commentWriteAsync?.();
       setCommentLoading(false);
       setPostDescription("");
-      dispatch(setIndexModal({
-        actionValue: true,
-        actionMessage: "Indexing Interaction",
-      }));
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Indexing Interaction",
+        })
+      );
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
       if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
@@ -347,15 +350,9 @@ const usePublication = () => {
   };
 
   const handlePostDescription = async (e: FormEvent): Promise<void> => {
-    if ((e.target as HTMLFormElement).value === "@") {
-      const profiles = await search({
-        query: (e.target as HTMLFormElement).value,
-        type: "PROFILE",
-        limit: 50,
-      });
-    }
-
-    setPostDescription((e.target as HTMLFormElement).value);
+    const text: any = (e.target as HTMLFormElement).value;
+    
+    setPostDescription(text);
   };
 
   useEffect(() => {

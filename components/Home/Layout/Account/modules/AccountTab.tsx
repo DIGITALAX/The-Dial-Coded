@@ -124,7 +124,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               defaultValue={profile?.bio ? profile?.bio : ""}
               style={{ resize: "none" }}
               name="bio"
-              className={`relative w-full h-32 overflow-y-scroll row-start-2 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 justify-self-start self-center caret-transparent focus:caret-transparent`}
+              className={`relative w-full h-32 overflow-y-scroll row-start-2 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 justify-self-start self-center caret-transparent`}
             ></textarea>
           </div>
           <div className="relative w-full h-fit col-start-2 grid grid-flow-row auto-rows-auto gap-1">

@@ -637,8 +637,6 @@ const useMainFeed = () => {
         getFeedTimeline();
       }
     }
-    // dependencies
-    // logged in person made a reaction of some kind (mirror, collect, comment?, heart)
   }, [
     isConnected,
     lensProfile,

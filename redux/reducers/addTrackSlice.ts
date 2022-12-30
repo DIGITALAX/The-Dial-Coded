@@ -1,19 +1,25 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface AddTrackState {
-  value?: number;
+  imageURI?: string[];
+  title?: string[];
 }
 
 const initialAddTrackState: AddTrackState = {
-  value: 0,
+  imageURI: undefined,
+  title: undefined,
 };
 
 export const addTrackSlice = createSlice({
   name: "addTrack",
   initialState: initialAddTrackState,
   reducers: {
-    setAddTrack: (state: AddTrackState, action: PayloadAction<number>) => {
-      state.value = action.payload;
+    setAddTrack: (
+      state: AddTrackState,
+      { payload: { actionImageURI, actionTitle } }
+    ) => {
+      state.imageURI = actionImageURI;
+      state.title = actionTitle;
     },
   },
 });

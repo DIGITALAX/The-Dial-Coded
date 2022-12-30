@@ -1,10 +1,12 @@
-import { FunctionComponent } from "react";
+import { FormEvent, FunctionComponent } from "react";
 import { MixInputProps } from "../../../types/common.types";
 
 const MixInput: FunctionComponent<MixInputProps> = ({
   row,
   name,
   title,
+  handleChange,
+  value
 }): JSX.Element => {
   return (
     <div
@@ -20,7 +22,9 @@ const MixInput: FunctionComponent<MixInputProps> = ({
         <div className="relative w-full h-full bg-white grid grid-flow-row auto-rows-auto rounded-md p-1 col-start-1">
           <input
             name={name}
+            value={value}
             className="relative w-full h-full p-2 text-black font-dosis rounded-md row-start-1 caret-transparent"
+            onChange={(e: FormEvent) => handleChange(e)}
           />
           <div className="relative h-1 w-full bg-offBlack/80 row-start-2 rounded-md"></div>
         </div>
