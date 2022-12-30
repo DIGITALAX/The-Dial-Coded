@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import { ImCross } from "react-icons/im";
 import { useDispatch, useSelector } from "react-redux";
-import { AiOutlineLoading } from "react-icons/ai";
 import { setCollectNotification } from "../../../../redux/reducers/collectNotificationSlice";
 import { RootState } from "../../../../redux/store";
 

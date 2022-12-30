@@ -206,12 +206,15 @@ export type MixButtonProps = {
   textSize: string;
   width: string;
   border?: boolean;
+  clickHandle?: () => Promise<void>;
 };
 
 export type MixInputProps = {
   row: string;
   name: string;
   title: string;
+  handleChange: (e: FormEvent) => void;
+  value: string
 };
 
 export type MixCheckProps = {
@@ -220,10 +223,22 @@ export type MixCheckProps = {
   valueClicked: boolean;
 };
 
+export type UseMixtapeImagesResults = {
+  uploadImage: (e: FormEvent, index: number) => Promise<void>;
+  handleRemoveImage: (index: number) => void;
+  imageLoading: boolean[];
+};
+
 export type UseCreateMixtapeResults = {
   checkValues: string[];
   handleClicked: (valueClicked: boolean, value: string) => void;
   valueClicked: boolean;
+  mixtapeLoading: boolean;
+  handleTrackTitle: (e: FormEvent, index: number) => void;
+  handleTitle: (e: FormEvent) => void;
+  handleSource: (e: FormEvent) => void;
+  handleRemoveTrack: (index: number) => void;
+  generateMixtape: () => Promise<void>;
 };
 
 export type CreateMixtapeProps = {
@@ -231,18 +246,65 @@ export type CreateMixtapeProps = {
   handleClicked: (valueClicked: boolean, value: string) => void;
   valueClicked: boolean;
   dispatch: Dispatch<AnyAction>;
-  setAddTrack: ActionCreatorWithPayload<number, "addTrack/setAddTrack">;
-  setEditTrack: ActionCreatorWithPayload<string, "editTrack/setEditTrack">;
-  setDeleteTrack: ActionCreatorWithPayload<
-    string,
-    "deleteTrack/setDeleteTrack"
-  >;
-  setAddMixtape: ActionCreatorWithPayload<string, "addMixtape/setAddMixtape">;
-  trackNumber: number | undefined;
+  setAddTrack: ActionCreatorWithPayload<any, "addTrack/setAddTrack">;
+  mixtapeLoading: boolean;
+  uploadImage: (e: FormEvent, index: number) => Promise<void>;
+  handleRemoveImage: (index: number) => void;
+  imageArray: string[] | undefined;
+  titleArray: string[] | undefined;
+  imageLoading: boolean[];
+  handleTrackTitle: (e: FormEvent, index: number) => void;
+  handleTitle: (e: FormEvent) => void;
+  handleSource: (e: FormEvent) => void;
+  handleRemoveTrack: (index: number) => void;
+  generateMixtape: () => Promise<void>;
+  enabledCurrencies: Erc20[];
+  audienceTypes: string[];
+  setAudienceType: (e: string) => void;
+  audienceType: string;
+  setEnabledCurrency: (e: string) => void;
+  enabledCurrency: string | undefined;
+  setChargeCollectDropDown: (e: boolean) => void;
+  setAudienceDropDown: (e: boolean) => void;
+  setCurrencyDropDown: (e: boolean) => void;
+  chargeCollectDropDown: boolean;
+  audienceDropDown: boolean;
+  currencyDropDown: boolean;
+  referral: number;
+  setReferral: (e: number) => void;
+  limit: number;
+  setLimit: (e: number) => void;
+  value: number;
+  setValue: (e: number) => void;
+  collectibleDropDown: boolean;
+  setCollectibleDropDown: (e: boolean) => void;
+  collectible: string;
+  setCollectible: (e: string) => void;
+  chargeCollect: string;
+  setChargeCollect: (e: string) => void;
+  limitedDropDown: boolean;
+  setLimitedDropDown: (e: boolean) => void;
+  limitedEdition: string;
+  setLimitedEdition: (e: string) => void;
+  setTimeLimit: (e: string) => void;
+  timeLimit: string;
+  timeLimitDropDown: boolean;
+  setTimeLimitDropDown: (e: boolean) => void;
+  handleSetCollectValues: () => void;
+  titleValue: string;
+  sourceValue: string;
 };
 
 export type TrackInputProps = {
   index: number;
+  mixtapeLoading: boolean;
+  uploadImage: (e: FormEvent, index: number) => Promise<void>;
+  handleRemoveImage: (index: number) => void;
+  imageLoading: boolean[];
+  titleArray: string[];
+  imageArray: string[];
+  handleTrackTitle: (e: FormEvent, index: number) => void;
+  handleRemoveTrack: (index: number) => void;
 };
 
 export type RecordProps = {

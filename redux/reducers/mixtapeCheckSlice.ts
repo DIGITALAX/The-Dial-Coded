@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface MixtapeCheckState {
-  value?: string;
+  value?: string | undefined;
 }
 
 const initialMixtapeCheckState: MixtapeCheckState = {
@@ -14,7 +14,7 @@ export const mixtapeCheckSlice = createSlice({
   reducers: {
     setMixtapeCheck: (
       state: MixtapeCheckState,
-      action: PayloadAction<string>
+      action: PayloadAction<string | undefined>
     ) => {
       state.value = action.payload;
     },

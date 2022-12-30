@@ -8,7 +8,6 @@ import Tape from "./Tape";
 import { IoMdArrowDropdown } from "react-icons/io";
 import NotificationsBar from "./Notifications/NotificationsBar";
 import MixtapeSwitch from "../../Home/Layout/Mixtape/MixtapeSwitch";
-import { setAddMixtape } from "../../../redux/reducers/addMixtapeSlice";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import AccountSwitch from "../../Home/Layout/Account/AccountSwitch";
 
@@ -85,6 +84,15 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
               className={`relative col-start-11 w-full h-full grid grid-flow-row auto-rows-auto border-y-4 border-l-4 border-black justify-self-end`}
             >
               <div className="relative w-full h-[50rem] grid grid-flow-row auto-rows-auto row-start-1 overflow-y-scroll overflow-x-clip">
+                {mixtape && (
+                  <Tape
+                    title="Add New Mixtape"
+                    key={1}
+                    index={1}
+                    handleTapeSet={handleTapeSet}
+                    bgColor={"record10"}
+                  />
+                )}
                 {tapeTitles?.map((title: string, index: number) => {
                   return (
                     <Tape
@@ -99,13 +107,13 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                     />
                   );
                 })}
-                {tapeTitles.length < 10 && (
+                {tapeTitles.length < 9 && (
                   <div
                     className={`relative w-full h-full row-start-${
-                      tapeTitles.length + 1
+                      tapeTitles.length + 2
                     }`}
                   >
-                    {Array.from(Array(10 - tapeTitles.length).keys()).map(
+                    {Array.from(Array(9 - tapeTitles.length).keys()).map(
                       (index: number) => {
                         return (
                           <Tape
@@ -123,20 +131,11 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                     )}
                   </div>
                 )}
-                {mixtape && (
-                  <Tape
-                    title="Add New Mixtape"
-                    key={1}
-                    index={1}
-                    handleTapeSet={setAddMixtape}
-                    bgColor={"record10"}
-                  />
-                )}
               </div>
               <div
                 className={`relative w-full h-full h-10 bg-black grid grid-flow-col auto-cols-auto row-start-2`}
               >
-                {tapeTitles.length > 10 && (
+                {tapeTitles.length > 9 && (
                   <div className="relative w-fit h-fit place-self-center">
                     <IoMdArrowDropdown size={30} color="#FCDB8F" />
                   </div>

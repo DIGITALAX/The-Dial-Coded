@@ -151,12 +151,15 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1 rounded-xl"
               >
                 <textarea
+                  id="post"
                   onChange={(e: FormEvent) => handlePostDescription(e)}
-                  style={{ resize: "none" }}
                   value={postDescription}
                   placeholder="Have something to share..."
-                  className={`relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 place-self-center caret-transparent focus:caret-transparent`}
+                  className={`relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 font-dosis text-md p-2 place-self-center caret-transparent`}
                   disabled={postLoading ? true : false}
+                  style={{
+                    resize: "none",
+                  }}
                 ></textarea>
               </div>
             </div>

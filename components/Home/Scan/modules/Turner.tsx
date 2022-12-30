@@ -35,7 +35,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
           </div>
           <div className="relative col-start-2 w-1 h-5/6 self-center justify-self-start border border-white rounded-lg"></div>
           <input
-            className="relative col-start-3 w-full h-full caret-offBlue focus:caret-offBlue font-dosis pl-2 text-white rounded-lg bg-transparent caret-transparent"
+            className="relative col-start-3 w-full h-full font-dosis pl-2 text-white rounded-lg bg-transparent caret-transparent"
             name="search"
             placeholder="search"
           />

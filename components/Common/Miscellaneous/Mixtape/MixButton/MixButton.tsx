@@ -11,10 +11,14 @@ const MixButton: FunctionComponent<MixButtonProps> = ({
   textSize,
   width,
   border,
+  clickHandle,
 }): JSX.Element => {
   return (
     <div
       id={bgColor}
+      onClick={() => {
+        clickHandle && clickHandle();
+      }}
       className={`relative w-${width} col-start-${col} h-fit grid grid-flow-col auto-cols-auto cursor-pointer active:scale-95 rounded-md pb-1 pt-1 pl-3 pr-1`}
     >
       <Image
