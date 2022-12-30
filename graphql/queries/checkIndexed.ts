@@ -90,10 +90,6 @@ export const checkIndexed = (txHash?: string) => {
 };
 export default checkIndexed;
 
-const sleep = (milliseconds: any): Promise<void> => {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-};
-
 export const pollUntilIndexed = async (txHash: string) => {
   while (true) {
     const result = await checkIndexed(txHash);
@@ -113,11 +109,9 @@ export const pollUntilIndexed = async (txHash: string) => {
         }
       }
 
-      // sleep for a second before trying again
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
-    // it got reverted and failed!
     throw new Error(response.reason);
   }
 };

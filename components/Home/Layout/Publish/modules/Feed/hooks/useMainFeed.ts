@@ -302,9 +302,13 @@ const useMainFeed = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      setPublicationsFeed(sortedArr);
+      const filteredArr = lodash.filter(
+        sortedArr,
+        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
+      );
+      setPublicationsFeed(filteredArr);
       setPaginatedResults(publicationsList?.data?.explorePublications.pageInfo);
-      const response = await checkPostReactions(sortedArr);
+      const response = await checkPostReactions(filteredArr);
       setReactionsFeed(response?.reactionsFeedArr);
     } catch (err: any) {
       console.error(err);
@@ -353,7 +357,11 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       }
-      const orderedArr = orderFeedManual(sortedArr);
+      const filteredArr = lodash.filter(
+        sortedArr,
+        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
+      );
+      const orderedArr = orderFeedManual(filteredArr);
       setPublicationsFeed(orderedArr);
       setPaginatedResults(pageData);
       const response = await checkPostReactions(orderedArr);
@@ -381,6 +389,9 @@ const useMainFeed = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
+      const filteredArr = lodash.filter(sortedArr, (arr) =>
+        !arr?.metadata?.content.includes("*Dial Mixtape*")
+      );
       if (sortedArr.length < 1) {
         const authPub = await explorePublicationsAuth({
           sources: "thedial",
@@ -393,7 +404,10 @@ const useMainFeed = () => {
         const auth_sortedArr: any[] = auth_arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
-        const orderedArr = orderFeedManual(auth_sortedArr);
+        const filteredArrAuth = lodash.filter(auth_sortedArr, (arr) =>
+          !arr?.metadata?.content.includes("*Dial Mixtape*")
+        );
+        const orderedArr = orderFeedManual(filteredArrAuth);
         setPublicationsFeed(orderedArr);
         setPaginatedResults(authPub.data.explorePublications.pageInfo);
         const response = await checkPostReactions(orderedArr);
@@ -404,7 +418,7 @@ const useMainFeed = () => {
         const hasCommentedArr = await checkIfCommented(orderedArr);
         setHasCommented(hasCommentedArr);
       } else {
-        const orderedArr = orderFeedManual(sortedArr);
+        const orderedArr = orderFeedManual(filteredArr);
         setPublicationsFeed(orderedArr);
         setPaginatedResults(data.feed.pageInfo);
         const response = await checkPostReactions(orderedArr);
@@ -435,12 +449,15 @@ const useMainFeed = () => {
       const arr: PublicationSearchResult[] = [
         ...morePublications?.data.explorePublications.items,
       ];
-      const sortedArr: PublicationSearchResult[] = arr.sort(
+      const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      setPublicationsFeed([...publicationsFeed, ...sortedArr]);
+      const filteredArr = lodash.filter(sortedArr, (arr) =>
+        !arr?.metadata?.content.includes("*Dial Mixtape*")
+      );
+      setPublicationsFeed([...publicationsFeed, ...filteredArr]);
       setPaginatedResults(morePublications?.data.explorePublications.pageInfo);
-      const response = await checkPostReactions(sortedArr);
+      const response = await checkPostReactions(filteredArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
     } catch (err: any) {
       console.error(err);
@@ -458,10 +475,13 @@ const useMainFeed = () => {
       const arr: PublicationSearchResult[] = [
         ...morePublications?.data.feed.items,
       ];
-      const sortedArr: PublicationSearchResult[] = arr.sort(
+      const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr.length < 1) {
+      const filteredArr = lodash.filter(sortedArr, (arr) =>
+        !arr?.metadata?.content.includes("*Dial Mixtape*")
+      );
+      if (filteredArr.length < 1) {
         const authPub = await explorePublicationsAuth({
           sources: "thedial",
           publicationTypes: feedOrder,
@@ -473,10 +493,13 @@ const useMainFeed = () => {
         const auth_arr: PublicationSearchResult[] = [
           ...authPub?.data.explorePublications.items,
         ];
-        const auth_sortedArr: PublicationSearchResult[] = auth_arr.sort(
+        const auth_sortedArr: any[] = auth_arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
-        const orderedArr = orderFeedManual(auth_sortedArr);
+        const filteredArrAuth = lodash.filter(auth_sortedArr, (arr) =>
+          !arr?.metadata?.content.includes("*Dial Mixtape*")
+        );
+        const orderedArr = orderFeedManual(filteredArrAuth);
         setPublicationsFeed([...publicationsFeed, ...orderedArr]);
         setPaginatedResults(authPub?.data.explorePublications.pageInfo);
         const response = await checkPostReactions(orderedArr);
@@ -487,7 +510,7 @@ const useMainFeed = () => {
         const hasCommentedArr = await checkIfCommented(orderedArr);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
       } else {
-        const orderedArr = orderFeedManual(sortedArr);
+        const orderedArr = orderFeedManual(filteredArr);
         setPublicationsFeed([...publicationsFeed, ...orderedArr]);
         setPaginatedResults(morePublications?.data.feed.pageInfo);
         const response = await checkPostReactions(orderedArr);
@@ -535,7 +558,11 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       }
-      const orderedArr = orderFeedManual(sortedArr);
+      const filteredArr = lodash.filter(
+        sortedArr,
+        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
+      );
+      const orderedArr = orderFeedManual(filteredArr);
       setPublicationsFeed([...publicationsFeed, ...orderedArr]);
       setPaginatedResults(pageData);
       const response = await checkPostReactions(orderedArr);

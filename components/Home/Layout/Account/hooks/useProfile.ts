@@ -274,14 +274,17 @@ const useProfile = () => {
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-
-      setUserFeed(sortedArr);
+      const filteredArr = lodash.filter(
+        sortedArr,
+        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
+      );
+      setUserFeed(filteredArr);
       setPaginatedResults(data?.publications?.pageInfo);
-      const response = await checkPostReactions(sortedArr);
+      const response = await checkPostReactions(filteredArr);
       setHasReacted(response?.hasReactedArr);
-      const hasMirroredArr = await checkIfMirrored(sortedArr);
+      const hasMirroredArr = await checkIfMirrored(filteredArr);
       setHasMirrored(hasMirroredArr);
-      const hasCommentedArr = await checkIfCommented(sortedArr);
+      const hasCommentedArr = await checkIfCommented(filteredArr);
       setHasCommented(hasCommentedArr);
       setReactionsFeed(response?.reactionsFeedArr);
     } catch (err: any) {
@@ -298,19 +301,21 @@ const useProfile = () => {
         limit: 30,
         cursor: paginatedResults?.next,
       });
-
       const arr: any[] = [...data?.publications?.items];
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-
-      setUserFeed(sortedArr);
+      const filteredArr = lodash.filter(
+        sortedArr,
+        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
+      );
+      setUserFeed(filteredArr);
       setPaginatedResults(data?.publications?.pageInfo);
-      const response = await checkPostReactions(sortedArr);
+      const response = await checkPostReactions(filteredArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
-      const hasMirroredArr = await checkIfMirrored(sortedArr);
+      const hasMirroredArr = await checkIfMirrored(filteredArr);
       setHasMirrored([...hasMirrored, ...hasMirroredArr]);
-      const hasCommentedArr = await checkIfCommented(sortedArr);
+      const hasCommentedArr = await checkIfCommented(filteredArr);
       setHasCommented([...hasCommented, ...hasCommentedArr]);
       setHasReacted([...hasReacted, ...response?.hasReactedArr]);
     } catch (err: any) {

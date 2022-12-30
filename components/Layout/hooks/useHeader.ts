@@ -47,7 +47,6 @@ const useHeader = (): UseHeaderResult => {
   };
 
   useEffect(() => {
-    // set connect
     setConnected(isConnected);
     const token = getAuthenticationToken();
     if (isConnected && !token) {
@@ -58,7 +57,6 @@ const useHeader = (): UseHeaderResult => {
       if (isAuthExpired(token?.exp)) {
         const refreshedAccessToken = refreshAuth();
         if (!refreshedAccessToken) {
-          // try again
           dispatch(setSignIn(true));
           dispatch(setLensProfile(undefined));
           removeAuthenticationToken();
@@ -66,7 +64,6 @@ const useHeader = (): UseHeaderResult => {
       }
       handleRefreshProfile();
     }
-    // check if the auth token already exists and if it does check if its expired, if it is expired try refresh token and then log them in either way automatically if not on both auth or refresh then dispatch sign in and get them to sign in
   }, [isConnected]);
 
   return { handleImageData, connected, handleAccount };

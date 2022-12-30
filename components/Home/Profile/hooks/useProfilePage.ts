@@ -375,14 +375,18 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         pageData = data?.publications?.pageInfo;
       }
-      setUserFeed(sortedArr);
+      const filteredArr = lodash.filter(
+        sortedArr,
+        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
+      );
+      setUserFeed(filteredArr);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(sortedArr);
+      const response = await checkPostReactions(filteredArr);
       setHasReacted(response?.hasReactedArr);
       if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        const hasMirroredArr = await checkIfMirrored(filteredArr);
         setHasMirrored(hasMirroredArr);
-        const hasCommentedArr = await checkIfCommented(sortedArr);
+        const hasCommentedArr = await checkIfCommented(filteredArr);
         setHasCommented(hasCommentedArr);
       }
       setReactionsFeed(response?.reactionsFeedArr);
@@ -416,21 +420,24 @@ const useProfilePage = (): UseProfilePageResults => {
           limit: 30,
           cursor: paginatedResults?.next,
         });
-
         const arr: any[] = [...data?.publications?.items];
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
         pageData = data?.publications?.pageInfo;
       }
-      setUserFeed(sortedArr);
+      const filteredArr = lodash.filter(
+        sortedArr,
+        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
+      );
+      setUserFeed(filteredArr);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(sortedArr);
+      const response = await checkPostReactions(filteredArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
       if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        const hasMirroredArr = await checkIfMirrored(filteredArr);
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
-        const hasCommentedArr = await checkIfCommented(sortedArr);
+        const hasCommentedArr = await checkIfCommented(filteredArr);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
       }
