@@ -31,15 +31,15 @@ const CollectButton: FunctionComponent<CollectButtonProps> = ({
       className={`relative w-fit h-fit ${col && `col-start-${col}`} ${
         row && `row-start-${row}`
       } grid grid-flow-row auto-rows-auto grid grid-flow-row auto-rows-auto ${
-        !mixtape ? "pb-3 pr-3 gap-3" : "gap-1"
+        !mixtape ? "pb-3 pr-3 gap-3" : "gap-1 z-10"
       }`}
     >
       <div className="relative w-fit h-fit row-start-1 font-dosis text-black text-sm whitespace-nowrap justify-self-start self-center text-left">
         {label}
       </div>
       <div
-        className={`relative w-40 px-3 py-2 rounded-t-lg ${
-          mixtape ? "bg-white border border-lB h-8" : "bg-offBlue h-10"
+        className={`relative w-40 px-3 rounded-t-lg ${
+          mixtape ? "bg-white border border-lB h-8" : "bg-offBlue h-10 py-2"
         } ${
           !openDropdown && "rounded-b-lg"
         } row-start-2 cursor-pointer grid grid-flow-col auto-cols-auto gap-3`}
@@ -56,7 +56,11 @@ const CollectButton: FunctionComponent<CollectButtonProps> = ({
             {selectValue}
           </div>
         </div>
-        <div className={`relative w-fit h-fit col-start-3 self-center ${mixtape ? "justify-self-end" : "justify-self-start"}`}>
+        <div
+          className={`relative w-fit h-fit col-start-3 self-center ${
+            mixtape ? "justify-self-end" : "justify-self-start"
+          }`}
+        >
           <IoMdArrowDropdown
             color={mixtape ? "#81A8F8" : "#FFDE90"}
             size={15}

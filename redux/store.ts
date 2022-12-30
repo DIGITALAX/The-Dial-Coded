@@ -43,6 +43,7 @@ import noUserDataReducer from "./reducers/noUserDataSlice";
 import notificationsReducer from "./reducers/notificationsSlice";
 import mixtapeTitleReducer from "./reducers/mixtapeTitleSlice";
 import mixtapeSourceReducer from "./reducers/mixtapeSourceSlice";
+import completeTrackReducer from "./reducers/completeTrackSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -87,7 +88,8 @@ const reducer = combineReducers({
   noUserDataReducer,
   notificationsReducer,
   mixtapeSourceReducer,
-  mixtapeTitleReducer
+  mixtapeTitleReducer,
+  completeTrackReducer,
 });
 
 export const store = configureStore({

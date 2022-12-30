@@ -27,6 +27,7 @@ import LensHubProxy from "../../../../../abis/LensHubProxy.json";
 import { setCollectValueType } from "../../../../../redux/reducers/collectValueTypeSlice";
 import useCollectionModal from "../../../../Common/Modals/Publications/hooks/useCollectionModal";
 import lodash from "lodash";
+import { setCompleteTrack } from "../../../../../redux/reducers/completeTrackSlice";
 
 const useCreateMixtape = (): UseCreateMixtapeResults => {
   const [valueClicked, setValueClicked] = useState<boolean>(false);
@@ -158,6 +159,28 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
   };
 
   const generateMixtape = async (): Promise<void> => {
+    let titlearr: number[] = [];
+    let imgarr: number[] = [];
+    lodash.filter(arrays?.title, (title, index: number) => {
+      if (title !== ("" || "TRACK NAME | SOURCE (shortened)")) {
+        titlearr.push(index);
+      }
+    });
+    lodash.filter(arrays?.imageURI, (image, index: number) => {
+      if (image !== "") {
+        imgarr.push(index);
+      }
+    });
+    if (
+      !lodash.isEqual(imgarr, titlearr) ||
+      !mixTapeTitle ||
+      !mixtapeSource ||
+      !check
+    ) {
+      dispatch(setCompleteTrack(true));
+      return;
+    }
+
     handleSetCollectValues();
     setMixtapeLoading(true);
     try {

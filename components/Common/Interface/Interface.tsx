@@ -13,6 +13,7 @@ const Interface: FunctionComponent<InterfaceProps> = ({
   backgroundImages,
   mixtape,
   loader,
+  more
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto pt-10">
@@ -79,6 +80,7 @@ const Interface: FunctionComponent<InterfaceProps> = ({
             backgroundImages={backgroundImages}
             mixtape={mixtape}
             loader={loader}
+            more={more}
           />
         </div>
         <div className="relative w-fit h-full justify-between col-start-3 grid grid-flow-row auto-rows-auto gap-8 justify-self-end">
