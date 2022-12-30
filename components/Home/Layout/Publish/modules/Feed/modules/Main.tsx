@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { MainProps } from "../types/feed.types";
 import { useDispatch } from "react-redux";
-import FeedPublication from "../../../../../../Common/Feed/FeedPublication";
+import FeedPublication from "../../../../../../Common/Feed/modules/FeedPublication";
 import { PublicationSearchResult } from "../../../../../../Common/types/lens.types";
 import InfiniteScroll from "react-infinite-scroll-component";
 

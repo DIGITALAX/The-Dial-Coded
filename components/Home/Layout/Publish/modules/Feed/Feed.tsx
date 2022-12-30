@@ -8,16 +8,19 @@ import { MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
 import { setMoreFeed } from "../../../../../../redux/reducers/moreFeedSlice";
 
 const Feed: FunctionComponent<FeedProps> = ({
-  topTrending,
-  topMixtape,
-  topTracks,
+  hotFeed,
+  hasHotReacted,
+  hasHotCommented,
+  hasHotMirrored,
+  hotReactionsFeed,
+  fetchMoreMixtapes,
   publicationsFeed,
   fetchMore,
   hasReacted,
   reactionsFeed,
   hasMirrored,
   hasCommented,
-  noUserData
+  noUserData,
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -41,10 +44,14 @@ const Feed: FunctionComponent<FeedProps> = ({
           noUserData={noUserData}
         />
         <Hot
-          topTrending={topTrending}
-          topMixtape={topMixtape}
-          topTracks={topTracks}
           isOpen={isOpen}
+          hotFeed={hotFeed}
+          hasHotReacted={hasHotReacted}
+          hasHotCommented={hasHotCommented}
+          hasHotMirrored={hasHotMirrored}
+          hotReactionsFeed={hotReactionsFeed}
+          fetchMoreMixtapes={fetchMoreMixtapes}
+          dispatch={dispatch}
         />
       </div>
       <div

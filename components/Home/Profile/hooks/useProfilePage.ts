@@ -451,7 +451,10 @@ const useProfilePage = (): UseProfilePageResults => {
       );
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+      if (
+        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS"
+      ) {
         dispatch(
           setIndexModal({
             actionValue: true,
@@ -493,7 +496,10 @@ const useProfilePage = (): UseProfilePageResults => {
       );
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
+      if (
+        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS"
+      ) {
         dispatch(
           setIndexModal({
             actionValue: true,
@@ -605,7 +611,7 @@ const useProfilePage = (): UseProfilePageResults => {
     isConnected,
     indexerModal.message,
     indexerModal.value,
-    hearted
+    hearted,
   ]);
 
   useEffect(() => {

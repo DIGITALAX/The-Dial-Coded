@@ -68,7 +68,6 @@ const useNotifications = () => {
           return true;
         }
       });
-      console.log(newData);
       setNotificationsPage(data?.result.pageInfo);
       setNotificationsList(newData);
     } catch (err: any) {

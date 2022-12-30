@@ -6,7 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { RootState } from "../../../../redux/store";
-import FeedPublication from "../../../Common/Feed/FeedPublication";
+import FeedPublication from "../../../Common/Feed/modules/FeedPublication";
 import useCollectionModal from "../../../Common/Modals/Publications/hooks/useCollectionModal";
 import useImageUpload from "../../../Common/Modals/Publications/hooks/useImageUpload";
 import CollectOptionsModal from "../../../Common/Modals/Publications/modules/CollectOptionsModal";

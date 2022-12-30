@@ -5,6 +5,7 @@ import { RiLock2Fill } from "react-icons/ri";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const Tape: FunctionComponent<TapeProps> = ({
   bgColor,
@@ -15,6 +16,7 @@ const Tape: FunctionComponent<TapeProps> = ({
   index,
   locked,
   handleTapeSet,
+  loader,
 }): JSX.Element => {
   const notifications = useSelector(
     (state: RootState) => state.app.notificationsReducer.value
@@ -23,7 +25,7 @@ const Tape: FunctionComponent<TapeProps> = ({
     <div
       key={index}
       id={bgColor}
-      className={`relative w-full h-20 border-black border-b-2 ${
+      className={`relative w-full h-24 border-black border-b-2 ${
         index !== 0 && "border-t-2"
       } grid grid-flow-col auto-cols-auto ${
         !sideImage ? "pr-2 pl-10" : "pr-2 pl-2"
@@ -44,7 +46,7 @@ const Tape: FunctionComponent<TapeProps> = ({
       {backgroundImages && (
         <div className="absolute w-full h-full mix-blend-hard-light">
           <Image
-            src={`${INFURA_GATEWAY}/ipfs/${backgroundImages[index + 1]}`}
+            src={`${INFURA_GATEWAY}/ipfs/${backgroundImages[index]}`}
             layout="fill"
             priority
             objectFit="cover"
@@ -66,8 +68,14 @@ const Tape: FunctionComponent<TapeProps> = ({
               : "bg-white"
           }`}
         >
-          <div className={`relative w-fit h-fit place-self-center p-1`}>
-            {mixtape ? (
+          <div
+            className={`relative w-fit h-fit place-self-center p-1 ${
+              loader && "animate-spin"
+            }`}
+          >
+            {loader ? (
+              <AiOutlineLoading color="black" size={20} />
+            ) : mixtape ? (
               `mixtape vol ${index + 1} - ${title}`
             ) : locked ? (
               <RiLock2Fill color="black" size={20} />

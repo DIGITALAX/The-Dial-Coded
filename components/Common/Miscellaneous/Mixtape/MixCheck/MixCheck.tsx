@@ -7,6 +7,7 @@ const MixCheck: FunctionComponent<MixCheckProps> = ({
   value,
   handleClicked,
   valueClicked,
+  loader,
 }): JSX.Element => {
   const checkedValue = useSelector(
     (state: RootState) => state.app.mixtapeCheckReducer.value
@@ -17,9 +18,11 @@ const MixCheck: FunctionComponent<MixCheckProps> = ({
         {value}
       </div>
       <div
-        onClick={() => handleClicked(valueClicked, value)}
+        onClick={loader ? () => {} : () => handleClicked(valueClicked, value)}
         id="crt"
-        className="relative w-8 h-8 p-0.5 rounded-md grid grid-flow-col auto-cols-auto cursor-pointer col-start-2 justify-self-end"
+        className={`relative w-8 h-8 p-0.5 rounded-md grid grid-flow-col auto-cols-auto ${
+          !loader && "cursor-pointer"
+        } col-start-2 justify-self-end`}
       >
         <div
           className={`relative w-full h-full grid grid-flow-row auto-rows-auto rounded-md p-1 col-start-1 ${

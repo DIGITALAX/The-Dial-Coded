@@ -341,7 +341,6 @@ const useMainFeed = () => {
           publicationTypes: feedOrder,
           limit: 20,
         });
-        console.log(data)
         if (data?.publications?.items?.length < 1 || !data) {
           dispatch(setNoUserData(true));
           return;
@@ -537,7 +536,7 @@ const useMainFeed = () => {
         pageData = data?.publications?.pageInfo;
       }
       const orderedArr = orderFeedManual(sortedArr);
-      setPublicationsFeed(orderedArr);
+      setPublicationsFeed([...publicationsFeed, ...orderedArr]);
       setPaginatedResults(pageData);
       const response = await checkPostReactions(orderedArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
@@ -667,6 +666,9 @@ const useMainFeed = () => {
     getMorePostComments,
     commentInfoLoading,
     getPostComments,
+    checkPostReactions,
+    checkIfCommented,
+    checkIfMirrored,
   };
 };
 

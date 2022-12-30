@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMixtapePage } from "../../../../../redux/reducers/mixtapePageSlice";
 import { Message } from "../../../../Common/types/common.types";
@@ -9,28 +9,101 @@ import { RootState } from "../../../../../redux/store";
 import { setMixtapeCheck } from "../../../../../redux/reducers/mixtapeCheckSlice";
 import { setMixtapeTitle } from "../../../../../redux/reducers/mixtapeTitleSlice";
 import { setMixtapeSource } from "../../../../../redux/reducers/mixtapeSourceSlice";
+import { profilePublicationsAuth } from "../../../../../graphql/queries/profilePublication";
+import lodash from "lodash";
 
 const useMixtape = (): UseMixtapeResults => {
   const dispatch = useDispatch();
   const mixtapePage = useSelector(
     (state: RootState) => state.app.mixtapePageReducer.value
   );
-  const mixtapeTitles: string[] = [
-    // "instant sampler",
-    // "latent waves",
-    // "Synth",
-    // "infinite runway",
-    // "public memory",
-    // "eigensocial",
-    // "reflex",
-    // "forever records",
-    // "per DIa.m",
-    // "AI ART DROP",
-    // "latent sounds",
-    // "random curation",
-  ];
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
+  const [getMixLoading, setGetMixLoading] = useState<boolean>(false);
+  const [mixtapes, setMixtapes] = useState<any[]>([]);
+  const [mixtapeTitles, setMixtapeTitles] = useState<string[]>([]);
+  const [mixtapeBackgrounds, setMixtapeBackgrounds] = useState<string[]>([]);
+  const [paginatedResults, setPaginatedResults] = useState<any>();
+  const [updateMix, setUpdateMix] = useState<any>();
+
+  const getMixtapes = async (): Promise<void> => {
+    setGetMixLoading(true);
+    try {
+      const { data } = await profilePublicationsAuth({
+        sources: "thedial",
+        profileId: lensProfile,
+        publicationTypes: ["POST"],
+        limit: 30,
+        metadata: {
+          tags: {
+            all: ["mixtape"],
+          },
+        },
+      });
+
+      const arr: any[] = [...data?.publications?.items];
+      const sortedArr = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      let mBg: string[] = [];
+      let mT: string[] = [];
+      sortedArr.forEach((item) => {
+        mBg.push(item?.metadata?.media[0]?.original?.url.split("//")[1]);
+        mT.push(item?.metadata?.name);
+      });
+      setMixtapeBackgrounds(mBg);
+      setMixtapeTitles(mT);
+      setPaginatedResults(data?.publications?.pageInfo);
+      setMixtapes(sortedArr);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setGetMixLoading(false);
+  };
+
+  const getMoreMixtapes = async (): Promise<void> => {
+    try {
+      const { data } = await profilePublicationsAuth({
+        sources: "thedial",
+        profileId: lensProfile,
+        publicationTypes: ["POST"],
+        limit: 30,
+        cursor: paginatedResults?.next,
+        metadata: {
+          tags: {
+            all: ["mixtape"],
+          },
+        },
+      });
+
+      const arr: any[] = [...data?.publications?.items];
+      const sortedArr = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      let mBg: string[] = [];
+      let mT: string[] = [];
+      sortedArr.forEach((item) => {
+        mBg.push(item?.metadata?.media[0]?.original?.url.split("//")[1]);
+        mT.push(item?.metadata?.name);
+      });
+      setMixtapeBackgrounds([...mixtapeBackgrounds, ...mBg]);
+      setMixtapeTitles([...mixtapeTitles, ...mT]);
+      setPaginatedResults(data?.publications?.pageInfo);
+      setMixtapes([...mixtapes, ...sortedArr]);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
 
   const handleTapeSet = (title: string): void => {
+    dispatch(
+      setCollectValueType({
+        freeCollectModule: {
+          followerOnly: false,
+        },
+      })
+    );
     dispatch(setMixtapePage(title));
   };
 
@@ -39,22 +112,6 @@ const useMixtape = (): UseMixtapeResults => {
     "QmUFEhfqFsKAnTPZaL8Ln9yaz8QPNiJNnuvbStZmXvage3",
     "QmZ6Theb5qCCscnBZhYZK2epoJftL67yLsD3JweBkBXtvK",
     "QmXfuFr8qDbajQ4nCTnrb4bfdrZgD7TymxMziSukyqxHk2",
-  ];
-
-  const backgroundImages: string[] = [
-    // "QmYAkxnWQsPJW3JMhppDkuuZsTe9ZzMK9tYi1V2QkpiWTu",
-    // "QmWYxU3VTECDRPCndpsD4GF1WDiECcgHu2YA33ugjVyewG",
-    // "QmRe72544oLTxq1gA4zvXS7SVXuKhqbdr4ioheFPgKYuYY",
-    // "QmY54nAeKfHJBZN224HbbejhAcks5Bsqo3RSoG6qaWskHC",
-    // "QmRiHSR28A8R8Lg3tGQtv3Rwwv7DiiZC79GsW8ori3KxiN",
-    // "QmYgqmyXwo5TdSkFkdKBLBW2NyK6296R19aRnAcS8w8UCA",
-    // "QmS4mHgwTnVbb4vpuXdcfKLzhkg3fTsT1rAuUyfkiVL8Y3",
-    // "QmXWMcUuhyJnpD3fEDHk1VjsLtc5QCdohJwo9z5z7aXEwu",
-    // "QmVyb7eW2RPAs45qPdtb9v2c24eP5zZgFh4o8ZtqFm8PPU",
-    // "QmcYd24Uihwb7c39XUyVz1vsMKMy6MQMWPJMFtUVAUqvRY",
-    // "QmYAkxnWQsPJW3JMhppDkuuZsTe9ZzMK9tYi1V2QkpiWTu",
-    // "QmcYd24Uihwb7c39XUyVz1vsMKMy6MQMWPJMFtUVAUqvRY",
-    // "QmRe72544oLTxq1gA4zvXS7SVXuKhqbdr4ioheFPgKYuYY",
   ];
 
   const message: Message = {
@@ -89,15 +146,44 @@ const useMixtape = (): UseMixtapeResults => {
       dispatch(setMixtapeCheck(undefined));
       dispatch(setMixtapeTitle(""));
       dispatch(setMixtapeSource(""));
+    } else {
+      const mixtape = lodash.find(
+        mixtapes,
+        (mix) => mix?.metadata?.name === mixtapePage
+      );
+      dispatch(setMixtapeCheck(mixtape?.metadata?.content?.split("\n\n")[1]));
+      let images: string[] = [];
+      let tracks: string[] = [];
+      mixtape?.metadata?.media?.forEach((image: any, index: number) => {
+        images.push(image?.original?.url?.split("//")[1]);
+        tracks.push(
+          mixtape?.metadata?.content?.split("\n\n")[2]?.split(",")[index]
+        );
+      });
+      dispatch(
+        setAddTrack({
+          actionImageURI: images,
+          actionTitle: tracks,
+        })
+      );
+      setUpdateMix(mixtape);
     }
   }, [mixtapePage]);
 
+  useEffect(() => {
+    getMixtapes();
+  }, []);
+
   return {
-    mixtapeTitles,
     handleTapeSet,
     notificationImages,
-    backgroundImages,
     message,
+    mixtapeTitles,
+    mixtapeBackgrounds,
+    getMoreMixtapes,
+    getMixLoading,
+    mixtapes,
+    updateMix,
   };
 };
 export default useMixtape;

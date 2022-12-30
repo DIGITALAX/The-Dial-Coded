@@ -4,8 +4,10 @@ import { setAddTrack } from "../../../../redux/reducers/addTrackSlice";
 import { RootState } from "../../../../redux/store";
 import useCollectionModal from "../../../Common/Modals/Publications/hooks/useCollectionModal";
 import useCreateMixtape from "./hooks/useCreateMixtape";
+import useMixtape from "./hooks/useMixtape";
 import useMixtapeImages from "./hooks/useMixtapeImages";
 import CreateMixtape from "./modules/CreateMixtape";
+import lodash from "lodash";
 
 const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
   const mixtapeType: string | undefined = useSelector(
@@ -29,9 +31,10 @@ const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
     handleRemoveTrack,
     generateMixtape,
   } = useCreateMixtape();
+  const { updateMix } = useMixtape();
   const arrays = useSelector((state: RootState) => state.app.addTrackReducer);
   const { handleRemoveImage, uploadImage, imageLoading } = useMixtapeImages();
-  let action: string = "Create";
+  let action: string = "Add New Mixtape";
   const decideStringAction = () => {
     action = mixtapeType as string;
     return action;
@@ -39,16 +42,11 @@ const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
 
   const {
     enabledCurrencies,
-    audienceTypes,
     setAudienceType,
     audienceType,
     setEnabledCurrency,
     enabledCurrency,
-    setChargeCollectDropDown,
-    setAudienceDropDown,
     setCurrencyDropDown,
-    chargeCollectDropDown,
-    audienceDropDown,
     currencyDropDown,
     referral,
     setReferral,
@@ -58,18 +56,12 @@ const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
     setValue,
     collectible,
     setCollectible,
-    collectibleDropDown,
-    setCollectibleDropDown,
     chargeCollect,
     setChargeCollect,
     limitedEdition,
     setLimitedEdition,
-    limitedDropDown,
-    setLimitedDropDown,
     setTimeLimit,
     timeLimit,
-    timeLimitDropDown,
-    setTimeLimitDropDown,
     handleSetCollectValues,
   } = useCollectionModal();
 
@@ -97,16 +89,11 @@ const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
           chargeCollect={chargeCollect}
           setChargeCollect={setChargeCollect}
           enabledCurrencies={enabledCurrencies}
-          audienceTypes={audienceTypes}
           setAudienceType={setAudienceType}
           audienceType={audienceType}
           setEnabledCurrency={setEnabledCurrency}
           enabledCurrency={enabledCurrency}
-          setChargeCollectDropDown={setChargeCollectDropDown}
-          setAudienceDropDown={setAudienceDropDown}
           setCurrencyDropDown={setCurrencyDropDown}
-          chargeCollectDropDown={chargeCollectDropDown}
-          audienceDropDown={audienceDropDown}
           currencyDropDown={currencyDropDown}
           value={value}
           setValue={setValue}
@@ -116,18 +103,13 @@ const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
           setReferral={setReferral}
           collectible={collectible}
           setCollectible={setCollectible}
-          collectibleDropDown={collectibleDropDown}
-          setCollectibleDropDown={setCollectibleDropDown}
           limitedEdition={limitedEdition}
           setLimitedEdition={setLimitedEdition}
-          limitedDropDown={limitedDropDown}
-          setLimitedDropDown={setLimitedDropDown}
           timeLimit={timeLimit}
           setTimeLimit={setTimeLimit}
-          timeLimitDropDown={timeLimitDropDown}
-          setTimeLimitDropDown={setTimeLimitDropDown}
           titleValue={titleValue}
           sourceValue={sourceValue}
+          updateMix={updateMix}
         />
       );
   }

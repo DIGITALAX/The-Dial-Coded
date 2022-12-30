@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { useDispatch } from "react-redux";
-import FeedPublication from "../../../Common/Feed/FeedPublication";
+import FeedPublication from "../../../Common/Feed/modules/FeedPublication";
 import { MainPostProps } from "../types/post.types";
 
 const MainPost: FunctionComponent<MainPostProps> = ({

@@ -22,9 +22,7 @@ const useMixtapeImages = (): UseMixtapeImagesResults => {
         body: (e.target as HTMLFormElement).files[0],
       });
       let cid = await response.json();
-      console.log(imageArray);
       imageArray[index] = String(cid?.cid);
-      console.log(imageArray);
     } catch (err: any) {
       console.error(err.message);
     }

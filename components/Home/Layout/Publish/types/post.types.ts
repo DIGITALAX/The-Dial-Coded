@@ -1,6 +1,7 @@
 import {
   Profile,
   PublicationSearchResult,
+  PublicationsQueryRequest,
 } from "../../../../Common/types/lens.types";
 
 export type PostBoxProps = {
@@ -14,9 +15,12 @@ export type UsePostResult = {
 };
 
 export type FeedProps = {
-  topTrending: string[];
-  topMixtape: string[];
-  topTracks: string[];
+  hotFeed: PublicationsQueryRequest[];
+  hasHotReacted: boolean[];
+  hasHotCommented: boolean[];
+  hasHotMirrored: boolean[];
+  hotReactionsFeed: any[];
+  fetchMoreMixtapes: () => Promise<void>;
   publicationsFeed: PublicationSearchResult[];
   fetchMore: () => Promise<void>;
   hasReacted: boolean[];
