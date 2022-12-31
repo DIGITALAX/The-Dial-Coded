@@ -9,6 +9,7 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import { useAccount } from "wagmi";
 
 const HotPublication: FunctionComponent<HotPublicationProps> = ({
   height,
@@ -21,6 +22,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
   hasReacted,
   hasMirrored,
   hasCommented,
+  handleHidePost,
 }): JSX.Element => {
   const router = useRouter();
   let imagePrefix: any;
@@ -36,7 +38,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
     if (data?.profile.picture?.original?.url.includes("http")) {
       profileImage = imagePrefix?.original.url;
     } else {
-      const cut = data?.profile?.picture?.original?.url.split("/");
+      const cut = data?.profile?.picture?.original?.url?.split("/");
       profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
     }
   } else {
@@ -45,6 +47,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
   const viewerOpen = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
   );
+  const { address } = useAccount();
   return (
     <div
       id="add"
@@ -67,8 +70,8 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
             router.push(
               `/profile/${
                 data?.__typename !== "Mirror"
-                  ? data?.profile?.handle.split(".lens")[0]
-                  : data?.mirrorOf?.profile?.handle.split(".lens")[0]
+                  ? data?.profile?.handle?.split(".lens")[0]
+                  : data?.mirrorOf?.profile?.handle?.split(".lens")[0]
               }`
             )}
         >
@@ -97,7 +100,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
           className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-1.5 py-px row-start-1 col-start-2"
         >
           <div className="relative w-fit h-fit place-self-center col-start-1">
-            {(data?.metadata?.content).split("\n\n")[2].split(",")[index]}
+            {(data?.metadata?.content)?.split("\n\n")[2]?.split(",")[index]}
           </div>
         </div>
         <div
@@ -117,8 +120,8 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
           }}
         >
           <div className="relative w-fit h-fit col-start-1 place-self-center whitespace-nowrap">
-            Src: {(data?.metadata?.content).split("\n\n")[0]} ——{" "}
-            {(data?.metadata?.content).split("\n\n")[1]}
+            Src: {(data?.metadata?.content)?.split("\n\n")[0]} ——{" "}
+            {(data?.metadata?.content)?.split("\n\n")[1]}
           </div>
         </div>
         <div
@@ -157,6 +160,8 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
             hasReacted={hasReacted}
             hasMirrored={hasMirrored}
             hasCommented={hasCommented}
+            handleHidePost={handleHidePost}
+            canDelete={address === data?.profile?.ownedBy ? true : false}
           />
         </div>
       </div>

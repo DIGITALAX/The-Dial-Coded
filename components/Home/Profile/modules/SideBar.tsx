@@ -31,6 +31,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   hasHotMirrored,
   hasHotCommented,
   mixtapes,
+  handleHidePost,
 }): JSX.Element => {
   const location = lodash.filter(
     profileData?.attributes,
@@ -191,13 +192,13 @@ const SideBar: FunctionComponent<SideBarProps> = ({
             )}
           </div>
         </div>
-        <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto">
+        <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto">
           <InfiniteScroll
             height={undefined}
             loader={""}
             hasMore={true}
             next={getMoreUserMixtapes}
-            dataLength={lodash.drop(mixtapes, 2)?.length}
+            dataLength={mixtapes?.length}
             className={`relative w-full h-full grid grid-flow-row auto-rows-auto gap-16`}
             style={{ color: "#131313", fontFamily: "Digi Reg" }}
           >
@@ -224,6 +225,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
                           hasReacted={hasHotReacted[indexOne]}
                           hasMirrored={hasHotMirrored[indexOne]}
                           hasCommented={hasHotCommented[indexOne]}
+                          handleHidePost={handleHidePost}
                         />
                       );
                     }

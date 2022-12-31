@@ -15,6 +15,8 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   hasReacted,
   reactionsFeed,
   profileDataLoading,
+  mixtapeMirror,
+  handleHidePost
 }): JSX.Element => {
   return (
     <div
@@ -53,6 +55,10 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
                     reactionsFeed={
                       reactionsFeed?.length > 0 && reactionsFeed[index]
                     }
+                    mixtapeMirror={
+                      mixtapeMirror?.length > 0 && mixtapeMirror[index]
+                    }
+                    handleHidePost={handleHidePost}
                   />
                 );
               }

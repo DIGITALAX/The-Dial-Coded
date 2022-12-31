@@ -119,7 +119,6 @@ const Viewer: FunctionComponent<ViewerProps> = ({
       <div
         className="relative w-fit h-fit row-start-2 col-start-2 cursor-pointer active:scale-95 justify-self-end self-center"
         // onClick={() =>
-        //   {console.log(fireCount)
         //   dispatch(
         //     setFire(fireCount && fireCount === 5 ? 0 : fireCount + 1)
         //   )}

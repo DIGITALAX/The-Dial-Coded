@@ -47,6 +47,8 @@ export type ProfileTabProps = {
   hasReacted: boolean[];
   reactionsFeed: any[];
   profileDataLoading?: boolean;
+  mixtapeMirror: boolean[];
+  handleHidePost: (id: string) => Promise<void>;
 };
 
 export type StatsTabProps = {

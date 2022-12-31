@@ -26,6 +26,7 @@ const Post: NextPage = (): JSX.Element => {
     hasPostMirrored,
     hasPostReacted,
   } = usePostPage();
+  const { handleHidePost } = useMainFeed();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
@@ -73,7 +74,7 @@ const Post: NextPage = (): JSX.Element => {
     commentSuccess,
     indexerModal.value,
     indexerModal.message,
-    hearted
+    hearted,
   ]);
   const { isConnected } = useAccount();
   useEffect(() => {
@@ -126,6 +127,7 @@ const Post: NextPage = (): JSX.Element => {
                 hasPostCommented={hasPostCommented}
                 hasPostReacted={hasPostReacted}
                 reactionsPostFeed={reactionsPostFeed}
+                handleHidePost={handleHidePost}
               />
               <Comments
                 commentors={commentors}

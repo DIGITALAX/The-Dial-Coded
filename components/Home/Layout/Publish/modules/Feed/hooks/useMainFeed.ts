@@ -19,6 +19,8 @@ import {
 import feedTimeline from "../../../../../../../graphql/queries/feedTimeline";
 import { useRouter } from "next/router";
 import { setNoUserData } from "../../../../../../../redux/reducers/noUserDataSlice";
+import hidePublication from "../../../../../../../graphql/mutations/hidePublication";
+import { setIndexModal } from "../../../../../../../redux/reducers/indexModalSlice";
 
 const useMainFeed = () => {
   const router = useRouter();
@@ -71,6 +73,7 @@ const useMainFeed = () => {
   const [hasMirrored, setHasMirrored] = useState<boolean[]>([]);
   const [hasCommented, setHasCommented] = useState<boolean[]>([]);
   const [commentInfoLoading, setCommentInfoLoading] = useState<boolean>(false);
+  const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
 
   const checkPublicationTypes = (): string[] => {
     let feedOrder: string[];
@@ -92,6 +95,20 @@ const useMainFeed = () => {
       }
     }
     return feedOrder;
+  };
+
+  const checkIfMixtapeMirror = (arr: any[]): boolean[] => {
+    let checkedArr: boolean[] = [];
+    lodash.filter(arr, (item) => {
+      if (item?.__typename === "Mirror") {
+        if (item?.mirrorOf?.metadata?.content.includes("*Dial Mixtape*"))
+          checkedArr.push(true);
+      } else {
+        checkedArr.push(false);
+      }
+    });
+
+    return checkedArr;
   };
 
   const orderFeedManual = (
@@ -302,12 +319,21 @@ const useMainFeed = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      const filteredArr = lodash.filter(
-        sortedArr,
-        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
-      );
+      const filteredArr = lodash.filter(sortedArr, (arr) => {
+        if (arr?.__typename === "Post") {
+          if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      });
       setPublicationsFeed(filteredArr);
       setPaginatedResults(publicationsList?.data?.explorePublications.pageInfo);
+      const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
+      setMixtapeMirror(mixtapeMirrors);
       const response = await checkPostReactions(filteredArr);
       setReactionsFeed(response?.reactionsFeedArr);
     } catch (err: any) {
@@ -357,12 +383,21 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       }
-      const filteredArr = lodash.filter(
-        sortedArr,
-        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
-      );
+      const filteredArr = lodash.filter(sortedArr, (arr) => {
+        if (arr?.__typename === "Post") {
+          if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      });
       const orderedArr = orderFeedManual(filteredArr);
       setPublicationsFeed(orderedArr);
+      const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
+      setMixtapeMirror(mixtapeMirrors);
       setPaginatedResults(pageData);
       const response = await checkPostReactions(orderedArr);
       setReactionsFeed(response?.reactionsFeedArr);
@@ -389,9 +424,17 @@ const useMainFeed = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      const filteredArr = lodash.filter(sortedArr, (arr) =>
-        !arr?.metadata?.content.includes("*Dial Mixtape*")
-      );
+      const filteredArr = lodash.filter(sortedArr, (arr) => {
+        if (arr?.__typename === "Post") {
+          if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      });
       if (sortedArr.length < 1) {
         const authPub = await explorePublicationsAuth({
           sources: "thedial",
@@ -404,11 +447,21 @@ const useMainFeed = () => {
         const auth_sortedArr: any[] = auth_arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
-        const filteredArrAuth = lodash.filter(auth_sortedArr, (arr) =>
-          !arr?.metadata?.content.includes("*Dial Mixtape*")
-        );
+        const filteredArrAuth = lodash.filter(auth_sortedArr, (arr) => {
+          if (arr?.__typename === "Post") {
+            if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        });
         const orderedArr = orderFeedManual(filteredArrAuth);
         setPublicationsFeed(orderedArr);
+        const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
+        setMixtapeMirror(mixtapeMirrors);
         setPaginatedResults(authPub.data.explorePublications.pageInfo);
         const response = await checkPostReactions(orderedArr);
         setHasReacted(response?.hasReactedArr);
@@ -420,6 +473,8 @@ const useMainFeed = () => {
       } else {
         const orderedArr = orderFeedManual(filteredArr);
         setPublicationsFeed(orderedArr);
+        const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
+        setMixtapeMirror(mixtapeMirrors);
         setPaginatedResults(data.feed.pageInfo);
         const response = await checkPostReactions(orderedArr);
         setHasReacted(response?.hasReactedArr);
@@ -452,11 +507,21 @@ const useMainFeed = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      const filteredArr = lodash.filter(sortedArr, (arr) =>
-        !arr?.metadata?.content.includes("*Dial Mixtape*")
-      );
+      const filteredArr = lodash.filter(sortedArr, (arr) => {
+        if (arr?.__typename === "Post") {
+          if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      });
       setPublicationsFeed([...publicationsFeed, ...filteredArr]);
       setPaginatedResults(morePublications?.data.explorePublications.pageInfo);
+      const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
+      setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       const response = await checkPostReactions(filteredArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
     } catch (err: any) {
@@ -478,9 +543,17 @@ const useMainFeed = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      const filteredArr = lodash.filter(sortedArr, (arr) =>
-        !arr?.metadata?.content.includes("*Dial Mixtape*")
-      );
+      const filteredArr = lodash.filter(sortedArr, (arr) => {
+        if (arr?.__typename === "Post") {
+          if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      });
       if (filteredArr.length < 1) {
         const authPub = await explorePublicationsAuth({
           sources: "thedial",
@@ -496,10 +569,20 @@ const useMainFeed = () => {
         const auth_sortedArr: any[] = auth_arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
-        const filteredArrAuth = lodash.filter(auth_sortedArr, (arr) =>
-          !arr?.metadata?.content.includes("*Dial Mixtape*")
-        );
+        const filteredArrAuth = lodash.filter(auth_sortedArr, (arr) => {
+          if (arr?.__typename === "Post") {
+            if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        });
         const orderedArr = orderFeedManual(filteredArrAuth);
+        const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
+        setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
         setPublicationsFeed([...publicationsFeed, ...orderedArr]);
         setPaginatedResults(authPub?.data.explorePublications.pageInfo);
         const response = await checkPostReactions(orderedArr);
@@ -511,6 +594,8 @@ const useMainFeed = () => {
         setHasCommented([...hasCommented, ...hasCommentedArr]);
       } else {
         const orderedArr = orderFeedManual(filteredArr);
+        const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
+        setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
         setPublicationsFeed([...publicationsFeed, ...orderedArr]);
         setPaginatedResults(morePublications?.data.feed.pageInfo);
         const response = await checkPostReactions(orderedArr);
@@ -558,11 +643,20 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       }
-      const filteredArr = lodash.filter(
-        sortedArr,
-        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
-      );
+      const filteredArr = lodash.filter(sortedArr, (arr) => {
+        if (arr?.__typename === "Post") {
+          if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      });
       const orderedArr = orderFeedManual(filteredArr);
+      const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
+      setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       setPublicationsFeed([...publicationsFeed, ...orderedArr]);
       setPaginatedResults(pageData);
       const response = await checkPostReactions(orderedArr);
@@ -646,6 +740,39 @@ const useMainFeed = () => {
     }
   };
 
+  const handleHidePost = async (id: string): Promise<void> => {
+    console.log(id);
+    try {
+      const hidden = await hidePublication({
+        publicationId: id,
+      });
+      if (hidden) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Post Successfully Hidden",
+          })
+        );
+      }
+    } catch (err: any) {
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Hide Unsuccessful, Please Try Again",
+        })
+      );
+      console.error(err?.message);
+    }
+    setTimeout(() => {
+      dispatch(
+        setIndexModal({
+          actionValue: false,
+          actionMessage: undefined,
+        })
+      );
+    }, 3000);
+  };
+
   useEffect(() => {
     if (commentShow) {
       getPostComments();
@@ -696,6 +823,8 @@ const useMainFeed = () => {
     checkPostReactions,
     checkIfCommented,
     checkIfMirrored,
+    mixtapeMirror,
+    handleHidePost,
   };
 };
 

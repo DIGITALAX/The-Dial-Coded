@@ -6,7 +6,7 @@ import {
   BsFillCollectionFill,
 } from "react-icons/bs";
 import { FaRegCommentDots, FaCommentDots } from "react-icons/fa";
-import { AiOutlineRetweet } from "react-icons/ai";
+import { AiOutlineMinusCircle, AiOutlineRetweet } from "react-icons/ai";
 import { ReactionProps } from "../../types/common.types";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -36,7 +36,9 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   hasReacted,
   hasMirrored,
   hasCommented,
+  handleHidePost,
   id,
+  canDelete
 }): JSX.Element => {
   const inCommentBox = useSelector(
     (state: RootState) => state.app.commentShowReducer
@@ -233,6 +235,16 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           >
             {collectAmount}
           </div>
+        </div>
+      )}
+      {canDelete && (
+        <div
+          className={`relative w-fit h-fit ${
+            canCollect ? "col-start-5" : "col-start-4"
+          } grid grid-flow-col auto-cols-auto gap-2 place-self-center cursor-pointer active:scale-95`}
+          onClick={() => handleHidePost(id as string)}
+        >
+          <AiOutlineMinusCircle color={textColor} size={15}/>
         </div>
       )}
     </div>

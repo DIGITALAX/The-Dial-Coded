@@ -58,6 +58,7 @@ const Post: NextPage = (): JSX.Element => {
     hasMirrored,
     hasReacted,
     reactionsFeed,
+    handleHidePost,
   } = useMainFeed();
 
   const dispatch = useDispatch();
@@ -73,7 +74,7 @@ const Post: NextPage = (): JSX.Element => {
     commentSuccess,
     indexerModal.value,
     indexerModal.message,
-    hearted
+    hearted,
   ]);
   const { isConnected } = useAccount();
   useEffect(() => {
@@ -126,6 +127,7 @@ const Post: NextPage = (): JSX.Element => {
                 hasPostCommented={hasPostCommented}
                 hasPostReacted={hasPostReacted}
                 reactionsPostFeed={reactionsPostFeed}
+                handleHidePost={handleHidePost}
               />
               <Comments
                 commentors={commentors}

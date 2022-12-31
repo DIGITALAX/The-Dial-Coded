@@ -26,7 +26,7 @@ const useHot = (): UseHotResults => {
     (state: RootState) => state.app.indexModalReducer
   );
   const [hotFeed, setHotFeed] = useState<PublicationsQueryRequest[]>([]);
-  const [paginatedResults, setPaginatedResults] = useState<any>();
+  const [paginatedHotResults, setPaginatedHotResults] = useState<any>();
   const { checkPostReactions, checkIfMirrored, checkIfCommented } =
     useMainFeed();
   const [hotReactionsFeed, setHotReactionsFeed] = useState<any[]>([]);
@@ -76,7 +76,7 @@ const useHot = (): UseHotResults => {
         pageData = data?.explorePublications?.pageInfo;
       }
       setHotFeed(sortedArr);
-      setPaginatedResults(pageData);
+      setPaginatedHotResults(pageData);
       const response = await checkPostReactions(sortedArr);
       setHotReactionsFeed(response?.reactionsFeedArr);
       if (lensProfile) {
@@ -107,7 +107,7 @@ const useHot = (): UseHotResults => {
             },
           },
           noRandomize: true,
-          cursor: paginatedResults?.next,
+          cursor: paginatedHotResults?.next,
         });
         const arr: any[] = [...data?.explorePublications?.items];
         sortedArr = arr.sort(
@@ -126,6 +126,7 @@ const useHot = (): UseHotResults => {
             },
           },
           noRandomize: true,
+          cursor: paginatedHotResults?.next,
         });
         const arr: any[] = [...data?.explorePublications?.items];
         sortedArr = arr.sort(
@@ -134,7 +135,7 @@ const useHot = (): UseHotResults => {
         pageData = data?.explorePublications?.pageInfo;
       }
       setHotFeed([...hotFeed, ...sortedArr]);
-      setPaginatedResults(pageData);
+      setPaginatedHotResults(pageData);
       const response = await checkPostReactions(sortedArr);
       setHotReactionsFeed([...hotReactionsFeed, ...response?.reactionsFeedArr]);
       if (lensProfile) {

@@ -26,6 +26,8 @@ const Post: FunctionComponent = (): JSX.Element => {
     reactionsFeed,
     hasMirrored,
     hasCommented,
+    mixtapeMirror,
+    handleHidePost
   } = useMainFeed();
   const {
     hotFeed,
@@ -57,6 +59,8 @@ const Post: FunctionComponent = (): JSX.Element => {
         hasMirrored={hasMirrored}
         hasCommented={hasCommented}
         noUserData={noUserData}
+        mixtapeMirror={mixtapeMirror}
+        handleHidePost={handleHidePost}
       />
     </div>
   );

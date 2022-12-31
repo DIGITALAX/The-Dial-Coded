@@ -37,6 +37,7 @@ const useProfile = () => {
   const [reactionsFeed, setReactionsFeed] = useState<any[]>([]);
   const [paginatedResults, setPaginatedResults] = useState<any>();
   const [profileDataLoading, setProfileDataLoading] = useState<boolean>(false);
+  const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
   const [followersLoading, setFollowersLoading] = useState<boolean>(false);
   const [followingLoading, setFollowingLoading] = useState<boolean>(false);
   const [userFollowing, setUserFollowing] = useState<
@@ -104,6 +105,20 @@ const useProfile = () => {
     } catch (err: any) {
       console.error(err.message);
     }
+  };
+
+  const checkIfMixtapeMirror = (arr: any[]): boolean[] => {
+    let checkedArr: boolean[] = [];
+    lodash.filter(arr, (item) => {
+      if (item?.__typename === "Mirror") {
+        if (item?.mirrorOf?.metadata?.content.includes("*Dial Mixtape*"))
+          checkedArr.push(true);
+      } else {
+        checkedArr.push(false);
+      }
+    });
+
+    return checkedArr;
   };
 
   const fetchReactions = async (pubId: string): Promise<any> => {
@@ -274,14 +289,23 @@ const useProfile = () => {
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      const filteredArr = lodash.filter(
-        sortedArr,
-        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
-      );
+      const filteredArr = lodash.filter(sortedArr, (arr: any) => {
+        if (arr?.__typename === "Post") {
+          if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      });
       setUserFeed(filteredArr);
       setPaginatedResults(data?.publications?.pageInfo);
       const response = await checkPostReactions(filteredArr);
       setHasReacted(response?.hasReactedArr);
+      const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
+      setMixtapeMirror(mixtapeMirrors);
       const hasMirroredArr = await checkIfMirrored(filteredArr);
       setHasMirrored(hasMirroredArr);
       const hasCommentedArr = await checkIfCommented(filteredArr);
@@ -305,14 +329,23 @@ const useProfile = () => {
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      const filteredArr = lodash.filter(
-        sortedArr,
-        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
-      );
+      const filteredArr = lodash.filter(sortedArr, (arr) => {
+        if (arr?.__typename === "Post") {
+          if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      });
       setUserFeed(filteredArr);
       setPaginatedResults(data?.publications?.pageInfo);
       const response = await checkPostReactions(filteredArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
+      const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
+      setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       const hasMirroredArr = await checkIfMirrored(filteredArr);
       setHasMirrored([...hasMirrored, ...hasMirroredArr]);
       const hasCommentedArr = await checkIfCommented(filteredArr);
@@ -347,6 +380,7 @@ const useProfile = () => {
     getMoreFollowing,
     followersLoading,
     followingLoading,
+    mixtapeMirror,
   };
 };
 

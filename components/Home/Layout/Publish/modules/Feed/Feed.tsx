@@ -21,6 +21,8 @@ const Feed: FunctionComponent<FeedProps> = ({
   hasMirrored,
   hasCommented,
   noUserData,
+  mixtapeMirror,
+  handleHidePost
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -42,6 +44,8 @@ const Feed: FunctionComponent<FeedProps> = ({
           hasMirrored={hasMirrored}
           hasCommented={hasCommented}
           noUserData={noUserData}
+          mixtapeMirror={mixtapeMirror}
+          handleHidePost={handleHidePost}
         />
         <Hot
           isOpen={isOpen}
@@ -52,6 +56,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           hotReactionsFeed={hotReactionsFeed}
           fetchMoreMixtapes={fetchMoreMixtapes}
           dispatch={dispatch}
+          handleHidePost={handleHidePost}
         />
       </div>
       <div
