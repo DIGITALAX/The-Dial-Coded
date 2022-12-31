@@ -14,6 +14,12 @@ export type SideBarProps = {
   isFollowedByMe: boolean;
   isFollowing: boolean;
   dispatch: Dispatch<AnyAction>;
+  getMoreUserMixtapes: () => Promise<void>;
+  hotReactionsFeed: any[];
+  hasHotReacted: boolean[];
+  hasHotMirrored: boolean[];
+  hasHotCommented: boolean[];
+  mixtapes: any[];
 };
 
 export interface FollowArgs {
@@ -51,4 +57,10 @@ export type UseProfilePageResults = {
   userFollowers: PaginatedFollowersResult[];
   getMoreFollowers: () => Promise<void>;
   getMoreFollowing: () => Promise<void>;
+  getMoreUserMixtapes: () => Promise<void>;
+  hotReactionsFeed: any[];
+  hasHotReacted: boolean[];
+  hasHotMirrored: boolean[];
+  hasHotCommented: boolean[];
+  mixtapes: any[];
 };
