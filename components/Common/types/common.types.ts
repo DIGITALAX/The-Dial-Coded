@@ -677,3 +677,13 @@ export type HotPublicationProps = {
   hasCommented?: boolean | undefined;
   dispatch: Dispatch<AnyAction>;
 };
+
+export type MixtapePublicationProps = {
+  publication: PublicationSearchResult;
+  dispatch: Dispatch<AnyAction>;
+  type?: string;
+  hasReacted?: boolean | undefined;
+  reactionsFeed?: number;
+  hasMirrored?: boolean | undefined;
+  hasCommented?: boolean | undefined;
+}

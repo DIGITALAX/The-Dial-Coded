@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import MainPost from "../../components/Home/Post/modules/MainPost";
 import Comments from "../../components/Home/Post/modules/Comments";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -11,6 +10,7 @@ import usePostPage from "../../components/Home/Post/hooks/usePostPage";
 import usePublication from "../../components/Common/Modals/Publications/hooks/usePublication";
 import useMainFeed from "../../components/Home/Layout/Publish/modules/Feed/hooks/useMainFeed";
 import { BsFillChatDotsFill } from "react-icons/bs";
+import MainPost from "../../components/Home/Mixtape/MainPost";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -81,8 +81,8 @@ const Post: NextPage = (): JSX.Element => {
   }, [isConnected]);
 
   return (
-    <div className="relative h-auto min-h-screen w-full grid grid-flow-col auto-col-auto overflow-hidden pt-44">
-      <div className="relative w-full h-full grid grid-flow-col auto-cols-auto col-start-1 bg-white rounded-t-md bg-white/90">
+    <div className="relative h-auto min-h-screen w-full grid grid-flow-col auto-col-auto overflow-hidden pt-32 bg-offWhite/60">
+      <div className="relative w-full h-full grid grid-flow-col auto-cols-auto col-start-1 rounded-t-md">
         {(publicationDataLoading || publicationDataLoading === undefined) &&
         !publicationData &&
         reactionsPostFeed?.length === 0 ? (
@@ -116,7 +116,7 @@ const Post: NextPage = (): JSX.Element => {
                 publicationData?.__typename === "Comment"
                   ? "row-start-2"
                   : "row-start-1"
-              } relative w-4/5 h-fit grid grid-flow-row auto-rows-auto col-start-1 justify-self-center ${
+              } relative w-full h-fit grid grid-flow-row auto-rows-auto col-start-1 justify-self-center ${
                 publicationData?.__typename !== "Comment" && "pt-20"
               }`}
             >

@@ -44,7 +44,7 @@ const Header: FunctionComponent = (): JSX.Element => {
       </div>
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-1 sm:col-start-2 gap-6 justify-self-start self-center sm:justify-self-center pr-4 row-start-2 sm:row-start-1">
         {!router.asPath.includes("post") &&
-          !router.asPath.includes("profile") && (
+          !router.asPath.includes("profile") && !router.asPath.includes("mixtape") && (
             <div
               className="relative w-fit h-fit col-start-1 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60"
               onClick={() => dispatch(setVideo(!video))}
@@ -58,7 +58,7 @@ const Header: FunctionComponent = (): JSX.Element => {
             </div>
           )}
         {!router.asPath.includes("post") &&
-          !router.asPath.includes("profile") && (
+          !router.asPath.includes("profile") && !router.asPath.includes("mixtape") && (
             <div
               className="relative w-fit h-fit col-start-2 opacity-80 place-self-center cursor-pointer active:scale-95 hover:opacity-60"
               onClick={() => handleImageData(currentImage)}
