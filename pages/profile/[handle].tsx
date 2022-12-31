@@ -25,6 +25,12 @@ const Profile: NextPage = (): JSX.Element => {
     hasCommented,
     hasReacted,
     reactionsFeed,
+    getMoreUserMixtapes,
+    hotReactionsFeed,
+    hasHotReacted,
+    hasHotMirrored,
+    hasHotCommented,
+    mixtapes,
   } = useProfilePage();
   const { isConnected } = useAccount();
   useEffect(() => {
@@ -74,8 +80,14 @@ const Profile: NextPage = (): JSX.Element => {
               isFollowedByMe={isFollowedByMe}
               isFollowing={isFollowing}
               dispatch={dispatch}
+              getMoreUserMixtapes={getMoreUserMixtapes}
+              hotReactionsFeed={hotReactionsFeed}
+              hasHotReacted={hasHotReacted}
+              hasHotMirrored={hasHotMirrored}
+              hasHotCommented={hasHotCommented}
+              mixtapes={mixtapes}
             />
-            <div className="relative w-full h-full col-start-2 col-span-4 grid grid-flow-col auto-cols-auto px-24 py-4 bg-offWhite/90">
+            <div className="relative w-full h-full col-start-2 grid grid-flow-col auto-cols-auto px-10 py-4 bg-offWhite/90">
               <ProfileTab
                 getMoreUserProfileFeed={getMoreUserProfileFeed}
                 userFeed={userFeed}

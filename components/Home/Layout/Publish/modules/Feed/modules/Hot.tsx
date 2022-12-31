@@ -89,10 +89,10 @@ const Hot: FunctionComponent<HotProps> = ({
                       data={mixtape}
                       image={image?.original?.url?.split("//")[1]}
                       dispatch={dispatch}
-                      reactionsFeed={hotReactionsFeed[indexOne]}
-                      hasReacted={hasHotReacted[indexOne]}
-                      hasMirrored={hasHotMirrored[indexOne]}
-                      hasCommented={hasHotCommented[indexOne]}
+                      reactionsFeed={hotReactionsFeed[indexOne+2]}
+                      hasReacted={hasHotReacted[indexOne+2]}
+                      hasMirrored={hasHotMirrored[indexOne+2]}
+                      hasCommented={hasHotCommented[indexOne+2]}
                     />
                   );
                 })}
