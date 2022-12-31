@@ -7,16 +7,15 @@ import useCreateMixtape from "./hooks/useCreateMixtape";
 import useMixtape from "./hooks/useMixtape";
 import useMixtapeImages from "./hooks/useMixtapeImages";
 import CreateMixtape from "./modules/CreateMixtape";
-import lodash from "lodash";
 
 const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
   const mixtapeType: string | undefined = useSelector(
     (state: RootState) => state.app.layoutReducer.value
   );
-  const titleValue = useSelector(
+  const mixTapeTitle = useSelector(
     (state: RootState) => state.app.mixtapeTitleReducer.value
   );
-  const sourceValue = useSelector(
+  const mixTapeSource = useSelector(
     (state: RootState) => state.app.mixtapeSourceReducer.value
   );
   const dispatch = useDispatch();
@@ -31,7 +30,6 @@ const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
     handleRemoveTrack,
     generateMixtape,
   } = useCreateMixtape();
-  const { updateMix } = useMixtape();
   const arrays = useSelector((state: RootState) => state.app.addTrackReducer);
   const { handleRemoveImage, uploadImage, imageLoading } = useMixtapeImages();
   let action: string = "Add New Mixtape";
@@ -107,9 +105,8 @@ const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
           setLimitedEdition={setLimitedEdition}
           timeLimit={timeLimit}
           setTimeLimit={setTimeLimit}
-          titleValue={titleValue}
-          sourceValue={sourceValue}
-          updateMix={updateMix}
+          titleValue={mixTapeTitle}
+          sourceValue={mixTapeSource}
         />
       );
   }

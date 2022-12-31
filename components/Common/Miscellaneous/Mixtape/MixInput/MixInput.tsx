@@ -8,7 +8,6 @@ const MixInput: FunctionComponent<MixInputProps> = ({
   handleChange,
   value,
   loader,
-  editValues,
 }): JSX.Element => {
   return (
     <div
@@ -23,9 +22,8 @@ const MixInput: FunctionComponent<MixInputProps> = ({
       >
         <div className="relative w-full h-full bg-white grid grid-flow-row auto-rows-auto rounded-md p-1 col-start-1">
           <input
-            key={value}
             name={name}
-            value={value ? value : editValues ? editValues : ""}
+            value={value}
             className="relative w-full h-full p-2 text-black font-dosis rounded-md row-start-1 caret-transparent"
             onChange={(e: FormEvent) => handleChange(e)}
             disabled={loader ? true : false}

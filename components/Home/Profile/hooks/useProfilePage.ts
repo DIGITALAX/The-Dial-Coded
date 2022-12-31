@@ -407,6 +407,7 @@ const useProfilePage = (): UseProfilePageResults => {
           return true;
         }
       });
+   
       setUserFeed(filteredArr);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror(mixtapeMirrors);
@@ -564,6 +565,7 @@ const useProfilePage = (): UseProfilePageResults => {
         pageData = data?.publications?.pageInfo;
       } else {
         const { data } = await profilePublicationsAuth({
+          sources: "thedial",
           profileId: profileData?.id,
           publicationTypes: ["POST"],
           limit: 30,

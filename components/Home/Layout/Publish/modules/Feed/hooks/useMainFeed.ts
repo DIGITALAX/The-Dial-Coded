@@ -458,6 +458,7 @@ const useMainFeed = () => {
             return true;
           }
         });
+        console.log(authPub.data.explorePublications.pageInfo, "forst data")
         const orderedArr = orderFeedManual(filteredArrAuth);
         setPublicationsFeed(orderedArr);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
@@ -580,6 +581,7 @@ const useMainFeed = () => {
             return true;
           }
         });
+        console.log(authPub.data.explorePublications.pageInfo, "second data")
         const orderedArr = orderFeedManual(filteredArrAuth);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);

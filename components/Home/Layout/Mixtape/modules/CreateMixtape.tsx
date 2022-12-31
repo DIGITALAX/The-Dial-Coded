@@ -48,7 +48,6 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
   handleSetCollectValues,
   titleValue,
   sourceValue,
-  updateMix,
 }): JSX.Element => {
   return (
     <div className="relative col-start-1 w-full h-fit grid grid-flow-row auto-rows-auto self-start gap-10">
@@ -74,7 +73,6 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
           handleChange={handleTitle}
           value={titleValue}
           loader={mixtapeLoading}
-          editValues={updateMix?.metadata?.name}
         />
         <MixInput
           col={"2"}
@@ -83,7 +81,6 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
           handleChange={handleSource}
           value={sourceValue}
           loader={mixtapeLoading}
-          editValues={(updateMix?.metadata?.content)?.split("\n\n")[0]}
         />
       </div>
       <div className="relative row-start-4 w-full h-fit grid grid-flow gap-3 pb-6">
