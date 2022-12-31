@@ -17,6 +17,9 @@ const useMixtape = (): UseMixtapeResults => {
   const mixtapePage = useSelector(
     (state: RootState) => state.app.mixtapePageReducer.value
   );
+  const indexerStatus = useSelector(
+    (state: RootState) => state.app.indexModalReducer?.value
+  );
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
@@ -44,7 +47,7 @@ const useMixtape = (): UseMixtapeResults => {
 
       const arr: any[] = [...data?.publications?.items];
       const sortedArr = arr.sort(
-        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        (a: any, b: any) => Date.parse(a.createdAt) - Date.parse(b.createdAt)
       );
       let mBg: string[] = [];
       let mT: string[] = [];
@@ -79,7 +82,7 @@ const useMixtape = (): UseMixtapeResults => {
 
       const arr: any[] = [...data?.publications?.items];
       const sortedArr = arr.sort(
-        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        (a: any, b: any) => Date.parse(a.createdAt) - Date.parse(b.createdAt)
       );
       let mBg: string[] = [];
       let mT: string[] = [];
@@ -126,6 +129,8 @@ const useMixtape = (): UseMixtapeResults => {
         actionTitle: Array(10).fill("TRACK NAME | SOURCE (shortened)"),
       })
     );
+    dispatch(setMixtapeTitle(""));
+    dispatch(setMixtapeSource(""));
   }, []);
 
   useEffect(() => {
@@ -166,13 +171,15 @@ const useMixtape = (): UseMixtapeResults => {
           actionTitle: tracks,
         })
       );
+      dispatch(setMixtapeTitle(mixtape?.metadata?.name));
+      dispatch(setMixtapeSource(mixtape?.metadata?.content?.split("\n\n")[0]));
       setUpdateMix(mixtape);
     }
   }, [mixtapePage]);
 
   useEffect(() => {
     getMixtapes();
-  }, []);
+  }, [indexerStatus]);
 
   return {
     handleTapeSet,

@@ -226,7 +226,6 @@ export type MixInputProps = {
   handleChange: (e: FormEvent) => void;
   value: string;
   loader?: boolean;
-  editValues: string;
 };
 
 export type MixCheckProps = {
@@ -295,7 +294,6 @@ export type CreateMixtapeProps = {
   handleSetCollectValues: () => void;
   titleValue: string;
   sourceValue: string;
-  updateMix: any;
 };
 
 export type TrackInputProps = {

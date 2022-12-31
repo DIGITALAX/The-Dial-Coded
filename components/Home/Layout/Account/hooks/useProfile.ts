@@ -281,6 +281,7 @@ const useProfile = () => {
     setProfileDataLoading(true);
     try {
       const { data } = await profilePublicationsAuth({
+        sources: "thedial",
         profileId: profileId,
         publicationTypes: ["POST", "COMMENT", "MIRROR"],
         limit: 30,
@@ -320,6 +321,7 @@ const useProfile = () => {
   const getMoreUserProfileFeed = async (): Promise<void> => {
     try {
       const { data } = await profilePublicationsAuth({
+        sources: "thedial",
         profileId: profileId,
         publicationTypes: ["POST", "COMMENT", "MIRROR"],
         limit: 30,
@@ -340,7 +342,7 @@ const useProfile = () => {
           return true;
         }
       });
-      setUserFeed(filteredArr);
+      setUserFeed([...userFeed, ...filteredArr]);
       setPaginatedResults(data?.publications?.pageInfo);
       const response = await checkPostReactions(filteredArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);

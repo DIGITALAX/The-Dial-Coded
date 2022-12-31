@@ -10,8 +10,6 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { setAddTrack } from "../../../../../redux/reducers/addTrackSlice";
-import { setMixtapeTitle } from "../../../../../redux/reducers/mixtapeTitleSlice";
-import { setMixtapeSource } from "../../../../../redux/reducers/mixtapeSourceSlice";
 import createPostTypedData from "../../../../../graphql/mutations/createPost";
 import { omit, splitSignature } from "../../../../../lib/lens/helpers";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
@@ -28,6 +26,8 @@ import { setCollectValueType } from "../../../../../redux/reducers/collectValueT
 import useCollectionModal from "../../../../Common/Modals/Publications/hooks/useCollectionModal";
 import lodash from "lodash";
 import { setCompleteTrack } from "../../../../../redux/reducers/completeTrackSlice";
+import { setMixtapeSource } from "../../../../../redux/reducers/mixtapeSourceSlice";
+import { setMixtapeTitle } from "../../../../../redux/reducers/mixtapeTitleSlice";
 
 const useCreateMixtape = (): UseCreateMixtapeResults => {
   const [valueClicked, setValueClicked] = useState<boolean>(false);
@@ -47,8 +47,8 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
   const mixTapeTitle = useSelector(
     (state: RootState) => state.app.mixtapeTitleReducer.value
   );
-  const mixtapeSource = useSelector(
-    (state: RootState) => state.app.mixtapeSourceReducer.value
+  const mixTapeSource = useSelector(
+    (state: RootState) => state.app.mixtapeTitleReducer.value
   );
   const [contentURI, setContentURI] = useState<string>();
   const dispatch = useDispatch();
@@ -119,9 +119,9 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     const data = {
       version: "2.0.0",
       metadata_id: uuidv4(),
-      description: mixtapeSource + "\n\n" + check + "\n\n" + titleFiltered,
+      description: mixTapeSource + "\n\n" + check + "\n\n" + titleFiltered,
       content:
-        mixtapeSource +
+        mixTapeSource +
         "\n\n" +
         check +
         "\n\n" +
@@ -180,7 +180,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     if (
       !lodash.isEqual(imgarr, titlearr) ||
       !mixTapeTitle ||
-      !mixtapeSource ||
+      !mixTapeSource ||
       !check
     ) {
       dispatch(setCompleteTrack(true));
@@ -262,6 +262,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
         indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
         "SUCCESS"
       ) {
+        setMixtapeLoading(false);
         dispatch(
           setIndexModal({
             actionValue: true,
@@ -269,6 +270,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
           })
         );
       } else {
+        setMixtapeLoading(false);
         dispatch(
           setIndexModal({
             actionValue: true,

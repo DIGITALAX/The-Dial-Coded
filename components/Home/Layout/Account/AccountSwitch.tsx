@@ -10,6 +10,7 @@ import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Notifications from "./modules/Notifications";
 import useNotifications from "./hooks/useNotifications";
+import useMainFeed from "../Publish/modules/Feed/hooks/useMainFeed";
 
 const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const accountType: string | undefined = useSelector(
@@ -41,8 +42,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     getMoreFollowing,
     followersLoading,
     followingLoading,
-    mixtapeMirror
+    mixtapeMirror,
   } = useProfile();
+  const { handleHidePost } = useMainFeed();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
   const profile = useSelector(
@@ -77,6 +79,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           reactionsFeed={reactionsFeed}
           profileDataLoading={profileDataLoading}
           mixtapeMirror={mixtapeMirror}
+          handleHidePost={handleHidePost}
         />
       );
 
