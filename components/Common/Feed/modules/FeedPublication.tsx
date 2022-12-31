@@ -135,11 +135,6 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
             ? (publication as any)?.metadata?.description
             : (publication as any)?.mirrorOf?.metadata?.description}
         </div>
-        <div className="relative w-full h-fit row-start-2 text-offBlue text-base self-center justify-self-start">
-          {(publication as any)?.__typename !== "Mirror"
-            ? (publication as any)?.metadata?.tags
-            : (publication as any)?.mirrorOf?.metadata?.tags}
-        </div>
       </div>
       <div
         className={`relative w-fit max-w-full h-fit rounded-lg overflow-x-scroll grid grid-flow-col auto-cols-auto gap-3 pl-6 z-10 ${

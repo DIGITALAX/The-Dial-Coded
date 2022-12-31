@@ -35,7 +35,11 @@ const useHeader = (): UseHeaderResult => {
   };
 
   const handleAccount = (): void => {
-    if (router.asPath.includes("post") || router.asPath.includes("profile")) {
+    if (
+      router.asPath.includes("post") ||
+      router.asPath.includes("profile") ||
+      router.asPath.includes("mixtape")
+    ) {
       router.push("/");
     }
     dispatch(setLayout("Account"));

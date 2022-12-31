@@ -82,7 +82,7 @@ const Post: NextPage = (): JSX.Element => {
 
   return (
     <div className="relative h-auto min-h-screen w-full grid grid-flow-col auto-col-auto overflow-hidden pt-44">
-      <div className="relative w-full h-full grid grid-flow-col auto-cols-auto col-start-1 bg-white rounded-t-md bg-white/90">
+      <div className="relative w-full h-full grid grid-flow-col auto-cols-auto col-start-1 rounded-t-md bg-white/90">
         {(publicationDataLoading || publicationDataLoading === undefined) &&
         !publicationData &&
         reactionsPostFeed?.length === 0 ? (

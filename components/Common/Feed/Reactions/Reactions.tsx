@@ -104,7 +104,9 @@ const Reactions: FunctionComponent<ReactionProps> = ({
       <div
         className={`relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
         onClick={
-          router.asPath.includes("post") || inCommentBox?.open
+          router.asPath.includes("post") ||
+          router.asPath.includes("mixtape") ||
+          inCommentBox?.open
             ? () => {
                 router.push(`/post/${id}`);
                 commentExpand &&
