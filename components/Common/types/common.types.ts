@@ -39,6 +39,8 @@ export type ReactionProps = {
   hasReacted?: boolean;
   hasMirrored?: boolean;
   hasCommented?: boolean;
+  handleHidePost: (id: string) => Promise<void>;
+  canDelete: boolean;
 };
 
 export type InterfaceProps = {
@@ -122,6 +124,8 @@ export type FeedPublicationProps = {
   reactionsFeed?: number;
   hasMirrored?: boolean | undefined;
   hasCommented?: boolean | undefined;
+  mixtapeMirror?: boolean;
+  handleHidePost: (id: string) => Promise<void>;
 };
 
 export type OptionMenuProps = {
@@ -676,6 +680,7 @@ export type HotPublicationProps = {
   hasMirrored?: boolean | undefined;
   hasCommented?: boolean | undefined;
   dispatch: Dispatch<AnyAction>;
+  handleHidePost: (id: string) => Promise<void>;
 };
 
 export type MixtapePublicationProps = {
@@ -686,4 +691,5 @@ export type MixtapePublicationProps = {
   reactionsFeed?: number;
   hasMirrored?: boolean | undefined;
   hasCommented?: boolean | undefined;
-}
+  handleHidePost: (id: string) => Promise<void>;
+};

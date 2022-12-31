@@ -13,6 +13,7 @@ const Hot: FunctionComponent<HotProps> = ({
   fetchMoreMixtapes,
   isOpen,
   dispatch,
+  handleHidePost,
 }): JSX.Element => {
   return (
     <div
@@ -35,6 +36,7 @@ const Hot: FunctionComponent<HotProps> = ({
                 hasReacted={hasHotReacted[0]}
                 hasMirrored={hasHotMirrored[0]}
                 hasCommented={hasHotCommented[0]}
+                handleHidePost={handleHidePost}
               />
             );
           }
@@ -56,6 +58,7 @@ const Hot: FunctionComponent<HotProps> = ({
                 hasReacted={hasHotReacted[1]}
                 hasMirrored={hasHotMirrored[1]}
                 hasCommented={hasHotCommented[1]}
+                handleHidePost={handleHidePost}
               />
             );
           }
@@ -63,12 +66,11 @@ const Hot: FunctionComponent<HotProps> = ({
       </div>
       <div className="relative w-full h-full row-start-3 grid grid-flow-row auto-rows-auto overflow-x-scroll">
         <InfiniteScroll
-          scrollableTarget={"targetDiv"}
           height={isOpen ? undefined : "100rem"}
           loader={""}
           hasMore={true}
           next={fetchMoreMixtapes}
-          dataLength={lodash.drop(hotFeed, 2)?.length}
+          dataLength={hotFeed?.length - 2}
           className={`relative row-start-1 w-full h-full overflow-y-scroll grid grid-flow-row auto-rows-auto gap-3`}
           style={{ color: "#131313", fontFamily: "Digi Reg" }}
         >
@@ -80,22 +82,25 @@ const Hot: FunctionComponent<HotProps> = ({
                   "relative w-full h-full gap-2 grid grid-flow-row auto-rows-auto"
                 }
               >
-                {mixtape?.metadata?.media?.map((image: any, indexTwo: number) => {
-                  return (
-                    <HotPublication
-                      height="72"
-                      key={indexTwo}
-                      index={indexTwo}
-                      data={mixtape}
-                      image={image?.original?.url?.split("//")[1]}
-                      dispatch={dispatch}
-                      reactionsFeed={hotReactionsFeed[indexOne+2]}
-                      hasReacted={hasHotReacted[indexOne+2]}
-                      hasMirrored={hasHotMirrored[indexOne+2]}
-                      hasCommented={hasHotCommented[indexOne+2]}
-                    />
-                  );
-                })}
+                {mixtape?.metadata?.media?.map(
+                  (image: any, indexTwo: number) => {
+                    return (
+                      <HotPublication
+                        height="72"
+                        key={indexTwo}
+                        index={indexTwo}
+                        data={mixtape}
+                        image={image?.original?.url?.split("//")[1]}
+                        dispatch={dispatch}
+                        reactionsFeed={hotReactionsFeed[indexOne + 2]}
+                        hasReacted={hasHotReacted[indexOne + 2]}
+                        hasMirrored={hasHotMirrored[indexOne + 2]}
+                        hasCommented={hasHotCommented[indexOne + 2]}
+                        handleHidePost={handleHidePost}
+                      />
+                    );
+                  }
+                )}
               </div>
             );
           })}

@@ -12,6 +12,7 @@ import Reactions from "../Reactions/Reactions";
 import { setImageViewer } from "../../../../redux/reducers/imageViewerSlice";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import { setCommentShow } from "../../../../redux/reducers/commentShowSlice";
+import { useAccount } from "wagmi";
 
 const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
   publication,
@@ -21,6 +22,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
   reactionsFeed,
   hasMirrored,
   hasCommented,
+  handleHidePost
 }): JSX.Element => {
   let imagePrefix: any;
   let profileImage: string;
@@ -47,6 +49,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
   const viewerOpen = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
   );
+  const { address } = useAccount();
   return (
     <div
       className={`relative w-full h-fit rounded-md grid grid-flow-row auto-rows-auto p-6 bg-white gap-6 border-2 border-black z-0`}
@@ -242,6 +245,10 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
             hasReacted={hasReacted}
             hasMirrored={hasMirrored}
             hasCommented={hasCommented}
+            handleHidePost={handleHidePost}
+            canDelete={
+              address === (publication as any)?.profile?.id ? true : false
+            }
           />
         </div>
         <div className="relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto justify-self-end">

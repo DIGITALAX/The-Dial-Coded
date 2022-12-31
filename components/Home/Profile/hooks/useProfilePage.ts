@@ -57,6 +57,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const [mixtapes, setMixtapes] = useState<any[]>([]);
   const [mixtapePaginated, setMixtapePaginated] = useState<any>();
   const [hotReactionsFeed, setHotReactionsFeed] = useState<boolean[]>([]);
+  const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
   const [hasHotReacted, setHasHotReacted] = useState<boolean[]>([]);
   const [hasHotMirrored, setHasHotMirrored] = useState<boolean[]>([]);
   const [hasHotCommented, setHasHotCommented] = useState<boolean[]>([]);
@@ -82,6 +83,20 @@ const useProfilePage = (): UseProfilePageResults => {
   const hearted = useSelector(
     (state: RootState) => state.app.heartedReducer?.direction
   );
+
+  const checkIfMixtapeMirror = (arr: any[]): boolean[] => {
+    let checkedArr: boolean[] = [];
+    lodash.filter(arr, (item) => {
+      if (item?.__typename === "Mirror") {
+        if (item?.mirrorOf?.metadata?.content.includes("*Dial Mixtape*"))
+          checkedArr.push(true);
+      } else {
+        checkedArr.push(false);
+      }
+    });
+
+    return checkedArr;
+  };
 
   const fetchReactions = async (pubId: string): Promise<any> => {
     try {
@@ -355,8 +370,6 @@ const useProfilePage = (): UseProfilePageResults => {
   const getUserProfileFeed = async () => {
     let sortedArr: any[];
     let pageData: any;
-    let sortedMix: any[];
-    let mixPageData: any;
     try {
       if (!lensProfile) {
         const { data } = await profilePublications({
@@ -370,24 +383,6 @@ const useProfilePage = (): UseProfilePageResults => {
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
         pageData = data?.publications?.pageInfo;
-
-        const { data: mixtapeData } = await profilePublications({
-          sources: "thedial",
-          profileId: profileData?.id,
-          publicationTypes: ["POST"],
-          limit: 30,
-          metadata: {
-            tags: {
-              all: ["mixtape"],
-            },
-          },
-          cursor: paginatedResults?.next,
-        });
-        const mixArr: any[] = [...mixtapeData?.publications?.items];
-        sortedMix = mixArr.sort(
-          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-        );
-        mixPageData = mixtapeData?.publications?.pageInfo;
       } else {
         const { data } = await profilePublicationsAuth({
           sources: "thedial",
@@ -400,49 +395,31 @@ const useProfilePage = (): UseProfilePageResults => {
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
         pageData = data?.publications?.pageInfo;
-
-        const { data: mixtapeData } = await profilePublicationsAuth({
-          sources: "thedial",
-          profileId: profileData?.id,
-          publicationTypes: ["POST"],
-          limit: 30,
-          metadata: {
-            tags: {
-              all: ["mixtape"],
-            },
-          },
-          cursor: paginatedResults?.next,
-        });
-        const mixArr: any[] = [...mixtapeData?.publications?.items];
-        sortedMix = mixArr.sort(
-          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-        );
-        mixPageData = mixtapeData?.publications?.pageInfo;
       }
-      const filteredArr = lodash.filter(
-        sortedArr,
-        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
-      );
+      const filteredArr = lodash.filter(sortedArr, (arr) => {
+        if (arr?.__typename === "Post") {
+          if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      });
       setUserFeed(filteredArr);
+      const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
+      setMixtapeMirror(mixtapeMirrors);
       setPaginatedResults(pageData);
-      setMixtapes(sortedMix);
-      setMixtapePaginated(mixPageData);
       const response = await checkPostReactions(filteredArr);
       setHasReacted(response?.hasReactedArr);
-      const mixResponse = await checkPostReactions(sortedMix);
-      setHasHotReacted(mixResponse?.hasReactedArr);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(filteredArr);
         setHasMirrored(hasMirroredArr);
-        const hasHotMirroredArr = await checkIfMirrored(sortedMix);
-        setHasHotMirrored(hasHotMirroredArr);
         const hasCommentedArr = await checkIfCommented(filteredArr);
         setHasCommented(hasCommentedArr);
-        const hasHotCommentedArr = await checkIfCommented(sortedMix);
-        setHasHotCommented(hasHotCommentedArr);
       }
       setReactionsFeed(response?.reactionsFeedArr);
-      setHotReactionsFeed(mixResponse?.reactionsFeedArr);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -478,12 +455,21 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         pageData = data?.publications?.pageInfo;
       }
-      const filteredArr = lodash.filter(
-        sortedArr,
-        (arr) => !arr?.metadata?.content.includes("*Dial Mixtape*")
-      );
+      const filteredArr = lodash.filter(sortedArr, (arr) => {
+        if (arr?.__typename === "Post") {
+          if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      });
       setUserFeed([...userFeed, ...filteredArr]);
-      setPaginatedResults([...paginatedResults, ...pageData]);
+      setPaginatedResults(pageData);
+      const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
+      setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       const response = await checkPostReactions(filteredArr);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
       if (lensProfile) {
@@ -495,6 +481,62 @@ const useProfilePage = (): UseProfilePageResults => {
       }
     } catch (err: any) {
       console.error(err.message);
+    }
+  };
+
+  const getUserMixtapes = async (): Promise<void> => {
+    let sortedArr: any[];
+    let pageData: any;
+    try {
+      if (!lensProfile) {
+        const { data } = await profilePublications({
+          sources: "thedial",
+          profileId: profileData?.id,
+          publicationTypes: ["POST"],
+          limit: 30,
+          metadata: {
+            tags: {
+              all: ["mixtape"],
+            },
+          },
+        });
+        const arr: any[] = [...data?.publications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.publications?.pageInfo;
+      } else {
+        const { data } = await profilePublicationsAuth({
+          sources: "thedial",
+          profileId: profileData?.id,
+          publicationTypes: ["POST"],
+          limit: 30,
+          metadata: {
+            tags: {
+              all: ["mixtape"],
+            },
+          },
+        });
+
+        const arr: any[] = [...data?.publications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.publications?.pageInfo;
+      }
+      setMixtapes(sortedArr);
+      setMixtapePaginated(pageData);
+      const response = await checkPostReactions(sortedArr);
+      setHotReactionsFeed(response?.reactionsFeedArr);
+      if (lensProfile) {
+        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        setHasHotMirrored(hasMirroredArr);
+        const hasCommentedArr = await checkIfCommented(sortedArr);
+        setHasHotCommented(hasCommentedArr);
+        setHasHotReacted(response?.hasReactedArr);
+      }
+    } catch (err: any) {
+      console.error(err);
     }
   };
 
@@ -513,7 +555,7 @@ const useProfilePage = (): UseProfilePageResults => {
               all: ["mixtape"],
             },
           },
-          cursor: paginatedResults?.next,
+          cursor: mixtapePaginated?.next,
         });
         const arr: any[] = [...data?.publications?.items];
         sortedArr = arr.sort(
@@ -530,7 +572,7 @@ const useProfilePage = (): UseProfilePageResults => {
               all: ["mixtape"],
             },
           },
-          cursor: paginatedResults?.next,
+          cursor: mixtapePaginated?.next,
         });
         const arr: any[] = [...data?.publications?.items];
         sortedArr = arr.sort(
@@ -538,7 +580,7 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         pageData = data?.publications?.pageInfo;
       }
-      setMixtapes(sortedArr);
+      setMixtapes([...mixtapes, ...sortedArr]);
       setMixtapePaginated(pageData);
       const response = await checkPostReactions(sortedArr);
       setHotReactionsFeed([...hotReactionsFeed, ...response?.reactionsFeedArr]);
@@ -715,6 +757,7 @@ const useProfilePage = (): UseProfilePageResults => {
   useEffect(() => {
     if (profileData) {
       getUserProfileFeed();
+      getUserMixtapes();
       handleFollowingData();
       getFollowing();
       getFollowers();
@@ -767,6 +810,7 @@ const useProfilePage = (): UseProfilePageResults => {
     hasHotCommented,
     hasHotMirrored,
     hotReactionsFeed,
+    mixtapeMirror,
   };
 };
 

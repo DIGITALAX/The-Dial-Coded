@@ -3,6 +3,7 @@ import Image from "next/legacy/image";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 import Banner from "../../components/Common/Profile/modules/Banner";
+import useMainFeed from "../../components/Home/Layout/Publish/modules/Feed/hooks/useMainFeed";
 import useProfilePage from "../../components/Home/Profile/hooks/useProfilePage";
 import SideBar from "../../components/Home/Profile/modules/SideBar";
 import { INFURA_GATEWAY } from "../../lib/lens/constants";
@@ -31,7 +32,9 @@ const Profile: NextPage = (): JSX.Element => {
     hasHotMirrored,
     hasHotCommented,
     mixtapes,
+    mixtapeMirror,
   } = useProfilePage();
+  const { handleHidePost } = useMainFeed();
   const { isConnected } = useAccount();
   useEffect(() => {
     dispatch(setWalletConnected(isConnected));
@@ -86,6 +89,7 @@ const Profile: NextPage = (): JSX.Element => {
               hasHotMirrored={hasHotMirrored}
               hasHotCommented={hasHotCommented}
               mixtapes={mixtapes}
+              handleHidePost={handleHidePost}
             />
             <div className="relative w-full h-full col-start-2 grid grid-flow-col auto-cols-auto px-10 py-4 bg-offWhite/90">
               <ProfileTab
@@ -97,6 +101,8 @@ const Profile: NextPage = (): JSX.Element => {
                 hasCommented={hasCommented}
                 hasReacted={hasReacted}
                 reactionsFeed={reactionsFeed}
+                mixtapeMirror={mixtapeMirror}
+                handleHidePost={handleHidePost}
               />
             </div>
           </div>

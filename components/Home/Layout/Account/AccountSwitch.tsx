@@ -41,6 +41,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     getMoreFollowing,
     followersLoading,
     followingLoading,
+    mixtapeMirror
   } = useProfile();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
@@ -75,6 +76,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           hasReacted={hasReacted}
           reactionsFeed={reactionsFeed}
           profileDataLoading={profileDataLoading}
+          mixtapeMirror={mixtapeMirror}
         />
       );
 

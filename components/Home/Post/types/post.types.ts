@@ -8,6 +8,7 @@ export type MainPostProps = {
   hasPostCommented: boolean[];
   hasPostReacted: boolean[];
   reactionsPostFeed: any[];
+  handleHidePost: (id: string) => Promise<void>;
 };
 
 export type CommentsProps = {

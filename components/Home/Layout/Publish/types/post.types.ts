@@ -28,4 +28,6 @@ export type FeedProps = {
   hasMirrored: boolean[];
   hasCommented: boolean[];
   noUserData: boolean;
+  mixtapeMirror: boolean[];
+  handleHidePost: (id: string) => Promise<void>;
 };

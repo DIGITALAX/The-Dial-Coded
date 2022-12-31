@@ -14,6 +14,8 @@ const Main: FunctionComponent<MainProps> = ({
   reactionsFeed,
   hasCommented,
   noUserData,
+  mixtapeMirror,
+  handleHidePost
 }): JSX.Element => {
   const dispatch = useDispatch();
   return (
@@ -46,6 +48,10 @@ const Main: FunctionComponent<MainProps> = ({
                     reactionsFeed?.length > 0 && reactionsFeed[index]
                   }
                   hasCommented={hasCommented?.length > 0 && hasCommented[index]}
+                  mixtapeMirror={
+                    mixtapeMirror?.length > 0 && mixtapeMirror[index]
+                  }
+                  handleHidePost={handleHidePost}
                 />
               );
             }
