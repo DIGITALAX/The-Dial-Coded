@@ -37,6 +37,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
   commentSuccess,
   reactionsFeed,
   gifs,
+  handleHidepost,
   handleRemoveGif,
 }): JSX.Element => {
   const { openConnectModal } = useConnectModal();
@@ -243,6 +244,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                   hasReacted={hasReacted?.length > 0 && hasReacted[index]}
                   reactionsFeed={reactionsFeed.length > 0 && reactionsFeed[index]}
                   hasCommented={hasCommented?.length > 0 && hasCommented[index]}
+                  handleHidePost={handleHidepost}
                 />
               );
             })}
