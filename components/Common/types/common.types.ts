@@ -577,6 +577,7 @@ export type CommentsModalProps = {
   commentInfoLoading: boolean;
   hasCommented: boolean[];
   reactionsFeed: any[];
+  handleHidePost: (id: string) => Promise<void>
 };
 
 export type ReactionModalProps = {
