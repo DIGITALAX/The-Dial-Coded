@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
-import { authClient } from "../../lib/lens/client";
+import { apolloClient, authClient } from "../../lib/lens/client";
 
-const WHO_MIRRORED_PUBLICATION = `
+const PROFILES = `
 query Profiles($request: ProfileQueryRequest!) {
   profiles(request: $request) {
     items {
@@ -88,13 +88,20 @@ query Profiles($request: ProfileQueryRequest!) {
 }
 `;
 
-const whoMirroredPublications = (request: any) => {
+export const whoMirroredPublications = (request: any) => {
   return authClient.query({
-    query: gql(WHO_MIRRORED_PUBLICATION),
+    query: gql(PROFILES),
     variables: {
       request: request,
     },
   });
 };
 
-export default whoMirroredPublications;
+export const getAllProfiles = (request: any) => {
+  return apolloClient.query({
+    query: gql(PROFILES),
+    variables: {
+      request: request,
+    },
+  });
+};

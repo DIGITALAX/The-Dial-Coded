@@ -8,7 +8,7 @@ import {
 } from "wagmi";
 import mirror from "../../../../graphql/mutations/mirror";
 import checkIndexed from "../../../../graphql/queries/checkIndexed";
-import whoMirroredPublications from "../../../../graphql/queries/whoMirroredPublications";
+import {whoMirroredPublications} from "../../../../graphql/queries/whoMirroredPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
 import { omit, splitSignature } from "../../../../lib/lens/helpers";
 import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";

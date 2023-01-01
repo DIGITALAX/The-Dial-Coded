@@ -40,6 +40,7 @@ const useAccount = (): UseAccountResult => {
     "profile feed",
     "stats",
     "notifications",
+    "conversations"
   ];
   const dispatch = useDispatch();
   const { address } = useAccountWagmi();

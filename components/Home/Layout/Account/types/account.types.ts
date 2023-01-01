@@ -4,7 +4,6 @@ import {
   Attribute,
   PaginatedFollowersResult,
   PaginatedFollowingResult,
-  PaginatedNotificationResult,
   Profile,
   PublicationSearchResult,
 } from "../../../../Common/types/lens.types";
@@ -102,4 +101,15 @@ export type NotificationsProps = {
   getMoreNotifications: () => Promise<void>;
   notificationsList: any[];
   notificationsLoading: boolean;
+};
+
+export type ConversationsProps = {
+  createClient: () => Promise<void>;
+  createdClient: boolean;
+};
+
+export type UseConversationResults = {
+  sendConversation: (otherProfile: Profile, e: FormEvent) => Promise<void>;
+  createClient: () => Promise<void>;
+  createdClient: boolean;
 };
