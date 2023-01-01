@@ -33,6 +33,7 @@ const Profile: NextPage = (): JSX.Element => {
     hasHotCommented,
     mixtapes,
     mixtapeMirror,
+    handleSendDM
   } = useProfilePage();
   const { handleHidePost } = useMainFeed();
   const { isConnected } = useAccount();
@@ -90,6 +91,7 @@ const Profile: NextPage = (): JSX.Element => {
               hasHotCommented={hasHotCommented}
               mixtapes={mixtapes}
               handleHidePost={handleHidePost}
+              handleSendDM={handleSendDM}
             />
             <div className="relative w-full h-full col-start-2 grid grid-flow-col auto-cols-auto px-10 py-4 bg-offWhite/90">
               <ProfileTab

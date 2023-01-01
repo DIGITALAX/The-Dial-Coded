@@ -20,6 +20,7 @@ import { RootState } from "../../../../redux/store";
 import {
   PaginatedFollowersResult,
   PaginatedFollowingResult,
+  Profile,
   PublicationSearchResult,
 } from "../../../Common/types/lens.types";
 import { FollowArgs, UseProfilePageResults } from "../types/profile.types";
@@ -35,6 +36,8 @@ import following from "../../../../graphql/queries/following";
 import followers from "../../../../graphql/queries/followers";
 import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
 import checkIndexed from "../../../../graphql/queries/checkIndexed";
+import { setChosenDMProfile } from "../../../../redux/reducers/chosenDMProfileSlice";
+import { setLayout } from "../../../../redux/reducers/layoutSlice";
 
 const useProfilePage = (): UseProfilePageResults => {
   const router = useRouter();
@@ -407,7 +410,7 @@ const useProfilePage = (): UseProfilePageResults => {
           return true;
         }
       });
-   
+
       setUserFeed(filteredArr);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror(mixtapeMirrors);
@@ -746,6 +749,12 @@ const useProfilePage = (): UseProfilePageResults => {
     }
   };
 
+  const handleSendDM = (profileData: Profile) => {
+    router.push("/")
+    dispatch(setLayout("Account"));
+    dispatch(setChosenDMProfile(profileData));
+  };
+
   const {
     query: { handle },
   } = useRouter();
@@ -813,6 +822,7 @@ const useProfilePage = (): UseProfilePageResults => {
     hasHotMirrored,
     hotReactionsFeed,
     mixtapeMirror,
+    handleSendDM,
   };
 };
 

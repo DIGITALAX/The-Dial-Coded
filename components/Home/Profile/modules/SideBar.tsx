@@ -16,6 +16,7 @@ import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import InfiniteScroll from "react-infinite-scroll-component";
 import HotPublication from "../../../Common/Feed/modules/HotPublication";
+import { MdOutlineMailOutline } from "react-icons/md";
 
 const SideBar: FunctionComponent<SideBarProps> = ({
   profileData,
@@ -32,6 +33,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   hasHotCommented,
   mixtapes,
   handleHidePost,
+  handleSendDM,
 }): JSX.Element => {
   const location = lodash.filter(
     profileData?.attributes,
@@ -142,13 +144,23 @@ const SideBar: FunctionComponent<SideBarProps> = ({
               <div className="relative w-fit h-fit col-start-2">Followers</div>
             </div>
           </div>
-          {isFollowing && (
-            <div className="relative w-fit h-fit row-start-5 grid grid-flow-col auto-cols-auto drop-shadow-md bg-gray-100/50 font-dosis text-sm text-black justify-self-start self-center py-2 px-4 rounded-lg">
-              <div className="relative w-fit h-fit col-start-1 place-self-center">
-                Following You
+          <div className="relative row-start-5 grid grid-flow-col auto-cols-auto">
+            {isFollowing && (
+              <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto drop-shadow-md bg-gray-100/50 font-dosis text-sm text-black justify-self-start self-center py-2 px-4 rounded-lg">
+                <div className="relative w-fit h-fit col-start-1 place-self-center">
+                  Following You
+                </div>
               </div>
+            )}
+            <div
+              className={`${
+                isFollowing ? "col-start-2" : "col-start-1"
+              } place-self-center cursor-pointer active:scale-95`}
+              onClick={() => handleSendDM(profileData)}
+            >
+              <MdOutlineMailOutline size={25} />
             </div>
-          )}
+          </div>
           <div className="relative pt-4 row-start-6 grid grid-flow-col auto-cols-auto text-sm text-offBlack gap-1 w-fit h-fit">
             <div className="relative w-fit h-fit col-start-1">Id:</div>
             <div className="relative w-fit h-fit col-start-2">

@@ -21,6 +21,7 @@ export type SideBarProps = {
   hasHotCommented: boolean[];
   mixtapes: any[];
   handleHidePost: (id: string) => Promise<void>;
+  handleSendDM: (profile: Profile) => void;
 };
 
 export interface FollowArgs {
@@ -65,4 +66,5 @@ export type UseProfilePageResults = {
   hasHotCommented: boolean[];
   mixtapes: any[];
   mixtapeMirror: boolean[];
+  handleSendDM: (profile: Profile) => void;
 };

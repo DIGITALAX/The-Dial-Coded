@@ -6,7 +6,7 @@ import {
   Signer,
   SortDirection,
 } from "@xmtp/xmtp-js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import {
   CONVERSATION_KEY_RE,
@@ -18,20 +18,23 @@ import { getAllProfiles } from "../../../../../graphql/queries/whoMirroredPublic
 import { UseConversationResults } from "../types/account.types";
 import search from "../../../../../graphql/queries/search";
 import lodash from "lodash";
+import { setChosenDMProfile } from "../../../../../redux/reducers/chosenDMProfileSlice";
 
 const useConversations = (): UseConversationResults => {
   const { data: signer } = useSigner();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
+  const chosenProfile = useSelector(
+    (state: RootState) => state.app.chosenDMProfileReducer.profile
+  );
+  const dispatch = useDispatch();
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [profileSearch, setProfileSearch] = useState<Profile[]>([]);
   const [pageCursor, setPageCursor] = useState<any>();
   const [createdClient, setCreatedClient] = useState<boolean>(false);
   const [clientLoading, setClientLoading] = useState<boolean>(false);
   const [searchTarget, setSearchTarget] = useState<string>();
-  const [otherProfile, setOtherProfile] = useState<Profile>();
-  const [chosenProfile, setChosenProfile] = useState<Profile>();
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [messageProfiles, setMessageProfiles] =
     useState<Map<string, Profile>>();
@@ -147,7 +150,7 @@ const useConversations = (): UseConversationResults => {
         {
           conversationId: buildConversationId(
             lensProfile?.id,
-            (chosenProfile as any)?.profileId
+            (chosenProfile as any)?.id
           ),
           metadata: {},
         }
@@ -211,14 +214,18 @@ const useConversations = (): UseConversationResults => {
 
   const handleChosenProfile = (user: Profile) => {
     setSearchTarget(user?.handle);
-    setChosenProfile(user);
+    dispatch(setChosenDMProfile(user));
     setDropdown(false);
   };
 
   const searchMessages = async (e: FormEvent): Promise<void> => {
     setSearchLoading(true);
     setSearchTarget((e.target as HTMLFormElement).value);
-    setDropdown(true);
+    if ((e.target as HTMLFormElement).value === "") {
+      setDropdown(false);
+    } else {
+      setDropdown(true);
+    }
     try {
       const profiles = await search({
         query: (e.target as HTMLFormElement).value,
@@ -269,10 +276,8 @@ const useConversations = (): UseConversationResults => {
     profileSearch,
     searchMoreMessages,
     handleMessage,
-    setOtherProfile,
     handleChosenProfile,
     searchTarget,
-    chosenProfile,
     dropdown,
   };
 };
