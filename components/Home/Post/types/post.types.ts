@@ -34,4 +34,5 @@ export type CommentsProps = {
   handleRemoveGif: (result: any) => void;
   gifs: string[];
   reactionsFeed: any[];
+  handleHidepost: (id: string) => Promise<void>;
 };
