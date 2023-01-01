@@ -12,6 +12,7 @@ import CollectOptionsModal from "./modules/CollectOptionsModal";
 import ImagePicker from "./modules/ImagePicker";
 import ImageUploads from "./modules/ImageUploads";
 import PostOptions from "./modules/PostOptions";
+import Tags from "./modules/Tags";
 
 const PublicationModal: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -76,6 +77,9 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     handleSetGif,
     handleRemoveGif,
     gifs,
+    handleTags,
+    tags,
+    handleRemoveTag
   } = usePublication();
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -145,7 +149,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 onClick={() => dispatch(setPublication(false))}
               />
             </div>
-            <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto pb-4 gap-6 row-start-2">
+            <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2">
               <div
                 id="radialPinkBorder"
                 className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1 rounded-xl"
@@ -163,7 +167,10 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 ></textarea>
               </div>
             </div>
-            <div className="relative w-full h-fit row-start-3 grid grid-flow-col auto-cols-auto">
+            <div className="relative w-full hit row-start-3">
+                <Tags handleRemoveTag={handleRemoveTag} tags={tags} handleTags={handleTags} />
+            </div>
+            <div className="relative w-full h-fit row-start-4 grid grid-flow-col auto-cols-auto">
               <div className="relative w-full h-fit col-start-1 pl-2 self-center">
                 <PostOptions
                   dispatch={dispatch}

@@ -42,6 +42,7 @@ const usePublication = () => {
   const defaultProfile = useSelector(
     (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
   );
+  const [tags, setTags] = useState<string[]>([]);
   const pubId = useSelector(
     (state: RootState) => state.app.reactionStateReducer.value
   );
@@ -191,7 +192,7 @@ const usePublication = () => {
       ],
       media: newImages,
       locale: "en",
-      tags: null,
+      tags: tags ? tags : null,
       createdOn: new Date(),
       appId: "thedial",
     };
@@ -275,8 +276,10 @@ const usePublication = () => {
       setPostDescription("");
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
-      if ( indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS") {
+      if (
+        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS"
+      ) {
         dispatch(
           setIndexModal({
             actionValue: true,
@@ -320,8 +323,10 @@ const usePublication = () => {
       );
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
-      if ( indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS") {
+      if (
+        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS"
+      ) {
         dispatch(
           setIndexModal({
             actionValue: true,
@@ -353,8 +358,20 @@ const usePublication = () => {
 
   const handlePostDescription = async (e: FormEvent): Promise<void> => {
     const text: any = (e.target as HTMLFormElement).value;
-    
+
     setPostDescription(text);
+  };
+
+  const handleTags = (e: FormEvent) => {
+    e.preventDefault();
+    let newTags: string[] = [...(tags as string[])];
+    newTags.push((e.target as HTMLFormElement).tag?.value);
+    setTags(newTags);
+  };
+
+  const handleRemoveTag = (removeTag: string) => {
+    const newArr = lodash.filter(tags, (tag: string) => tag !== removeTag);
+    setTags(newArr);
   };
 
   useEffect(() => {
@@ -384,6 +401,9 @@ const usePublication = () => {
     commentLoading,
     commentSuccess,
     commentPost,
+    handleTags,
+    tags,
+    handleRemoveTag,
   };
 };
 
