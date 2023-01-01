@@ -152,6 +152,7 @@ const usePublication = () => {
 
   const uploadContent = async (): Promise<string | undefined> => {
     let newImages: PostImage[] = [];
+    let formattedTags: string[] = [];
     postImages?.forEach((image) => {
       newImages.push({
         item: "ipfs://" + image,
@@ -168,6 +169,16 @@ const usePublication = () => {
           altTag: gifs[i],
         });
       }
+    }
+
+    if (tags?.length > 0) {
+      lodash.filter(tags, (tag) => {
+        if (tag.length > 50) {
+          formattedTags.push(tag.substring(0, 49));
+        } else {
+          formattedTags.push(tag);
+        }
+      });
     }
 
     const data = {
@@ -192,7 +203,7 @@ const usePublication = () => {
       ],
       media: newImages,
       locale: "en",
-      tags: tags ? tags : null,
+      tags: formattedTags?.length > 0 ? formattedTags : null,
       createdOn: new Date(),
       appId: "thedial",
     };
