@@ -1,4 +1,5 @@
 import { FunctionComponent } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
 import Message from "../../../../Common/Conversations/Message";
 import Preview from "../../../../Common/Conversations/Preview";
 import Search from "../../../../Common/Conversations/Search";
@@ -6,15 +7,68 @@ import { ConversationsProps } from "../types/account.types";
 
 const Conversations: FunctionComponent<ConversationsProps> = ({
   createClient,
+  createdClient,
+  searchMessages,
+  clientLoading,
+  searchLoading,
+  profileSearch,
+  searchMoreMessages,
+  sendConversation,
+  handleMessage,
+  setOtherProfile,
+  handleChosenProfile,
+  searchTarget,
+  dropdown,
+  chosenProfile,
 }): JSX.Element => {
+  if (!createdClient) {
+    return (
+      <div className="relative w-full h-full grid grid-flow-col auto-cols-auto bg-white bg-opacity-30 backdrop-blur-sm rounded-md">
+        <div
+          className="relative w-40 h-10 px-3 py-1 grid grid-flow-col auto-cols-auto bg-offBlack text-white font-dosis rounded-md top-20 justify-self-center cursor-pointer active:scale-95"
+          onClick={() => createClient()}
+        >
+          <div
+            className={`relative w-fit h-fit text-md place-self-center ${
+              clientLoading && "animate-spin"
+            }`}
+          >
+            {clientLoading ? (
+              <AiOutlineLoading size={20} color="white" />
+            ) : (
+              "Start messaging"
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
-      <div className="relative w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto">
-        <Search />
-        <Preview />
+      <div className="relative w-72 h-full rounded-l-md col-start-1 grid grid-flow-col auto-cols-auto bg-offWhite">
+        <div className="relative w-full h-fit col-start-1">
+          <Search
+            searchMessages={searchMessages}
+            searchLoading={searchLoading}
+            profileSearch={profileSearch}
+            searchMoreMessages={searchMoreMessages}
+            handleChosenProfile={handleChosenProfile}
+            searchTarget={searchTarget}
+            dropdown={dropdown}
+          />
+          <Preview
+            setOtherProfile={setOtherProfile}
+            searchTarget={searchTarget}
+          />
+        </div>
       </div>
-      <div className="relative w-full h-fit col-start-2">
-        <Message />
+      <div className="relative w-full h-full col-start-2 col-span-6">
+        <Message
+          sendConversation={sendConversation}
+          handleMessage={handleMessage}
+          searchTarget={searchTarget}
+          chosenProfile={chosenProfile}
+        />
       </div>
     </div>
   );

@@ -16,21 +16,32 @@ import { Profile } from "../../../../Common/types/lens.types";
 import { FormEvent, useEffect, useState } from "react";
 import { getAllProfiles } from "../../../../../graphql/queries/whoMirroredPublications";
 import { UseConversationResults } from "../types/account.types";
+import search from "../../../../../graphql/queries/search";
+import lodash from "lodash";
 
 const useConversations = (): UseConversationResults => {
   const { data: signer } = useSigner();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
+  const [profileSearch, setProfileSearch] = useState<Profile[]>([]);
+  const [pageCursor, setPageCursor] = useState<any>();
   const [createdClient, setCreatedClient] = useState<boolean>(false);
+  const [clientLoading, setClientLoading] = useState<boolean>(false);
+  const [searchTarget, setSearchTarget] = useState<string>();
+  const [otherProfile, setOtherProfile] = useState<Profile>();
+  const [chosenProfile, setChosenProfile] = useState<Profile>();
+  const [dropdown, setDropdown] = useState<boolean>(false);
   const [messageProfiles, setMessageProfiles] =
     useState<Map<string, Profile>>();
   const [previewMessages, setPreviewMessages] =
     useState<Map<string, DecodedMessage>>();
   const [profileIds, setProfileIds] = useState<(string | null)[]>();
+  const [message, setMessage] = useState<string>();
 
   const createClient = async () => {
-    setCreatedClient(true);
+    setClientLoading(true);
     try {
       const xmtp = await Client.create(signer as Signer | null);
       const allConversations = await xmtp.conversations.list();
@@ -54,10 +65,11 @@ const useConversations = (): UseConversationResults => {
         getProfileFromKey(key)
       );
       setProfileIds(profileIds);
+      setCreatedClient(true);
     } catch (err: any) {
       console.error(err?.message);
     }
-    setCreatedClient(false);
+    setClientLoading(false);
   };
 
   const getProfileMessages = async () => {
@@ -127,17 +139,21 @@ const useConversations = (): UseConversationResults => {
   const conversationMatchesProfile = (profileId: string) =>
     new RegExp(`lens.dev/dm/.*${profileId}`);
 
-  const sendConversation = async (otherProfile: Profile, e: FormEvent) => {
+  const sendConversation = async () => {
     try {
       const xmtp = await Client.create(signer as Signer | null);
       const conversation = await xmtp.conversations.newConversation(
-        otherProfile.ownedBy,
+        chosenProfile?.ownedBy,
         {
-          conversationId: buildConversationId(lensProfile?.id, otherProfile.id),
+          conversationId: buildConversationId(
+            lensProfile?.id,
+            (chosenProfile as any)?.profileId
+          ),
           metadata: {},
         }
       );
-      await conversation.send((e.target as HTMLFormElement).value);
+      const response = await conversation.send(message);
+      console.log(response);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -189,13 +205,76 @@ const useConversations = (): UseConversationResults => {
     return parsed.members.find((member) => member !== userProfileId) ?? null;
   };
 
+  const handleMessage = (e: FormEvent): void => {
+    setMessage((e.target as HTMLFormElement).value);
+  };
+
+  const handleChosenProfile = (user: Profile) => {
+    setSearchTarget(user?.handle);
+    setChosenProfile(user);
+    setDropdown(false);
+  };
+
+  const searchMessages = async (e: FormEvent): Promise<void> => {
+    setSearchLoading(true);
+    setSearchTarget((e.target as HTMLFormElement).value);
+    setDropdown(true);
+    try {
+      const profiles = await search({
+        query: (e.target as HTMLFormElement).value,
+        type: "PROFILE",
+        limit: 50,
+      });
+      setPageCursor(profiles?.data?.search?.pageInfo);
+      const sortedArr = lodash.sortBy(profiles?.data?.search?.items, "handle");
+      setProfileSearch(sortedArr);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setSearchLoading(false);
+  };
+
+  const searchMoreMessages = async (): Promise<void> => {
+    try {
+      const moreProfiles = await search({
+        query: searchTarget,
+        type: "PROFILE",
+        limit: 50,
+        cursor: pageCursor?.next,
+      });
+      setPageCursor(moreProfiles?.data?.search?.pageInfo);
+      const sortedArr = lodash.sortBy(
+        moreProfiles?.data?.search?.items,
+        "handle"
+      );
+      setProfileSearch([...profileSearch, ...sortedArr]);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   useEffect(() => {
-    if (profileIds) {
+    if (profileIds && profileIds?.length > 0) {
       getProfileMessages();
     }
   }, [profileIds]);
 
-  return { createClient, sendConversation, createdClient };
+  return {
+    createClient,
+    sendConversation,
+    createdClient,
+    searchMessages,
+    clientLoading,
+    searchLoading,
+    profileSearch,
+    searchMoreMessages,
+    handleMessage,
+    setOtherProfile,
+    handleChosenProfile,
+    searchTarget,
+    chosenProfile,
+    dropdown,
+  };
 };
 
 export default useConversations;

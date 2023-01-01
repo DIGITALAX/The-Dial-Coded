@@ -103,13 +103,58 @@ export type NotificationsProps = {
   notificationsLoading: boolean;
 };
 
+export type MessageProps = {
+  sendConversation: () => Promise<void>;
+  handleMessage: (e: FormEvent) => void;
+  searchTarget: string | undefined;
+  chosenProfile: Profile | undefined;
+};
+
 export type ConversationsProps = {
   createClient: () => Promise<void>;
   createdClient: boolean;
+  searchMessages: (e: FormEvent) => Promise<void>;
+  clientLoading: boolean;
+  searchLoading: boolean;
+  profileSearch: Profile[];
+  searchMoreMessages: () => Promise<void>;
+  sendConversation: () => Promise<void>;
+  handleMessage: (e: FormEvent) => void;
+  setOtherProfile: (e: Profile) => void;
+  handleChosenProfile: (user: Profile) => void;
+  searchTarget: string | undefined;
+  dropdown: boolean;
+  chosenProfile: Profile | undefined;
+};
+
+export type PreviewProps = {
+  setOtherProfile: (e: Profile) => void;
+  searchTarget: string | undefined;
 };
 
 export type UseConversationResults = {
-  sendConversation: (otherProfile: Profile, e: FormEvent) => Promise<void>;
+  sendConversation: () => Promise<void>;
   createClient: () => Promise<void>;
   createdClient: boolean;
+  searchMessages: (e: FormEvent) => Promise<void>;
+  clientLoading: boolean;
+  searchLoading: boolean;
+  profileSearch: Profile[];
+  searchMoreMessages: () => Promise<void>;
+  handleMessage: (e: FormEvent) => void;
+  setOtherProfile: (e: Profile) => void;
+  handleChosenProfile: (user: Profile) => void;
+  searchTarget: string | undefined;
+  dropdown: boolean;
+  chosenProfile: Profile | undefined;
+};
+
+export type SearchProps = {
+  searchMessages: (e: FormEvent) => Promise<void>;
+  searchLoading: boolean;
+  profileSearch: Profile[];
+  searchMoreMessages: () => Promise<void>;
+  handleChosenProfile: (user: Profile) => void;
+  searchTarget: string | undefined;
+  dropdown: boolean;
 };
