@@ -16,7 +16,8 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
   hasMirrored,
   hasReacted,
   hasCommented,
-  reactionsFeed
+  reactionsFeed,
+  handleHidePost
 }): JSX.Element | null => {
   const dispatch = useDispatch();
   const pubId = useSelector((state: RootState) => state.app.commentShowReducer);
@@ -65,6 +66,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
                             hasReacted={hasReacted?.length > 0 && hasReacted[index]}
                             hasCommented={hasCommented?.length > 0 && hasCommented[index]}
                             reactionsFeed={reactionsFeed?.length > 0 && reactionsFeed[index]}
+                            handleHidePost={handleHidePost}
                           />
                         );
                       })}

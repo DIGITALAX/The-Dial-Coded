@@ -89,6 +89,7 @@ const Modals = () => {
     hasMirrored,
     hasReacted,
     reactionsFeed,
+    handleHidePost,
   } = useMainFeed();
 
   const {
@@ -146,6 +147,7 @@ const Modals = () => {
           hasReacted={hasReacted}
           hasCommented={hasCommented}
           reactionsFeed={reactionsFeed}
+          handleHidePost={handleHidePost}
         />
       )}
       {follow?.open && (
