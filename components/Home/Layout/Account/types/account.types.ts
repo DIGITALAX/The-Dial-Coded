@@ -120,7 +120,6 @@ export type ConversationsProps = {
   searchMoreMessages: () => Promise<void>;
   sendConversation: () => Promise<void>;
   handleMessage: (e: FormEvent) => void;
-  setOtherProfile: (e: Profile) => void;
   handleChosenProfile: (user: Profile) => void;
   searchTarget: string | undefined;
   dropdown: boolean;
@@ -128,7 +127,6 @@ export type ConversationsProps = {
 };
 
 export type PreviewProps = {
-  setOtherProfile: (e: Profile) => void;
   searchTarget: string | undefined;
 };
 
@@ -142,11 +140,9 @@ export type UseConversationResults = {
   profileSearch: Profile[];
   searchMoreMessages: () => Promise<void>;
   handleMessage: (e: FormEvent) => void;
-  setOtherProfile: (e: Profile) => void;
   handleChosenProfile: (user: Profile) => void;
   searchTarget: string | undefined;
   dropdown: boolean;
-  chosenProfile: Profile | undefined;
 };
 
 export type SearchProps = {

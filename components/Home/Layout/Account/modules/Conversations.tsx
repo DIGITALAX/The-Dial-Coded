@@ -15,7 +15,6 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
   searchMoreMessages,
   sendConversation,
   handleMessage,
-  setOtherProfile,
   handleChosenProfile,
   searchTarget,
   dropdown,
@@ -57,7 +56,6 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
             dropdown={dropdown}
           />
           <Preview
-            setOtherProfile={setOtherProfile}
             searchTarget={searchTarget}
           />
         </div>

@@ -2,8 +2,7 @@ import { FunctionComponent } from "react";
 import { PreviewProps } from "../../Home/Layout/Account/types/account.types";
 
 const Preview: FunctionComponent<PreviewProps> = ({
-  setOtherProfile,
-  searchTarget
+  searchTarget,
 }): JSX.Element => {
   return <div></div>;
 };

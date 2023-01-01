@@ -19,6 +19,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const accountType: string | undefined = useSelector(
     (state: RootState) => state.app.accountPageReducer.value
   );
+  const chosenProfile = useSelector(
+    (state: RootState) => state.app.chosenDMProfileReducer.profile
+  );
   const {
     profileImage,
     coverImage,
@@ -57,11 +60,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     sendConversation,
     profileSearch,
     handleMessage,
-    setOtherProfile,
     handleChosenProfile,
     searchTarget,
     dropdown,
-    chosenProfile
   } = useConversations();
   const { handleHidePost } = useMainFeed();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
@@ -136,7 +137,6 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           searchMoreMessages={searchMoreMessages}
           sendConversation={sendConversation}
           handleMessage={handleMessage}
-          setOtherProfile={setOtherProfile}
           handleChosenProfile={handleChosenProfile}
           searchTarget={searchTarget}
           dropdown={dropdown}

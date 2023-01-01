@@ -14,7 +14,7 @@ const Custom404: FunctionComponent = (): JSX.Element => {
         </div>
         <div
           className="relative place-self-center w-60 h-60 hover:rotate-3 active:rotate-6 row-start-2"
-          onClick={() => router.replace("/")}
+          onClick={() => router.push("/")}
         >
           <Image
             src={`${INFURA_GATEWAY}/ipfs/QmQZ8UwjeizDQkbCiZED8Ya4LxpFD5JbVbNeAdowurHkiY`}
