@@ -1,4 +1,6 @@
 export const BASE_URL: string = "https://api-mumbai.lens.dev";
+export const XMTP_PREFIX = 'lens.dev/dm'
+export const CONVERSATION_KEY_RE = /^(.*)\/lens\.dev\/dm\/(.*)-(.*)$/;
 
 export const ACCESS_KEY: string = "access-token";
 export const REFRESH_KEY: string = "refresh-token";

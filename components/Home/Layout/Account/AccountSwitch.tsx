@@ -11,6 +11,9 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Notifications from "./modules/Notifications";
 import useNotifications from "./hooks/useNotifications";
 import useMainFeed from "../Publish/modules/Feed/hooks/useMainFeed";
+import Conversations from "./modules/Conversations";
+import useXmtpClient from "./hooks/useConversations";
+import useConversations from "./hooks/useConversations";
 
 const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const accountType: string | undefined = useSelector(
@@ -44,6 +47,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     followingLoading,
     mixtapeMirror,
   } = useProfile();
+  const { createClient, createdClient } = useConversations();
   const { handleHidePost } = useMainFeed();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
@@ -104,6 +108,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           notificationsLoading={notificationsLoading}
         />
       );
+
+    case "conversations":
+      return <Conversations createdClient={createdClient} createClient={createClient} />;
 
     case "no profile":
       return (
