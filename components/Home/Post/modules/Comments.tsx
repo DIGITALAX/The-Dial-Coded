@@ -13,6 +13,7 @@ import CollectOptionsModal from "../../../Common/Modals/Publications/modules/Col
 import ImagePicker from "../../../Common/Modals/Publications/modules/ImagePicker";
 import ImageUploads from "../../../Common/Modals/Publications/modules/ImageUploads";
 import PostOptions from "../../../Common/Modals/Publications/modules/PostOptions";
+import Tags from "../../../Common/Modals/Publications/modules/Tags";
 import { CommentsProps } from "../types/post.types";
 
 const Comments: FunctionComponent<CommentsProps> = ({
@@ -39,6 +40,9 @@ const Comments: FunctionComponent<CommentsProps> = ({
   gifs,
   handleHidePost,
   handleRemoveGif,
+  tags,
+  handleTags,
+  handleRemoveTag
 }): JSX.Element => {
   const { openConnectModal } = useConnectModal();
   const collectOptionsModal = useSelector(
@@ -177,7 +181,14 @@ const Comments: FunctionComponent<CommentsProps> = ({
               className={`relative w-full h-48 overflow-y-scroll row-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-4 place-self-center drop-shadow-lg caret-transparent`}
               disabled={commentLoading ? true : false}
             ></textarea>
-            <div className="relative w-full h-full grid grid-flow-col auto-cols-auto row-start-2">
+            <div className="relative w-full hit row-start-2">
+              <Tags
+                handleRemoveTag={handleRemoveTag}
+                tags={tags}
+                handleTags={handleTags}
+              />
+            </div>
+            <div className="relative w-full h-full grid grid-flow-col auto-cols-auto row-start-3">
               <div className="relative w-full h-fit col-start-1 pl-2 place-self-center">
                 <PostOptions
                   dispatch={dispatch}
@@ -242,7 +253,9 @@ const Comments: FunctionComponent<CommentsProps> = ({
                   type={"comment"}
                   hasMirrored={hasMirrored?.length > 0 && hasMirrored[index]}
                   hasReacted={hasReacted?.length > 0 && hasReacted[index]}
-                  reactionsFeed={reactionsFeed.length > 0 && reactionsFeed[index]}
+                  reactionsFeed={
+                    reactionsFeed.length > 0 && reactionsFeed[index]
+                  }
                   hasCommented={hasCommented?.length > 0 && hasCommented[index]}
                   handleHidePost={handleHidePost}
                 />

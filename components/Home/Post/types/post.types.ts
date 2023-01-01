@@ -35,4 +35,7 @@ export type CommentsProps = {
   gifs: string[];
   reactionsFeed: any[];
   handleHidePost: (id: string) => Promise<void>;
+  tags: string[];
+  handleTags: (e: FormEvent) => void;
+  handleRemoveTag: (tag: string) => void;
 };

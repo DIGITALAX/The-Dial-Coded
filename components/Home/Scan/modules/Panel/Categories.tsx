@@ -9,8 +9,10 @@ const Categories: FunctionComponent = (): JSX.Element => {
         return (
           <span
             key={index}
-            id={backgroundColors[index]}
-            className={`relative col-start-${index} w-fit h-fit px-5 py-1.5 font-dosis text-white rounded-2xl grid grid-flow-col auto-cols-auto text-lg whitespace-nowrap border-2 border-offYellow`}
+            id={index < 14 ? `record${index + 1}` : `record${index - 14}`}
+            className={`relative col-start-${
+              index + 1
+            } w-fit h-fit px-5 font-dosis text-white rounded-2xl grid grid-flow-col py-1.5 auto-cols-auto text-lg whitespace-nowrap border-2 border-offYellow`}
           >
             <div className="relative w-fit h-fit col-start-1 text-center">
               {category}

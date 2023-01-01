@@ -577,7 +577,7 @@ export type CommentsModalProps = {
   commentInfoLoading: boolean;
   hasCommented: boolean[];
   reactionsFeed: any[];
-  handleHidePost: (id: string) => Promise<void>
+  handleHidePost: (id: string) => Promise<void>;
 };
 
 export type ReactionModalProps = {
@@ -691,4 +691,10 @@ export type MixtapePublicationProps = {
   hasMirrored?: boolean | undefined;
   hasCommented?: boolean | undefined;
   handleHidePost: (id: string) => Promise<void>;
+};
+
+export type TagsProps = {
+  tags: string[];
+  handleTags: (e: FormEvent) => void;
+  handleRemoveTag: (tag: string) => void;
 };
