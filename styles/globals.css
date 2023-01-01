@@ -285,7 +285,12 @@ textarea::placeholder {
 
 input:focus {
   caret-color: black;
-  outline: 0
+  outline: 0;
+  color: black;
+}
+
+input::placeholder {
+  color: black;
 }
 
 textarea:focus {
@@ -308,3 +313,4 @@ textarea:focus {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+

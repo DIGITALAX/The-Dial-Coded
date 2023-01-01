@@ -47,7 +47,22 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     followingLoading,
     mixtapeMirror,
   } = useProfile();
-  const { createClient, createdClient } = useConversations();
+  const {
+    createClient,
+    createdClient,
+    searchMessages,
+    clientLoading,
+    searchLoading,
+    searchMoreMessages,
+    sendConversation,
+    profileSearch,
+    handleMessage,
+    setOtherProfile,
+    handleChosenProfile,
+    searchTarget,
+    dropdown,
+    chosenProfile
+  } = useConversations();
   const { handleHidePost } = useMainFeed();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
@@ -110,7 +125,24 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
       );
 
     case "conversations":
-      return <Conversations createdClient={createdClient} createClient={createClient} />;
+      return (
+        <Conversations
+          createdClient={createdClient}
+          createClient={createClient}
+          searchMessages={searchMessages}
+          clientLoading={clientLoading}
+          searchLoading={searchLoading}
+          profileSearch={profileSearch}
+          searchMoreMessages={searchMoreMessages}
+          sendConversation={sendConversation}
+          handleMessage={handleMessage}
+          setOtherProfile={setOtherProfile}
+          handleChosenProfile={handleChosenProfile}
+          searchTarget={searchTarget}
+          dropdown={dropdown}
+          chosenProfile={chosenProfile}
+        />
+      );
 
     case "no profile":
       return (

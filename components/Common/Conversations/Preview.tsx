@@ -1,9 +1,11 @@
 import { FunctionComponent } from "react";
+import { PreviewProps } from "../../Home/Layout/Account/types/account.types";
 
-const Preview: FunctionComponent = (): JSX.Element => {
-    return (
-        <div></div>
-    )
-}
+const Preview: FunctionComponent<PreviewProps> = ({
+  setOtherProfile,
+  searchTarget
+}): JSX.Element => {
+  return <div></div>;
+};
 
-export default Preview
+export default Preview;
