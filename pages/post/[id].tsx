@@ -152,6 +152,7 @@ const Post: NextPage = (): JSX.Element => {
                 hasReacted={hasReacted}
                 hasCommented={hasCommented}
                 reactionsFeed={reactionsFeed}
+                handleHidePost={handleHidePost}
               />
             </div>
           </>
