@@ -1,3 +1,5 @@
+import { AnyAction, Dispatch } from "redux";
+
 export type MainPostMixtapeProps = {
   publicationData: any;
   hasPostMirrored: boolean[];

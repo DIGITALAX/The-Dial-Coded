@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { authClient } from "../../lib/lens/client";
+import { apolloClient, authClient } from "../../lib/lens/client";
 
 const PROFILE_SEARCH = `query Search($request: SearchQueryRequest!) {
     search(request: $request) {
@@ -465,6 +465,16 @@ export const searchProfile = (request: any) => {
 
 export const searchPublication = (request: any) => {
   return authClient.query({
+    query: gql(PUB_SEARCH),
+    variables: {
+      request: request,
+    },
+    fetchPolicy: "no-cache",
+  });
+};
+
+export const searchPublicationAuth = (request: any) => {
+  return apolloClient.query({
     query: gql(PUB_SEARCH),
     variables: {
       request: request,
