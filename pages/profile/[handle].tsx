@@ -3,10 +3,10 @@ import Image from "next/legacy/image";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 import Banner from "../../components/Common/Profile/modules/Banner";
-import useMainFeed from "../../components/Home/Layout/Publish/modules/Feed/hooks/useMainFeed";
 import useProfilePage from "../../components/Home/Profile/hooks/useProfilePage";
 import SideBar from "../../components/Home/Profile/modules/SideBar";
-import { INFURA_GATEWAY } from "../../lib/lens/constants";
+import createProfilePicture from "../../lib/lens/helpers/createProfilePicture";
+import handleHidePost from "../../lib/lens/helpers/handleHidePost";
 import { setWalletConnected } from "../../redux/reducers/walletConnectedSlice";
 import ProfileTab from "./../../components/Home/Layout/Account/modules/ProfileTab";
 
@@ -33,27 +33,14 @@ const Profile: NextPage = (): JSX.Element => {
     hasHotCommented,
     mixtapes,
     mixtapeMirror,
-    handleSendDM
+    handleSendDM,
   } = useProfilePage();
-  const { handleHidePost } = useMainFeed();
   const { isConnected } = useAccount();
   useEffect(() => {
     dispatch(setWalletConnected(isConnected));
   }, [isConnected]);
 
-  let profileImage: string;
-  if (!(profileData?.picture as any)?.original) {
-    profileImage = "";
-  } else if ((profileData?.picture as any)?.original) {
-    if ((profileData?.picture as any)?.original?.url.includes("http")) {
-      profileImage = (profileData?.picture as any)?.original.url;
-    } else {
-      const cut = (profileData?.picture as any)?.original?.url.split("//");
-      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[1]}`;
-    }
-  } else {
-    profileImage = (profileData?.picture as any)?.uri;
-  }
+  const profileImage = createProfilePicture(profileData);
 
   return (
     <div className="relative h-full w-full bg-black/70 grid grid-flow-col auto-col-auto overflow-hidden">
@@ -66,7 +53,10 @@ const Profile: NextPage = (): JSX.Element => {
           <Banner coverPicture={profileData?.coverPicture} />
           <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto row-start-2">
             <div className="absolute w-fit h-fit grid grid-flow-col auto-cols-auto px-10">
-              <div id="crt" className="relative w-48 h-48 col-start-1 rounded-full grid grid-flow-col auto-cols-auto z-10 -top-20 border-2 border-offBlack">
+              <div
+                id="crt"
+                className="relative w-48 h-48 col-start-1 rounded-full grid grid-flow-col auto-cols-auto z-10 -top-20 border-2 border-offBlack"
+              >
                 <Image
                   src={profileImage}
                   layout={"fill"}

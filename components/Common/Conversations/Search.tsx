@@ -3,6 +3,7 @@ import { FormEvent, FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
+import createProfilePicture from "../../../lib/lens/helpers/createProfilePicture";
 import { SearchProps } from "../../Home/Layout/Account/types/account.types";
 
 const Search: FunctionComponent<SearchProps> = ({
@@ -43,19 +44,7 @@ const Search: FunctionComponent<SearchProps> = ({
               className="relative w-full h-fit"
             >
               {profileSearch?.map((user: any, index: number) => {
-                let profileImage: string;
-                if (!user?.picture?.original) {
-                  profileImage = "";
-                } else if (user?.picture?.original) {
-                  if (user?.picture?.original?.url.includes("http")) {
-                    profileImage = user?.picture?.original.url;
-                  } else {
-                    const cut = user?.picture?.original?.url.split("/");
-                    profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-                  }
-                } else {
-                  profileImage = user?.picture?.uri;
-                }
+                const profileImage = createProfilePicture(user);
                 return (
                   <div
                     key={index}

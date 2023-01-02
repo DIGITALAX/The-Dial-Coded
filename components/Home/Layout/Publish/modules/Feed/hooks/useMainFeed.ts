@@ -10,7 +10,6 @@ import {
   PublicationSearchResult,
 } from "../../../../../../Common/types/lens.types";
 import lodash from "lodash";
-import whoReactedublications from "../../../../../../../graphql/queries/whoReactedPublication";
 import {
   profilePublicationsAuth,
   profilePublications,
@@ -19,8 +18,13 @@ import {
 import feedTimeline from "../../../../../../../graphql/queries/feedTimeline";
 import { useRouter } from "next/router";
 import { setNoUserData } from "../../../../../../../redux/reducers/noUserDataSlice";
-import hidePublication from "../../../../../../../graphql/mutations/hidePublication";
-import { setIndexModal } from "../../../../../../../redux/reducers/indexModalSlice";
+import orderFeedManual from "../../../../../../../lib/lens/helpers/orderFeedManual";
+import checkPublicationTypes from "../../../../../../../lib/lens/helpers/checkPublicationTypes";
+import checkPostReactions from "../../../../../../../lib/lens/helpers/checkPostReactions";
+import checkIfMirrored from "../../../../../../../lib/lens/helpers/checkIfMirrored";
+import checkIfCommented from "../../../../../../../lib/lens/helpers/checkIfCommented";
+import checkIfMixtapeMirror from "../../../../../../../lib/lens/helpers/checkIfMixtapeMirror";
+import getPostComments from "../../../../../../../lib/lens/helpers/getPostComments";
 
 const useMainFeed = () => {
   const router = useRouter();
@@ -75,238 +79,8 @@ const useMainFeed = () => {
   const [commentInfoLoading, setCommentInfoLoading] = useState<boolean>(false);
   const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
 
-  const checkPublicationTypes = (): string[] => {
-    let feedOrder: string[];
-    if (!feedOrderState && !feedPriorityState) {
-      feedOrder = ["POST"];
-    } else {
-      if (feedPriorityState === "interests") {
-        if (feedOrderState === "chrono") {
-          feedOrder = ["POST"];
-        } else {
-          feedOrder = ["POST", "COMMENT", "MIRROR"];
-        }
-      } else {
-        if (feedOrderState === "algo") {
-          feedOrder = ["COMMENT", "MIRROR"];
-        } else {
-          feedOrder = ["COMMENT"];
-        }
-      }
-    }
-    return feedOrder;
-  };
-
-  const checkIfMixtapeMirror = (arr: any[]): boolean[] => {
-    let checkedArr: boolean[] = [];
-    lodash.filter(arr, (item) => {
-      if (item?.__typename === "Mirror") {
-        if (item?.mirrorOf?.metadata?.content.includes("*Dial Mixtape*"))
-          checkedArr.push(true);
-      } else {
-        checkedArr.push(false);
-      }
-    });
-
-    return checkedArr;
-  };
-
-  const orderFeedManual = (
-    arr: PublicationSearchResult[]
-  ): PublicationSearchResult[] => {
-    let orderedArr: PublicationSearchResult[];
-    if (!feedOrderState && !feedPriorityState) {
-      orderedArr = lodash.filter(
-        arr,
-        (item) => (item?.__typename as string) === "Post"
-      );
-    } else {
-      if (feedPriorityState === "interests") {
-        if (feedOrderState === "chrono") {
-          orderedArr = lodash.filter(
-            arr,
-            (item) => (item?.__typename as string) === "Post"
-          );
-        } else {
-          orderedArr = arr;
-        }
-      } else {
-        if (feedOrderState === "algo") {
-          orderedArr = lodash.filter(
-            arr,
-            (item) =>
-              (item?.__typename as string) === "Comment" ||
-              (item?.__typename as string) === "Mirror"
-          );
-        } else {
-          orderedArr = lodash.filter(
-            arr,
-            (item) => (item?.__typename as string) === "Comment"
-          );
-        }
-      }
-    }
-    return orderedArr;
-  };
-
-  const fetchReactions = async (pubId: string): Promise<any> => {
-    try {
-      const reactions = await whoReactedublications({
-        publicationId: pubId,
-      });
-      const upvoteArr = lodash.filter(
-        reactions?.data?.whoReactedPublication.items,
-        (item) => item.reaction === "UPVOTE"
-      );
-      return upvoteArr;
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
-  const checkPostReactions = async (arr: any[]): Promise<any> => {
-    let reactionsFeedArr: any[] = [];
-    let hasReactedArr: any[] = [];
-    try {
-      for (let pub = 0; pub < arr?.length; pub++) {
-        const reactions = await fetchReactions(arr[pub]?.id);
-        reactionsFeedArr.push(reactions.length);
-        const checkReacted = lodash.filter(
-          reactions,
-          (arr) => arr?.profile?.id === lensProfile
-        );
-        hasReactedArr.push(checkReacted.length > 0 ? true : false);
-      }
-      return { hasReactedArr, reactionsFeedArr };
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
-  // did mirror
-  const checkIfMirrored = async (arr: any[]): Promise<any> => {
-    try {
-      const { data } = await profilePublications({
-        profileId: lensProfile,
-        publicationTypes: ["MIRROR"],
-        limit: 50,
-      });
-      const array_data = [...data.publications.items];
-      const sortedArr = array_data.sort(
-        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-      );
-      let mirroredArray: any[] = sortedArr;
-      let loopMirroredArray: any[] = sortedArr;
-      let pageData: any;
-      while (loopMirroredArray.length === 50) {
-        const { mirroredValues, paginatedData } = await checkIfMoreMirrored(
-          pageData ? pageData : data?.publications?.pageInfo
-        );
-        loopMirroredArray = mirroredValues;
-        pageData = paginatedData;
-        mirroredArray = [...mirroredArray, ...mirroredValues];
-      }
-      let hasMirroredArr: boolean[] = [];
-      for (let i = 0; i < arr.length; i++) {
-        const mirrorLength = lodash.filter(
-          mirroredArray,
-          (mirror) => mirror?.mirrorOf?.id === arr[i]?.id
-        );
-        if (mirrorLength?.length > 0) {
-          hasMirroredArr.push(true);
-        } else {
-          hasMirroredArr.push(false);
-        }
-      }
-      return hasMirroredArr;
-    } catch (err: any) {
-      console.error(err);
-    }
-  };
-
-  const checkIfMoreMirrored = async (pageData: any): Promise<any> => {
-    try {
-      const { data } = await profilePublications({
-        profileId: lensProfile,
-        publicationTypes: ["MIRROR"],
-        limit: 50,
-        cursor: pageData?.next,
-      });
-      const arr = [...data.publications.items];
-      const mirroredValues = arr.sort(
-        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-      );
-      const paginatedData = data?.publications?.pageInfo;
-      return { mirroredValues, paginatedData };
-    } catch (err: any) {
-      console.error(err);
-    }
-  };
-
-  //did comment
-  const checkIfCommented = async (inputArr: any[]): Promise<any> => {
-    let hasCommentedArr: boolean[] = [];
-    try {
-      for (let i = 0; i < inputArr.length; i++) {
-        const comments = await whoCommentedPublications({
-          commentsOf: inputArr[i]?.id,
-          limit: 50,
-        });
-        const arr: any[] = [...comments.data.publications.items];
-        const sortedArr: any[] = arr.sort(
-          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-        );
-        let commentedArray: any[] = sortedArr;
-        let loopCommentedArray: any[] = sortedArr;
-        let pageData: any;
-        while (loopCommentedArray.length === 50) {
-          const { commentedValues, paginatedData } = await checkIfMoreCommented(
-            pageData ? pageData : comments?.data?.publications?.pageInfo,
-            inputArr[i]?.id
-          );
-          loopCommentedArray = commentedValues;
-          pageData = paginatedData;
-          commentedArray = [...commentedArray, ...commentedValues];
-        }
-        const commentLength = lodash.filter(
-          commentedArray,
-          (comment) => comment?.profile.id === lensProfile
-        );
-        if (commentLength?.length > 0) {
-          hasCommentedArr.push(true);
-        } else {
-          hasCommentedArr.push(false);
-        }
-      }
-      return hasCommentedArr;
-    } catch (err: any) {
-      console.error(err.any);
-    }
-  };
-
-  const checkIfMoreCommented = async (
-    pageData: any,
-    id: string
-  ): Promise<any> => {
-    try {
-      const comments = await whoCommentedPublications({
-        commentsOf: id,
-        limit: 30,
-        cursor: pageData?.next,
-      });
-      const arr: any[] = [...comments.data.publications.items];
-      const commentedValues: any[] = arr.sort(
-        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-      );
-      const paginatedData = comments.data.publications.pageInfo;
-      return { commentedValues, paginatedData };
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
   const fetchPublications = async (): Promise<void> => {
-    const feedOrder = checkPublicationTypes();
+    const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     try {
       const publicationsList = await explorePublications({
         sources: "thedial",
@@ -334,7 +108,7 @@ const useMainFeed = () => {
       setPaginatedResults(publicationsList?.data?.explorePublications.pageInfo);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror(mixtapeMirrors);
-      const response = await checkPostReactions(filteredArr);
+      const response = await checkPostReactions(filteredArr, lensProfile);
       setReactionsFeed(response?.reactionsFeedArr);
     } catch (err: any) {
       console.error(err);
@@ -342,7 +116,7 @@ const useMainFeed = () => {
   };
 
   const getUserSelectFeed = async (): Promise<void> => {
-    const feedOrder = checkPublicationTypes();
+    const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     let sortedArr: any[];
     let pageData: any;
     try {
@@ -394,17 +168,21 @@ const useMainFeed = () => {
           return true;
         }
       });
-      const orderedArr = orderFeedManual(filteredArr);
+      const orderedArr = orderFeedManual(
+        filteredArr,
+        feedOrderState,
+        feedPriorityState
+      );
       setPublicationsFeed(orderedArr);
       const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
       setMixtapeMirror(mixtapeMirrors);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(orderedArr);
+      const response = await checkPostReactions(orderedArr, lensProfile);
       setReactionsFeed(response?.reactionsFeedArr);
       if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(orderedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
         setHasMirrored(hasMirroredArr);
-        const hasCommentedArr = await checkIfCommented(orderedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr, lensProfile);
         setHasCommented(hasCommentedArr);
         setHasReacted(response?.hasReactedArr);
       }
@@ -414,7 +192,7 @@ const useMainFeed = () => {
   };
 
   const getFeedTimeline = async (): Promise<void> => {
-    const feedOrder = checkPublicationTypes();
+    const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     try {
       const { data } = await feedTimeline({
         profileId: lensProfile,
@@ -458,31 +236,39 @@ const useMainFeed = () => {
             return true;
           }
         });
-        console.log(authPub.data.explorePublications.pageInfo, "forst data")
-        const orderedArr = orderFeedManual(filteredArrAuth);
+        console.log(authPub.data.explorePublications.pageInfo, "forst data");
+        const orderedArr = orderFeedManual(
+          filteredArrAuth,
+          feedOrderState,
+          feedPriorityState
+        );
         setPublicationsFeed(orderedArr);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror(mixtapeMirrors);
         setPaginatedResults(authPub.data.explorePublications.pageInfo);
-        const response = await checkPostReactions(orderedArr);
+        const response = await checkPostReactions(orderedArr, lensProfile);
         setHasReacted(response?.hasReactedArr);
         setReactionsFeed(response?.reactionsFeedArr);
-        const hasMirroredArr = await checkIfMirrored(orderedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
         setHasMirrored(hasMirroredArr);
-        const hasCommentedArr = await checkIfCommented(orderedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr, lensProfile);
         setHasCommented(hasCommentedArr);
       } else {
-        const orderedArr = orderFeedManual(filteredArr);
+        const orderedArr = orderFeedManual(
+          filteredArr,
+          feedOrderState,
+          feedPriorityState
+        );
         setPublicationsFeed(orderedArr);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror(mixtapeMirrors);
         setPaginatedResults(data.feed.pageInfo);
-        const response = await checkPostReactions(orderedArr);
+        const response = await checkPostReactions(orderedArr, lensProfile);
         setHasReacted(response?.hasReactedArr);
         setReactionsFeed(response?.reactionsFeedArr);
-        const hasMirroredArr = await checkIfMirrored(orderedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
         setHasMirrored(hasMirroredArr);
-        const hasCommentedArr = await checkIfCommented(orderedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr, lensProfile);
         setHasCommented(hasCommentedArr);
       }
     } catch (err: any) {
@@ -492,7 +278,7 @@ const useMainFeed = () => {
 
   // fetch more
   const fetchMorePublications = async (): Promise<void> => {
-    const feedOrder = checkPublicationTypes();
+    const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     try {
       const morePublications = await explorePublications({
         sources: "thedial",
@@ -523,7 +309,7 @@ const useMainFeed = () => {
       setPaginatedResults(morePublications?.data.explorePublications.pageInfo);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
-      const response = await checkPostReactions(filteredArr);
+      const response = await checkPostReactions(filteredArr, lensProfile);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
     } catch (err: any) {
       console.error(err);
@@ -531,7 +317,7 @@ const useMainFeed = () => {
   };
 
   const getMoreFeedTimeline = async (): Promise<void> => {
-    const feedOrder = checkPublicationTypes();
+    const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     try {
       const morePublications = await feedTimeline({
         profileId: lensProfile,
@@ -581,31 +367,39 @@ const useMainFeed = () => {
             return true;
           }
         });
-        console.log(authPub.data.explorePublications.pageInfo, "second data")
-        const orderedArr = orderFeedManual(filteredArrAuth);
+        console.log(authPub.data.explorePublications.pageInfo, "second data");
+        const orderedArr = orderFeedManual(
+          filteredArrAuth,
+          feedOrderState,
+          feedPriorityState
+        );
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
         setPublicationsFeed([...publicationsFeed, ...orderedArr]);
         setPaginatedResults(authPub?.data.explorePublications.pageInfo);
-        const response = await checkPostReactions(orderedArr);
+        const response = await checkPostReactions(orderedArr, lensProfile);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
         setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
-        const hasMirroredArr = await checkIfMirrored(orderedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
-        const hasCommentedArr = await checkIfCommented(orderedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr, lensProfile);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
       } else {
-        const orderedArr = orderFeedManual(filteredArr);
+        const orderedArr = orderFeedManual(
+          filteredArr,
+          feedOrderState,
+          feedPriorityState
+        );
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
         setPublicationsFeed([...publicationsFeed, ...orderedArr]);
         setPaginatedResults(morePublications?.data.feed.pageInfo);
-        const response = await checkPostReactions(orderedArr);
+        const response = await checkPostReactions(orderedArr, lensProfile);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
         setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
-        const hasMirroredArr = await checkIfMirrored(orderedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
-        const hasCommentedArr = await checkIfCommented(orderedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr, lensProfile);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
       }
     } catch (err: any) {
@@ -614,7 +408,7 @@ const useMainFeed = () => {
   };
 
   const getMoreUserSelectFeed = async (): Promise<void> => {
-    const feedOrder = checkPublicationTypes();
+    const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     let sortedArr: any[];
     let pageData: any;
     try {
@@ -656,17 +450,21 @@ const useMainFeed = () => {
           return true;
         }
       });
-      const orderedArr = orderFeedManual(filteredArr);
+      const orderedArr = orderFeedManual(
+        filteredArr,
+        feedOrderState,
+        feedPriorityState
+      );
       const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       setPublicationsFeed([...publicationsFeed, ...orderedArr]);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(orderedArr);
+      const response = await checkPostReactions(orderedArr, lensProfile);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
       if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(orderedArr);
+        const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
-        const hasCommentedArr = await checkIfCommented(orderedArr);
+        const hasCommentedArr = await checkIfCommented(orderedArr, lensProfile);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
       }
@@ -687,34 +485,6 @@ const useMainFeed = () => {
     }
   };
 
-  const getPostComments = async (id?: string): Promise<void> => {
-    setCommentInfoLoading(true);
-    try {
-      const comments = await whoCommentedPublications({
-        commentsOf: id ? id : commentId,
-        limit: 30,
-      });
-      const arr: any[] = [...comments.data.publications.items];
-      const sortedArr: any[] = arr.sort(
-        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-      );
-      setCommentors(sortedArr);
-      setCommentPageInfo(comments.data.publications.pageInfo);
-      const response = await checkPostReactions(sortedArr);
-      setReactionsFeed(response?.reactionsFeedArr);
-      if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(sortedArr);
-        setHasMirrored(hasMirroredArr);
-        const hasCommentedArr = await checkIfCommented(sortedArr);
-        setHasCommented(hasCommentedArr);
-        setHasReacted(response?.hasReactedArr);
-      }
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    setCommentInfoLoading(false);
-  };
-
   const getMorePostComments = async (id?: string): Promise<void> => {
     try {
       const comments = await whoCommentedPublications({
@@ -728,12 +498,12 @@ const useMainFeed = () => {
       );
       setCommentors([...commentors, ...sortedArr]);
       setCommentPageInfo(comments.data.publications.pageInfo);
-      const response = await checkPostReactions(sortedArr);
+      const response = await checkPostReactions(sortedArr, lensProfile);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
       if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(sortedArr);
+        const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
-        const hasCommentedArr = await checkIfCommented(sortedArr);
+        const hasCommentedArr = await checkIfCommented(sortedArr, lensProfile);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
       }
@@ -742,42 +512,20 @@ const useMainFeed = () => {
     }
   };
 
-  const handleHidePost = async (id: string): Promise<void> => {
-    console.log(id);
-    try {
-      const hidden = await hidePublication({
-        publicationId: id,
-      });
-      if (hidden) {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Post Successfully Hidden",
-          })
-        );
-      }
-    } catch (err: any) {
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Hide Unsuccessful, Please Try Again",
-        })
-      );
-      console.error(err?.message);
-    }
-    setTimeout(() => {
-      dispatch(
-        setIndexModal({
-          actionValue: false,
-          actionMessage: undefined,
-        })
-      );
-    }, 3000);
-  };
-
   useEffect(() => {
     if (commentShow) {
-      getPostComments();
+      getPostComments(
+        setCommentInfoLoading,
+        setCommentors,
+        setCommentPageInfo,
+        setReactionsFeed,
+        lensProfile,
+        setHasMirrored,
+        setHasCommented,
+        setHasReacted,
+        undefined,
+        commentId
+      );
     }
   }, [
     reactions.type,
@@ -821,12 +569,14 @@ const useMainFeed = () => {
     commentors,
     getMorePostComments,
     commentInfoLoading,
-    getPostComments,
-    checkPostReactions,
-    checkIfCommented,
-    checkIfMirrored,
     mixtapeMirror,
-    handleHidePost,
+    setCommentInfoLoading,
+    setCommentors,
+    setCommentPageInfo,
+    setReactionsFeed,
+    setHasMirrored,
+    setHasCommented,
+    setHasReacted,
   };
 };
 

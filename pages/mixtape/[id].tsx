@@ -11,6 +11,8 @@ import usePublication from "../../components/Common/Modals/Publications/hooks/us
 import useMainFeed from "../../components/Home/Layout/Publish/modules/Feed/hooks/useMainFeed";
 import { BsFillChatDotsFill } from "react-icons/bs";
 import MainPost from "../../components/Home/Mixtape/MainPost";
+import handleHidePost from "../../lib/lens/helpers/handleHidePost";
+import getPostComments from "../../lib/lens/helpers/getPostComments";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -51,17 +53,22 @@ const Post: NextPage = (): JSX.Element => {
     searchGif,
     tags,
     handleRemoveTag,
-    handleTags
+    handleTags,
   } = usePublication();
   const {
-    getPostComments,
     commentors,
     getMorePostComments,
     hasCommented,
     hasMirrored,
     hasReacted,
     reactionsFeed,
-    handleHidePost,
+    setCommentInfoLoading,
+    setCommentors,
+    setCommentPageInfo,
+    setReactionsFeed,
+    setHasMirrored,
+    setHasCommented,
+    setHasReacted,
   } = useMainFeed();
 
   const dispatch = useDispatch();
@@ -69,7 +76,17 @@ const Post: NextPage = (): JSX.Element => {
   useEffect(() => {
     if (id) {
       getPublicationData(id as string);
-      getPostComments(id as string);
+      getPostComments(
+        setCommentInfoLoading,
+        setCommentors,
+        setCommentPageInfo,
+        setReactionsFeed,
+        lensProfile,
+        setHasMirrored,
+        setHasCommented,
+        setHasReacted,
+        id as string
+      );
     }
   }, [
     id,

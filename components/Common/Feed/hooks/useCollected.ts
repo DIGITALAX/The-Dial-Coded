@@ -15,7 +15,6 @@ import approvedModuleAllowance from "../../../../graphql/queries/approvedModuleA
 import getPublication from "../../../../graphql/queries/getPublication";
 import whoCollectedPublications from "../../../../graphql/queries/whoCollectPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
-import { omit, splitSignature } from "../../../../lib/lens/helpers";
 import { setApprovalArgs } from "../../../../redux/reducers/approvalArgsSlice";
 import { setInsufficientFunds } from "../../../../redux/reducers/insufficientFunds";
 import { setPostCollectValues } from "../../../../redux/reducers/postCollectValuesSlice";
@@ -30,6 +29,8 @@ import LensHubProxy from "./../../../../abis/LensHubProxy.json";
 import lodash from "lodash";
 import checkIndexed from "../../../../graphql/queries/checkIndexed";
 import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
+import omit from "../../../../lib/lens/helpers/omit";
+import splitSignature from "../../../../lib/lens/helpers/splitSignature";
 
 const useCollected = () => {
   const {

@@ -20,11 +20,11 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
 }): JSX.Element => {
   const location = lodash.filter(
     profile?.attributes,
-    (attribute) => attribute.key === "location"
+    (attribute) => attribute?.key === "location"
   );
   const website = lodash.filter(
     profile?.attributes,
-    (attribute) => attribute.key === "website"
+    (attribute) => attribute?.key === "website"
   );
   const coverPrefix = (profile as any)?.coverPicture;
   const imagePrefix = (profile as any)?.picture;

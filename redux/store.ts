@@ -46,6 +46,8 @@ import mixtapeSourceReducer from "./reducers/mixtapeSourceSlice";
 import completeTrackReducer from "./reducers/completeTrackSlice";
 import chosenDMProfileReducer from "./reducers/chosenDMProfileSlice";
 import preSearchReducer from "./reducers/preSearchSlice";
+import lexicaImagesReducer from "./reducers/lexicaImagesSlice";
+import searchTargetReducer from "./reducers/searchTargetSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -94,6 +96,8 @@ const reducer = combineReducers({
   completeTrackReducer,
   chosenDMProfileReducer,
   preSearchReducer,
+  lexicaImagesReducer,
+  searchTargetReducer,
 });
 
 export const store = configureStore({

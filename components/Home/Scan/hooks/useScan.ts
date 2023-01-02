@@ -13,22 +13,34 @@ import lodash from "lodash";
 import { setPreSearch } from "../../../../redux/reducers/preSearchSlice";
 import { Profile } from "../../../Common/types/lens.types";
 import { useRouter } from "next/router";
+import { setLexicaImages } from "../../../../redux/reducers/lexicaImagesSlice";
+import { setSearchTarget } from "../../../../redux/reducers/searchTargetSlice";
+import checkIfMixtapeMirror from "../../../../lib/lens/helpers/checkIfMixtapeMirror";
+import checkPostReactions from "../../../../lib/lens/helpers/checkPostReactions";
+import checkIfMirrored from "../../../../lib/lens/helpers/checkIfMirrored";
+import checkIfCommented from "../../../../lib/lens/helpers/checkIfCommented";
 
 const useScan = (): UseScanResult => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
   const backgroundNumber = useSelector(
     (state: RootState) => state.app.backgroundReducer.value
+  );
+  const searchTarget = useSelector(
+    (state: RootState) => state.app.searchTargetReducer.value
   );
   const [profileSearchValues, setProfileSearchValues] = useState<any[]>([]);
   const [currentSetting, setCurrentSetting] = useState<number>(0);
   const [dropDown, setDropDown] = useState<boolean>(false);
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
-  const [searchTarget, setSearchTarget] = useState<string>("");
-  const [publicationSearchLength, setPublicationSearchLength] =
-    useState<number>(0);
+  const [publicationSearchValues, setPublicationSearchValues] = useState<any[]>(
+    []
+  );
+
   const [profilePageCursor, setProfilePageCursor] = useState<any>();
-  const [publicationPageCursor, setPublicationPageCursor] = useState<any>();
 
   const handleQuickSearch = async (e: FormEvent): Promise<void> => {
     setSearchLoading(true);
@@ -38,7 +50,7 @@ const useScan = (): UseScanResult => {
     } else {
       setDropDown(false);
     }
-    setSearchTarget(searchTargetString);
+    dispatch(setSearchTarget(searchTargetString));
     try {
       const profiles = await searchProfile({
         query: searchTargetString,
@@ -52,27 +64,56 @@ const useScan = (): UseScanResult => {
         limit: 50,
       });
       setProfilePageCursor(profiles?.data?.search?.pageInfo);
-      setPublicationPageCursor(publications?.data?.search?.pageInfo);
       const sortedProfileArr = lodash.sortBy(
         profiles?.data?.search?.items,
         "handle"
       );
       const arr: any[] = [...publications?.data?.search?.items];
-      const sortedPublicationArr = arr.sort(
+      const sortedPublicationArr = arr?.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       setProfileSearchValues(sortedProfileArr);
-      setPublicationSearchLength(publications?.data?.search?.items?.length);
-      dispatch(
-        setPreSearch({
-          actionItems: sortedPublicationArr,
-          actionTarget: searchTargetString,
-        })
-      );
+      setPublicationSearchValues(sortedPublicationArr);
     } catch (err: any) {
       console.error(err.message);
     }
     setSearchLoading(false);
+  };
+
+  const getPublicationReactions = async (): Promise<any> => {
+    let mixtapeMirrors: boolean[] = [];
+    let reactionsFeed: any[] = [];
+    let hasMirrored: boolean[] = [];
+    let hasCommented: boolean[] = [];
+    let hasReacted: boolean[] = [];
+    try {
+      mixtapeMirrors = checkIfMixtapeMirror(publicationSearchValues);
+      const response = await checkPostReactions(
+        publicationSearchValues,
+        lensProfile
+      );
+      reactionsFeed = response?.reactionsFeedArr;
+      if (lensProfile) {
+        hasMirrored = await checkIfMirrored(
+          publicationSearchValues,
+          lensProfile
+        );
+        hasCommented = await checkIfCommented(
+          publicationSearchValues,
+          lensProfile
+        );
+        hasReacted = response?.hasReactedArr;
+      }
+      return {
+        mixtapeMirrors,
+        reactionsFeed,
+        hasCommented,
+        hasMirrored,
+        hasReacted,
+      };
+    } catch (err: any) {
+      console.error(err.message);
+    }
   };
 
   const handleMoreProfileQuickSearch = async (): Promise<void> => {
@@ -94,10 +135,82 @@ const useScan = (): UseScanResult => {
     }
   };
 
-  const handleChosenSearch = (type: string, user?: Profile) => {
+  const handleKeyDownEnter = async (e: any): Promise<void> => {
+    if (e.key === "Enter") {
+      setDropDown(false);
+      dispatch(setLayout("Slider"));
+      const {
+        mixtapeMirrors,
+        reactionsFeed,
+        hasCommented,
+        hasMirrored,
+        hasReacted,
+      } = await getPublicationReactions();
+      dispatch(
+        setPreSearch({
+          actionItems: publicationSearchValues,
+          actionTarget: e.target?.value,
+          actionMixtapeMirrors: mixtapeMirrors,
+          actionReactionsFeed: reactionsFeed,
+          actionCommented: hasCommented,
+          actionMirrored: hasMirrored,
+          actionReacted: hasReacted,
+        })
+      );
+      dispatch(setSearchTarget(e.target?.value));
+      await callLexicaSearch(e.target?.value);
+      document.getElementById("sliderSearch")?.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleChosenSearch = async (
+    type: string,
+    user?: Profile
+  ): Promise<void> => {
+    setDropDown(false);
     if (type === "profile") {
       router.push(`/profile/${user?.handle.split(".lens")[0]}`);
     } else {
+      dispatch(setLayout("Slider"));
+      const {
+        mixtapeMirrors,
+        reactionsFeed,
+        hasCommented,
+        hasMirrored,
+        hasReacted,
+      } = await getPublicationReactions();
+      dispatch(
+        setPreSearch({
+          actionItems: publicationSearchValues,
+          actionTarget: searchTarget,
+          actionMixtapeMirrors: mixtapeMirrors,
+          actionReactionsFeed: reactionsFeed,
+          actionCommented: hasCommented,
+          actionMirrored: hasMirrored,
+          actionReacted: hasReacted,
+        })
+      );
+      await callLexicaSearch(searchTarget as string);
+      document.getElementById("sliderSearch")?.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const callLexicaSearch = async (searchTarget: string): Promise<void> => {
+    try {
+      const getLexicaImages = await fetch("/api/lexica", {
+        method: "POST",
+        body: JSON.stringify(searchTarget),
+      });
+      const { json } = await getLexicaImages.json();
+      dispatch(setLexicaImages(json?.images));
+    } catch (err: any) {
+      console.error(err.message);
     }
   };
 
@@ -187,12 +300,13 @@ const useScan = (): UseScanResult => {
     imageArtist,
     imageDescription,
     handleQuickSearch,
-    publicationSearchLength,
+    publicationSearchValues,
     profileSearchValues,
     handleMoreProfileQuickSearch,
     searchLoading,
     dropDown,
     handleChosenSearch,
+    handleKeyDownEnter,
   };
 };
 

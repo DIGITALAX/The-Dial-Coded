@@ -9,6 +9,7 @@ import usePost from "./hooks/usePost";
 import useHot from "./modules/Feed/hooks/useHot";
 import { Profile } from "../../../Common/types/lens.types";
 import useMainFeed from "./modules/Feed/hooks/useMainFeed";
+import handleHidePost from "../../../../lib/lens/helpers/handleHidePost";
 
 const Post: FunctionComponent = (): JSX.Element => {
   const { openConnectModal } = useConnectModal();
@@ -27,7 +28,6 @@ const Post: FunctionComponent = (): JSX.Element => {
     hasMirrored,
     hasCommented,
     mixtapeMirror,
-    handleHidePost
   } = useMainFeed();
   const {
     hotFeed,

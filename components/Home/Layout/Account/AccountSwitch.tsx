@@ -10,10 +10,9 @@ import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Notifications from "./modules/Notifications";
 import useNotifications from "./hooks/useNotifications";
-import useMainFeed from "../Publish/modules/Feed/hooks/useMainFeed";
 import Conversations from "./modules/Conversations";
-import useXmtpClient from "./hooks/useConversations";
 import useConversations from "./hooks/useConversations";
+import handleHidePost from "../../../../lib/lens/helpers/handleHidePost";
 
 const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const accountType: string | undefined = useSelector(
@@ -64,7 +63,6 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     searchTarget,
     dropdown,
   } = useConversations();
-  const { handleHidePost } = useMainFeed();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
   const profile = useSelector(

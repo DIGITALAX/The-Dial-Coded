@@ -1,10 +1,8 @@
 import Image from "next/legacy/image";
 import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
-import { AiFillEye, AiOutlineRetweet } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { AiOutlineRetweet } from "react-icons/ai";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
-import { RootState } from "../../../../redux/store";
 import { MixtapePublicationProps } from "../../types/common.types";
 import moment from "moment";
 import { MediaSet } from "../../types/lens.types";
@@ -13,6 +11,7 @@ import { setImageViewer } from "../../../../redux/reducers/imageViewerSlice";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import { setCommentShow } from "../../../../redux/reducers/commentShowSlice";
 import { useAccount } from "wagmi";
+import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 
 const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
   publication,
@@ -22,33 +21,10 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
   reactionsFeed,
   hasMirrored,
   hasCommented,
-  handleHidePost
+  handleHidePost,
 }): JSX.Element => {
-  let imagePrefix: any;
-  let profileImage: string;
-  if ((publication as any)?.__typename === "Mirror") {
-    imagePrefix = (publication as any)?.mirrorOf?.profile?.picture;
-  } else {
-    imagePrefix = (publication as any)?.profile?.picture;
-  }
-  if (!imagePrefix?.original) {
-    profileImage = "";
-  } else if (imagePrefix?.original) {
-    if ((publication as any)?.profile.picture?.original?.url.includes("http")) {
-      profileImage = imagePrefix?.original.url;
-    } else {
-      const cut = (publication as any)?.profile?.picture?.original?.url.split(
-        "/"
-      );
-      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-    }
-  } else {
-    profileImage = imagePrefix?.uri;
-  }
+  const profileImage = createProfilePicture(publication, true);
   const router = useRouter();
-  const viewerOpen = useSelector(
-    (state: RootState) => state.app.imageViewerReducer.open
-  );
   const { address } = useAccount();
   return (
     <div

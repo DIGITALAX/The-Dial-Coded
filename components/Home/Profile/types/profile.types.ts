@@ -20,7 +20,7 @@ export type SideBarProps = {
   hasHotMirrored: boolean[];
   hasHotCommented: boolean[];
   mixtapes: any[];
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   handleSendDM: (profile: Profile) => void;
 };
 

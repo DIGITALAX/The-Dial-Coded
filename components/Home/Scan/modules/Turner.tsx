@@ -5,18 +5,21 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { TurnerProps } from "./../types/scan.types";
 import { TfiSearch } from "react-icons/tfi";
+import SearchBar from "../../../Common/SearchBar/SearchBar";
 
 const Turner: FunctionComponent<TurnerProps> = ({
   currentSetting,
   handleCount,
   canvasURIs,
   handleQuickSearch,
-  publicationSearchLength,
+  publicationSearchValues,
   profileSearchValues,
   handleMoreProfileQuickSearch,
   searchLoading,
   dropDown,
   handleChosenSearch,
+  handleKeyDownEnter,
+  searchTarget
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit col-start-1 row-start-2 md:row-start-1 md:col-start-2 grid grid-flow-row auto-rows-auto self-center sm:self-start md:self-center justify-center md:justify-end gap-10 pr-10 pt-8 sm:pt-16 top-24 lg:top-0 lg:pt-0">
@@ -33,27 +36,17 @@ const Turner: FunctionComponent<TurnerProps> = ({
         />
       </div>
       <div className="relative w-full h-fit row-start-2 grid grid-flow-col auto-cols-auto">
-        <div className="relative w-full h-10 col-start-1 row-start-1 grid grid-flow-col auto-cols-auto rounded-lg border-2 border-white opacity-90 gap-3 pl-1 bg-bluey/30">
-          <div className="relative col-start-1 w-fit h-fit place-self-center place-self-center grid grid-flow-col auto-cols-auto pl-2">
-            <Image
-              src={`${INFURA_GATEWAY}/ipfs/QmZhr4Eo92GHQ3Qn3xpv8HSz7ArcjgSPsD3Upe9v8H5rge`}
-              alt="search"
-              width={15}
-              height={20}
-              className="flex w-fit h-fit relative col-start-1 place-self-center"
-            />
-          </div>
-          <div className="relative col-start-2 w-1 h-5/6 self-center justify-self-start border border-white rounded-lg"></div>
-          <div className="relative w-full h-full grid grid-flow-row auto-rows-auto col-start-3">
-            <input
-              className="relative row-start-1 w-full h-full font-dosis pl-2 text-white rounded-lg bg-transparent caret-transparent"
-              name="search"
-              placeholder="search"
-              onChange={(e: FormEvent) => handleQuickSearch(e)}
-            />
-          </div>
-        </div>
-        <div className="absolute w-full h-full grid grid-flow-row auto-rows-auto col-start-1 row-start-2 col-span-1">
+        <SearchBar
+          bg="bluey"
+          bgOpacity
+          borderColor="white"
+          textColor="white"
+          width="56"
+          handleKeyDown={handleKeyDownEnter}
+          handleOnChange={handleQuickSearch}
+          searchTarget={searchTarget}
+        />
+        <div className="absolute w-56 h-full grid grid-flow-row auto-rows-auto col-start-1 row-start-2">
           {
             <div
               className={`relative grid grid-flow-row auto-rows-auto w-full h-fit overflow-y-scroll z-10`}
@@ -66,7 +59,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
                 </div>
               ) : (
                 <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto">
-                  {dropDown && publicationSearchLength > 0 && (
+                  {dropDown && publicationSearchValues?.length > 0 && (
                     <div
                       className="rounded-md relative w-full h-fit px-3 py-2 col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer border-y border-white font-dosis hover:bg-offBlue row-start-1 text-white bg-bluey/30"
                       onClick={() => handleChosenSearch("pub")}
@@ -75,9 +68,9 @@ const Turner: FunctionComponent<TurnerProps> = ({
                         <TfiSearch color="white" size={15} />
                       </div>
                       <div className="relative w-fit h-fit col-start-2 place-self-center">
-                        {publicationSearchLength}
+                        {publicationSearchValues?.length}
                       </div>
-                      <div className="relative col-start-3 place-self-center">
+                      <div className="relative col-start-3 place-self-center text-sm">
                         On this Topic
                       </div>
                     </div>
@@ -90,7 +83,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
                       loader={""}
                       height={"10rem"}
                       className={`${
-                        publicationSearchLength && publicationSearchLength > 0
+                        publicationSearchValues?.length > 0
                           ? "row-start-2"
                           : "row-start-1"
                       } relative w-full h-fit`}

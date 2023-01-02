@@ -14,7 +14,7 @@ const Samples: FunctionComponent = (): JSX.Element => {
     (state: RootState) => state.app.topicReducer.value
   );
   return (
-    <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto pl-20 gap-6">
+    <div className="relative w-full h-full row-start-4 grid grid-flow-row auto-rows-auto pl-20 gap-6">
       <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto overflow-x-scroll gap-5">
         {topics?.map((topic: string, index: number) => {
           return (

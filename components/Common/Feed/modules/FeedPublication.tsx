@@ -13,6 +13,7 @@ import { setReactionState } from "../../../../redux/reducers/reactionStateSlice"
 import { setCommentShow } from "../../../../redux/reducers/commentShowSlice";
 import moment from "moment";
 import { useAccount } from "wagmi";
+import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
@@ -23,29 +24,9 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   hasMirrored,
   hasCommented,
   mixtapeMirror,
-  handleHidePost
+  handleHidePost,
 }): JSX.Element => {
-  let imagePrefix: any;
-  let profileImage: string;
-  if ((publication as any)?.__typename === "Mirror") {
-    imagePrefix = (publication as any)?.mirrorOf?.profile?.picture;
-  } else {
-    imagePrefix = (publication as any)?.profile?.picture;
-  }
-  if (!imagePrefix?.original) {
-    profileImage = "";
-  } else if (imagePrefix?.original) {
-    if ((publication as any)?.profile.picture?.original?.url.includes("http")) {
-      profileImage = imagePrefix?.original.url;
-    } else {
-      const cut = (publication as any)?.profile?.picture?.original?.url.split(
-        "/"
-      );
-      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-    }
-  } else {
-    profileImage = imagePrefix?.uri;
-  }
+  const profileImage = createProfilePicture(publication, true);
   const router = useRouter();
   const viewerOpen = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
@@ -304,11 +285,20 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
             className={`relative w-fit h-fit col-start-2 justify-self-end self-center grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95 ${
               mixtapeMirror ? "text-offBlack" : "text-white"
             }`}
-            onClick={() => {
+            onClick={
               viewerOpen
-                ? {}
-                : router.push(`/post/${(publication as any)?.id}`);
-            }}
+                ? () => {}
+                : () => {
+                    router.push(`/post/${(publication as any)?.id}`);
+                    // dispatch(
+                    //   setCommentShow({
+                    //     actionOpen: false,
+                    //     actionType: "comment",
+                    //     actionValue: pubId.value,
+                    //   })
+                    // );
+                  }
+            }
           >
             <div className="relative w-fit h-fit col-start-1 text-sm">
               {type === "Post" && !mixtapeMirror

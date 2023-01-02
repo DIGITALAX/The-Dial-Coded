@@ -37,7 +37,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
 }): JSX.Element => {
   const location = lodash.filter(
     profileData?.attributes,
-    (attribute) => attribute.key === "location"
+    (attribute) => attribute?.key === "location"
   );
   const website = lodash.filter(
     profileData?.attributes,

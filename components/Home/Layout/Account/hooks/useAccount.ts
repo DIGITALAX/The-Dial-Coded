@@ -10,7 +10,6 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import profileMetadata from "../../../../../graphql/mutations/profileMetadata";
 import { RootState } from "../../../../../redux/store";
-import { omit, splitSignature } from "../../../../../lib/lens/helpers";
 import {
   useContractWrite,
   usePrepareContractWrite,
@@ -33,6 +32,8 @@ import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 import { setNotifications } from "../../../../../redux/reducers/notificationsSlice";
+import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
+import omit from "../../../../../lib/lens/helpers/omit";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = [

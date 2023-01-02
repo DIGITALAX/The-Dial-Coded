@@ -8,9 +8,10 @@ import {
 } from "wagmi";
 import mirror from "../../../../graphql/mutations/mirror";
 import checkIndexed from "../../../../graphql/queries/checkIndexed";
-import {whoMirroredPublications} from "../../../../graphql/queries/whoMirroredPublications";
+import { whoMirroredPublications } from "../../../../graphql/queries/whoMirroredPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
-import { omit, splitSignature } from "../../../../lib/lens/helpers";
+import omit from "../../../../lib/lens/helpers/omit";
+import splitSignature from "../../../../lib/lens/helpers/splitSignature";
 import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
 import { setInsufficientFunds } from "../../../../redux/reducers/insufficientFunds";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
@@ -152,8 +153,10 @@ const useMirrored = () => {
       );
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
-      if ( indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS") {
+      if (
+        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS"
+      ) {
         dispatch(
           setIndexModal({
             actionValue: true,
@@ -187,13 +190,7 @@ const useMirrored = () => {
     if (reactions.type === "mirror") {
       getPostMirrors();
     }
-  }, [
-    reactions.type,
-    reactions.open,
-    id,
-    pubId,
-    mirrorComplete,
-  ]);
+  }, [reactions.type, reactions.open, id, pubId, mirrorComplete]);
 
   useEffect(() => {
     if (isSuccess) {

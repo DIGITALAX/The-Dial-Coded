@@ -29,5 +29,5 @@ export type FeedProps = {
   hasCommented: boolean[];
   noUserData: boolean;
   mixtapeMirror: boolean[];
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
 };

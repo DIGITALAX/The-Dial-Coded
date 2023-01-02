@@ -242,7 +242,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           className={`relative w-fit h-fit ${
             canCollect ? "col-start-5" : "col-start-4"
           } grid grid-flow-col auto-cols-auto gap-2 place-self-center cursor-pointer active:scale-95`}
-          onClick={() => handleHidePost(id as string)}
+          onClick={() => handleHidePost(id as string, dispatch)}
         >
           <AiOutlineMinusCircle color={textColor} size={15}/>
         </div>

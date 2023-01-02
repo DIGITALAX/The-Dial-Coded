@@ -18,6 +18,7 @@ import FollowsModal from "../../Common/Modals/Follows/FollowsModal";
 import useProfilePage from "../Profile/hooks/useProfilePage";
 import IndexingModal from "../../Common/Modals/Indexing/IndexingModal";
 import CompleteTrack from "../../Common/Modals/CompleteTrack/CompleteTrackModal";
+import handleHidePost from "../../../lib/lens/helpers/handleHidePost";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -89,7 +90,6 @@ const Modals = () => {
     hasMirrored,
     hasReacted,
     reactionsFeed,
-    handleHidePost,
   } = useMainFeed();
 
   const {

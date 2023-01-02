@@ -79,7 +79,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     gifs,
     handleTags,
     tags,
-    handleRemoveTag
+    handleRemoveTag,
   } = usePublication();
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -168,7 +168,11 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
               </div>
             </div>
             <div className="relative w-full hit row-start-3">
-                <Tags handleRemoveTag={handleRemoveTag} tags={tags} handleTags={handleTags} />
+              <Tags
+                handleRemoveTag={handleRemoveTag}
+                tags={tags}
+                handleTags={handleTags}
+              />
             </div>
             <div className="relative w-full h-fit row-start-4 grid grid-flow-col auto-cols-auto">
               <div className="relative w-full h-fit col-start-1 pl-2 self-center">

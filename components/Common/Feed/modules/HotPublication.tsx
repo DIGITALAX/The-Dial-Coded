@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { useAccount } from "wagmi";
+import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 
 const HotPublication: FunctionComponent<HotPublicationProps> = ({
   height,
@@ -25,25 +26,8 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
   handleHidePost,
 }): JSX.Element => {
   const router = useRouter();
-  let imagePrefix: any;
-  let profileImage: string;
-  if (data?.__typename === "Mirror") {
-    imagePrefix = data?.mirrorOf?.profile?.picture;
-  } else {
-    imagePrefix = data?.profile?.picture;
-  }
-  if (!imagePrefix?.original) {
-    profileImage = "";
-  } else if (imagePrefix?.original) {
-    if (data?.profile.picture?.original?.url.includes("http")) {
-      profileImage = imagePrefix?.original.url;
-    } else {
-      const cut = data?.profile?.picture?.original?.url?.split("/");
-      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-    }
-  } else {
-    profileImage = imagePrefix?.uri;
-  }
+  const profileImage = createProfilePicture(data, true);
+
   const viewerOpen = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
   );
@@ -100,7 +84,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
           className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-1.5 py-px row-start-1 col-start-2"
         >
           <div className="relative w-fit h-fit place-self-center col-start-1">
-            {(data?.metadata?.content)?.split("\n\n")[2]?.split(",")[index]}
+            {data?.metadata?.content?.split("\n\n")[2]?.split(",")[index]}
           </div>
         </div>
         <div
@@ -120,8 +104,8 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
           }}
         >
           <div className="relative w-fit h-fit col-start-1 place-self-center whitespace-nowrap">
-            Src: {(data?.metadata?.content)?.split("\n\n")[0]} ——{" "}
-            {(data?.metadata?.content)?.split("\n\n")[1]}
+            Src: {data?.metadata?.content?.split("\n\n")[0]} ——{" "}
+            {data?.metadata?.content?.split("\n\n")[1]}
           </div>
         </div>
         <div

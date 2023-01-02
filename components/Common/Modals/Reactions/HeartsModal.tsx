@@ -12,6 +12,7 @@ import { ReactionModalProps } from "../../types/common.types";
 import lodash from "lodash";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
+import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 
 const HeartsModal: FunctionComponent<ReactionModalProps> = ({
   reacters,
@@ -67,29 +68,8 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
                       className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4"
                     >
                       {reacters?.map((reacter: any, index: number) => {
-                        let profileImage: string;
-                        if (!(reacter?.profile?.picture as any)?.original) {
-                          profileImage = "";
-                        } else if (
-                          (reacter?.profile?.picture as any)?.original
-                        ) {
-                          if (
-                            (
-                              reacter?.profile?.picture as any
-                            )?.original?.url?.includes("http")
-                          ) {
-                            profileImage = (reacter?.profile?.picture as any)
-                              ?.original?.url;
-                          } else {
-                            const cut = (
-                              reacter?.profile?.picture as any
-                            )?.original?.url?.split("/");
-                            profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-                          }
-                        } else {
-                          profileImage = (reacter?.profile?.picture as any)
-                            ?.uri;
-                        }
+                        const profileImage = createProfilePicture(reacter);
+
                         return (
                           <Link
                             href={`/profile/${

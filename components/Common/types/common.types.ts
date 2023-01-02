@@ -29,7 +29,7 @@ export type ReactionProps = {
   heartExpand?: ActionCreatorWithPayload<any>;
   collectExpand?: ActionCreatorWithPayload<any>;
   commentExpand?: ActionCreatorWithPayload<any>;
-  dispatch?: Dispatch<AnyAction>;
+  dispatch: Dispatch<AnyAction>;
   mirrorValue?: string;
   collectValue?: string;
   commentValue?: string;
@@ -39,7 +39,7 @@ export type ReactionProps = {
   hasReacted?: boolean;
   hasMirrored?: boolean;
   hasCommented?: boolean;
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   canDelete: boolean;
 };
 
@@ -125,7 +125,7 @@ export type FeedPublicationProps = {
   hasMirrored?: boolean | undefined;
   hasCommented?: boolean | undefined;
   mixtapeMirror?: boolean;
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
 };
 
 export type OptionMenuProps = {
@@ -577,7 +577,7 @@ export type CommentsModalProps = {
   commentInfoLoading: boolean;
   hasCommented: boolean[];
   reactionsFeed: any[];
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
 };
 
 export type ReactionModalProps = {
@@ -679,7 +679,7 @@ export type HotPublicationProps = {
   hasMirrored?: boolean | undefined;
   hasCommented?: boolean | undefined;
   dispatch: Dispatch<AnyAction>;
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
 };
 
 export type MixtapePublicationProps = {
@@ -690,11 +690,22 @@ export type MixtapePublicationProps = {
   reactionsFeed?: number;
   hasMirrored?: boolean | undefined;
   hasCommented?: boolean | undefined;
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
 };
 
 export type TagsProps = {
   tags: string[];
   handleTags: (e: FormEvent) => void;
   handleRemoveTag: (tag: string) => void;
+};
+
+export type SearchBarProps = {
+  width?: string;
+  handleKeyDown: (e: any) => void;
+  handleOnChange: (e: FormEvent) => void;
+  borderColor: string;
+  bg: string;
+  bgOpacity?: boolean;
+  textColor: string;
+  searchTarget: string;
 };

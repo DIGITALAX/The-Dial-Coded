@@ -14,7 +14,6 @@ import { RootState } from "../../../../../redux/store";
 import { PostArgsType, PostImage } from "../../../types/common.types";
 import moment from "moment";
 import createPostTypedData from "../../../../../graphql/mutations/createPost";
-import { omit, splitSignature } from "../../../../../lib/lens/helpers";
 import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import { setSignIn } from "../../../../../redux/reducers/signInSlice";
@@ -23,6 +22,8 @@ import { setInsufficientFunds } from "../../../../../redux/reducers/insufficient
 import CreateCommentTypedData from "../../../../../graphql/mutations/comment";
 import { useRouter } from "next/router";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
+import omit from "../../../../../lib/lens/helpers/omit";
+import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
 
 const usePublication = () => {
   const {

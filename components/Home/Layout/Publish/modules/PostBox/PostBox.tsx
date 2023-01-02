@@ -2,6 +2,7 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { useDispatch } from "react-redux";
 import { INFURA_GATEWAY } from "../../../../../../lib/lens/constants";
+import createProfilePicture from "../../../../../../lib/lens/helpers/createProfilePicture";
 import { setPublication } from "../../../../../../redux/reducers/publicationSlice";
 import { setSignIn } from "../../../../../../redux/reducers/signInSlice";
 import { PostBoxProps } from "../../types/post.types";
@@ -12,19 +13,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
   lensProfile,
 }): JSX.Element => {
   const dispatch = useDispatch();
-  let profileImage: string;
-  if (!(lensProfile?.picture as any)?.original) {
-    profileImage = "";
-  } else if ((lensProfile?.picture as any)?.original) {
-    if ((lensProfile?.picture as any)?.original.url.includes("http")) {
-      profileImage = (lensProfile?.picture as any)?.original.url;
-    } else {
-      const cut = (lensProfile?.picture as any)?.original.url.split("/");
-      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-    }
-  } else {
-    profileImage = (lensProfile?.picture as any)?.uri;
-  }
+  const profileImage = createProfilePicture(lensProfile);
   return (
     <div className="relative row-start-1 w-full h-full rounded-xl grid grid-flow-col auto-cols-auto">
       <div
