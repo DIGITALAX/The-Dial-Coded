@@ -69,7 +69,6 @@ const useHot = (): UseHotResults => {
           },
           noRandomize: true,
         });
-        console.log(data?.explorePublications?.pageInfo);
         const arr: any[] = [...data?.explorePublications?.items];
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)

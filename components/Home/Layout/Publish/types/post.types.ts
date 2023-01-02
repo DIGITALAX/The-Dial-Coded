@@ -1,3 +1,4 @@
+import { AnyAction, Dispatch } from "redux";
 import {
   Profile,
   PublicationSearchResult,
