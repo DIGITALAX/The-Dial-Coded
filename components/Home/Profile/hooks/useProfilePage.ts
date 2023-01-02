@@ -248,7 +248,6 @@ const useProfilePage = (): UseProfilePageResults => {
       });
       setUserFeed(filteredArr);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
-      console.log(mixtapeMirrors)
       setMixtapeMirror(mixtapeMirrors);
       setPaginatedResults(pageData);
       const response = await checkPostReactions(filteredArr, lensProfile);

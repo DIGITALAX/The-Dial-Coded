@@ -2,7 +2,6 @@ import lodash from "lodash";
 
 const checkIfMixtapeMirror = (arr: any[]): boolean[] => {
   let checkedArr: boolean[] = [];
-  console.log(arr);
   lodash.filter(arr, (item) => {
     if (item?.__typename === "Mirror") {
       if (item?.mirrorOf?.metadata?.content.includes("*Dial Mixtape*")) {

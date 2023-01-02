@@ -236,7 +236,6 @@ const useMainFeed = () => {
             return true;
           }
         });
-        console.log(authPub.data.explorePublications.pageInfo, "forst data");
         const orderedArr = orderFeedManual(
           filteredArrAuth,
           feedOrderState,
@@ -367,7 +366,6 @@ const useMainFeed = () => {
             return true;
           }
         });
-        console.log(authPub.data.explorePublications.pageInfo, "second data");
         const orderedArr = orderFeedManual(
           filteredArrAuth,
           feedOrderState,
