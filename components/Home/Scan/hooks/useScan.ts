@@ -8,6 +8,7 @@ import { FormEvent, useState } from "react";
 import {
   searchProfile,
   searchPublication,
+  searchPublicationAuth,
 } from "../../../../graphql/queries/search";
 import lodash from "lodash";
 import { setPreSearch } from "../../../../redux/reducers/preSearchSlice";
@@ -51,18 +52,28 @@ const useScan = (): UseScanResult => {
       setDropDown(false);
     }
     dispatch(setSearchTarget(searchTargetString));
+    let publications: any;
     try {
       const profiles = await searchProfile({
         query: searchTargetString,
         type: "PROFILE",
         limit: 50,
       });
-      const publications = await searchPublication({
-        query: searchTargetString,
-        type: "PUBLICATION",
-        sources: "thedial",
-        limit: 50,
-      });
+      if (lensProfile) {
+        publications = await searchPublicationAuth({
+          query: searchTargetString,
+          type: "PUBLICATION",
+          sources: "thedial",
+          limit: 50,
+        });
+      } else {
+        publications = await searchPublication({
+          query: searchTargetString,
+          type: "PUBLICATION",
+          sources: "thedial",
+          limit: 50,
+        });
+      }
       setProfilePageCursor(profiles?.data?.search?.pageInfo);
       const sortedProfileArr = lodash.sortBy(
         profiles?.data?.search?.items,

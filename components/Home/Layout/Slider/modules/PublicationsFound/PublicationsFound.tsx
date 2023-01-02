@@ -16,6 +16,7 @@ const PublicationsFound: FunctionComponent<PublicationsFoundProps> = ({
   return (
     <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
       {publicationsSearch?.map((publication: any, index: number) => {
+        console.log(publication)
         return (
           <FeedPublication
             dispatch={dispatch}
