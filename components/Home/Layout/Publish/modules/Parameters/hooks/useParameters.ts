@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useDispatch } from "react-redux";
-import search from "../../../../../../../graphql/queries/search";
+import { searchProfile } from "../../../../../../../graphql/queries/search";
 import { setUserViewer } from "../../../../../../../redux/reducers/userViewSlice";
 import { Profile } from "../../../../../../Common/types/lens.types";
 import { UseParametersResult } from "../types/parameters.types";
@@ -39,7 +39,7 @@ const useParameters = (): UseParametersResult => {
     }
     setSearchTarget((e.target as HTMLFormElement).value);
     try {
-      const profiles = await search({
+      const profiles = await searchProfile({
         query: (e.target as HTMLFormElement).value,
         type: "PROFILE",
         limit: 50,
@@ -55,7 +55,7 @@ const useParameters = (): UseParametersResult => {
 
   const getMoreProfiles = async (): Promise<void> => {
     try {
-      const moreProfiles = await search({
+      const moreProfiles = await searchProfile({
         query: searchTarget,
         type: "PROFILE",
         limit: 50,

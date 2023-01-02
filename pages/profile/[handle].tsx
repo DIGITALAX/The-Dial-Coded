@@ -66,7 +66,7 @@ const Profile: NextPage = (): JSX.Element => {
           <Banner coverPicture={profileData?.coverPicture} />
           <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto row-start-2">
             <div className="absolute w-fit h-fit grid grid-flow-col auto-cols-auto px-10">
-              <div className="relative w-48 h-48 col-start-1 rounded-full grid grid-flow-col auto-cols-auto z-10 -top-20 border-2 border-offBlack">
+              <div id="crt" className="relative w-48 h-48 col-start-1 rounded-full grid grid-flow-col auto-cols-auto z-10 -top-20 border-2 border-offBlack">
                 <Image
                   src={profileImage}
                   layout={"fill"}

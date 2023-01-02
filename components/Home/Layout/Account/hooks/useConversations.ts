@@ -16,7 +16,7 @@ import { Profile } from "../../../../Common/types/lens.types";
 import { FormEvent, useEffect, useState } from "react";
 import { getAllProfiles } from "../../../../../graphql/queries/whoMirroredPublications";
 import { UseConversationResults } from "../types/account.types";
-import search from "../../../../../graphql/queries/search";
+import { searchProfile } from "../../../../../graphql/queries/search";
 import lodash from "lodash";
 import { setChosenDMProfile } from "../../../../../redux/reducers/chosenDMProfileSlice";
 
@@ -227,7 +227,7 @@ const useConversations = (): UseConversationResults => {
       setDropdown(true);
     }
     try {
-      const profiles = await search({
+      const profiles = await searchProfile({
         query: (e.target as HTMLFormElement).value,
         type: "PROFILE",
         limit: 50,
@@ -243,7 +243,7 @@ const useConversations = (): UseConversationResults => {
 
   const searchMoreMessages = async (): Promise<void> => {
     try {
-      const moreProfiles = await search({
+      const moreProfiles = await searchProfile({
         query: searchTarget,
         type: "PROFILE",
         limit: 50,

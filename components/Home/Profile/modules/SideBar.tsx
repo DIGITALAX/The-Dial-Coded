@@ -154,8 +154,8 @@ const SideBar: FunctionComponent<SideBarProps> = ({
             )}
             <div
               className={`${
-                isFollowing ? "col-start-2" : "col-start-1"
-              } place-self-center cursor-pointer active:scale-95`}
+                isFollowing ? "col-start-2 place-self-center" : "col-start-1 justify-self-start self-center"
+              } cursor-pointer active:scale-95`}
               onClick={() => handleSendDM(profileData)}
             >
               <MdOutlineMailOutline size={25} />
