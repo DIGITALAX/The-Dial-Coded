@@ -41,7 +41,7 @@ const Tags: FunctionComponent<TagsProps> = ({
             <div
               key={index}
               onClick={() => handleRemoveTag(tag)}
-              id={index < 14 ? `record${index + 1}` : `record${index - 14}`}
+              id={`record${index + 1}`}
               className={`relative col-start-${
                 index + 1
               } w-fit h-fit px-5 font-dosis text-white rounded-lg grid grid-flow-col auto-cols-auto text-lg whitespace-nowrap border-2 border-offYellow`}

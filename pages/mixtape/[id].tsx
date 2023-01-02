@@ -49,6 +49,9 @@ const Post: NextPage = (): JSX.Element => {
     handleSetGif,
     results,
     searchGif,
+    tags,
+    handleRemoveTag,
+    handleTags
   } = usePublication();
   const {
     getPostComments,
@@ -153,6 +156,9 @@ const Post: NextPage = (): JSX.Element => {
                 hasCommented={hasCommented}
                 reactionsFeed={reactionsFeed}
                 handleHidePost={handleHidePost}
+                handleRemoveTag={handleRemoveTag}
+                handleTags={handleTags}
+                tags={tags}
               />
             </div>
           </>
