@@ -16,7 +16,7 @@ export type MainProps = {
   hasCommented: boolean[];
   noUserData: boolean;
   mixtapeMirror: boolean[];
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
 };
 
 export type HotProps = {
@@ -28,7 +28,7 @@ export type HotProps = {
   hotReactionsFeed: any[];
   fetchMoreMixtapes: () => Promise<void>;
   dispatch: Dispatch<AnyAction>;
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
 };
 
 export type UseHotResults = {
@@ -51,5 +51,5 @@ export type UseMainResults = {
   getMirrors: () => Promise<void>;
   hasReacted: boolean[];
   reactionsFeed: any[];
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
 };

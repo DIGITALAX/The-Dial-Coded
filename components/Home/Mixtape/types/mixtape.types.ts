@@ -4,5 +4,5 @@ export type MainPostMixtapeProps = {
   hasPostCommented: boolean[];
   hasPostReacted: boolean[];
   reactionsPostFeed: any[];
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
 };

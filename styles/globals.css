@@ -44,9 +44,9 @@ body {
   background-color: #131313;
 }
 
-::placeholder {
+/* ::placeholder {
   color: white !important;
-}
+} */
 
 #radialPinkBorder {
   background: radial-gradient(

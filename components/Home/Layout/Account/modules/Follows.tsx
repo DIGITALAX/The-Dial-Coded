@@ -1,23 +1,11 @@
 import Image from "next/legacy/image";
 import Link from "next/link";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../../../lib/lens/constants";
+import createProfilePicture from "../../../../../lib/lens/helpers/createProfilePicture";
 import { FollowProps } from "../types/account.types";
 
 const Follows: FunctionComponent<FollowProps> = ({ follow }): JSX.Element => {
-  let profileImage: string;
-  if (!(follow.picture as any)?.original) {
-    profileImage = "";
-  } else if ((follow.picture as any)?.original) {
-    if ((follow.picture as any)?.original?.url?.includes("http")) {
-      profileImage = (follow.picture as any)?.original?.url;
-    } else {
-      const cut = (follow.picture as any)?.original?.url?.split("/");
-      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-    }
-  } else {
-    profileImage = (follow.picture as any)?.uri;
-  }
+  const profileImage = createProfilePicture(follow);
   return (
     <Link
       href={`/profile/${follow.handle?.split("lens")[0]}`}
@@ -33,9 +21,7 @@ const Follows: FunctionComponent<FollowProps> = ({ follow }): JSX.Element => {
             className="relative w-fit h-fit rounded-full self-center"
           />
         </div>
-        <div
-          className="relative w-fit h-fit place-self-center col-start-2 text-offBlack text-sm"
-        >
+        <div className="relative w-fit h-fit place-self-center col-start-2 text-offBlack text-sm">
           @{follow.handle}
         </div>
       </div>

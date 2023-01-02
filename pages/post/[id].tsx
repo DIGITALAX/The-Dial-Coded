@@ -11,6 +11,8 @@ import usePostPage from "../../components/Home/Post/hooks/usePostPage";
 import usePublication from "../../components/Common/Modals/Publications/hooks/usePublication";
 import useMainFeed from "../../components/Home/Layout/Publish/modules/Feed/hooks/useMainFeed";
 import { BsFillChatDotsFill } from "react-icons/bs";
+import handleHidePost from "../../lib/lens/helpers/handleHidePost";
+import getPostComments from "../../lib/lens/helpers/getPostComments";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -26,7 +28,6 @@ const Post: NextPage = (): JSX.Element => {
     hasPostMirrored,
     hasPostReacted,
   } = usePostPage();
-  const { handleHidePost } = useMainFeed();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
@@ -55,13 +56,19 @@ const Post: NextPage = (): JSX.Element => {
     handleTags,
   } = usePublication();
   const {
-    getPostComments,
     commentors,
     getMorePostComments,
     hasCommented,
     hasMirrored,
     hasReacted,
     reactionsFeed,
+    setCommentInfoLoading,
+    setCommentors,
+    setCommentPageInfo,
+    setReactionsFeed,
+    setHasMirrored,
+    setHasCommented,
+    setHasReacted,
   } = useMainFeed();
 
   const dispatch = useDispatch();
@@ -69,7 +76,17 @@ const Post: NextPage = (): JSX.Element => {
   useEffect(() => {
     if (id) {
       getPublicationData(id as string);
-      getPostComments(id as string);
+      getPostComments(
+        setCommentInfoLoading,
+        setCommentors,
+        setCommentPageInfo,
+        setReactionsFeed,
+        lensProfile,
+        setHasMirrored,
+        setHasCommented,
+        setHasReacted,
+        id as string
+      );
     }
   }, [
     id,

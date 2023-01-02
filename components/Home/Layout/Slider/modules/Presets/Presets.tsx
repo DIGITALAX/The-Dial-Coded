@@ -6,7 +6,7 @@ import Preset from "../../../../../Common/Preset/Preset";
 const Presets: FunctionComponent = (): JSX.Element => {
   const { more, setMore, presetOptions } = usePresets();
   return (
-    <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-3 gap-5 pt-10 pl-20">
+    <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-5 gap-5 pt-10 pl-20">
       <div className="relative row-start-1 w-fit h-fit justify-self-start text-black font-dosis text-left text-lg">
         Common, novel & highlighted presets:
       </div>

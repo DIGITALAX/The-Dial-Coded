@@ -2,6 +2,7 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { useSelector } from "react-redux";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
+import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 import { setHamburger } from "../../../../redux/reducers/hamburgerSlice";
 import { RootState } from "../../../../redux/store";
 import { ProfileProps } from "../../types/common.types";
@@ -12,19 +13,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
   authStatus,
   newNotifications,
 }): JSX.Element => {
-  let profileImage: string;
-  if (!(lensProfile?.picture as any)?.original) {
-    profileImage = "";
-  } else if ((lensProfile?.picture as any)?.original) {
-    if ((lensProfile?.picture as any)?.original.url.includes("http")) {
-      profileImage = (lensProfile?.picture as any)?.original.url;
-    } else {
-      const cut = (lensProfile?.picture as any)?.original.url.split("/");
-      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-    }
-  } else {
-    profileImage = (lensProfile?.picture as any)?.uri;
-  }
+  const profileImage = createProfilePicture(lensProfile);
   const hamburgerValue = useSelector(
     (state: RootState) => state.app.hamburgerReducer.value
   );

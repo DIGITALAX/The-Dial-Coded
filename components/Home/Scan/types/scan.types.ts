@@ -6,12 +6,14 @@ export type TurnerProps = {
   currentSetting: number;
   canvasURIs: string[];
   handleQuickSearch: (e: FormEvent) => Promise<void>;
-  publicationSearchLength: number;
+  publicationSearchValues: any[];
   profileSearchValues: Profile[];
   handleMoreProfileQuickSearch: () => Promise<void>;
   searchLoading: boolean;
   dropDown: boolean;
-  handleChosenSearch: (type: string, user?: Profile) => void;
+  handleChosenSearch: (type: string, user?: Profile) => Promise<void>;
+  handleKeyDownEnter: (e: any) => Promise<void>;
+  searchTarget: string;
 };
 
 export type UseScanResult = {
@@ -23,12 +25,13 @@ export type UseScanResult = {
   imageArtist: string[];
   imageDescription: string[];
   handleQuickSearch: (e: FormEvent) => Promise<void>;
-  publicationSearchLength: number;
+  publicationSearchValues: any[];
   profileSearchValues: Profile[];
   handleMoreProfileQuickSearch: () => Promise<void>;
   searchLoading: boolean;
-  handleChosenSearch: (type: string, user?: Profile) => void;
+  handleChosenSearch: (type: string, user?: Profile) => Promise<void>;
   dropDown: boolean;
+  handleKeyDownEnter: (e: any) => Promise<void>;
 };
 
 export type BackgroundImageProps = {
@@ -49,3 +52,19 @@ export type ScanProps = {
 export type PanelProps = {
   layout: string | undefined;
 };
+
+export interface LexicaImages {
+  id: string;
+  gallery: string;
+  src: string;
+  srcSmall: string;
+  prompt: string;
+  width: number;
+  height: number;
+  seed: string;
+  grid: boolean;
+  model: string;
+  guidance: number;
+  promptid: string;
+  nsfw: boolean;
+}

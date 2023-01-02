@@ -8,7 +8,7 @@ export type MainPostProps = {
   hasPostCommented: boolean[];
   hasPostReacted: boolean[];
   reactionsPostFeed: any[];
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
 };
 
 export type CommentsProps = {
@@ -34,7 +34,7 @@ export type CommentsProps = {
   handleRemoveGif: (result: any) => void;
   gifs: string[];
   reactionsFeed: any[];
-  handleHidePost: (id: string) => Promise<void>;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   tags: string[];
   handleTags: (e: FormEvent) => void;
   handleRemoveTag: (tag: string) => void;

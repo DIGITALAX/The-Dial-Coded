@@ -11,7 +11,6 @@ import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { setAddTrack } from "../../../../../redux/reducers/addTrackSlice";
 import createPostTypedData from "../../../../../graphql/mutations/createPost";
-import { omit, splitSignature } from "../../../../../lib/lens/helpers";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 import checkIndexed from "../../../../../graphql/queries/checkIndexed";
@@ -28,6 +27,8 @@ import lodash from "lodash";
 import { setCompleteTrack } from "../../../../../redux/reducers/completeTrackSlice";
 import { setMixtapeSource } from "../../../../../redux/reducers/mixtapeSourceSlice";
 import { setMixtapeTitle } from "../../../../../redux/reducers/mixtapeTitleSlice";
+import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
+import omit from "../../../../../lib/lens/helpers/omit";
 
 const useCreateMixtape = (): UseCreateMixtapeResults => {
   const [valueClicked, setValueClicked] = useState<boolean>(false);
