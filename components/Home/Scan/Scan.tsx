@@ -22,6 +22,13 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
     imageArtist,
     imageDescription,
     imageTitle,
+    handleQuickSearch,
+    handleMoreProfileQuickSearch,
+    profileSearchValues,
+    publicationSearchLength,
+    searchLoading,
+    handleChosenSearch,
+    dropDown
   } = useScan();
   const videoOpen = useSelector(
     (state: RootState) => state.app.videoReducer.value
@@ -73,6 +80,13 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
           canvasURIs={canvasURIs}
           currentSetting={currentSetting}
           handleCount={handleCount}
+          handleQuickSearch={handleQuickSearch}
+          handleMoreProfileQuickSearch={handleMoreProfileQuickSearch}
+          profileSearchValues={profileSearchValues}
+          publicationSearchLength={publicationSearchLength}
+          handleChosenSearch={handleChosenSearch}
+          searchLoading={searchLoading}
+          dropDown={dropDown}
         />
       </div>
       <Marquee />

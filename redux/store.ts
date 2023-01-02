@@ -45,6 +45,7 @@ import mixtapeTitleReducer from "./reducers/mixtapeTitleSlice";
 import mixtapeSourceReducer from "./reducers/mixtapeSourceSlice";
 import completeTrackReducer from "./reducers/completeTrackSlice";
 import chosenDMProfileReducer from "./reducers/chosenDMProfileSlice";
+import preSearchReducer from "./reducers/preSearchSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -92,6 +93,7 @@ const reducer = combineReducers({
   mixtapeTitleReducer,
   completeTrackReducer,
   chosenDMProfileReducer,
+  preSearchReducer,
 });
 
 export const store = configureStore({

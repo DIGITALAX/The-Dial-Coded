@@ -4,14 +4,102 @@ import { setDial } from "../../../../redux/reducers/dialSlice";
 import { setLayout } from "../../../../redux/reducers/layoutSlice";
 import { RootState } from "../../../../redux/store";
 import { setBackground } from "../../../../redux/reducers/backgroundSlice";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+import {
+  searchProfile,
+  searchPublication,
+} from "../../../../graphql/queries/search";
+import lodash from "lodash";
+import { setPreSearch } from "../../../../redux/reducers/preSearchSlice";
+import { Profile } from "../../../Common/types/lens.types";
+import { useRouter } from "next/router";
 
 const useScan = (): UseScanResult => {
-  const [currentSetting, setCurrentSetting] = useState<number>(0);
   const dispatch = useDispatch();
+  const router = useRouter();
   const backgroundNumber = useSelector(
     (state: RootState) => state.app.backgroundReducer.value
   );
+  const [profileSearchValues, setProfileSearchValues] = useState<any[]>([]);
+  const [currentSetting, setCurrentSetting] = useState<number>(0);
+  const [dropDown, setDropDown] = useState<boolean>(false);
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
+  const [searchTarget, setSearchTarget] = useState<string>("");
+  const [publicationSearchLength, setPublicationSearchLength] =
+    useState<number>(0);
+  const [profilePageCursor, setProfilePageCursor] = useState<any>();
+  const [publicationPageCursor, setPublicationPageCursor] = useState<any>();
+
+  const handleQuickSearch = async (e: FormEvent): Promise<void> => {
+    setSearchLoading(true);
+    let searchTargetString: string = (e.target as HTMLFormElement).value;
+    if (searchTargetString !== "") {
+      setDropDown(true);
+    } else {
+      setDropDown(false);
+    }
+    setSearchTarget(searchTargetString);
+    try {
+      const profiles = await searchProfile({
+        query: searchTargetString,
+        type: "PROFILE",
+        limit: 50,
+      });
+      const publications = await searchPublication({
+        query: searchTargetString,
+        type: "PUBLICATION",
+        sources: "thedial",
+        limit: 50,
+      });
+      setProfilePageCursor(profiles?.data?.search?.pageInfo);
+      setPublicationPageCursor(publications?.data?.search?.pageInfo);
+      const sortedProfileArr = lodash.sortBy(
+        profiles?.data?.search?.items,
+        "handle"
+      );
+      const arr: any[] = [...publications?.data?.search?.items];
+      const sortedPublicationArr = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      setProfileSearchValues(sortedProfileArr);
+      setPublicationSearchLength(publications?.data?.search?.items?.length);
+      dispatch(
+        setPreSearch({
+          actionItems: sortedPublicationArr,
+          actionTarget: searchTargetString,
+        })
+      );
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setSearchLoading(false);
+  };
+
+  const handleMoreProfileQuickSearch = async (): Promise<void> => {
+    try {
+      const profiles = await searchProfile({
+        query: searchTarget,
+        type: "PROFILE",
+        limit: 50,
+        cursor: profilePageCursor?.next,
+      });
+      const sortedProfileArr = lodash.sortBy(
+        profiles?.data?.search?.items,
+        "handle"
+      );
+      setProfileSearchValues([...profileSearchValues, ...sortedProfileArr]);
+      setProfilePageCursor(profiles?.data?.search?.pageInfo);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const handleChosenSearch = (type: string, user?: Profile) => {
+    if (type === "profile") {
+      router.push(`/profile/${user?.handle.split(".lens")[0]}`);
+    } else {
+    }
+  };
 
   const canvasURIs: string[] = [
     "QmQZAsmdnPUdGGhBVqWLLddLLWYF9v3oj1wjVe1S5sSm47",
@@ -98,6 +186,13 @@ const useScan = (): UseScanResult => {
     imageTitle,
     imageArtist,
     imageDescription,
+    handleQuickSearch,
+    publicationSearchLength,
+    profileSearchValues,
+    handleMoreProfileQuickSearch,
+    searchLoading,
+    dropDown,
+    handleChosenSearch,
   };
 };
 

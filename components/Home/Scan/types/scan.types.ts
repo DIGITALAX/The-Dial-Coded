@@ -1,7 +1,17 @@
+import { FormEvent } from "react";
+import { Profile } from "../../../Common/types/lens.types";
+
 export type TurnerProps = {
   handleCount: (currentSetting: number) => void;
   currentSetting: number;
   canvasURIs: string[];
+  handleQuickSearch: (e: FormEvent) => Promise<void>;
+  publicationSearchLength: number;
+  profileSearchValues: Profile[];
+  handleMoreProfileQuickSearch: () => Promise<void>;
+  searchLoading: boolean;
+  dropDown: boolean;
+  handleChosenSearch: (type: string, user?: Profile) => void;
 };
 
 export type UseScanResult = {
@@ -12,6 +22,13 @@ export type UseScanResult = {
   imageTitle: string[];
   imageArtist: string[];
   imageDescription: string[];
+  handleQuickSearch: (e: FormEvent) => Promise<void>;
+  publicationSearchLength: number;
+  profileSearchValues: Profile[];
+  handleMoreProfileQuickSearch: () => Promise<void>;
+  searchLoading: boolean;
+  handleChosenSearch: (type: string, user?: Profile) => void;
+  dropDown: boolean;
 };
 
 export type BackgroundImageProps = {
@@ -31,4 +48,4 @@ export type ScanProps = {
 
 export type PanelProps = {
   layout: string | undefined;
-}
+};
