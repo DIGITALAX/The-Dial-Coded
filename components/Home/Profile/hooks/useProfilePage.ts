@@ -51,7 +51,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const [profileData, setProfileData] = useState<any>();
   const [followLoading, setFollowLoading] = useState<boolean>(false);
   const [followArgs, setFollowArgs] = useState<FollowArgs>();
-  const [unfollowArgs, setUnfollowArgs] = useState<any[]>([]);
+  const [unfollowArgs, setUnfollowArgs] = useState<any[]>();
   const [userFeed, setUserFeed] = useState<PublicationSearchResult[]>([]);
   const [paginatedResults, setPaginatedResults] = useState<any>();
   const { address } = useAccount();
@@ -103,7 +103,6 @@ const useProfilePage = (): UseProfilePageResults => {
   const {
     config: unfollowConfig,
     isSuccess: unfollowSuccess,
-    error,
   } = useUnfollowPrepareContractWrite({
     address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
     abi: LensHubProxy,

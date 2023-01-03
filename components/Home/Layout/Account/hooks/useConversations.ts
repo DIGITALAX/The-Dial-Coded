@@ -132,7 +132,6 @@ const useConversations = (): UseConversationResults => {
       setPreviewMessages(newPreviewMessages);
       (messageProfiles as any)?.map(([key, profile]: any[]) => {
         const message = previewMessages?.get(key);
-        console.log(`profileId: ${profile.id} messageId: ${message?.id}`);
       });
     } catch (err: any) {
       console.error(err.message);

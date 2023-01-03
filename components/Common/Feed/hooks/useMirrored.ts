@@ -192,6 +192,7 @@ const useMirrored = () => {
     }
   }, [reactions.type, reactions.open, id, pubId, mirrorComplete]);
 
+
   useEffect(() => {
     if (isSuccess) {
       mirrorWrite();
