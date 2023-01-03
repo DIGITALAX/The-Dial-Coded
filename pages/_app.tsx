@@ -11,6 +11,8 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import Modals from "../components/Home/Modals/Modals";
 import { useEffect, useState } from "react";
 import shuffle from "shuffle-array";
+import { useRouter } from "next/router";
+import RouterChange from "../components/Common/RouterChange/RouterChange";
 
 const { chains, provider } = configureChains(
   [chain.polygonMumbai],
@@ -33,6 +35,10 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const [routerChangeLoading, setRouterChangeLoading] =
+    useState<boolean>(false);
+
   const streamLinks: string[] = [
     "https://www.youtube.com/embed/__PtdR1xZYY?controls=0?rel=0&autoplay=1&mute=1",
     "https://www.youtube.com/embed/CqpU5vCQxGM?controls=0?rel=0&autoplay=1&mute=1",
@@ -44,6 +50,31 @@ function MyApp({ Component, pageProps }: AppProps) {
     const shuffledLinks: number[] = shuffle([0, 1]);
     setNewLink(streamLinks[shuffledLinks[0]]);
   }, []);
+
+  useEffect(() => {
+    const handleStart = () => {
+      setRouterChangeLoading(true);
+    };
+
+    const handleStop = () => {
+      setRouterChangeLoading(false);
+    };
+
+    router.events.on("routeChangeStart", handleStart);
+    router.events.on("routeChangeComplete", handleStop);
+    router.events.on("routeChangeError", handleStop);
+
+    return () => {
+      router.events.off("routeChangeStart", handleStart);
+      router.events.off("routeChangeComplete", handleStop);
+      router.events.off("routeChangeError", handleStop);
+    };
+  }, [router]);
+
+  if (routerChangeLoading) {
+    return <RouterChange />;
+  }
+
   return (
     <Provider store={store}>
       <WagmiConfig client={wagmiClient}>
