@@ -13,6 +13,7 @@ import useMainFeed from "../../components/Home/Layout/Publish/modules/Feed/hooks
 import { BsFillChatDotsFill } from "react-icons/bs";
 import handleHidePost from "../../lib/lens/helpers/handleHidePost";
 import getPostComments from "../../lib/lens/helpers/getPostComments";
+import NotFound from "../../components/Common/NotFound/NotFound";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -100,6 +101,10 @@ const Post: NextPage = (): JSX.Element => {
   useEffect(() => {
     dispatch(setWalletConnected(isConnected));
   }, [isConnected]);
+
+  if (!publicationData && !publicationDataLoading) {
+    return <NotFound />;
+  }
 
   return (
     <div className="relative h-auto min-h-screen w-full grid grid-flow-col auto-col-auto overflow-hidden pt-44">

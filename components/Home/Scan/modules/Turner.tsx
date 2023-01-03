@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { TurnerProps } from "./../types/scan.types";
 import { TfiSearch } from "react-icons/tfi";
-import SearchBar from "../../../Common/SearchBar/SearchBar";
+import SearchBar from "../../../Common/Search/SearchBar";
 
 const Turner: FunctionComponent<TurnerProps> = ({
   currentSetting,

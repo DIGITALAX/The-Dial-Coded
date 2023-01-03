@@ -138,7 +138,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
         {
           traitType: "string",
           key: "date",
-          date: moment().format("MM/D hh:mm:ss"),
+          date: Date.now(),
         },
       ],
       media: newImages,

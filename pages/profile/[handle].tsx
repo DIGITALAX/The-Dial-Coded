@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Image from "next/legacy/image";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
+import NotFound from "../../components/Common/NotFound/NotFound";
 import Banner from "../../components/Common/Profile/modules/Banner";
 import useProfilePage from "../../components/Home/Profile/hooks/useProfilePage";
 import SideBar from "../../components/Home/Profile/modules/SideBar";
@@ -42,6 +43,10 @@ const Profile: NextPage = (): JSX.Element => {
 
   const profileImage = createProfilePicture(profileData);
 
+  if (!profileData && !profileDataLoading) {
+    return <NotFound />;
+  }
+
   return (
     <div className="relative h-full w-full bg-black/70 grid grid-flow-col auto-col-auto overflow-hidden">
       {(profileDataLoading || profileDataLoading === undefined) &&
@@ -57,13 +62,15 @@ const Profile: NextPage = (): JSX.Element => {
                 id="crt"
                 className="relative w-48 h-48 col-start-1 rounded-full grid grid-flow-col auto-cols-auto z-10 -top-20 border-2 border-offBlack"
               >
-                <Image
-                  src={profileImage}
-                  layout={"fill"}
-                  objectFit="cover"
-                  objectPosition={"center"}
-                  className="rounded-full"
-                />
+                {profileImage && (
+                  <Image
+                    src={profileImage}
+                    layout={"fill"}
+                    objectFit="cover"
+                    objectPosition={"center"}
+                    className="rounded-full"
+                  />
+                )}
               </div>
             </div>
             <SideBar
