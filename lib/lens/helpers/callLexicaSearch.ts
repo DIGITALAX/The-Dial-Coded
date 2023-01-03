@@ -24,7 +24,7 @@ const callLexicaSearch = async (
       }
     });
     const uniqueArr = lodash.uniq(propsArray);
-    const trimArray = lodash.slice(uniqueArr, 0, 31);
+    const trimArray = lodash.slice(uniqueArr, 0, 30);
     dispatch(setSearchCategories(trimArray));
   } catch (err: any) {
     console.error(err.message);

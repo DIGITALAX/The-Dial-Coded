@@ -38,7 +38,7 @@ export const getAuthenticationToken = () => {
 
 export const removeAuthenticationToken = () => {
   if (typeof window !== "undefined") {
-    sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    localStorage.removeItem(AUTH_STORAGE_KEY);
   }
 };
 

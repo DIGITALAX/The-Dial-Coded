@@ -5,7 +5,7 @@ const promptRegex = (prompt: string): string | undefined => {
   for (let i = 0; i < splitPrompt?.length; i++) {
     if (!splitPrompt[i]?.match(pattern)) {
       const returnedResult = splitPrompt[i]
-        .replace(/[:;,"“)(]+/g, "")
+        .replace(/[:;,"“')(]+/g, "")
         .toLowerCase();
       return returnedResult;
     }

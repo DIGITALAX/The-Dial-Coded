@@ -80,7 +80,9 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     handleTags,
     tags,
     handleRemoveTag,
+    myDiv,
   } = usePublication();
+
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
@@ -155,9 +157,15 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1 rounded-xl"
               >
                 <textarea
+                  // contentEditable
+                  // ref={myDiv}
                   id="post"
+                  // role="textbox"
+                  // aria-multiline="true"
+                  // aria-expanded="false"
                   onChange={(e: FormEvent) => handlePostDescription(e)}
                   value={postDescription}
+                  // defaultValue={postDescription}
                   placeholder="Have something to share..."
                   className={`relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 font-dosis text-md p-2 place-self-center caret-transparent`}
                   disabled={postLoading ? true : false}

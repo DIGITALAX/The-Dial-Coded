@@ -1,4 +1,10 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import {
+  FormEvent,
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   useContractWrite,
   usePrepareContractWrite,
@@ -12,7 +18,6 @@ import { v4 as uuidv4 } from "uuid";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { PostArgsType, PostImage } from "../../../types/common.types";
-import moment from "moment";
 import createPostTypedData from "../../../../../graphql/mutations/createPost";
 import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
@@ -39,6 +44,7 @@ const usePublication = () => {
   const [results, setResults] = useState<any>([]);
   const [commentArgs, setCommentArgs] = useState<any>();
   const [commentLoading, setCommentLoading] = useState<boolean>(false);
+  const myDiv = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const defaultProfile = useSelector(
     (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
@@ -368,10 +374,21 @@ const usePublication = () => {
     }
   };
 
-  const handlePostDescription = async (e: FormEvent): Promise<void> => {
-    const text: any = (e.target as HTMLFormElement).value;
-
-    setPostDescription(text);
+  const handlePostDescription = async (e: any): Promise<void> => {
+    // console.log(e)
+    // const text = e.target.innerHTML;
+    // const words = text?.split(/\s/);
+    // let html: string[] = [];
+    // words?.forEach((word: string) => {
+    //   if (word[0] === "#" || word[0] === "@") {
+    //     html.push(`<span class="text-offBlue">${word}</span> `);
+    //   } else {
+    //     html.push(`${word} `);
+    //   }
+    // });
+    // e.target.innerHTML = html.join("")
+    setPostDescription(e.target.value)
+    // console.log(html, "here")
   };
 
   const handleTags = (e: FormEvent) => {
@@ -416,6 +433,7 @@ const usePublication = () => {
     handleTags,
     tags,
     handleRemoveTag,
+    myDiv,
   };
 };
 

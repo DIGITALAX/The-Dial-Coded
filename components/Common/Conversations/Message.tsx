@@ -1,6 +1,7 @@
 import Image from "next/legacy/image";
 import { FunctionComponent, FormEvent } from "react";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
+import createProfilePicture from "../../../lib/lens/helpers/createProfilePicture";
 import { MessageProps } from "../../Home/Layout/Account/types/account.types";
 
 const Message: FunctionComponent<MessageProps> = ({
@@ -9,19 +10,7 @@ const Message: FunctionComponent<MessageProps> = ({
   searchTarget,
   chosenProfile,
 }): JSX.Element => {
-  let profileImage: string;
-  if (!(chosenProfile?.picture as any)?.original) {
-    profileImage = "";
-  } else if ((chosenProfile?.picture as any)?.original) {
-    if ((chosenProfile?.picture as any)?.original?.url.includes("http")) {
-      profileImage = (chosenProfile?.picture as any)?.original.url;
-    } else {
-      const cut = (chosenProfile?.picture as any)?.original?.url.split("/");
-      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-    }
-  } else {
-    profileImage = (chosenProfile?.picture as any)?.uri;
-  }
+  const profileImage = createProfilePicture(chosenProfile);
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto rounded-x-md bg-white/50 text-black font-dosis">
       {chosenProfile && (
