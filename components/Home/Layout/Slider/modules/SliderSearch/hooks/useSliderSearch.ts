@@ -68,6 +68,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
   };
 
   const handleKeyEnter = async (e: any): Promise<void> => {
+    setSearchLoading(true);
     if (e.key === "Enter") {
       setDropDown(false);
       const {
@@ -96,9 +97,11 @@ const useSliderSearch = (): UseSliderSearchResults => {
         dispatch(setSearchTarget(e.target?.value));
       }
     }
+    setSearchLoading(false);
   };
 
   const handleChosenSearch = async (prompt?: string): Promise<void> => {
+    setSearchLoading(true);
     setDropDown(false);
     try {
       const {
@@ -129,6 +132,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
     } catch (err: any) {
       console.error(err.message);
     }
+    setSearchLoading(false);
   };
 
   return {

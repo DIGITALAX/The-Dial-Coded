@@ -91,6 +91,7 @@ const useScan = (): UseScanResult => {
   };
 
   const handleMoreProfileQuickSearch = async (): Promise<void> => {
+    setSearchLoading(true);
     try {
       const profiles = await searchProfile({
         query: searchTarget,
@@ -107,9 +108,11 @@ const useScan = (): UseScanResult => {
     } catch (err: any) {
       console.error(err.message);
     }
+    setSearchLoading(false);
   };
 
   const handleKeyDownEnter = async (e: any): Promise<void> => {
+    setSearchLoading(true);
     if (e.key === "Enter") {
       setDropDown(false);
       dispatch(setLayout("Slider"));
@@ -140,6 +143,7 @@ const useScan = (): UseScanResult => {
         behavior: "smooth",
       });
     }
+    setSearchLoading(false);
   };
 
   const handleChosenSearch = async (

@@ -45,6 +45,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
           handleKeyDown={handleKeyDownEnter}
           handleOnChange={handleQuickSearch}
           searchTarget={searchTarget}
+          searchLoading={searchLoading}
         />
         <div className="absolute w-56 h-full grid grid-flow-row auto-rows-auto col-start-1 row-start-2 z-10">
           {
