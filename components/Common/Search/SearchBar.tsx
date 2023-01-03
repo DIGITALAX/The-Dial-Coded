@@ -48,6 +48,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
           value={searchTarget}
           onChange={(e: FormEvent) => handleOnChange(e)}
           onKeyDown={(e) => handleKeyDown(e)}
+          autoComplete="off"
         />
       </div>
       <div className="relative col-start-14 w-fit h-fit grid grid-flow-col auto-cols-auto justify-self-end self-center pr-3">

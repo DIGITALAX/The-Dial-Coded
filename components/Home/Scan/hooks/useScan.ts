@@ -31,6 +31,7 @@ const useScan = (): UseScanResult => {
     (state: RootState) => state.app.searchTargetReducer.value
   );
   const [profileSearchValues, setProfileSearchValues] = useState<any[]>([]);
+  const [scanSearchTarget, setScanSearchTarget] = useState<string>("");
   const [currentSetting, setCurrentSetting] = useState<number>(0);
   const [dropDown, setDropDown] = useState<boolean>(false);
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
@@ -43,7 +44,8 @@ const useScan = (): UseScanResult => {
   const handleQuickSearch = async (e: FormEvent): Promise<void> => {
     setSearchLoading(true);
     let searchTargetString: string = (e.target as HTMLFormElement).value;
-    dispatch(setSearchTarget(searchTargetString));
+    setScanSearchTarget(searchTargetString)
+    // dispatch(setSearchTarget(searchTargetString));
     if (searchTargetString !== "") {
       setDropDown(true);
     } else {
@@ -174,7 +176,8 @@ const useScan = (): UseScanResult => {
             actionReacted: hasReacted,
           })
         );
-        await callLexicaSearch(searchTarget as string, dispatch);
+        await callLexicaSearch(scanSearchTarget as string, dispatch);
+        dispatch(setSearchTarget(scanSearchTarget));
         document.getElementById("sliderSearch")?.scrollIntoView({
           block: "start",
           behavior: "smooth",
@@ -278,6 +281,7 @@ const useScan = (): UseScanResult => {
     dropDown,
     handleChosenSearch,
     handleKeyDownEnter,
+    scanSearchTarget
   };
 };
 

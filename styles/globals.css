@@ -290,9 +290,8 @@ input:focus {
 
 textarea:focus {
   caret-color: black;
-  outline: 0
+  outline: 0;
 }
-
 
 #profile {
   background: linear-gradient(
@@ -309,3 +308,9 @@ textarea:focus {
   -webkit-text-fill-color: transparent;
 }
 
+#canvas {
+  background-image: linear-gradient(#131313 0.1em, transparent 0.1em),
+    linear-gradient(90deg, #131313 0.1em, transparent 0.1em);
+  background-size: 3em 3em;
+  background-color: white;
+}
