@@ -14,12 +14,15 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
   textColor,
   searchTarget,
   searchLoading,
+  height,
+  textSize,
+  loaderSize
 }): JSX.Element => {
   return (
     <div
       className={`relative ${
         width ? `w-${width}` : "w-full"
-      } h-10 col-start-1 row-start-1 grid grid-flow-col auto-cols-auto rounded-lg border-2 border-${borderColor} opacity-90 gap-1 pl-1 ${
+      } h-${height} col-start-1 row-start-1 grid grid-flow-col auto-cols-auto rounded-lg border-2 border-${borderColor} opacity-90 gap-1 pl-1 ${
         bgOpacity ? `bg-${bg}/30` : `bg-bluey/50`
       }`}
     >
@@ -39,7 +42,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
       </div>
       <div className="relative w-full h-full grid grid-flow-row auto-rows-auto col-start-2 col-span-12">
         <input
-          className={`relative row-start-1 w-full h-full font-dosis text-${textColor} rounded-lg bg-transparent caret-transparent placeholder:text-${textColor}`}
+          className={`relative row-start-1 w-full h-full font-dosis text-${textColor} rounded-lg bg-transparent caret-transparent placeholder:text-${textColor} text-${textSize}`}
           name="search"
           placeholder="search"
           value={searchTarget}
@@ -47,10 +50,10 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
           onKeyDown={(e) => handleKeyDown(e)}
         />
       </div>
-      <div className="relative col-start-14 w-fit h-fit grid grid-flow-col auto-cols-auto justify-self-end self-center pr-2">
+      <div className="relative col-start-14 w-fit h-fit grid grid-flow-col auto-cols-auto justify-self-end self-center pr-3">
         {searchLoading && (
           <div className="relative w-fit h-fit animate-spin place-self-center">
-            <AiOutlineLoading size={15} color={textColor} />
+            <AiOutlineLoading size={loaderSize} color={textColor} />
           </div>
         )}
       </div>

@@ -723,4 +723,7 @@ export type SearchBarProps = {
   textColor: string;
   searchTarget: string;
   searchLoading?: boolean;
+  height: string;
+  textSize: string;
+  loaderSize: number
 };
