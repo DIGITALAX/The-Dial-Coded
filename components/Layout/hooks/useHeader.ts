@@ -27,9 +27,9 @@ const useHeader = (): UseHeaderResult => {
   );
   const { isConnected } = useAccount();
   const handleImageData = (): void => {
-    if (backgroundNumber < 17 && backgroundNumber > 4) {
+    if (backgroundNumber < 66 && backgroundNumber > 4) {
       dispatch(setBackground(backgroundNumber + 1));
-    } else if (backgroundNumber === 17 || backgroundNumber <= 4) {
+    } else if (backgroundNumber === 66 || backgroundNumber <= 4) {
       dispatch(setBackground(5));
     }
   };
