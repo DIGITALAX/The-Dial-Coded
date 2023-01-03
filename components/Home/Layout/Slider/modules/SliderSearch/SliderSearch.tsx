@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { TfiSearch } from "react-icons/tfi";
-import SearchBar from "../../../../../Common/SearchBar/SearchBar";
+import SearchBar from "../../../../../Common/Search/SearchBar";
 import { SliderSearchProps } from "./types/slidersearch.types";
 
 const SliderSearch: FunctionComponent<SliderSearchProps> = ({

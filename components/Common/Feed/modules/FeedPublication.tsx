@@ -31,6 +31,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   const viewerOpen = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
   );
+  console.log(publication)
   const { address } = useAccount();
   return (
     <div
@@ -290,13 +291,13 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                 ? () => {}
                 : () => {
                     router.push(`/post/${(publication as any)?.id}`);
-                    // dispatch(
-                    //   setCommentShow({
-                    //     actionOpen: false,
-                    //     actionType: "comment",
-                    //     actionValue: pubId.value,
-                    //   })
-                    // );
+                    dispatch(
+                      setCommentShow({
+                        actionOpen: false,
+                        actionType: "comment",
+                        actionValue: (publication as any)?.id,
+                      })
+                    );
                   }
             }
           >
