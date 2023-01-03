@@ -49,9 +49,6 @@ export type ScanProps = {
   newLink: string;
 };
 
-export type PanelProps = {
-  layout: string | undefined;
-};
 
 export interface LexicaImages {
   id: string;

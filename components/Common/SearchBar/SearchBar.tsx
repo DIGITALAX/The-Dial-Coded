@@ -16,7 +16,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
   return (
     <div
       className={`relative ${
-        width ? `w-${width}` : "w-11/12"
+        width ? `w-${width}` : "w-full"
       } h-10 col-start-1 row-start-1 grid grid-flow-col auto-cols-auto rounded-lg border-2 border-${borderColor} opacity-90 gap-1 pl-1 ${
         bgOpacity ? `bg-${bg}/30` : `bg-bluey/50`
       }`}

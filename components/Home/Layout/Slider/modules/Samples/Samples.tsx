@@ -6,6 +6,7 @@ import { RootState } from "../../../../../../redux/store";
 import { TopicInterface } from "./types/samples.types";
 import Topic from "../../../../../Common/Topic/Topic";
 import TopicValues from "../../../../../Common/Topic/TopicValues";
+import handleAddtoSearch from "../../../../../../lib/lens/helpers/handleAddtoSearch";
 
 const Samples: FunctionComponent = (): JSX.Element => {
   const { topics, topicValues } = useSamples();
@@ -13,8 +14,11 @@ const Samples: FunctionComponent = (): JSX.Element => {
   const selectedTopic: string = useSelector(
     (state: RootState) => state.app.topicReducer.value
   );
+  const searchTarget: string = useSelector(
+    (state: RootState) => state.app.searchTargetReducer.value
+  );
   return (
-    <div className="relative w-full h-full row-start-4 grid grid-flow-row auto-rows-auto pl-20 gap-6">
+    <div className="relative w-full h-full row-start-3 grid grid-flow-row auto-rows-auto pl-20 gap-6">
       <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto overflow-x-scroll gap-5">
         {topics?.map((topic: string, index: number) => {
           return (
@@ -35,7 +39,16 @@ const Samples: FunctionComponent = (): JSX.Element => {
             ?.toLowerCase()
             ?.replaceAll(" ", "") as keyof TopicInterface
         ]?.map((value: string, index: number) => {
-          return <TopicValues index={index} value={value} key={index} />;
+          return (
+            <TopicValues
+              dispatch={dispatch}
+              searchTarget={searchTarget}
+              handleOnClick={handleAddtoSearch}
+              index={index}
+              value={value}
+              key={index}
+            />
+          );
         })}
       </div>
     </div>

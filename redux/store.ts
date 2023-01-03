@@ -48,6 +48,7 @@ import chosenDMProfileReducer from "./reducers/chosenDMProfileSlice";
 import preSearchReducer from "./reducers/preSearchSlice";
 import lexicaImagesReducer from "./reducers/lexicaImagesSlice";
 import searchTargetReducer from "./reducers/searchTargetSlice";
+import searchCategoriesReducer from "./reducers/searchCategoriesSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -98,6 +99,7 @@ const reducer = combineReducers({
   preSearchReducer,
   lexicaImagesReducer,
   searchTargetReducer,
+  searchCategoriesReducer,
 });
 
 export const store = configureStore({

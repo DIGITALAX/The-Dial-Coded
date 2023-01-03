@@ -3,7 +3,7 @@ import fetchReactions from "./fetchReactions";
 
 const checkPostReactions = async (
   arr: any[],
-  lensProfile: string
+  lensProfile: string | undefined
 ): Promise<any> => {
   let reactionsFeedArr: any[] = [];
   let hasReactedArr: any[] = [];

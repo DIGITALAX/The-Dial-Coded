@@ -1,5 +1,5 @@
 import Image from "next/legacy/image";
-import { FormEvent, FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
@@ -46,10 +46,10 @@ const Turner: FunctionComponent<TurnerProps> = ({
           handleOnChange={handleQuickSearch}
           searchTarget={searchTarget}
         />
-        <div className="absolute w-56 h-full grid grid-flow-row auto-rows-auto col-start-1 row-start-2">
+        <div className="absolute w-56 h-full grid grid-flow-row auto-rows-auto col-start-1 row-start-2 z-10">
           {
             <div
-              className={`relative grid grid-flow-row auto-rows-auto w-full h-fit overflow-y-scroll z-10`}
+              className={`relative grid grid-flow-row auto-rows-auto w-full h-fit overflow-y-scroll`}
             >
               {searchLoading ? (
                 <div className="relative w-full h-10 px-3 py-2 col-start-1 grid grid-flow-col auto-cols-auto bg-bluey/30">

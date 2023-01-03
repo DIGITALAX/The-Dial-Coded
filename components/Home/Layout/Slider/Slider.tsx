@@ -1,5 +1,6 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import callLexicaSearch from "../../../../lib/lens/helpers/callLexicaSearch";
 import handleHidePost from "../../../../lib/lens/helpers/handleHidePost";
 import { RootState } from "../../../../redux/store";
 import Rewind from "../../../Common/Miscellaneous/Rewind/Rewind";
@@ -10,32 +11,45 @@ import Samples from "./modules/Samples/Samples";
 import useSliderSearch from "./modules/SliderSearch/hooks/useSliderSearch";
 import SliderSearch from "./modules/SliderSearch/SliderSearch";
 import SliderSwitch from "./SliderSwitch";
+import shuffle from "shuffle-array";
 
 const Slider: FunctionComponent = (): JSX.Element => {
-  const {
-    scannerSlider,
-    dropsSlider,
-    highlightsSlider,
-    reachSlider,
-    recordsSlider,
-    handleBackward,
-    handleForward,
-    currentValue,
-  } = useSlider();
+  const { handleBackward, handleForward, currentValue, promptString } =
+    useSlider();
   const searchTarget = useSelector(
     (state: RootState) => state.app.searchTargetReducer.value
   );
   const dispatch = useDispatch();
+  const {
+    handleKeyEnter,
+    handleChangeSearch,
+    searchLoading,
+    dropDown,
+    handleChosenSearch,
+    publicationsSearchNotDispatch,
+    prompts,
+  } = useSliderSearch();
   const publicationsSearch = useSelector(
     (state: RootState) => state.app.preSearchReducer
   );
-  const { handleChangeSearch, handleKeyEnter } = useSliderSearch();
+  useEffect(() => {
+    if (!searchTarget || searchTarget === "") {
+      const shuffledLinks: number[] = shuffle([0, 1, 2, 3]);
+      callLexicaSearch(promptString[shuffledLinks[0]], dispatch);
+    }
+  }, []);
+
   return (
     <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-white py-10 pl-10 gap-10">
       <SliderSearch
         handleChangeSearch={handleChangeSearch}
         handleKeyEnter={handleKeyEnter}
         searchTarget={searchTarget}
+        dropDown={dropDown}
+        handleChosenSearch={handleChosenSearch}
+        searchLoading={searchLoading}
+        prompts={prompts}
+        publicationsSearchNotDispatch={publicationsSearchNotDispatch}
       />
       {publicationsSearch?.items && publicationsSearch?.items?.length > 0 && (
         <PublicationsFound
@@ -49,7 +63,8 @@ const Slider: FunctionComponent = (): JSX.Element => {
           handleHidePost={handleHidePost}
         />
       )}
-      <div className="relative w-full h-full row-start-3 grid grid-flow-col auto-cols-auto gap-4">
+      <Samples />
+      <div className="relative w-full h-full row-start-4 grid grid-flow-col auto-cols-auto gap-4">
         <div className="relative w-fit h-full col-start-1 grid grid-flow-row auto-rows-auto gap-8 col-span-1">
           <Rewind
             row={"1"}
@@ -65,15 +80,8 @@ const Slider: FunctionComponent = (): JSX.Element => {
             currentValue={currentValue}
           />
         </div>
-        <SliderSwitch
-          scannerSlider={scannerSlider}
-          dropsSlider={dropsSlider}
-          reachSlider={reachSlider}
-          recordsSlider={recordsSlider}
-          highlightsSlider={highlightsSlider}
-        />
+        <SliderSwitch />
       </div>
-      <Samples />
       <Presets />
     </div>
   );

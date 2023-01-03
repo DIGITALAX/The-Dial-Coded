@@ -2,19 +2,25 @@ import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLayout } from "../../../../../redux/reducers/layoutSlice";
 import Categories from "./Categories";
-import useSearch from "./hooks/usePanel";
+import usePanel from "./hooks/usePanel";
 import lodash from "lodash";
 import PanelOption from "../../../../Common/Panel/PanelOption";
 import Arrow from "../../../../Common/Miscellaneous/Arrow/Arrow";
 import { RootState } from "../../../../../redux/store";
 import PanelText from "./PanelText";
-import { PanelProps } from "../../types/scan.types";
+import handleAddtoSearch from "../../../../../lib/lens/helpers/handleAddtoSearch";
 
-const Panel: FunctionComponent<PanelProps> = ({ layout }): JSX.Element => {
+const Panel: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
-  const { open, setOpen, uris, layoutType } = useSearch();
+  const { open, setOpen, uris, layoutType } = usePanel();
   const layoutState: string | undefined = useSelector(
     (state: RootState) => state.app.layoutReducer.value
+  );
+  const searchTarget: string = useSelector(
+    (state: RootState) => state.app.searchTargetReducer.value
+  );
+  const categoriesList = useSelector(
+    (state: RootState) => state.app.searchCategoriesReducer.value
   );
   return (
     <div
@@ -56,7 +62,12 @@ const Panel: FunctionComponent<PanelProps> = ({ layout }): JSX.Element => {
           }
         />
       ) : (
-        <Categories />
+        <Categories
+          categoriesList={categoriesList}
+          handleAddtoSearch={handleAddtoSearch}
+          searchTarget={searchTarget}
+          dispatch={dispatch}
+        />
       )}
     </div>
   );
