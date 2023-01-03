@@ -722,4 +722,5 @@ export type SearchBarProps = {
   bgOpacity?: boolean;
   textColor: string;
   searchTarget: string;
+  searchLoading?: boolean;
 };

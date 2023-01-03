@@ -27,6 +27,7 @@ const SliderSearch: FunctionComponent<SliderSearchProps> = ({
           handleKeyDown={handleKeyEnter}
           handleOnChange={handleChangeSearch}
           searchTarget={searchTarget}
+          searchLoading={searchLoading}
         />
       </div>
       {dropDown && (

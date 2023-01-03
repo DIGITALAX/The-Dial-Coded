@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { FormEvent, FunctionComponent } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import { SearchBarProps } from "../types/common.types";
 
@@ -12,6 +13,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
   bgOpacity,
   textColor,
   searchTarget,
+  searchLoading,
 }): JSX.Element => {
   return (
     <div
@@ -44,6 +46,13 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
           onChange={(e: FormEvent) => handleOnChange(e)}
           onKeyDown={(e) => handleKeyDown(e)}
         />
+      </div>
+      <div className="relative col-start-14 w-fit h-fit grid grid-flow-col auto-cols-auto justify-self-end self-center pr-2">
+        {searchLoading && (
+          <div className="relative w-fit h-fit animate-spin place-self-center">
+            <AiOutlineLoading size={15} color={textColor} />
+          </div>
+        )}
       </div>
     </div>
   );
