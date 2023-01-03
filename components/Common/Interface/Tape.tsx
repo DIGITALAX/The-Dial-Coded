@@ -28,7 +28,7 @@ const Tape: FunctionComponent<TapeProps> = ({
       className={`relative w-full h-24 border-black border-b-2 ${
         index !== 0 && "border-t-2"
       } grid grid-flow-col auto-cols-auto ${
-        !sideImage ? "pr-2 pl-10" : "pr-2 pl-2"
+        !sideImage ? "pr-2 pl-1" : "pr-2 pl-2"
       } cursor-pointer hover:mix-blend-hard-light`}
       onClick={() => {
         handleTapeSet && handleTapeSet(title as string);
@@ -69,7 +69,7 @@ const Tape: FunctionComponent<TapeProps> = ({
           }`}
         >
           <div
-            className={`relative w-fit h-fit place-self-center p-1 ${
+            className={`relative w-fit h-fit place-self-center p-1 truncate ${
               loader && "animate-spin"
             }`}
           >

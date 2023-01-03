@@ -1,8 +1,7 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
-import { setFeedOrder } from "../../../redux/reducers/feedOrderSlice";
-import { setFeedPriority } from "../../../redux/reducers/feedPrioritySlice";
 import { setMixtapePage } from "../../../redux/reducers/mixtapePageSlice";
 import { PanelOptionProps } from "../types/common.types";
 
@@ -13,6 +12,7 @@ const PanelOption: FunctionComponent<PanelOptionProps> = ({
   setLayout,
   uri,
 }): JSX.Element => {
+  const router = useRouter();
   return (
     <div
       className={`relative w-fit h-12 col-start-${
@@ -20,6 +20,7 @@ const PanelOption: FunctionComponent<PanelOptionProps> = ({
       } grid grid-flow-col auto-cols-auto gap-2 cursor-pointer hover:opacity-80 active:scale-95`}
       key={index}
       onClick={() => {
+        router.push(`/#${layoutType[index]}`);
         dispatch(setLayout(layoutType[index]));
         layoutType[index] === "Mixtape" &&
           dispatch(setMixtapePage("Add New Mixtape"));

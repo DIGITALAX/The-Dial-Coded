@@ -52,6 +52,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   useEffect(() => {
+
     const handleStart = () => {
       setRouterChangeLoading(true);
     };
