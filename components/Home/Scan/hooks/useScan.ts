@@ -117,6 +117,7 @@ const useScan = (): UseScanResult => {
     setSearchLoading(true);
     if (e.key === "Enter") {
       setDropDown(false);
+      router.push(`/#Slider`)
       dispatch(setLayout("Slider"));
       const {
         mixtapeMirrors,
@@ -157,6 +158,7 @@ const useScan = (): UseScanResult => {
       if (type === "profile") {
         router.push(`/profile/${user?.handle.split(".lens")[0]}`);
       } else {
+        router.push(`/#Slider`)
         dispatch(setLayout("Slider"));
         const {
           mixtapeMirrors,
@@ -251,6 +253,7 @@ const useScan = (): UseScanResult => {
 
   const handleCount = (): void => {
     dispatch(setDial(dialSettings[currentSetting]));
+    router.push(`/#Slider`)
     dispatch(setLayout("Slider"));
     if (backgroundNumber < 4) {
       dispatch(setBackground(backgroundNumber + 1));

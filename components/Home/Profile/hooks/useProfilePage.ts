@@ -560,7 +560,7 @@ const useProfilePage = (): UseProfilePageResults => {
   };
 
   const handleSendDM = (profileData: Profile) => {
-    router.push("/");
+    router.push("/#Account");
     dispatch(setLayout("Account"));
     dispatch(setChosenDMProfile(profileData));
   };

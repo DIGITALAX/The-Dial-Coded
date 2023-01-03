@@ -42,6 +42,7 @@ const useHeader = (): UseHeaderResult => {
     ) {
       router.push("/");
     }
+    router.push(`/#Account`)
     dispatch(setLayout("Account"));
     dispatch(setHamburger(false));
     document.getElementById("account")?.scrollIntoView({

@@ -83,7 +83,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
               </div>
             </div>
             <div
-              className={`relative col-start-11 w-full h-full grid grid-flow-row auto-rows-auto border-y-4 border-l-4 border-black justify-self-end bg-offBlack`}
+              className={`relative col-start-11 w-80 h-full grid grid-flow-row auto-rows-auto border-y-4 border-l-4 border-black justify-self-end bg-offBlack`}
             >
               <div className="relative w-full max-h-[54rem] h-full grid grid-flow-row auto-rows-auto row-start-1 overflow-y-scroll overflow-x-clip bg-comp">
                 {mixtape && (

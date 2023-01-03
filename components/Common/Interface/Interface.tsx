@@ -17,7 +17,7 @@ const Interface: FunctionComponent<InterfaceProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto pt-10">
-      <div className="relative col-start-1 w-[95%] h-full bg-gradient-to-r from-offBlack via-black/70 to-offBlack rounded-lg grid grid-flow-col auto-cols-auto pt-4 px-4 pb-10 gap-8 justify-self-center">
+      <div className="relative col-start-1 w-[95%] h-full bg-gradient-to-r from-offBlack via-black/70 to-offBlack rounded-lg grid grid-flow-col auto-cols-auto pt-4 px-4 pb-10 gap-4 justify-self-center">
         <div className="relative w-fit h-full col-start-1 grid grid-flow-row auto-rows-auto gap-8 justify-between">
           <div className="relative row-start-1 place-self-start w-fit h-fit grid grid-flow-row auto-rows-auto gap-6">
             <Box
@@ -48,7 +48,7 @@ const Interface: FunctionComponent<InterfaceProps> = ({
             rounded
           />
         </div>
-        <div className="relative w-full h-fit col-start-2 grid grid-flow-row auto-rows-auto gap-6">
+        <div className="relative w-[80vw] h-fit col-start-2 grid grid-flow-row auto-rows-auto gap-6 place-self-center">
           <div className="relative row-start-1 w-full h-fit grid grid-flow-col auto-cols-auto self-start justify-between">
             <Box
               image={"QmdiQ9NdH95kSgysocBj7uKbsVjPujPiavozihXRPYt1g5"}
