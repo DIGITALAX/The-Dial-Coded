@@ -59,7 +59,7 @@ const usePublication = () => {
     address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
     abi: LensHubProxy,
     functionName: "postWithSig",
-    enabled: Boolean(enabled),
+    enabled: Boolean(args),
     args: [args],
   });
 

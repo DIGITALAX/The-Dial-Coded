@@ -31,7 +31,6 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   const viewerOpen = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
   );
-  console.log(publication)
   const { address } = useAccount();
   return (
     <div

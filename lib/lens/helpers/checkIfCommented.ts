@@ -4,7 +4,7 @@ import checkIfMoreCommented from "./checkIfMoreCommented";
 
 const checkIfCommented = async (
   inputArr: any[],
-  lensProfile: string
+  lensProfile?: string | undefined
 ): Promise<any> => {
   let hasCommentedArr: boolean[] = [];
   try {

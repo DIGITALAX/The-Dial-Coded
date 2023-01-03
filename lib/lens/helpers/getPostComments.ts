@@ -9,7 +9,7 @@ const getPostComments = async (
   setCommentors: (e: any[]) => void,
   setPaginated: (e: any) => void,
   setReactionsFeed: (e: any[]) => void,
-  profile: string,
+  profile: string | undefined,
   setHasMirrored: (e: boolean[]) => void,
   setHasCommented: (e: boolean[]) => void,
   setHasReacted: (e: boolean[]) => void,
