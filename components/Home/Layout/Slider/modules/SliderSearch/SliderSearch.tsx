@@ -28,6 +28,9 @@ const SliderSearch: FunctionComponent<SliderSearchProps> = ({
           handleOnChange={handleChangeSearch}
           searchTarget={searchTarget}
           searchLoading={searchLoading}
+          height={"16"}
+          textSize={"lg"}
+          loaderSize={20}
         />
       </div>
       {dropDown && (
