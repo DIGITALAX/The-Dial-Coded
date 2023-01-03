@@ -314,3 +314,31 @@ textarea:focus {
   background-size: 3em 3em;
   background-color: white;
 }
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+div[contenteditable] {
+  cursor: text;
+}
+
+div[contenteditable]::selection::before {
+  content: "";
+  position: absolute;
+  background: black;
+  width: 1px;
+  height: 1em;
+  top: 0;
+  left: -1px;
+  animation: blink 1s linear infinite;
+  cursor: text;
+}
