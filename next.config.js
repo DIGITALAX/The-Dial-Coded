@@ -20,6 +20,11 @@ const nextConfig = {
         hostname: "media.tenor.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "lexica-serve-encoded-images.sharif.workers.dev/md",
+        pathname: "/**",
+      },
     ],
     unoptimized: true,
   },

@@ -36,9 +36,6 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
   );
   const dispatch = useDispatch();
   let queryWindowSize1200: boolean = useMediaQuery("(max-width:1200px)");
-  const layout = useSelector(
-    (state: RootState) => state.app.layoutReducer.value
-  );
   const searchTarget = useSelector(
     (state: RootState) => state.app.searchTargetReducer.value
   );
@@ -96,7 +93,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
         />
       </div>
       <Marquee />
-      <Panel layout={layout} />
+      <Panel />
     </div>
   );
 };

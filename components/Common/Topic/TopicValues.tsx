@@ -1,7 +1,13 @@
 import { FunctionComponent } from "react";
 import { TopicValuesProps } from "../types/common.types";
 
-const TopicValues: FunctionComponent<TopicValuesProps> = ({index, value}): JSX.Element => {
+const TopicValues: FunctionComponent<TopicValuesProps> = ({
+  index,
+  value,
+  dispatch,
+  handleOnClick,
+  searchTarget,
+}): JSX.Element => {
   return (
     <div
       key={index}
@@ -9,7 +15,10 @@ const TopicValues: FunctionComponent<TopicValuesProps> = ({index, value}): JSX.E
         index + 1
       } grid grid-flow-col auto-cols-auto whitespace-nowrap`}
     >
-      <div className="relative w-fit h-fit text-black font-dosis text-sm col-start-1 place-self-center underline underline-offset-2 cursor-pointer hover:text-offBlue">
+      <div
+        onClick={() => handleOnClick(value, dispatch, searchTarget)}
+        className="relative w-fit h-fit text-black font-dosis text-sm col-start-1 place-self-center underline underline-offset-2 cursor-pointer hover:text-offBlue"
+      >
         {value}
       </div>
     </div>

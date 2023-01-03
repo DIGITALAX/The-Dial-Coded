@@ -2,9 +2,16 @@ import { FunctionComponent } from "react";
 import usePresets from "./hooks/usePresets";
 import lodash from "lodash";
 import Preset from "../../../../../Common/Preset/Preset";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../../../redux/store";
+import handleAddtoSearch from "../../../../../../lib/lens/helpers/handleAddtoSearch";
 
 const Presets: FunctionComponent = (): JSX.Element => {
   const { more, setMore, presetOptions } = usePresets();
+  const dispatch = useDispatch();
+  const searchTarget = useSelector(
+    (state: RootState) => state.app.searchTargetReducer.value
+  );
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-5 gap-5 pt-10 pl-20">
       <div className="relative row-start-1 w-fit h-fit justify-self-start text-black font-dosis text-left text-lg">
@@ -13,7 +20,16 @@ const Presets: FunctionComponent = (): JSX.Element => {
       <div className="relative w-11/12 h-full row-start-2 flex flex-wrap justify-center gap-2 place-self-center text-center min-h-96">
         {(more ? presetOptions : lodash.slice(presetOptions, 0, 13)).map(
           (format: string, index: number) => {
-            return <Preset index={index} format={format} key={index} />;
+            return (
+              <Preset
+                index={index}
+                format={format}
+                key={index}
+                dispatch={dispatch}
+                searchTarget={searchTarget}
+                handleOnClick={handleAddtoSearch}
+              />
+            );
           }
         )}
         {presetOptions.length > 13 && (

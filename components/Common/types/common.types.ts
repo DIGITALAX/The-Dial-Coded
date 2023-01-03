@@ -92,6 +92,13 @@ export type TopicProps = {
 export type TopicValuesProps = {
   index: number;
   value: string;
+  dispatch: Dispatch<AnyAction>;
+  searchTarget: string;
+  handleOnClick: (
+    category: string,
+    dispatch: Dispatch<AnyAction>,
+    searchTarget: string
+  ) => void;
 };
 
 export type PanelOptionProps = {
@@ -114,6 +121,13 @@ export type ArrowProps = {
 export type PresetProps = {
   index: number;
   format: string;
+  dispatch: Dispatch<AnyAction>;
+  searchTarget: string;
+  handleOnClick: (
+    category: string,
+    dispatch: Dispatch<AnyAction>,
+    searchTarget: string
+  ) => void;
 };
 
 export type FeedPublicationProps = {

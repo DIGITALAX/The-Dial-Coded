@@ -156,7 +156,6 @@ const useConversations = (): UseConversationResults => {
         }
       );
       const response = await conversation.send(message);
-      console.log(response);
     } catch (err: any) {
       console.error(err.message);
     }

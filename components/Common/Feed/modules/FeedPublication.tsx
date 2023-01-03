@@ -34,7 +34,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   const { address } = useAccount();
   return (
     <div
-      className={`relative w-full h-fit rounded-md grid grid-flow-row auto-rows-auto p-6  gap-6 border-2 border-black z-0 ${
+      className={`relative w-full h-fit rounded-md grid grid-flow-row auto-rows-auto p-6 gap-6 border-2 border-black z-0 ${
         mixtapeMirror
           ? "bg-white"
           : "bg-gradient-to-r from-offBlack via-gray-600 to-black"

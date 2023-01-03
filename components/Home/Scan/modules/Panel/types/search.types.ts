@@ -1,3 +1,5 @@
+import { AnyAction, Dispatch } from "redux";
+
 export type UsePanelResults = {
   open: boolean;
   setOpen: (e: boolean) => void;
@@ -5,11 +7,17 @@ export type UsePanelResults = {
   layoutType: string[];
 };
 
-export type UseCategoriesResults = {
-  listedCategories: string[];
-  backgroundColors: string[];
+export type PanelTextProps = {
+  text: string;
 };
 
-export type PanelTextProps = {
-  text: string
-}
+export type CategoriesProps = {
+  categoriesList: string[];
+  handleAddtoSearch: (
+    category: string,
+    dispatch: Dispatch<AnyAction>,
+    searchTarget: string
+  ) => void;
+  searchTarget: string;
+  dispatch: Dispatch<AnyAction>;
+};
