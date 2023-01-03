@@ -32,6 +32,7 @@ export type UseScanResult = {
   handleChosenSearch: (type: string, user?: Profile) => Promise<void>;
   dropDown: boolean;
   handleKeyDownEnter: (e: any) => Promise<void>;
+  scanSearchTarget: string;
 };
 
 export type BackgroundImageProps = {

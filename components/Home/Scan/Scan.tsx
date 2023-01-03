@@ -30,15 +30,13 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
     handleChosenSearch,
     dropDown,
     handleKeyDownEnter,
+    scanSearchTarget,
   } = useScan();
   const videoOpen = useSelector(
     (state: RootState) => state.app.videoReducer.value
   );
   const dispatch = useDispatch();
   let queryWindowSize1200: boolean = useMediaQuery("(max-width:1200px)");
-  const searchTarget = useSelector(
-    (state: RootState) => state.app.searchTargetReducer.value
-  );
   return (
     <div className="relative w-full h-full row-start-1 grid grid-flow-row auto-rows-auto">
       <BackgroundImage mainImage={mainImage} />
@@ -89,7 +87,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
           searchLoading={searchLoading}
           dropDown={dropDown}
           handleKeyDownEnter={handleKeyDownEnter}
-          searchTarget={searchTarget}
+          searchTarget={scanSearchTarget}
         />
       </div>
       <Marquee />
