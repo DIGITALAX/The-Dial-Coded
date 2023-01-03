@@ -149,12 +149,14 @@ const useConversations = (): UseConversationResults => {
         {
           conversationId: buildConversationId(
             lensProfile?.id,
-            (chosenProfile as any)?.id
+            (chosenProfile as any)?.profileId
           ),
           metadata: {},
         }
       );
+      console.log(chosenProfile)
       const response = await conversation.send(message);
+      console.log(response)
     } catch (err: any) {
       console.error(err.message);
     }
