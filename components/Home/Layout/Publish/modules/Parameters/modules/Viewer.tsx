@@ -5,6 +5,8 @@ import { BsFillEyeFill } from "react-icons/bs";
 import { INFURA_GATEWAY } from "../../../../../../../lib/lens/constants";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 const Viewer: FunctionComponent<ViewerProps> = ({
   userTypeOpen,
@@ -108,7 +110,10 @@ const Viewer: FunctionComponent<ViewerProps> = ({
           </div>
         </div>
       </div>
-      <div className="relative w-fit h-fit col-start-2 row-start-1 cursor-pointer active:scale-95 justify-self-end self-center">
+      <div
+        className="relative w-fit h-fit col-start-2 row-start-1 cursor-pointer justify-self-end self-center"
+        id="venn-tool"
+      >
         <Image
           src={`${INFURA_GATEWAY}/ipfs/QmfNvhTRhR7ginJh2pHTEPTNthM6GWhp8NpfuA9LggqgYQ`}
           width={30}
@@ -116,8 +121,19 @@ const Viewer: FunctionComponent<ViewerProps> = ({
           alt="venn"
         />
       </div>
+      <ReactTooltip
+        anchorId="venn-tool"
+        place="left"
+        content="🔥 Coming Soon 🔥"
+        style={{
+          fontSize: "9px",
+          backgroundColor: "#131313",
+          opacity: "0.7",
+        }}
+      />
       <div
-        className="relative w-fit h-fit row-start-2 col-start-2 cursor-pointer active:scale-95 justify-self-end self-center"
+        className="relative w-fit h-fit row-start-2 col-start-2 cursor-pointer justify-self-end self-center"
+        id="toggle-fire"
         // onClick={() =>
         //   dispatch(
         //     setFire(fireCount && fireCount === 5 ? 0 : fireCount + 1)
@@ -131,6 +147,16 @@ const Viewer: FunctionComponent<ViewerProps> = ({
           alt="fire"
         />
       </div>
+      <ReactTooltip
+        anchorId="toggle-fire"
+        place="left"
+        content="🔥 Coming Soon 🔥"
+        style={{
+          fontSize: "9px",
+          backgroundColor: "#131313",
+          opacity: "0.7",
+        }}
+      />
     </div>
   );
 };
