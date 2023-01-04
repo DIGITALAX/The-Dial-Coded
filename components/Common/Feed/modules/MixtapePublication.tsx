@@ -225,6 +225,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
             canDelete={
               address === (publication as any)?.profile?.id ? true : false
             }
+            followerOnly={false}
           />
         </div>
         <div className="relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto justify-self-end">
