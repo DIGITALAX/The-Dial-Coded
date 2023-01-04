@@ -96,6 +96,10 @@ const useHot = (): UseHotResults => {
     let pageData: any;
     try {
       if (!lensProfile) {
+        if (!paginatedHotResults?.next) {
+          // fix apollo duplications on null next
+          return
+        }
         const { data } = await explorePublications({
           sources: "thedial",
           publicationTypes: ["POST"],
@@ -115,6 +119,10 @@ const useHot = (): UseHotResults => {
         );
         pageData = data?.explorePublications?.pageInfo;
       } else {
+        if (!paginatedHotResults?.next) {
+          // fix apollo duplications on null next
+          return
+        }
         const { data } = await explorePublicationsAuth({
           sources: "thedial",
           publicationTypes: ["POST"],

@@ -276,6 +276,10 @@ const useProfilePage = (): UseProfilePageResults => {
     let pageData: any;
     try {
       if (!lensProfile) {
+        if (!paginatedResults?.next) {
+          // fix apollo duplications on null next
+          return;
+        }
         const { data } = await profilePublications({
           sources: "thedial",
           profileId: profileData?.id,
@@ -289,6 +293,10 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         pageData = data?.publications?.pageInfo;
       } else {
+        if (!paginatedResults?.next) {
+          // fix apollo duplications on null next
+          return;
+        }
         const { data } = await profilePublicationsAuth({
           profileId: profileData?.id,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
@@ -394,6 +402,10 @@ const useProfilePage = (): UseProfilePageResults => {
     let pageData: any;
     try {
       if (!lensProfile) {
+        if (!mixtapePaginated?.next) {
+          // fix apollo duplications on null next
+          return;
+        }
         const { data } = await profilePublications({
           sources: "thedial",
           profileId: profileData?.id,
@@ -412,6 +424,10 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         pageData = data?.publications?.pageInfo;
       } else {
+        if (!mixtapePaginated?.next) {
+          // fix apollo duplications on null next
+          return;
+        }
         const { data } = await profilePublicationsAuth({
           sources: "thedial",
           profileId: profileData?.id,
@@ -538,6 +554,10 @@ const useProfilePage = (): UseProfilePageResults => {
 
   const getMoreFollowers = async (): Promise<void> => {
     try {
+      if (!paginatedFollowers?.next) {
+        // fix apollo duplications on null next
+        return;
+      }
       const { data } = await followers({
         profileId: profileData?.id,
         limit: 50,
@@ -552,6 +572,10 @@ const useProfilePage = (): UseProfilePageResults => {
 
   const getMoreFollowing = async (): Promise<void> => {
     try {
+      if (!paginatedFollowing?.next) {
+        // fix apollo duplications on null next
+        return;
+      }
       const { data } = await following({
         address: profileData?.ownedBy,
         limit: 50,
