@@ -67,10 +67,6 @@ const useMixtape = (): UseMixtapeResults => {
 
   const getMoreMixtapes = async (): Promise<void> => {
     try {
-      if (!paginatedResults?.next) {
-        // fix apollo duplications on null next
-        return
-      }
       const { data } = await profilePublicationsAuth({
         sources: "thedial",
         profileId: lensProfile,

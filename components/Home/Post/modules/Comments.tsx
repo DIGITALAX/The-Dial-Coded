@@ -52,7 +52,6 @@ const Comments: FunctionComponent<CommentsProps> = ({
   const imagePickerModal = useSelector(
     (state: RootState) => state.app.emojiPickerReducer.value
   );
-  console.log(commentors);
   const {
     enabledCurrencies,
     audienceTypes,

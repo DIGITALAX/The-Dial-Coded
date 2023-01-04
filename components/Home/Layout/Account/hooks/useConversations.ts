@@ -154,7 +154,6 @@ const useConversations = (): UseConversationResults => {
           metadata: {},
         }
       );
-      console.log(chosenProfile)
       const response = await conversation.send(message);
       console.log(response)
     } catch (err: any) {
