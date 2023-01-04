@@ -28,6 +28,7 @@ const Post: FunctionComponent = (): JSX.Element => {
     hasMirrored,
     hasCommented,
     mixtapeMirror,
+    followerOnly
   } = useMainFeed();
   const {
     hotFeed,
@@ -61,6 +62,7 @@ const Post: FunctionComponent = (): JSX.Element => {
         noUserData={noUserData}
         mixtapeMirror={mixtapeMirror}
         handleHidePost={handleHidePost}
+        followerOnly={followerOnly}
       />
     </div>
   );

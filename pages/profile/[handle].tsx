@@ -35,6 +35,7 @@ const Profile: NextPage = (): JSX.Element => {
     mixtapes,
     mixtapeMirror,
     handleSendDM,
+    followerOnly
   } = useProfilePage();
   const { isConnected } = useAccount();
   useEffect(() => {
@@ -43,7 +44,7 @@ const Profile: NextPage = (): JSX.Element => {
 
   const profileImage = createProfilePicture(profileData);
 
-  if (!profileData && !profileDataLoading) {
+  if (!profileData && profileDataLoading === false) {
     return <NotFound />;
   }
 
@@ -102,6 +103,7 @@ const Profile: NextPage = (): JSX.Element => {
                 reactionsFeed={reactionsFeed}
                 mixtapeMirror={mixtapeMirror}
                 handleHidePost={handleHidePost}
+                followerOnly={followerOnly}
               />
             </div>
           </div>

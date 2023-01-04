@@ -29,6 +29,7 @@ import { useRouter } from "next/router";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 import omit from "../../../../../lib/lens/helpers/omit";
 import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
+import { setFollowerOnly } from "../../../../../redux/reducers/followerOnlySlice";
 
 const usePublication = () => {
   const {
@@ -39,7 +40,6 @@ const usePublication = () => {
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [contentURI, setContentURI] = useState<string | undefined>();
   const [args, setArgs] = useState<PostArgsType | undefined>();
-  const [enabled, setEnabled] = useState<boolean>(false);
   const [searchGif, setSearchGif] = useState<string>();
   const [results, setResults] = useState<any>([]);
   const [commentArgs, setCommentArgs] = useState<any>();
@@ -56,6 +56,9 @@ const usePublication = () => {
   const { signTypedDataAsync } = useSignTypedData();
   const postImages = useSelector(
     (state: RootState) => state?.app?.postImageReducer?.value
+  );
+  const followersOnly = useSelector(
+    (state: RootState) => state.app.followerOnlyReducer.value
   );
   const collectModuleType = useSelector(
     (state: RootState) => state?.app?.collectValueTypeReducer?.type
@@ -92,7 +95,7 @@ const usePublication = () => {
         contentURI: "ipfs://" + contentURI,
         collectModule: collectModuleType,
         referenceModule: {
-          followerOnlyReferenceModule: false,
+          followerOnlyReferenceModule: followersOnly ? followersOnly : false,
         },
       });
 
@@ -241,7 +244,7 @@ const usePublication = () => {
         contentURI: "ipfs://" + contentURI,
         collectModule: collectModuleType,
         referenceModule: {
-          followerOnlyReferenceModule: false,
+          followerOnlyReferenceModule: followersOnly ? followersOnly : false,
         },
       });
 
@@ -270,7 +273,6 @@ const usePublication = () => {
         },
       };
       setArgs(postArgs);
-      setEnabled(true);
     } catch (err: any) {
       console.error(err.message);
       dispatch(setSignIn(true));
@@ -283,8 +285,8 @@ const usePublication = () => {
     try {
       const tx = await writeAsync?.();
       dispatch(setPublication(false));
+      dispatch(setFollowerOnly(false));
       setPostLoading(false);
-      setEnabled(false);
       dispatch(
         setIndexModal({
           actionValue: true,
@@ -333,6 +335,7 @@ const usePublication = () => {
       const tx = await commentWriteAsync?.();
       setCommentLoading(false);
       setPostDescription("");
+      dispatch(setFollowerOnly(false));
       dispatch(
         setIndexModal({
           actionValue: true,
@@ -387,7 +390,7 @@ const usePublication = () => {
     //   }
     // });
     // e.target.innerHTML = html.join("")
-    setPostDescription(e.target.value)
+    setPostDescription(e.target.value);
     // console.log(html, "here")
   };
 

@@ -22,7 +22,8 @@ const Feed: FunctionComponent<FeedProps> = ({
   hasCommented,
   noUserData,
   mixtapeMirror,
-  handleHidePost
+  handleHidePost,
+  followerOnly
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -46,6 +47,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           noUserData={noUserData}
           mixtapeMirror={mixtapeMirror}
           handleHidePost={handleHidePost}
+          followerOnly={followerOnly}
         />
         <Hot
           isOpen={isOpen}

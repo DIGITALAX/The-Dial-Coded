@@ -9,6 +9,7 @@ export type MainPostProps = {
   hasPostReacted: boolean[];
   reactionsPostFeed: any[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
+  followerOnly: boolean;
 };
 
 export type CommentsProps = {
@@ -38,4 +39,5 @@ export type CommentsProps = {
   tags: string[];
   handleTags: (e: FormEvent) => void;
   handleRemoveTag: (tag: string) => void;
+  followerOnly: boolean;
 };

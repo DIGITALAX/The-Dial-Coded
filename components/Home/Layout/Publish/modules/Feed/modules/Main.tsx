@@ -15,7 +15,8 @@ const Main: FunctionComponent<MainProps> = ({
   hasCommented,
   noUserData,
   mixtapeMirror,
-  handleHidePost
+  handleHidePost,
+  followerOnly,
 }): JSX.Element => {
   const dispatch = useDispatch();
   return (
@@ -51,6 +52,7 @@ const Main: FunctionComponent<MainProps> = ({
                   mixtapeMirror={
                     mixtapeMirror?.length > 0 && mixtapeMirror[index]
                   }
+                  followerOnly={followerOnly?.length > 0 && followerOnly[index]}
                   handleHidePost={handleHidePost}
                 />
               );

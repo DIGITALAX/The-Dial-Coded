@@ -7,6 +7,7 @@ import {
 import callLexicaSearch, {
   callLexicaPrompts,
 } from "../../../../../../../lib/lens/helpers/callLexicaSearch";
+import checkIfFollowerOnly from "../../../../../../../lib/lens/helpers/checkIfFollowerOnly";
 import getPublicationReactions from "../../../../../../../lib/lens/helpers/getPublicationsReactions";
 import { setPreSearch } from "../../../../../../../redux/reducers/preSearchSlice";
 import { setSearchTarget } from "../../../../../../../redux/reducers/searchTargetSlice";
@@ -81,6 +82,10 @@ const useSliderSearch = (): UseSliderSearchResults => {
         publicationsSearchNotDispatch,
         lensProfile
       );
+      const followerOnly = await checkIfFollowerOnly(
+        publicationsSearchNotDispatch,
+        lensProfile
+      );
       dispatch(
         setPreSearch({
           actionItems: publicationsSearchNotDispatch,
@@ -90,6 +95,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
           actionCommented: hasCommented,
           actionMirrored: hasMirrored,
           actionReacted: hasReacted,
+          actionFollower: followerOnly,
         })
       );
       if (e.target?.value !== "" || !e.target?.value) {
@@ -114,6 +120,10 @@ const useSliderSearch = (): UseSliderSearchResults => {
         publicationsSearchNotDispatch,
         lensProfile
       );
+      const followerOnly = await checkIfFollowerOnly(
+        publicationsSearchNotDispatch,
+        lensProfile
+      );
       dispatch(
         setPreSearch({
           actionItems: publicationsSearchNotDispatch,
@@ -123,6 +133,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
           actionCommented: hasCommented,
           actionMirrored: hasMirrored,
           actionReacted: hasReacted,
+          actionFollower: followerOnly,
         })
       );
       if (prompt) {

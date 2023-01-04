@@ -25,6 +25,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   hasCommented,
   mixtapeMirror,
   handleHidePost,
+  followerOnly
 }): JSX.Element => {
   const profileImage = createProfilePicture(publication, true);
   const router = useRouter();
@@ -279,6 +280,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
             (publication as any)?.profile?.ownedBy === address ? true : false
           }
           handleHidePost={handleHidePost}
+          followerOnly={followerOnly}
         />
         {!router.asPath.includes((publication as any)?.id) && (
           <div

@@ -38,7 +38,8 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   hasCommented,
   handleHidePost,
   id,
-  canDelete
+  canDelete,
+  followerOnly,
 }): JSX.Element => {
   const inCommentBox = useSelector(
     (state: RootState) => state.app.commentShowReducer
@@ -118,6 +119,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                       actionOpen: false,
                       actionType: "comment",
                       actionValue: commentValue,
+                      actionFollower: followerOnly,
                     })
                   );
               }
@@ -134,7 +136,11 @@ const Reactions: FunctionComponent<ReactionProps> = ({
               }
         }
       >
-        <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
+        <div
+          className={`relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95 ${
+            followerOnly && "opacity-50"
+          }`}
+        >
           {commentAmount && commentAmount > 0 && hasCommented ? (
             <FaCommentDots size={15} color={commentColor} />
           ) : (
@@ -172,12 +178,17 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                       actionType: "mirror",
                       actionValue: mirrorValue,
                       actionResponseMirror: hasMirrored,
+                      actionFollower: followerOnly,
                     })
                   );
               }
         }
       >
-        <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
+        <div
+          className={`relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95 ${
+            followerOnly && "opacity-50"
+          }`}
+        >
           <AiOutlineRetweet
             color={
               mirrorAmount && mirrorAmount > 0 && hasMirrored
@@ -244,7 +255,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           } grid grid-flow-col auto-cols-auto gap-2 place-self-center cursor-pointer active:scale-95`}
           onClick={() => handleHidePost(id as string, dispatch)}
         >
-          <AiOutlineMinusCircle color={textColor} size={15}/>
+          <AiOutlineMinusCircle color={textColor} size={15} />
         </div>
       )}
     </div>

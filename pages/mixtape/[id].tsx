@@ -27,6 +27,7 @@ const Post: NextPage = (): JSX.Element => {
     hasPostCommented,
     hasPostMirrored,
     hasPostReacted,
+    followerOnly
   } = usePostPage();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
@@ -176,6 +177,7 @@ const Post: NextPage = (): JSX.Element => {
                 handleRemoveTag={handleRemoveTag}
                 handleTags={handleTags}
                 tags={tags}
+                followerOnly={followerOnly}
               />
             </div>
           </>

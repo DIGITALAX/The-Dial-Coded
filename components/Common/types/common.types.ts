@@ -41,6 +41,7 @@ export type ReactionProps = {
   hasCommented?: boolean;
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   canDelete: boolean;
+  followerOnly: boolean;
 };
 
 export type InterfaceProps = {
@@ -140,6 +141,7 @@ export type FeedPublicationProps = {
   hasCommented?: boolean | undefined;
   mixtapeMirror?: boolean;
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
+  followerOnly: boolean;
 };
 
 export type OptionMenuProps = {
