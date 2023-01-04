@@ -8,6 +8,7 @@ export interface PreSearchState {
   commented: boolean[];
   mirrored: boolean[];
   reacted: boolean[];
+  follower: boolean[];
 }
 
 const initialPreSearchState: PreSearchState = {
@@ -18,6 +19,7 @@ const initialPreSearchState: PreSearchState = {
   commented: [],
   mirrored: [],
   reacted: [],
+  follower: [],
 };
 
 export const preSearchSlice = createSlice({
@@ -35,6 +37,7 @@ export const preSearchSlice = createSlice({
           actionCommented,
           actionMirrored,
           actionReacted,
+          actionFollower,
         },
       }
     ) => {
@@ -45,6 +48,7 @@ export const preSearchSlice = createSlice({
       state.commented = actionCommented;
       state.mirrored = actionMirrored;
       state.reacted = actionReacted;
+      state.follower = actionFollower;
     },
   },
 });

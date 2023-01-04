@@ -1,11 +1,20 @@
 import { FormEvent, FunctionComponent } from "react";
 import { IoMdImages } from "react-icons/io";
 import { AiOutlineGif } from "react-icons/ai";
-import { BsFillEmojiLaughingFill } from "react-icons/bs";
+import {
+  BsFillEmojiLaughingFill,
+  BsToggleOff,
+  BsToggleOn,
+} from "react-icons/bs";
 import { RiGalleryUploadLine } from "react-icons/ri";
 import { setCollectOptionsModal } from "../../../../../redux/reducers/collectOptionsModalSlice";
 import { PostOptionsProps } from "../../../types/common.types";
 import { setImagePickerModal } from "../../../../../redux/reducers/imagePickerSlice";
+import { setFollowerOnly } from "../../../../../redux/reducers/followerOnlySlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 const PostOptions: FunctionComponent<PostOptionsProps> = ({
   dispatch,
@@ -14,6 +23,9 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
   imageUploading,
   postLoading,
 }): JSX.Element => {
+  const followerOnly = useSelector(
+    (state: RootState) => state.app.followerOnlyReducer.value
+  );
   return (
     <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2">
       <label
@@ -34,7 +46,7 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
           multiple={true}
           name="images"
           className="caret-transparent"
-          disabled={(imageUploading || postLoading) ? true : false}
+          disabled={imageUploading || postLoading ? true : false}
         />
       </label>
       <div
@@ -77,6 +89,35 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
         }}
       >
         <RiGalleryUploadLine color="white" size={20} />
+      </div>
+      <div
+        className={`relative w-fit h-fit col-start-5 place-self-center grid grid-flow-col auto-cols-auto ${
+          !postLoading && "cursor-pointer active:scale-95"
+        }`}
+        onClick={() => {
+          !postLoading ? dispatch(setFollowerOnly(!followerOnly)) : {};
+        }}
+      >
+        <p
+          id="toggle-followers"
+          className="text-blue-600 hover:text-blue-700 transition duration-150 place-self-center w-fit h-fit col-start-1"
+        >
+          {!followerOnly ? (
+            <BsToggleOff color="white" size={20} />
+          ) : (
+            <BsToggleOn color="#FA4040" size={20} />
+          )}
+        </p>
+        <ReactTooltip
+          anchorId="toggle-followers"
+          place="right"
+          content="Only Followers can Mirror & Comment"
+          style={{
+            fontSize: "9px",
+            backgroundColor: "#131313",
+            opacity: "0.7",
+          }}
+        />
       </div>
     </div>
   );

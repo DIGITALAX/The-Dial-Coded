@@ -49,6 +49,7 @@ import preSearchReducer from "./reducers/preSearchSlice";
 import lexicaImagesReducer from "./reducers/lexicaImagesSlice";
 import searchTargetReducer from "./reducers/searchTargetSlice";
 import searchCategoriesReducer from "./reducers/searchCategoriesSlice";
+import followerOnlyReducer from "./reducers/followerOnlySlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -100,6 +101,7 @@ const reducer = combineReducers({
   lexicaImagesReducer,
   searchTargetReducer,
   searchCategoriesReducer,
+  followerOnlyReducer,
 });
 
 export const store = configureStore({

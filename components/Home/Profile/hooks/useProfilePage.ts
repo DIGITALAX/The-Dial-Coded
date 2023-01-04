@@ -44,6 +44,7 @@ import checkIfCommented from "../../../../lib/lens/helpers/checkIfCommented";
 import checkIfMixtapeMirror from "../../../../lib/lens/helpers/checkIfMixtapeMirror";
 import getFollowing from "../../../../lib/lens/helpers/getFollowing";
 import getFollowers from "../../../../lib/lens/helpers/getFollowers";
+import checkIfFollowerOnly from "../../../../lib/lens/helpers/checkIfFollowerOnly";
 
 const useProfilePage = (): UseProfilePageResults => {
   const router = useRouter();
@@ -66,6 +67,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const [mixtapes, setMixtapes] = useState<any[]>([]);
   const [mixtapePaginated, setMixtapePaginated] = useState<any>();
   const [hotReactionsFeed, setHotReactionsFeed] = useState<boolean[]>([]);
+  const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
   const [hasHotReacted, setHasHotReacted] = useState<boolean[]>([]);
   const [hasHotMirrored, setHasHotMirrored] = useState<boolean[]>([]);
@@ -100,16 +102,14 @@ const useProfilePage = (): UseProfilePageResults => {
     enabled: Boolean(followArgs),
     args: [followArgs],
   });
-  const {
-    config: unfollowConfig,
-    isSuccess: unfollowSuccess,
-  } = useUnfollowPrepareContractWrite({
-    address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
-    abi: LensHubProxy,
-    functionName: "burnWithSig",
-    enabled: Boolean(unfollowArgs),
-    args: unfollowArgs,
-  });
+  const { config: unfollowConfig, isSuccess: unfollowSuccess } =
+    useUnfollowPrepareContractWrite({
+      address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
+      abi: LensHubProxy,
+      functionName: "burnWithSig",
+      enabled: Boolean(unfollowArgs),
+      args: unfollowArgs,
+    });
 
   const { writeAsync, isSuccess: followComplete } = useContractWrite(config);
   const { writeAsync: unfollowWriteAsync, isSuccess: unfollowComplete } =
@@ -246,6 +246,11 @@ const useProfilePage = (): UseProfilePageResults => {
         }
       });
       setUserFeed(filteredArr);
+      const isOnlyFollowers = await checkIfFollowerOnly(
+        filteredArr,
+        lensProfile
+      );
+      setFollowerOnly(isOnlyFollowers as boolean[]);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror(mixtapeMirrors);
       setPaginatedResults(pageData);
@@ -643,6 +648,7 @@ const useProfilePage = (): UseProfilePageResults => {
     hotReactionsFeed,
     mixtapeMirror,
     handleSendDM,
+    followerOnly,
   };
 };
 

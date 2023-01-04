@@ -32,6 +32,9 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
   const lensProfile: string = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
+  const followerOnly = useSelector(
+    (state: RootState) => state.app.reactionStateReducer?.follower
+  );
   const { openConnectModal } = useConnectModal();
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -46,6 +49,7 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                     actionOpen: false,
                     actionType: "mirror",
                     actionValue: pubId,
+                    actionFollower: followerOnly,
                   })
                 )
               }
@@ -127,12 +131,18 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                       : `This post hasn't been mirrored. Will you be first?`}
                   </div>
                   <div
-                    className={`relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95 `}
+                    className={`relative ${
+                      followerOnly
+                        ? "w-fit px-1"
+                        : "w-20 px-0 cursor-pointer hover:opacity-70 active:scale-95"
+                    } h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center `}
                     onClick={
                       isConnected
                         ? () => {
                             lensProfile
-                              ? mirrorPost()
+                              ? followerOnly
+                                ? {}
+                                : mirrorPost()
                               : dispatch(setSignIn(true));
                           }
                         : openConnectModal
@@ -147,6 +157,8 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                         <AiOutlineLoading color="white" size={20} />
                       ) : hasMirrored ? (
                         "Mirror again?"
+                      ) : followerOnly ? (
+                        "Only Followers Can Mirror"
                       ) : (
                         "Mirror"
                       )}

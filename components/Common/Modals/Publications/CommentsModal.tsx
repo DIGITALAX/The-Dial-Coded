@@ -17,7 +17,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
   hasReacted,
   hasCommented,
   reactionsFeed,
-  handleHidePost
+  handleHidePost,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
   const pubId = useSelector((state: RootState) => state.app.commentShowReducer);
@@ -37,6 +37,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
                     actionOpen: false,
                     actionType: "comment",
                     actionValue: pubId.value,
+                    actionFollower: pubId?.follower,
                   })
                 )
               }
@@ -62,11 +63,20 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
                             publication={commentor}
                             key={index}
                             type={"comment"}
-                            hasMirrored={hasMirrored?.length > 0 && hasMirrored[index]}
-                            hasReacted={hasReacted?.length > 0 && hasReacted[index]}
-                            hasCommented={hasCommented?.length > 0 && hasCommented[index]}
-                            reactionsFeed={reactionsFeed?.length > 0 && reactionsFeed[index]}
+                            hasMirrored={
+                              hasMirrored?.length > 0 && hasMirrored[index]
+                            }
+                            hasReacted={
+                              hasReacted?.length > 0 && hasReacted[index]
+                            }
+                            hasCommented={
+                              hasCommented?.length > 0 && hasCommented[index]
+                            }
+                            reactionsFeed={
+                              reactionsFeed?.length > 0 && reactionsFeed[index]
+                            }
                             handleHidePost={handleHidePost}
+                            followerOnly={pubId?.follower as boolean}
                           />
                         );
                       })}

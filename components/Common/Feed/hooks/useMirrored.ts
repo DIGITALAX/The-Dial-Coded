@@ -138,6 +138,7 @@ const useMirrored = () => {
     setMirrorLoading(true);
     try {
       const tx = await writeAsync?.();
+      setMirrorLoading(false);
       dispatch(
         setReactionState({
           actionOpen: false,
@@ -181,9 +182,9 @@ const useMirrored = () => {
       }, 3000);
     } catch (err: any) {
       dispatch(setInsufficientFunds("failed"));
+      setMirrorLoading(false);
       console.error(err.message);
     }
-    setMirrorLoading(false);
   };
 
   useEffect(() => {

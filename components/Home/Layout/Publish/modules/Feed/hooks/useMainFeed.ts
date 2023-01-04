@@ -9,7 +9,7 @@ import {
   PaginatedResultInfo,
   PublicationSearchResult,
 } from "../../../../../../Common/types/lens.types";
-import lodash from "lodash";
+import lodash, { filter } from "lodash";
 import {
   profilePublicationsAuth,
   profilePublications,
@@ -25,6 +25,7 @@ import checkIfMirrored from "../../../../../../../lib/lens/helpers/checkIfMirror
 import checkIfCommented from "../../../../../../../lib/lens/helpers/checkIfCommented";
 import checkIfMixtapeMirror from "../../../../../../../lib/lens/helpers/checkIfMixtapeMirror";
 import getPostComments from "../../../../../../../lib/lens/helpers/getPostComments";
+import checkIfFollowerOnly from "../../../../../../../lib/lens/helpers/checkIfFollowerOnly";
 
 const useMainFeed = () => {
   const router = useRouter();
@@ -77,6 +78,7 @@ const useMainFeed = () => {
   const [hasMirrored, setHasMirrored] = useState<boolean[]>([]);
   const [hasCommented, setHasCommented] = useState<boolean[]>([]);
   const [commentInfoLoading, setCommentInfoLoading] = useState<boolean>(false);
+  const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
 
   const fetchPublications = async (): Promise<void> => {
@@ -105,6 +107,11 @@ const useMainFeed = () => {
         }
       });
       setPublicationsFeed(filteredArr);
+      const isOnlyFollowers = await checkIfFollowerOnly(
+        filteredArr,
+        undefined
+      );
+      setFollowerOnly(isOnlyFollowers as boolean[]);
       setPaginatedResults(publicationsList?.data?.explorePublications.pageInfo);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror(mixtapeMirrors);
@@ -179,6 +186,11 @@ const useMainFeed = () => {
       setPaginatedResults(pageData);
       const response = await checkPostReactions(orderedArr, lensProfile);
       setReactionsFeed(response?.reactionsFeedArr);
+      const isOnlyFollowers = await checkIfFollowerOnly(
+        orderedArr,
+        lensProfile
+      );
+      setFollowerOnly(isOnlyFollowers as boolean[]);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
         setHasMirrored(hasMirroredArr);
@@ -242,6 +254,11 @@ const useMainFeed = () => {
           feedPriorityState
         );
         setPublicationsFeed(orderedArr);
+        const isOnlyFollowers = await checkIfFollowerOnly(
+          orderedArr,
+          lensProfile
+        );
+        setFollowerOnly(isOnlyFollowers as boolean[]);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror(mixtapeMirrors);
         setPaginatedResults(authPub.data.explorePublications.pageInfo);
@@ -259,6 +276,11 @@ const useMainFeed = () => {
           feedPriorityState
         );
         setPublicationsFeed(orderedArr);
+        const isOnlyFollowers = await checkIfFollowerOnly(
+          orderedArr,
+          lensProfile
+        );
+        setFollowerOnly(isOnlyFollowers as boolean[]);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror(mixtapeMirrors);
         setPaginatedResults(data.feed.pageInfo);
@@ -306,6 +328,11 @@ const useMainFeed = () => {
       });
       setPublicationsFeed([...publicationsFeed, ...filteredArr]);
       setPaginatedResults(morePublications?.data.explorePublications.pageInfo);
+      const isOnlyFollowers = await checkIfFollowerOnly(
+        filteredArr,
+        undefined
+      );
+      setFollowerOnly([...followerOnly, ...isOnlyFollowers as boolean[]]);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       const response = await checkPostReactions(filteredArr, lensProfile);
@@ -371,6 +398,11 @@ const useMainFeed = () => {
           feedOrderState,
           feedPriorityState
         );
+        const isOnlyFollowers = await checkIfFollowerOnly(
+          orderedArr,
+          lensProfile
+        );
+        setFollowerOnly([...followerOnly, ...isOnlyFollowers as boolean[]]);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
         setPublicationsFeed([...publicationsFeed, ...orderedArr]);
@@ -388,6 +420,11 @@ const useMainFeed = () => {
           feedOrderState,
           feedPriorityState
         );
+        const isOnlyFollowers = await checkIfFollowerOnly(
+          orderedArr,
+          lensProfile
+        );
+        setFollowerOnly([...followerOnly, ...isOnlyFollowers as boolean[]]);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
         setPublicationsFeed([...publicationsFeed, ...orderedArr]);
@@ -453,6 +490,11 @@ const useMainFeed = () => {
         feedOrderState,
         feedPriorityState
       );
+      const isOnlyFollowers = await checkIfFollowerOnly(
+        orderedArr,
+        lensProfile
+      );
+      setFollowerOnly([...followerOnly, ...isOnlyFollowers as boolean[]]);
       const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       setPublicationsFeed([...publicationsFeed, ...orderedArr]);
@@ -575,6 +617,7 @@ const useMainFeed = () => {
     setHasMirrored,
     setHasCommented,
     setHasReacted,
+    followerOnly,
   };
 };
 

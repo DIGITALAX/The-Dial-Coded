@@ -28,7 +28,9 @@ const Post: NextPage = (): JSX.Element => {
     hasPostCommented,
     hasPostMirrored,
     hasPostReacted,
+    followerOnly,
   } = usePostPage();
+
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
@@ -73,7 +75,6 @@ const Post: NextPage = (): JSX.Element => {
   } = useMainFeed();
 
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (id) {
       getPublicationData(id as string);
@@ -102,7 +103,7 @@ const Post: NextPage = (): JSX.Element => {
     dispatch(setWalletConnected(isConnected));
   }, [isConnected]);
 
-  if (!publicationData && !publicationDataLoading) {
+  if (!publicationData && publicationDataLoading === false) {
     return <NotFound />;
   }
 
@@ -153,8 +154,10 @@ const Post: NextPage = (): JSX.Element => {
                 hasPostReacted={hasPostReacted}
                 reactionsPostFeed={reactionsPostFeed}
                 handleHidePost={handleHidePost}
+                followerOnly={followerOnly}
               />
               <Comments
+                followerOnly={followerOnly}
                 commentors={commentors}
                 getMorePostComments={getMorePostComments}
                 dispatch={dispatch}

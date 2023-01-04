@@ -42,7 +42,8 @@ const Comments: FunctionComponent<CommentsProps> = ({
   handleRemoveGif,
   tags,
   handleTags,
-  handleRemoveTag
+  handleRemoveTag,
+  followerOnly,
 }): JSX.Element => {
   const { openConnectModal } = useConnectModal();
   const collectOptionsModal = useSelector(
@@ -51,6 +52,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
   const imagePickerModal = useSelector(
     (state: RootState) => state.app.emojiPickerReducer.value
   );
+  console.log(commentors);
   const {
     enabledCurrencies,
     audienceTypes,
@@ -173,14 +175,20 @@ const Comments: FunctionComponent<CommentsProps> = ({
           </div>
         ) : (
           <div className="relative w-full h-full place-self-center col-start-1 grid grid-flow-row auto-rows-auto gap-2">
-            <textarea
-              onChange={(e: FormEvent) => handleCommentDescription(e)}
-              style={{ resize: "none" }}
-              value={commentDescription}
-              placeholder="Have something to share..."
-              className={`relative w-full h-48 overflow-y-scroll row-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-4 place-self-center drop-shadow-lg caret-transparent`}
-              disabled={commentLoading ? true : false}
-            ></textarea>
+            {!followerOnly ? (
+              <textarea
+                onChange={(e: FormEvent) => handleCommentDescription(e)}
+                style={{ resize: "none" }}
+                value={commentDescription}
+                placeholder="Have something to share..."
+                className={`relative w-full h-48 overflow-y-scroll row-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-4 place-self-center drop-shadow-lg caret-transparent`}
+                disabled={commentLoading || followerOnly ? true : false}
+              ></textarea>
+            ) : (
+              <div className="relative w-full h-48 row-start-1 bg-white/80 rounded-xl p-4 place-self-center drop-shadow-lg grid grid-flow-col auto-cols-auto font-dosis text-offBlack">
+                Only followers can comment...
+              </div>
+            )}
             <div className="relative w-full hit row-start-2">
               <Tags
                 handleRemoveTag={handleRemoveTag}
@@ -216,8 +224,13 @@ const Comments: FunctionComponent<CommentsProps> = ({
               <div
                 className={`relative w-32 h-10 px-3 py-1 justify-self-end self-center grid grid-flow-col auto-cols-auto bg-white/95 rounded-md ${
                   gifs ? "col-start-3" : "col-start-2"
-                } cursor-pointer hover:opacity-70 active:scale-95`}
-                onClick={(e: FormEvent) => commentPost(e)}
+                } ${
+                  !followerOnly &&
+                  "cursor-pointer hover:opacity-70 active:scale-95"
+                }`}
+                onClick={
+                  !followerOnly ? (e: FormEvent) => commentPost(e) : () => {}
+                }
               >
                 <div
                   className={`relative w-fit h-fit col-start-1 place-self-center ${
@@ -258,6 +271,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                   }
                   hasCommented={hasCommented?.length > 0 && hasCommented[index]}
                   handleHidePost={handleHidePost}
+                  followerOnly={followerOnly}
                 />
               );
             })}

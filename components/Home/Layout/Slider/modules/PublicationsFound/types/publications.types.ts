@@ -9,4 +9,5 @@ export type PublicationsFoundProps = {
   hasCommented: boolean[];
   mixtapeMirror: boolean[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
+  followerOnly: boolean[];
 };

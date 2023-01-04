@@ -1,5 +1,4 @@
 import { FunctionComponent } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import FeedPublication from "../../../../../Common/Feed/modules/FeedPublication";
 import { PublicationsFoundProps } from "./types/publications.types";
 
@@ -12,6 +11,7 @@ const PublicationsFound: FunctionComponent<PublicationsFoundProps> = ({
   hasCommented,
   mixtapeMirror,
   handleHidePost,
+  followerOnly,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
@@ -35,6 +35,7 @@ const PublicationsFound: FunctionComponent<PublicationsFoundProps> = ({
                 mixtapeMirror={
                   mixtapeMirror?.length > 0 && mixtapeMirror[index]
                 }
+                followerOnly={followerOnly?.length > 0 && followerOnly[index]}
                 handleHidePost={handleHidePost}
               />
             </div>

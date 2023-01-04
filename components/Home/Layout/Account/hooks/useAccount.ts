@@ -291,6 +291,7 @@ const useAccount = (): UseAccountResult => {
       const tx = await writeAsync?.();
       if (error) {
         dispatch(setInsufficientFunds("failed"));
+        setAccountLoading(false);
         return;
       }
       dispatch(
@@ -345,6 +346,7 @@ const useAccount = (): UseAccountResult => {
       const tx = await profilewriteAsync?.();
       if (writeErrorImage) {
         dispatch(setInsufficientFunds("failed"));
+        setProfileLoading(false);
         return;
       }
       dispatch(

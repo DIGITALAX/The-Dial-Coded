@@ -217,8 +217,10 @@ const useCollected = () => {
     },
     // enabled: Boolean(approvalSendEnabled),
   });
+
   const { sendTransactionAsync, isSuccess: approvalSuccess } =
     useSendTransaction(approvalConfig);
+
   const callApprovalSign = async (): Promise<void> => {
     try {
       const tx = await sendTransactionAsync?.();

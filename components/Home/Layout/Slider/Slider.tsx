@@ -61,6 +61,7 @@ const Slider: FunctionComponent = (): JSX.Element => {
           hasCommented={publicationsSearch?.commented}
           mixtapeMirror={publicationsSearch?.mixtapeMirrors}
           handleHidePost={handleHidePost}
+          followerOnly={publicationsSearch?.follower}
         />
       )}
       <Samples />

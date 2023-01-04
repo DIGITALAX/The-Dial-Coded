@@ -9,7 +9,8 @@ const MainPost: FunctionComponent<MainPostProps> = ({
   hasPostCommented,
   hasPostReacted,
   reactionsPostFeed,
-  handleHidePost
+  handleHidePost,
+  followerOnly
 }): JSX.Element => {
   const dispatch = useDispatch();
   return (
@@ -30,6 +31,7 @@ const MainPost: FunctionComponent<MainPostProps> = ({
           hasReacted={hasPostReacted?.length > 0 && hasPostReacted[0]}
           reactionsFeed={reactionsPostFeed?.length > 0 && reactionsPostFeed[0]}
           handleHidePost={handleHidePost}
+          followerOnly={followerOnly}
         />
       </div>
     </div>

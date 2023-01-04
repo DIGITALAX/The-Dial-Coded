@@ -6,6 +6,7 @@ export interface ReactionStateState {
   value?: any;
   mirror?: boolean;
   react?: boolean;
+  follower?: boolean;
 }
 
 const initialReactionStateState: ReactionStateState = {
@@ -14,6 +15,7 @@ const initialReactionStateState: ReactionStateState = {
   value: undefined,
   mirror: undefined,
   react: undefined,
+  follower: undefined,
 };
 
 export const reactionStateSlice = createSlice({
@@ -29,14 +31,16 @@ export const reactionStateSlice = createSlice({
           actionValue,
           actionResponseMirror,
           actionResponseReact,
+          actionFollower,
         },
       }
     ) => {
       state.open = actionOpen;
       state.type = actionType;
       state.value = actionValue;
-      (state.mirror = actionResponseMirror),
-        (state.react = actionResponseReact);
+      state.mirror = actionResponseMirror;
+      state.react = actionResponseReact;
+      state.follower = actionFollower;
     },
   },
 });

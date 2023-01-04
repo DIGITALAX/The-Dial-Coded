@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { setSearchTarget } from "../../../../redux/reducers/searchTargetSlice";
 import callLexicaSearch from "../../../../lib/lens/helpers/callLexicaSearch";
 import getPublicationReactions from "../../../../lib/lens/helpers/getPublicationsReactions";
+import checkIfFollowerOnly from "../../../../lib/lens/helpers/checkIfFollowerOnly";
 
 const useScan = (): UseScanResult => {
   const dispatch = useDispatch();
@@ -44,7 +45,7 @@ const useScan = (): UseScanResult => {
   const handleQuickSearch = async (e: FormEvent): Promise<void> => {
     setSearchLoading(true);
     let searchTargetString: string = (e.target as HTMLFormElement).value;
-    setScanSearchTarget(searchTargetString)
+    setScanSearchTarget(searchTargetString);
     // dispatch(setSearchTarget(searchTargetString));
     if (searchTargetString !== "") {
       setDropDown(true);
@@ -114,37 +115,46 @@ const useScan = (): UseScanResult => {
   };
 
   const handleKeyDownEnter = async (e: any): Promise<void> => {
-    setSearchLoading(true);
-    if (e.key === "Enter") {
-      setDropDown(false);
-      router.push(`/#Slider`)
-      dispatch(setLayout("Slider"));
-      const {
-        mixtapeMirrors,
-        reactionsFeed,
-        hasCommented,
-        hasMirrored,
-        hasReacted,
-      } = await getPublicationReactions(publicationSearchValues, lensProfile);
-      dispatch(
-        setPreSearch({
-          actionItems: publicationSearchValues,
-          actionTarget: e.target?.value,
-          actionMixtapeMirrors: mixtapeMirrors,
-          actionReactionsFeed: reactionsFeed,
-          actionCommented: hasCommented,
-          actionMirrored: hasMirrored,
-          actionReacted: hasReacted,
-        })
-      );
-      if (e.target?.value !== "" || !e.target?.value) {
-        dispatch(setSearchTarget(e.target?.value));
-        await callLexicaSearch(e.target?.value, dispatch);
+    try {
+      setSearchLoading(true);
+      if (e.key === "Enter") {
+        setDropDown(false);
+        router.push(`/#Slider`);
+        dispatch(setLayout("Slider"));
+        const {
+          mixtapeMirrors,
+          reactionsFeed,
+          hasCommented,
+          hasMirrored,
+          hasReacted,
+        } = await getPublicationReactions(publicationSearchValues, lensProfile);
+        const followerOnly = await checkIfFollowerOnly(
+          publicationSearchValues,
+          lensProfile
+        );
+        dispatch(
+          setPreSearch({
+            actionItems: publicationSearchValues,
+            actionTarget: e.target?.value,
+            actionMixtapeMirrors: mixtapeMirrors,
+            actionReactionsFeed: reactionsFeed,
+            actionCommented: hasCommented,
+            actionMirrored: hasMirrored,
+            actionReacted: hasReacted,
+            actionFollower: followerOnly,
+          })
+        );
+        if (e.target?.value !== "" || !e.target?.value) {
+          dispatch(setSearchTarget(e.target?.value));
+          await callLexicaSearch(e.target?.value, dispatch);
+        }
+        document.getElementById("sliderSearch")?.scrollIntoView({
+          block: "start",
+          behavior: "smooth",
+        });
       }
-      document.getElementById("sliderSearch")?.scrollIntoView({
-        block: "start",
-        behavior: "smooth",
-      });
+    } catch (err: any) {
+      console.error(err.message);
     }
     setSearchLoading(false);
   };
@@ -154,11 +164,12 @@ const useScan = (): UseScanResult => {
     user?: Profile
   ): Promise<void> => {
     setDropDown(false);
+    setSearchLoading(true);
     try {
       if (type === "profile") {
         router.push(`/profile/${user?.handle.split(".lens")[0]}`);
       } else {
-        router.push(`/#Slider`)
+        router.push(`/#Slider`);
         dispatch(setLayout("Slider"));
         const {
           mixtapeMirrors,
@@ -167,6 +178,10 @@ const useScan = (): UseScanResult => {
           hasMirrored,
           hasReacted,
         } = await getPublicationReactions(publicationSearchValues, lensProfile);
+        const followerOnly = await checkIfFollowerOnly(
+          publicationSearchValues,
+          lensProfile
+        );
         dispatch(
           setPreSearch({
             actionItems: publicationSearchValues,
@@ -176,6 +191,7 @@ const useScan = (): UseScanResult => {
             actionCommented: hasCommented,
             actionMirrored: hasMirrored,
             actionReacted: hasReacted,
+            actionFollower: followerOnly,
           })
         );
         await callLexicaSearch(scanSearchTarget as string, dispatch);
@@ -188,6 +204,7 @@ const useScan = (): UseScanResult => {
     } catch (err: any) {
       console.error(err.message);
     }
+    setSearchLoading(false);
   };
 
   const canvasURIs: string[] = [
@@ -321,7 +338,7 @@ const useScan = (): UseScanResult => {
 
   const handleCount = (): void => {
     dispatch(setDial(dialSettings[currentSetting]));
-    router.push(`/#Slider`)
+    router.push(`/#Slider`);
     dispatch(setLayout("Slider"));
     if (backgroundNumber < 4) {
       dispatch(setBackground(backgroundNumber + 1));
@@ -352,7 +369,7 @@ const useScan = (): UseScanResult => {
     dropDown,
     handleChosenSearch,
     handleKeyDownEnter,
-    scanSearchTarget
+    scanSearchTarget,
   };
 };
 
