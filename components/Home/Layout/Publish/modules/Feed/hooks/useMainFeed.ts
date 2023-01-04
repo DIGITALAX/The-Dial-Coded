@@ -9,7 +9,7 @@ import {
   PaginatedResultInfo,
   PublicationSearchResult,
 } from "../../../../../../Common/types/lens.types";
-import lodash, { filter } from "lodash";
+import lodash from "lodash";
 import {
   profilePublicationsAuth,
   profilePublications,
@@ -237,6 +237,7 @@ const useMainFeed = () => {
         const auth_sortedArr: any[] = auth_arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
+        console.log("first", authPub)
         const filteredArrAuth = lodash.filter(auth_sortedArr, (arr) => {
           if (arr?.__typename === "Post") {
             if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
@@ -301,6 +302,10 @@ const useMainFeed = () => {
   const fetchMorePublications = async (): Promise<void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     try {
+      if (!paginatedResults?.next) {
+        // fix apollo duplications on null next
+        return
+      }
       const morePublications = await explorePublications({
         sources: "thedial",
         publicationTypes: feedOrder,
@@ -345,6 +350,10 @@ const useMainFeed = () => {
   const getMoreFeedTimeline = async (): Promise<void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     try {
+      if (!paginatedResults?.next) {
+        // fix apollo duplications on null next
+        return
+      }
       const morePublications = await feedTimeline({
         profileId: lensProfile,
         limit: 50,
@@ -368,6 +377,10 @@ const useMainFeed = () => {
         }
       });
       if (filteredArr.length < 1) {
+        if (!paginatedResults?.next) {
+          // fix apollo duplications on null next
+          return
+        }
         const authPub = await explorePublicationsAuth({
           sources: "thedial",
           publicationTypes: feedOrder,
@@ -448,6 +461,10 @@ const useMainFeed = () => {
     let pageData: any;
     try {
       if (!lensProfile) {
+        if (!paginatedResults?.next) {
+          // fix apollo duplications on null next
+          return
+        }
         const { data } = await profilePublications({
           sources: "thedial",
           profileId: (userView as any)?.profileId,
@@ -461,6 +478,10 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       } else {
+        if (!paginatedResults?.next) {
+          // fix apollo duplications on null next
+          return
+        }
         const { data } = await profilePublicationsAuth({
           sources: "thedial",
           profileId: (userView as any)?.profileId,
@@ -527,6 +548,10 @@ const useMainFeed = () => {
 
   const getMorePostComments = async (id?: string): Promise<void> => {
     try {
+      if (!commentPageInfo?.next) {
+        // fix apollo duplications on null next
+        return
+      }
       const comments = await whoCommentedPublications({
         commentsOf: id ? id : commentId,
         limit: 30,
