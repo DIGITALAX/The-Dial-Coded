@@ -237,7 +237,6 @@ const useMainFeed = () => {
         const auth_sortedArr: any[] = auth_arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
-        console.log("first", authPub)
         const filteredArrAuth = lodash.filter(auth_sortedArr, (arr) => {
           if (arr?.__typename === "Post") {
             if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {

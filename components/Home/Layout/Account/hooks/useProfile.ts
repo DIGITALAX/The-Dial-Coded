@@ -55,10 +55,6 @@ const useProfile = () => {
 
   const getMoreFollowers = async (): Promise<void> => {
     try {
-      if (!paginatedFollowers?.next) {
-        // fix apollo duplications on null next
-        return
-      }
       const { data } = await followers({
         profileId: profileId,
         limit: 50,
@@ -73,10 +69,6 @@ const useProfile = () => {
 
   const getMoreFollowing = async (): Promise<void> => {
     try {
-      if (!paginatedFollowing?.next) {
-        // fix apollo duplications on null next
-        return
-      }
       const { data } = await following({
         address: address,
         limit: 50,
@@ -134,10 +126,6 @@ const useProfile = () => {
 
   const getMoreUserProfileFeed = async (): Promise<void> => {
     try {
-      if (!paginatedResults?.next) {
-        // fix apollo duplications on null next
-        return
-      }
       const { data } = await profilePublicationsAuth({
         sources: "thedial",
         profileId: profileId,
