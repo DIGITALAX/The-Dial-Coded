@@ -17,6 +17,7 @@ import checkIfCommented from "../../../../../lib/lens/helpers/checkIfCommented";
 import checkIfMixtapeMirror from "../../../../../lib/lens/helpers/checkIfMixtapeMirror";
 import getFollowers from "../../../../../lib/lens/helpers/getFollowers";
 import getFollowing from "../../../../../lib/lens/helpers/getFollowing";
+import checkIfFollowerOnly from "../../../../../lib/lens/helpers/checkIfFollowerOnly";
 
 const useProfile = () => {
   const selectProfile = useSelector(
@@ -42,6 +43,7 @@ const useProfile = () => {
   const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
   const [followersLoading, setFollowersLoading] = useState<boolean>(false);
   const [followingLoading, setFollowingLoading] = useState<boolean>(false);
+  const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [userFollowing, setUserFollowing] = useState<
     PaginatedFollowingResult[]
   >([]);
@@ -104,6 +106,8 @@ const useProfile = () => {
         }
       });
       setUserFeed(filteredArr);
+      const isFollowedByMe = await checkIfFollowerOnly(filteredArr, profileId);
+      setFollowerOnly(isFollowedByMe as boolean[]);
       setPaginatedResults(data?.publications?.pageInfo);
       const response = await checkPostReactions(filteredArr, profileId);
       setHasReacted(response?.hasReactedArr);
@@ -145,6 +149,8 @@ const useProfile = () => {
         }
       });
       setUserFeed([...userFeed, ...filteredArr]);
+      const isFollowedByMe = await checkIfFollowerOnly(filteredArr, profileId);
+      setFollowerOnly([...followerOnly, ...(isFollowedByMe as boolean[])]);
       setPaginatedResults(data?.publications?.pageInfo);
       const response = await checkPostReactions(filteredArr, profileId);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
@@ -195,6 +201,7 @@ const useProfile = () => {
     followersLoading,
     followingLoading,
     mixtapeMirror,
+    followerOnly,
   };
 };
 

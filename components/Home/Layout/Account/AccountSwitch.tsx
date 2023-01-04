@@ -48,6 +48,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     followersLoading,
     followingLoading,
     mixtapeMirror,
+    followerOnly
   } = useProfile();
   const {
     createClient,
@@ -98,6 +99,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           profileDataLoading={profileDataLoading}
           mixtapeMirror={mixtapeMirror}
           handleHidePost={handleHidePost}
+          followerOnly={followerOnly}
         />
       );
 
