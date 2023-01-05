@@ -7,6 +7,7 @@ import Draw from "./modules/Draw";
 import useDraw from "./hooks/useDraw";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
+import useBase from "./hooks/useBase";
 
 const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   const profile = useSelector(
@@ -41,6 +42,13 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     thickness,
     setBrushWidth,
   } = useDraw();
+  const {
+    quickSearchResults,
+    searchLoading,
+    handleChangeSearch,
+    searchTarget,
+    handleKeyEnter,
+  } = useBase();
   let action: string = "canvas";
   const decideStringAction = () => {
     if (!profile || !isConnected) {
@@ -95,6 +103,11 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           setThickness={setThickness}
           thickness={thickness}
           setBrushWidth={setBrushWidth}
+          handleKeyEnter={handleKeyEnter}
+          handleChangeSearch={handleChangeSearch}
+          searchLoading={searchLoading}
+          searchTarget={searchTarget}
+          quickSearchResults={quickSearchResults}
         />
       );
   }

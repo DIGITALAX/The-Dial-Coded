@@ -7,8 +7,6 @@ const Board: FunctionComponent<BoardProps> = ({
   handleMouseMove,
   handleMouseUp
 }): JSX.Element => {
-  console.log(window.innerHeight)
-  console.log(window.innerWidth)
   return (
     <canvas
       ref={canvasRef}
