@@ -5,6 +5,7 @@ import {
   useLayoutEffect,
   MouseEvent,
   FormEvent,
+  useEffect,
 } from "react";
 import rough from "roughjs/bundled/rough.cjs";
 import { ElementInterface, Point2 } from "../types/canvas.types";
@@ -13,6 +14,7 @@ import lodash from "lodash";
 
 const useDraw = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const writingRef = useRef<HTMLTextAreaElement>(null);
   const [showSideDrawOptions, setShowSideDrawOptions] =
     useState<boolean>(false);
   const [showBottomDrawOptions, setShowBottomDrawOptions] =
@@ -29,10 +31,37 @@ const useDraw = () => {
   const [colorPicker, setColorPicker] = useState<boolean>(false);
   const [brushWidth, setBrushWidth] = useState<number>(12);
   const [thickness, setThickness] = useState<boolean>(false);
-  const [elements, setElements] = useState<ElementInterface[]>([]);
   const generator = rough.generator();
   const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
   const ctx = canvas?.getContext("2d");
+
+  const useElementHistory = (initialState: any) => {
+    const [index, setIndex] = useState(0);
+    const [history, setHistory] = useState([initialState]);
+
+    const setState = (action: any, overwrite = false) => {
+      const newState =
+        typeof action === "function" ? action(history[index]) : action;
+      if (overwrite) {
+        const historyCopy = [...history];
+        historyCopy[index] = newState;
+        setHistory(historyCopy);
+      } else {
+        const updatedState = [...history].slice(0, index + 1);
+        setHistory([...updatedState, newState]);
+        setIndex((prevState) => prevState + 1);
+      }
+    };
+
+    const undo = (): boolean | void =>
+      index > 0 && setIndex((prevState) => prevState - 1);
+    const redo = (): boolean | void =>
+      index < history.length - 1 && setIndex((prevState) => prevState + 1);
+
+    return [history[index], setState, undo, redo];
+  };
+
+  const [elements, setElements, undo, redo] = useElementHistory([]);
 
   const getSvgPathFromStroke = (stroke: any) => {
     if (!stroke.length) return "";
@@ -93,7 +122,7 @@ const useDraw = () => {
     xhr.onload = function () {
       let a = document.createElement("a");
       a.href = window.URL.createObjectURL(xhr.response);
-      a.download = "thedial.png";
+      a.download = "thedial_drafts.png";
       a.style.display = "none";
       document.body.appendChild(a);
       a.click();
@@ -121,7 +150,7 @@ const useDraw = () => {
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
     if (ctx) {
       const roughCanvas = rough?.canvas(canvas);
-      elements.forEach((element) => {
+      elements.forEach((element: any) => {
         drawElement(element, roughCanvas, ctx);
       });
     }
@@ -255,10 +284,10 @@ const useDraw = () => {
     y2: number,
     type: string,
     id: number,
-    strokeWidth: number,
-    fill: string,
-    fillStyle: string,
-    stroke: string
+    strokeWidth?: number,
+    fill?: string,
+    fillStyle?: string,
+    stroke?: string
   ): ElementInterface | undefined => {
     let roughElement;
     const bounds = canvas?.getBoundingClientRect();
@@ -355,7 +384,7 @@ const useDraw = () => {
           type,
           x1: transformedX1,
           y1: transformedY1,
-          text: "hello world",
+          text: "",
         };
     }
   };
@@ -381,7 +410,8 @@ const useDraw = () => {
     strokeWidth: number,
     fill: string,
     fillStyle: string,
-    stroke: string
+    stroke: string,
+    text: string
   ) => {
     const elementsCopy = [...elements];
     const bounds = canvas?.getBoundingClientRect();
@@ -411,9 +441,15 @@ const useDraw = () => {
         break;
 
       case "text":
+        const textWidth = ctx?.measureText(text).width as number;
+        const textHeight = 24 as number;
+        elementsCopy[index] = {
+          ...createElement(x1, y1, x1 + textWidth, y1 + textHeight, type, index, ""),
+          text: text,
+        };
         break;
     }
-    setElements(elementsCopy);
+    setElements(elementsCopy, true);
   };
 
   const handleMouseDown = (e: MouseEvent): void => {
@@ -433,6 +469,7 @@ const useDraw = () => {
           const offsetY = e.clientY - (element[0]?.y1 as number);
           setSelectedElement({ ...element[0], offsetX, offsetY });
         }
+        setElements((prevState: any) => prevState);
 
         setAction("moving");
       }
@@ -442,9 +479,9 @@ const useDraw = () => {
       tool === "pencil" ||
       tool === "rect" ||
       tool === "ell" ||
-      tool === "line"
+      tool === "line" ||
+      tool === "text"
     ) {
-      setAction("drawing");
       const id = elements.length;
       const newElement = createElement(
         e.clientX,
@@ -458,10 +495,9 @@ const useDraw = () => {
         shapeFillType,
         hex
       );
-
-      setElements([...elements, newElement as ElementInterface]);
-    } else if (tool === "text") {
-      setAction("writing");
+      setElements((prevState: any) => [...prevState, newElement]);
+      setSelectedElement(newElement);
+      setAction(tool === "text" ? "writing" : "drawing");
     }
   };
 
@@ -483,6 +519,7 @@ const useDraw = () => {
         hex
       );
     } else if (action === "writing") {
+      return;
     } else if (action === "moving") {
       if (selectedElement.type === "pencil") {
         const newPoints = selectedElement.points?.map(
@@ -496,7 +533,7 @@ const useDraw = () => {
           ...elementsCopy[selectedElement.id],
           points: newPoints,
         };
-        setElements(elementsCopy);
+        setElements(elementsCopy, true);
       } else {
         const {
           x2,
@@ -532,10 +569,32 @@ const useDraw = () => {
     }
   };
 
+  useEffect(() => {}, [undo, redo]);
+
   const handleMouseUp = (e: MouseEvent): void => {
+    // if (selectedElement) {
+    //   if (
+    //     selectedElement.type === "text" &&
+    //     e.clientX - selectedElement.offsetX === selectedElement.x1 &&
+    //     e.clientY - selectedElement.offsetY === selectedElement.y1
+    //   ) {
+    //     setAction("writing");
+    //     return;
+    //   }
+    // }
+
+    if (action === "writing") return;
     setAction("none");
     setSelectedElement(null);
   };
+
+  useEffect(() => {
+    const textAreaElement = writingRef.current;
+    if (action === "writing") {
+      textAreaElement?.focus();
+      (textAreaElement as HTMLTextAreaElement).value = selectedElement.text;
+    }
+  }, [action, selectedElement]);
 
   return {
     hex,
@@ -566,6 +625,11 @@ const useDraw = () => {
     setShapes,
     text,
     setText,
+    undo,
+    redo,
+    selectedElement,
+    action,
+    writingRef,
   };
 };
 

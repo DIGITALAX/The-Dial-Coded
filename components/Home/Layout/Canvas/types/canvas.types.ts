@@ -44,6 +44,11 @@ export type DrawProps = {
   handleImageAdd: (e: FormEvent) => void;
   setTool: (e: string) => void;
   tool: string;
+  undo: () => boolean | void;
+  redo: () => boolean | void;
+  selectedElement: any;
+  action: string;
+  writingRef: Ref<HTMLTextAreaElement>;
 };
 
 export type ColorPickerProps = {
@@ -58,6 +63,8 @@ export type SideMenuProps = {
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
   handleImageAdd: (e: FormEvent) => void;
+  undo: () => boolean | void;
+  redo: () => boolean | void;
 };
 
 export type BottomMenuProps = {
@@ -89,6 +96,8 @@ export type SideOptionsProps = {
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
   handleImageAdd: (e: FormEvent) => void;
+  undo: () => boolean | void;
+  redo: () => boolean | void;
 };
 
 export type BottomOptionsProps = {

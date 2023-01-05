@@ -6,6 +6,8 @@ import MixCheck from "../../../../Common/Miscellaneous/Mixtape/MixCheck/MixCheck
 import TrackInput from "../../../../Common/Miscellaneous/Mixtape/TrackInput/TrackInput";
 import { CreateMixtapeProps } from "../../../../Common/types/common.types";
 import CollectOptions from "./CollectOptions";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
   checkValues,
@@ -62,8 +64,19 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
           clickHandle={generateMixtape}
           loader={mixtapeLoading}
         />
-        {/* can this be sent as an xmtp ?? private message ?*/}
-        <MixSave col={"2"} />
+        <div className="relative w-fit h-fit place-self-center" id="save-mixtape">
+          <MixSave col={"2"} />
+        </div>
+        <ReactTooltip
+          anchorId="save-mixtape"
+          place="right"
+          content="Save Mixtapes::Coming Soon::💯"
+          style={{
+            fontSize: "10px",
+            backgroundColor: "#131313",
+            opacity: "0.7",
+          }}
+        />
       </div>
       <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto row-start-2 gap-6 ">
         <MixInput
