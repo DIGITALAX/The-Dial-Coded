@@ -14,7 +14,6 @@
     "@rainbow-me/rainbowkit": "^0.8.0",
     "@reduxjs/toolkit": "^1.9.1",
     "@uiw/react-color-sketch": "^1.1.1",
-    "@win11react/react-canvas-draw": "^1.2.2",
     "@xmtp/xmtp-js": "^7.7.2",
     "body-parser": "^1.20.1",
     "coingecko-api": "^1.0.10",
@@ -40,7 +39,9 @@
     "redux": "^4.2.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.2",
+    "roughjs": "^4.5.2",
     "shuffle-array": "^1.0.1",
+    "uninstall": "^0.0.0",
     "uuid": "^9.0.0",
     "wagmi": "^0.8.5"
   },

@@ -1,7 +1,6 @@
 import { HsvaColor, ColorResult } from "@uiw/color-convert";
 import { SwatchPresetColor } from "@uiw/react-color-swatch";
-import { LegacyRef, Ref } from "react";
-import CanvasDraw from "react-canvas-draw";
+import { Ref, MouseEvent } from "react";
 
 export interface SketchProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "color"> {
@@ -16,11 +15,26 @@ export interface SketchProps
 export type DrawProps = {
   hex: string;
   setHex: (e: string) => void;
-  showDrawOptions: boolean;
-  setShowDrawOptions: (e: boolean) => void;
-  drawing: string | undefined;
-  canvasRef: LegacyRef<CanvasDraw> | undefined;
+  showSideDrawOptions: boolean;
+  setShowSideDrawOptions: (e: boolean) => void;
+  showBottomDrawOptions: boolean;
+  setShowBottomDrawOptions: (e: boolean) => void;
+  canvasRef: Ref<HTMLCanvasElement>;
   brushWidth: number;
+  handleMouseDown: (e: MouseEvent) => void;
+  handleMouseMove: (e: MouseEvent) => void;
+  handleMouseUp: (e: MouseEvent) => void;
+  colorPicker: boolean;
+  setColorPicker: (e: boolean) => void;
+  shapes: boolean;
+  setShapes: (e: boolean) => void;
+  pencil: boolean;
+  setPencil: (e: boolean) => void;
+  setShapeFillType: (e: string[]) => void;
+  setOnDrawTracker: (e: boolean) => void;
+  setThickness: (e: boolean) => void;
+  thickness: boolean;
+  setBrushWidth: (e: number) => void;
 };
 
 export type ColorPickerProps = {
@@ -28,21 +42,65 @@ export type ColorPickerProps = {
   setHex: (e: string) => void;
 };
 
-export type MenuProps = {
-  hex: string;
-  setHex: (e: string) => void;
-  showDrawOptions: boolean;
-  setShowDrawOptions: (e: boolean) => void;
+export type SideMenuProps = {
+  showSideDrawOptions: boolean;
+  setShowSideDrawOptions: (e: boolean) => void;
 };
 
-export type BoardProps = {
-  drawing: string | undefined;
-  canvasRef: LegacyRef<CanvasDraw> | undefined;
+export type BottomMenuProps = {
+  showBottomDrawOptions: boolean;
+  setShowBottomDrawOptions: (e: boolean) => void;
+  colorPicker: boolean;
+  setColorPicker: (e: boolean) => void;
   hex: string;
+  setHex: (e: string) => void;
+  shapes: boolean;
+  setShapes: (e: boolean) => void;
+  pencil: boolean;
+  setPencil: (e: boolean) => void;
+  setShapeFillType: (e: string[]) => void;
+  setOnDrawTracker: (e: boolean) => void;
+  setThickness: (e: boolean) => void;
+  thickness: boolean;
+  setBrushWidth: (e: number) => void;
   brushWidth: number;
 };
 
-export type DrawOptionsProps = {
+export type BoardProps = {
+  canvasRef: Ref<HTMLCanvasElement>;
+  handleMouseDown: (e: MouseEvent) => void;
+  handleMouseMove: (e: MouseEvent) => void;
+  handleMouseUp: (e: MouseEvent) => void;
+};
+
+export type SideOptionsProps = {};
+
+export type BottomOptionsProps = {
+  colorPicker: boolean;
+  setColorPicker: (e: boolean) => void;
   hex: string;
   setHex: (e: string) => void;
+  shapes: boolean;
+  setShapes: (e: boolean) => void;
+  pencil: boolean;
+  setPencil: (e: boolean) => void;
+  setShapeFillType: (e: string[]) => void;
+  setOnDrawTracker: (e: boolean) => void;
+  setThickness: (e: boolean) => void;
+  thickness: boolean;
+  setBrushWidth: (e: number) => void;
+  brushWidth: number;
 };
+
+export interface ElementInterface {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  roughElement: any;
+}
+
+export interface Point2 {
+  x: number;
+  y: number;
+}

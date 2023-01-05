@@ -45,9 +45,9 @@ export type ReactionProps = {
 };
 
 export type InterfaceProps = {
-  title: string;
-  tapeTitles: string[];
-  handleTapeSet: (title: string) => void;
+  title?: string;
+  tapeTitles?: string[];
+  handleTapeSet?: (title: string) => void;
   images?: string[];
   message?: Message;
   backgroundImages?: string[];
@@ -727,5 +727,17 @@ export type SearchBarProps = {
   searchLoading?: boolean;
   height: string;
   textSize: string;
-  loaderSize: number
+  loaderSize: number;
+};
+
+export type CanvasOptionProps = {
+  bool_option?: boolean;
+  string_option?: string[];
+  image: string;
+  bgColor?: string;
+  setShowBool?: (bool_option: boolean) => void;
+  setShowString?: (string_option: string[]) => void;
+  width: number;
+  height: number;
+  color?: boolean;
 };

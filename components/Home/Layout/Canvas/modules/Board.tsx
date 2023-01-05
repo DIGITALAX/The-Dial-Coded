@@ -1,28 +1,25 @@
-import { FunctionComponent, useLayoutEffect, useRef, useState } from "react";
+import { FunctionComponent, MouseEvent } from "react";
 import { BoardProps } from "../types/canvas.types";
-import CanvasDraw from "@win11react/react-canvas-draw";
 
 const Board: FunctionComponent<BoardProps> = ({
   canvasRef,
-  drawing,
-  hex,
-  brushWidth,
+  handleMouseDown,
+  handleMouseMove,
+  handleMouseUp
 }): JSX.Element => {
-
+  console.log(window.innerHeight)
+  console.log(window.innerWidth)
   return (
-    <div ref={parentRef} className="relative w-full h-full z-0">
-      <CanvasDraw
-        ref={canvasRef}
-        lazyRadius={0}
-        hideGrid={true}
-        brushColor={hex}
-        brushRadius={brushWidth}
-        canvasWidth={width}
-        canvasHeight={height}
-        enablePanAndZoom={true}
-        style={{ backgroundColor: "transparent", width: width, height: height }}
-      />
-    </div>
+    <canvas
+      ref={canvasRef}
+      className="relative z-0 rounded-lg"
+      style={{ width: "100%", height: "100%" }}
+      width={document.getElementById("parent")?.offsetWidth}
+      height={document.getElementById("parent")?.offsetHeight}
+      onMouseDown={(e: MouseEvent<HTMLCanvasElement>) => handleMouseDown(e)}
+      onMouseUp={(e: MouseEvent<HTMLCanvasElement>) => handleMouseUp(e)}
+      onMouseMove={(e: MouseEvent<HTMLCanvasElement>) => handleMouseMove(e)}
+    ></canvas>
   );
 };
 
