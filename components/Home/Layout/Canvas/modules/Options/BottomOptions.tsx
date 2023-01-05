@@ -18,13 +18,19 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
   thickness,
   setBrushWidth,
   brushWidth,
+  erase,
+  setErase,
+  pan,
+  setPan,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-6">
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2 self-end">
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
-          <div className="relative w-fit h-fit row-start-1"></div>
-          <div className="relative w-fit h-fit row-start-2 self-end">
+          <div
+            className="relative w-fit h-fit row-start-2 self-end"
+            onClick={() => setErase(false)}
+          >
             <CanvasOption
               image="QmcWMzgeq6vGShetnRvJDy1Dt3yZ8LxDDQHLwWy5zf9YPX"
               bgColor="black"
@@ -34,13 +40,17 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
           </div>
         </div>
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
-          <div className="relative w-fit h-fit row-start-1 self-end"></div>
-          <div className="relative w-fit h-fit row-start-2 self-end">
+          <div
+            className="relative w-fit h-fit row-start-2 self-end"
+            onClick={() => setErase(false)}
+          >
             <CanvasOption
               bgColor="black"
               image="QmPvfTS6brNvnTN6e6L2Btp8eAMxC8XhErrtQEjYF1nB8o"
               width={20}
               height={20}
+              setShowBool={setPan}
+              bool_option={pan}
             />
           </div>
         </div>
@@ -48,7 +58,10 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2 self-end">
         <div
           className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end"
-          onClick={() => setOnDrawTracker(true)}
+          onClick={() => {
+            setOnDrawTracker(true);
+            setErase(false);
+          }}
         >
           <div className="relative w-fit h-fit row-start-2 self-end">
             <CanvasOption
@@ -89,7 +102,10 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               <div className="absolute w-fit h-fit grid grid-flow-col auto-cols-auto gap-1">
                 <div
                   className="relative w-fit h-fit col-start-1"
-                  onClick={() => setOnDrawTracker(false)}
+                  onClick={() => {
+                    setOnDrawTracker(false);
+                    setErase(false);
+                  }}
                 >
                   <CanvasOption
                     image="QmRgWU2HUJJJYWNV5yfB4FCjbx1vw2K9c335xWENSduVBd"
@@ -102,7 +118,10 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
                 </div>
                 <div
                   className="relative w-fit h-fit col-start-2"
-                  onClick={() => setOnDrawTracker(false)}
+                  onClick={() => {
+                    setOnDrawTracker(false);
+                    setErase(false);
+                  }}
                 >
                   <CanvasOption
                     image="QmVcbF6SLwjn78VseukYU2q56UGnbTmCNMQpfuBUWiSLyP"
@@ -115,7 +134,10 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
                 </div>
                 <div
                   className="relative w-fit h-fit col-start-3"
-                  onClick={() => setOnDrawTracker(false)}
+                  onClick={() => {
+                    setOnDrawTracker(false);
+                    setErase(false);
+                  }}
                 >
                   <CanvasOption
                     image="QmXSoMrX1zB14Q9v2H1qnCxcJKeaLz39KHtpYpNCo7yTbB"
@@ -128,7 +150,10 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
                 </div>
                 <div
                   className="relative w-fit h-fit col-start-4"
-                  onClick={() => setOnDrawTracker(false)}
+                  onClick={() => {
+                    setOnDrawTracker(false);
+                    setErase(false);
+                  }}
                 >
                   <CanvasOption
                     image="QmbLf1DV49PDDwx7nU1qLmG9yQf91Q5YYmGP7uoFbRNicQ"
@@ -141,7 +166,10 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
                 </div>
                 <div
                   className="relative w-fit h-fit col-start-5"
-                  onClick={() => setOnDrawTracker(false)}
+                  onClick={() => {
+                    setOnDrawTracker(false);
+                    setErase(false);
+                  }}
                 >
                   <CanvasOption
                     image="Qmd1ToTbusW3rKLwej9m6f1LKG5amfVNhPjJvoivJciD6q"
@@ -167,13 +195,15 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
           </div>
         </div>
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
-          <div className="relative w-fit h-fit row-start-1"></div>
-          <div className="relative w-fit h-fit row-start-2 self-end">
+          <div
+            className="relative w-fit h-fit row-start-2 self-end"
+            onClick={() => setErase(false)}
+          >
             <CanvasOption
-              image="QmSP3FjkEoNbw4pn1nWu3vha7gAVNeNa7uPdmsXg9k48nz"
+              image="QmcsGqcvZv4jXFeN9Eg9b1aDMF5asQbLB2bKLB88PzBLna"
               bgColor="black"
-              width={20}
-              height={20}
+              width={30}
+              height={30}
             />
           </div>
         </div>
@@ -187,12 +217,16 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               bgColor="black"
               width={25}
               height={25}
+              setShowBool={setErase}
+              bool_option={erase}
             />
           </div>
         </div>
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
-          <div className="relative w-fit h-fit row-start-1"></div>
-          <div className="relative w-fit h-fit row-start-2 self-end">
+          <div
+            className="relative w-fit h-fit row-start-2 self-end"
+            onClick={() => setErase(false)}
+          >
             <CanvasOption
               image="QmXXTr7nuQDgTGMivfxbpYYvwykNZcXMwgST7Z1U6SAV6X"
               bgColor="black"
@@ -201,7 +235,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
             />
           </div>
         </div>
-        <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
+        {/* <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
           <div className="relative w-fit h-fit row-start-1"></div>
           <div className="relative w-fit h-fit row-start-2 self-end">
             <CanvasOption
@@ -211,7 +245,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               height={25}
             />
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
         {colorPicker && (

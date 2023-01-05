@@ -47,7 +47,19 @@ module.exports = {
         dialY: "#FBDB84",
         dialG: "#A6DA70",
         lB: "#06A9CF",
-        ocean: "#078FD6"
+        ocean: "#078FD6",
+      },
+      cursor: {
+        focus: "url('/focus.png'), auto",
+      },
+      backgroundImage: {
+        spots:
+          "url('https://thedial.infura-ipfs.io/ipfs/QmdCN3qFCJcao9HfQVbQm3SbCjErMJysefqgP1uogXjtve')",
+        board:
+          "linear-gradient(#131313 0.1em, transparent 0.1em),linear-gradient(90deg, #131313 0.1em, transparent 0.1em)",
+      },
+      backgroundSize: {
+        boardSize: "3em 3em",
       },
     },
   },

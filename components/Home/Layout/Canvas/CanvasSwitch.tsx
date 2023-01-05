@@ -41,6 +41,13 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     setThickness,
     thickness,
     setBrushWidth,
+    erase,
+    setErase,
+    pan,
+    setPan,
+    handleSave,
+    setDraftBoard,
+    draftBoard
   } = useDraw();
   const {
     quickSearchResults,
@@ -48,6 +55,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handleChangeSearch,
     searchTarget,
     handleKeyEnter,
+    fillImages
   } = useBase();
   let action: string = "canvas";
   const decideStringAction = () => {
@@ -108,6 +116,14 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           searchLoading={searchLoading}
           searchTarget={searchTarget}
           quickSearchResults={quickSearchResults}
+          fillImages={fillImages}
+          erase={erase}
+          setErase={setErase}
+          pan={pan}
+          setPan={setPan}
+          handleSave={handleSave}
+          draftBoard={draftBoard}
+          setDraftBoard={setDraftBoard}
         />
       );
   }
