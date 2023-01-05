@@ -28,10 +28,7 @@ export type DrawProps = {
   setColorPicker: (e: boolean) => void;
   shapes: boolean;
   setShapes: (e: boolean) => void;
-  pencil: boolean;
-  setPencil: (e: boolean) => void;
-  setShapeFillType: (e: string[]) => void;
-  setOnDrawTracker: (e: boolean) => void;
+  setShapeFillType: (e: string) => void;
   setThickness: (e: boolean) => void;
   thickness: boolean;
   setBrushWidth: (e: number) => void;
@@ -41,13 +38,12 @@ export type DrawProps = {
   searchLoading: boolean;
   quickSearchResults: any[];
   fillImages: string[];
-  setErase: (e: boolean) => void;
-  erase: boolean;
-  setPan: (e: boolean) => void;
-  pan: boolean;
   handleSave: () => void;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
+  handleImageAdd: (e: FormEvent) => void;
+  setTool: (e: string) => void;
+  tool: string;
 };
 
 export type ColorPickerProps = {
@@ -61,6 +57,7 @@ export type SideMenuProps = {
   handleSave: () => void;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
+  handleImageAdd: (e: FormEvent) => void;
 };
 
 export type BottomMenuProps = {
@@ -72,18 +69,12 @@ export type BottomMenuProps = {
   setHex: (e: string) => void;
   shapes: boolean;
   setShapes: (e: boolean) => void;
-  pencil: boolean;
-  setPencil: (e: boolean) => void;
-  setShapeFillType: (e: string[]) => void;
-  setOnDrawTracker: (e: boolean) => void;
+  setShapeFillType: (e: string) => void;
   setThickness: (e: boolean) => void;
   thickness: boolean;
   setBrushWidth: (e: number) => void;
   brushWidth: number;
-  setErase: (e: boolean) => void;
-  erase: boolean;
-  setPan: (e: boolean) => void;
-  pan: boolean;
+  setTool: (e: string) => void;
 };
 
 export type BoardProps = {
@@ -97,6 +88,7 @@ export type SideOptionsProps = {
   handleSave: () => void;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
+  handleImageAdd: (e: FormEvent) => void;
 };
 
 export type BottomOptionsProps = {
@@ -106,18 +98,12 @@ export type BottomOptionsProps = {
   setHex: (e: string) => void;
   shapes: boolean;
   setShapes: (e: boolean) => void;
-  pencil: boolean;
-  setPencil: (e: boolean) => void;
-  setShapeFillType: (e: string[]) => void;
-  setOnDrawTracker: (e: boolean) => void;
+  setShapeFillType: (e: string) => void;
   setThickness: (e: boolean) => void;
   thickness: boolean;
   setBrushWidth: (e: number) => void;
   brushWidth: number;
-  setErase: (e: boolean) => void;
-  erase: boolean;
-  setPan: (e: boolean) => void;
-  pan: boolean;
+  setTool: (e: string) => void;
 };
 
 export interface ElementInterface {
@@ -133,6 +119,7 @@ export interface ElementInterface {
   }[];
   color?: string;
   thickness?: number;
+  text?: string;
 }
 
 export interface Point2 {
