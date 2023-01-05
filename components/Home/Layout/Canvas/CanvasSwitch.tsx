@@ -5,6 +5,8 @@ import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Draw from "./modules/Draw";
 import useDraw from "./hooks/useDraw";
+import Image from "next/legacy/image";
+import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 
 const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   const profile = useSelector(
@@ -18,11 +20,26 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   const {
     hex,
     setHex,
-    showDrawOptions,
-    setShowDrawOptions,
+    showSideDrawOptions,
+    setShowSideDrawOptions,
     canvasRef,
-    drawing,
     brushWidth,
+    handleMouseDown,
+    handleMouseUp,
+    handleMouseMove,
+    showBottomDrawOptions,
+    setShowBottomDrawOptions,
+    colorPicker,
+    setColorPicker,
+    shapes,
+    setShapes,
+    pencil,
+    setPencil,
+    setShapeFillType,
+    setOnDrawTracker,
+    setThickness,
+    thickness,
+    setBrushWidth,
   } = useDraw();
   let action: string = "canvas";
   const decideStringAction = () => {
@@ -36,12 +53,20 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     case "no profile":
       return (
         <div
-          className="relative w-fit h-fit place-self-center font-dosis text-offBlack text-md cursor-pointer"
+          className="relative w-full h-[70vw] grid grid-flow-col auto-cols-auto bg-offBlack rounded-lg border border-white grid grid-flow-col auto-cols-auto text-white font-dosis"
           onClick={
             !isConnected ? openConnectModal : () => dispatch(setSignIn(true))
           }
         >
-          Please Connect to Lens to use the Canvas.
+          <Image
+            src={`${INFURA_GATEWAY}/ipfs/QmdCN3qFCJcao9HfQVbQm3SbCjErMJysefqgP1uogXjtve`}
+            objectFit="cover"
+            layout="fill"
+            className="absolute rounded-lg"
+          />
+          <div className="relative w-fit h-fit place-self-center">
+            Please Connect to Lens to use the Canvas.
+          </div>
         </div>
       );
 
@@ -50,11 +75,26 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
         <Draw
           hex={hex}
           setHex={setHex}
-          showDrawOptions={showDrawOptions}
-          setShowDrawOptions={setShowDrawOptions}
-          drawing={drawing}
+          showSideDrawOptions={showSideDrawOptions}
+          setShowSideDrawOptions={setShowSideDrawOptions}
           canvasRef={canvasRef}
           brushWidth={brushWidth}
+          handleMouseDown={handleMouseDown}
+          handleMouseUp={handleMouseUp}
+          handleMouseMove={handleMouseMove}
+          showBottomDrawOptions={showBottomDrawOptions}
+          setShowBottomDrawOptions={setShowBottomDrawOptions}
+          colorPicker={colorPicker}
+          setColorPicker={setColorPicker}
+          shapes={shapes}
+          setShapes={setShapes}
+          pencil={pencil}
+          setPencil={setPencil}
+          setShapeFillType={setShapeFillType}
+          setOnDrawTracker={setOnDrawTracker}
+          setThickness={setThickness}
+          thickness={thickness}
+          setBrushWidth={setBrushWidth}
         />
       );
   }

@@ -10,7 +10,7 @@ const ColorPicker: FunctionComponent<ColorPickerProps> = ({
     <Sketch
       color={hex}
       onChange={(color) => {
-        setHex(color.hex);
+        setHex(color.hexa);
       }}
     />
   );

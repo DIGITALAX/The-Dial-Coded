@@ -1,4 +1,7 @@
 import { FunctionComponent } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import CanvasSwitch from "../../Home/Layout/Canvas/CanvasSwitch";
 import Box from "../Miscellaneous/Box";
 import { InterfaceProps } from "../types/common.types";
 import MainDisplay from "./MainDisplay";
@@ -13,8 +16,11 @@ const Interface: FunctionComponent<InterfaceProps> = ({
   backgroundImages,
   mixtape,
   loader,
-  more
+  more,
 }): JSX.Element => {
+  const layout = useSelector(
+    (state: RootState) => state.app.layoutReducer.value
+  );
   return (
     <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto pt-10">
       <div className="relative col-start-1 w-[95%] h-full bg-gradient-to-r from-offBlack via-black/70 to-offBlack rounded-lg grid grid-flow-col auto-cols-auto pt-4 px-4 pb-10 gap-4 justify-self-center">
@@ -69,19 +75,23 @@ const Interface: FunctionComponent<InterfaceProps> = ({
               border
             />
           </div>
-          <MainDisplay
-            tapeTitles={tapeTitles}
-            row={"2"}
-            title={title}
-            handleTapeSet={handleTapeSet}
-            images={images}
-            message={message}
-            sideImage={sideImage}
-            backgroundImages={backgroundImages}
-            mixtape={mixtape}
-            loader={loader}
-            more={more}
-          />
+          {layout === "Canvas" ? (
+            <CanvasSwitch />
+          ) : (
+            <MainDisplay
+              tapeTitles={tapeTitles as string[]}
+              row={"2"}
+              title={title as string}
+              handleTapeSet={handleTapeSet as (e: string) => void}
+              images={images}
+              message={message}
+              sideImage={sideImage}
+              backgroundImages={backgroundImages}
+              mixtape={mixtape}
+              loader={loader}
+              more={more}
+            />
+          )}
         </div>
         <div className="relative w-fit h-full justify-between col-start-3 grid grid-flow-row auto-rows-auto gap-8 justify-self-end">
           <Box
