@@ -2,7 +2,11 @@ import { FunctionComponent } from "react";
 import CanvasOption from "../../../../../Common/Miscellaneous/CanvasOption";
 import { SideOptionsProps } from "../../types/canvas.types";
 
-const SideOptions: FunctionComponent<SideOptionsProps> = ({}): JSX.Element => {
+const SideOptions: FunctionComponent<SideOptionsProps> = ({
+  handleSave,
+  setDraftBoard,
+  draftBoard
+}): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-4">
       <CanvasOption
@@ -31,17 +35,31 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({}): JSX.Element => {
         />
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
-        <CanvasOption
-          image="QmeBHHf7Ueca9bs4xWqNAj4UEgChPkwtpiG68xqPxaavSo"
-          bgColor="black"
-          width={25}
-          height={25}
-        />
+        <label>
+          <CanvasOption
+            image="QmeBHHf7Ueca9bs4xWqNAj4UEgChPkwtpiG68xqPxaavSo"
+            bgColor="black"
+            width={25}
+            height={25}
+          />
+          <input
+            type="file"
+            accept="image/png"
+            hidden
+            required
+            id="files"
+            multiple={false}
+            name="images"
+            className="caret-transparent"
+          />
+        </label>
         <CanvasOption
           image="QmZZhPPzhmsicoiHGKPvqATdQ3JGakrZ2G3mK67goHA9CN"
           bgColor="black"
           width={25}
           height={25}
+          setShowBool={setDraftBoard}
+          bool_option={draftBoard}
         />
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
@@ -59,18 +77,20 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({}): JSX.Element => {
         />
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
-        <CanvasOption
+        {/* <CanvasOption
           image="QmcX4FjBExCJvbLvxuTs2VPwzhpoCds1sL97AvxygF9EYE"
           bgColor="black"
           width={25}
           height={25}
-        />
-        <CanvasOption
-          image="QmYMJJ2U8fCWsoiaX2Twmmks8sj3z4bCU5BMNT9dXhnaBj"
-          bgColor="black"
-          width={25}
-          height={25}
-        />
+        /> */}
+        <div className="relative w-fit h-fit" onClick={() => handleSave()}>
+          <CanvasOption
+            image="QmYMJJ2U8fCWsoiaX2Twmmks8sj3z4bCU5BMNT9dXhnaBj"
+            bgColor="black"
+            width={25}
+            height={25}
+          />
+        </div>
       </div>
     </div>
   );

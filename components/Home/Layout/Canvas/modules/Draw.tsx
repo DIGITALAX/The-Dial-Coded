@@ -36,23 +36,30 @@ const Draw: FunctionComponent<DrawProps> = ({
   searchTarget,
   handleKeyEnter,
   quickSearchResults,
+  fillImages,
+  erase,
+  setErase,
+  pan,
+  setPan,
+  handleSave,
+  draftBoard,
+  setDraftBoard,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
       <div
         id="parent"
-        className="relative w-full h-[70vw] grid grid-flow-col auto-cols-auto bg-offBlack rounded-lg border border-white row-start-1"
+        className={`relative w-full h-[70vw] grid grid-flow-col auto-cols-auto ${
+          draftBoard ? "bg-board bg-boardSize bg-white" : "bg-spots"
+        } rounded-lg border border-white row-start-1`}
       >
-        <Image
-          src={`${INFURA_GATEWAY}/ipfs/QmdCN3qFCJcao9HfQVbQm3SbCjErMJysefqgP1uogXjtve`}
-          objectFit="cover"
-          layout="fill"
-          className="absolute rounded-lg"
-        />
         <Publish />
         <SideMenu
           showSideDrawOptions={showSideDrawOptions}
           setShowSideDrawOptions={setShowSideDrawOptions}
+          handleSave={handleSave}
+          draftBoard={draftBoard}
+          setDraftBoard={setDraftBoard}
         />
         <BottomMenu
           showBottomDrawOptions={showBottomDrawOptions}
@@ -71,6 +78,10 @@ const Draw: FunctionComponent<DrawProps> = ({
           thickness={thickness}
           setBrushWidth={setBrushWidth}
           brushWidth={brushWidth}
+          erase={erase}
+          setErase={setErase}
+          pan={pan}
+          setPan={setPan}
         />
         <Board
           canvasRef={canvasRef}
@@ -86,6 +97,7 @@ const Draw: FunctionComponent<DrawProps> = ({
           handleKeyEnter={handleKeyEnter}
           searchLoading={searchLoading}
           quickSearchResults={quickSearchResults}
+          fillImages={fillImages}
         />
       </div>
     </div>

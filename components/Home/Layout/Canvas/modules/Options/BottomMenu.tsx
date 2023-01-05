@@ -20,6 +20,11 @@ const BottomMenu: FunctionComponent<BottomMenuProps> = ({
   thickness,
   setBrushWidth,
   brushWidth,
+  erase,
+  setErase,
+  pan,
+  setPan,
+  handleSave
 }): JSX.Element => {
   return (
     <div className="absolute w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto justify-self-start self-end p-3 gap-2 z-10">
@@ -47,6 +52,11 @@ const BottomMenu: FunctionComponent<BottomMenuProps> = ({
           thickness={thickness}
           setBrushWidth={setBrushWidth}
           brushWidth={brushWidth}
+          erase={erase}
+          setErase={setErase}
+          pan={pan}
+          setPan={setPan}
+          handleSave={handleSave}
         />
       )}
     </div>

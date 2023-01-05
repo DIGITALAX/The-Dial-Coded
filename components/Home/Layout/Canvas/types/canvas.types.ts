@@ -39,7 +39,15 @@ export type DrawProps = {
   handleChangeSearch: (e: FormEvent) => void;
   handleKeyEnter: (e: any) => void;
   searchLoading: boolean;
-  quickSearchResults: any[]
+  quickSearchResults: any[];
+  fillImages: string[];
+  setErase: (e: boolean) => void;
+  erase: boolean;
+  setPan: (e: boolean) => void;
+  pan: boolean;
+  handleSave: () => void;
+  draftBoard: boolean;
+  setDraftBoard: (e: boolean) => void;
 };
 
 export type ColorPickerProps = {
@@ -50,6 +58,9 @@ export type ColorPickerProps = {
 export type SideMenuProps = {
   showSideDrawOptions: boolean;
   setShowSideDrawOptions: (e: boolean) => void;
+  handleSave: () => void;
+  draftBoard: boolean;
+  setDraftBoard: (e: boolean) => void;
 };
 
 export type BottomMenuProps = {
@@ -69,6 +80,10 @@ export type BottomMenuProps = {
   thickness: boolean;
   setBrushWidth: (e: number) => void;
   brushWidth: number;
+  setErase: (e: boolean) => void;
+  erase: boolean;
+  setPan: (e: boolean) => void;
+  pan: boolean;
 };
 
 export type BoardProps = {
@@ -78,7 +93,11 @@ export type BoardProps = {
   handleMouseUp: (e: MouseEvent) => void;
 };
 
-export type SideOptionsProps = {};
+export type SideOptionsProps = {
+  handleSave: () => void;
+  draftBoard: boolean;
+  setDraftBoard: (e: boolean) => void;
+};
 
 export type BottomOptionsProps = {
   colorPicker: boolean;
@@ -95,14 +114,25 @@ export type BottomOptionsProps = {
   thickness: boolean;
   setBrushWidth: (e: number) => void;
   brushWidth: number;
+  setErase: (e: boolean) => void;
+  erase: boolean;
+  setPan: (e: boolean) => void;
+  pan: boolean;
 };
 
 export interface ElementInterface {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  roughElement: any;
+  type: string;
+  x1?: number;
+  y1?: number;
+  x2?: number;
+  y2?: number;
+  roughElement?: any;
+  points?: {
+    x: number;
+    y: number;
+  }[];
+  color?: string;
+  thickness?: number;
 }
 
 export interface Point2 {
@@ -115,5 +145,6 @@ export type BaseProps = {
   handleChangeSearch: (e: FormEvent) => void;
   handleKeyEnter: (e: any) => void;
   searchLoading: boolean;
-  quickSearchResults: any[]
+  quickSearchResults: any[];
+  fillImages: string[];
 };
