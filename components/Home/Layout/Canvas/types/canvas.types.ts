@@ -119,7 +119,6 @@ export interface ElementInterface {
     y: number;
   }[];
   fill?: string;
-  thickness?: number;
   text?: string;
   stroke?: string;
   strokeWidth?: number;
