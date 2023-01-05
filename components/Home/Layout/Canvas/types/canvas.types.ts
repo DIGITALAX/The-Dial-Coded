@@ -1,6 +1,6 @@
 import { HsvaColor, ColorResult } from "@uiw/color-convert";
 import { SwatchPresetColor } from "@uiw/react-color-swatch";
-import { Ref, MouseEvent } from "react";
+import { Ref, MouseEvent, FormEvent } from "react";
 
 export interface SketchProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "color"> {
@@ -35,6 +35,11 @@ export type DrawProps = {
   setThickness: (e: boolean) => void;
   thickness: boolean;
   setBrushWidth: (e: number) => void;
+  searchTarget: string;
+  handleChangeSearch: (e: FormEvent) => void;
+  handleKeyEnter: (e: any) => void;
+  searchLoading: boolean;
+  quickSearchResults: any[]
 };
 
 export type ColorPickerProps = {
@@ -104,3 +109,11 @@ export interface Point2 {
   x: number;
   y: number;
 }
+
+export type BaseProps = {
+  searchTarget: string;
+  handleChangeSearch: (e: FormEvent) => void;
+  handleKeyEnter: (e: any) => void;
+  searchLoading: boolean;
+  quickSearchResults: any[]
+};
