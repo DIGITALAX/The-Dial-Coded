@@ -157,6 +157,20 @@ const useDraw = () => {
     return Math.abs(offset) < maxDistance ? "inside" : null;
   };
 
+  const insideEllipse = (
+    x: number,
+    y: number,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+  ) => {
+    const p =
+      Math.pow(x - x1, 2) / Math.pow(x2 - x1, 2) +
+      Math.pow(y - y1, 2) / Math.pow(y2 - y1, 2);
+    return p < 1;
+  };
+
   const positionWithinElement = (
     x: number,
     y: number,
@@ -179,7 +193,15 @@ const useDraw = () => {
             : null;
         return topLeft || topRight || bottomLeft || bottomRight || inside;
       case "ell":
-      // something hrere
+        const ellInside = insideEllipse(
+          x,
+          y,
+          x1 as number,
+          y1 as number,
+          x2 as number,
+          y2 as number
+        );
+        return ellInside;
       case "line":
         const on = onLine(
           x1 as number,
@@ -382,7 +404,6 @@ const useDraw = () => {
         break;
 
       case "pencil":
-        console.log("in pencil");
         elementsCopy[index].points = [
           ...(elementsCopy[index].points as any),
           { x: x2 - bounds?.left, y: y2 - bounds?.top },
@@ -463,9 +484,7 @@ const useDraw = () => {
       );
     } else if (action === "writing") {
     } else if (action === "moving") {
-      console.log("above", selectedElement)
       if (selectedElement.type === "pencil") {
-        console.log("here", selectedElement)
         const newPoints = selectedElement.points?.map(
           (_: ElementInterface, index: number) => ({
             x: e.clientX - selectedElement?.offsetXs[index],
