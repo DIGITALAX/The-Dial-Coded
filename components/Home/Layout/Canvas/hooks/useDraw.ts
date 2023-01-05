@@ -9,6 +9,7 @@ import {
 import rough from "roughjs/bundled/rough.cjs";
 import { ElementInterface, Point2 } from "../types/canvas.types";
 import getStroke from "perfect-freehand";
+import lodash from "lodash";
 
 const useDraw = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -62,7 +63,7 @@ const useDraw = () => {
         break;
 
       case "pencil":
-        (ctx as CanvasRenderingContext2D).fillStyle = element?.color as string;
+        (ctx as CanvasRenderingContext2D).fillStyle = element?.fill as string;
         const pathData = getSvgPathFromStroke(
           getStroke(element?.points as { x: number; y: number }[], {
             size: element?.thickness,
@@ -112,7 +113,6 @@ const useDraw = () => {
       imageObject.onload = function (ev) {
         ctx?.drawImage(imageObject, 0, 0); // Draws the image on canvas
         const imgData = canvas.toDataURL("image/jpeg", 0.75); // Assigns image base64 string in jpeg format to a variable
-        console.log(imgData);
       };
     };
   };
@@ -163,21 +163,14 @@ const useDraw = () => {
     element: ElementInterface
   ) => {
     const { type, x1, x2, y1, y2 } = element;
-    console.log(element);
+    const bounds = canvas.getBoundingClientRect();
     switch (type) {
       case "rect":
-        const topLeft = nearPoint(x, y, x1 as number, y1 as number, "tl");
-        const topRight = nearPoint(x, y, x2 as number, y1 as number, "tr");
-        const bottomLeft = nearPoint(x, y, x1 as number, y2 as number, "bl");
-        const bottomRight = nearPoint(x, y, x2 as number, y2 as number, "br");
-        const inside =
-          x >= (x1 as number) &&
-          x <= (x2 as number) &&
-          y >= (y1 as number) &&
-          y <= (y2 as number)
-            ? "inside"
-            : null;
-        return topLeft || topRight || bottomLeft || bottomRight || inside;
+        const minX = Math.min(x1 as number, x2 as number);
+        const maxX = Math.max(x1 as number, x2 as number);
+        const minY = Math.min(y1 as number, y2 as number);
+        const maxY = Math.max(y1 as number, y2 as number);
+        return x >= minX && x <= maxX && y <= maxY && y >= minY;
       case "ell":
       // something hrere
       case "line":
@@ -186,11 +179,23 @@ const useDraw = () => {
           y1 as number,
           x2 as number,
           y2 as number,
-          x,
-          y
+          x - bounds.left,
+          y - bounds.top
         );
-        const start = nearPoint(x, y, x1 as number, y1 as number, "start");
-        const end = nearPoint(x, y, x2 as number, y2 as number, "end");
+        const start = nearPoint(
+          x - bounds.left,
+          y - bounds.top,
+          x1 as number,
+          y1 as number,
+          "start"
+        );
+        const end = nearPoint(
+          x - bounds.left,
+          y - bounds.top,
+          x2 as number,
+          y2 as number,
+          "end"
+        );
         return start || end || on;
       case "pencil":
         const betweenAnyPoint = element.points?.some((point, index) => {
@@ -202,7 +207,15 @@ const useDraw = () => {
           )[index + 1];
           if (!nextPoint) return false;
           return (
-            onLine(point.x, point.y, nextPoint.x, nextPoint.y, x, y, 5) != null
+            onLine(
+              point.x,
+              point.y,
+              nextPoint.x,
+              nextPoint.y,
+              x - bounds.left,
+              y - bounds.top,
+              5
+            ) != null
           );
         });
         return betweenAnyPoint ? "inside" : null;
@@ -223,7 +236,12 @@ const useDraw = () => {
     y1: number,
     x2: number,
     y2: number,
-    type: string
+    type: string,
+    id: number,
+    strokeWidth: number,
+    fill: string,
+    fillStyle: string,
+    stroke: string
   ): ElementInterface | undefined => {
     let roughElement;
     const bounds = canvas?.getBoundingClientRect();
@@ -235,13 +253,25 @@ const useDraw = () => {
           x2 - x1,
           y2 - y1,
           {
-            fill: hex,
-            stroke: hex,
-            strokeWidth: brushWidth,
-            fillStyle: shapeFillType,
+            fill,
+            stroke,
+            strokeWidth,
+            fillStyle,
           }
         );
-        return { type, x1, y1, x2, y2, roughElement };
+        return {
+          id,
+          type,
+          x1,
+          y1,
+          x2,
+          y2,
+          roughElement,
+          fill,
+          stroke,
+          strokeWidth,
+          fillStyle,
+        };
       case "ell":
         roughElement = generator.ellipse(
           x1 - bounds?.left,
@@ -249,13 +279,25 @@ const useDraw = () => {
           x2 - x1,
           y2 - y1,
           {
-            fill: hex,
-            stroke: hex,
-            strokeWidth: brushWidth,
-            fillStyle: shapeFillType,
+            fill,
+            stroke,
+            strokeWidth,
+            fillStyle,
           }
         );
-        return { type, x1, y1, x2, y2, roughElement };
+        return {
+          id,
+          type,
+          x1,
+          y1,
+          x2,
+          y2,
+          roughElement,
+          fill,
+          stroke,
+          strokeWidth,
+          fillStyle,
+        };
       case "line":
         roughElement = generator.line(
           x1 - bounds?.left,
@@ -263,24 +305,36 @@ const useDraw = () => {
           x2 - bounds?.left,
           y2 - bounds?.top,
           {
-            strokeWidth: brushWidth,
-            stroke: hex,
+            strokeWidth,
+            stroke,
           }
         );
 
-        return { type, x1, y1, x2, y2, roughElement };
+        return {
+          id,
+          type,
+          x1,
+          y1,
+          x2,
+          y2,
+          roughElement,
+          stroke,
+          strokeWidth,
+        };
       case "pencil":
         return {
+          id,
           type,
           points: [{ x: x1 - bounds?.left, y: y1 - bounds?.top }],
-          color: hex,
-          thickness: brushWidth,
+          fill,
+          thickness: strokeWidth,
         };
       case "text":
         const transformedX1 = x1 - bounds?.left;
         const transformedY1 = y1 - bounds?.top;
 
         return {
+          id,
           type,
           x1: transformedX1,
           y1: transformedY1,
@@ -290,9 +344,14 @@ const useDraw = () => {
   };
 
   const getElementPosition = (x: number, y: number) => {
-    return elements.find((element) => {
-      positionWithinElement(x, y, element);
+    let positionArray: ElementInterface[] = [];
+    lodash.filter(elements, (element) => {
+      const returned = positionWithinElement(x, y, element);
+      if (returned) {
+        positionArray.push(element);
+      }
     });
+    return positionArray;
   };
 
   const updateElement = (
@@ -301,7 +360,11 @@ const useDraw = () => {
     x2: number,
     y2: number,
     type: string,
-    index: number
+    index: number,
+    strokeWidth: number,
+    fill: string,
+    fillStyle: string,
+    stroke: string
   ) => {
     const elementsCopy = [...elements];
     const bounds = canvas?.getBoundingClientRect();
@@ -314,7 +377,12 @@ const useDraw = () => {
           y1 as number,
           x2,
           y2,
-          type
+          type,
+          index,
+          strokeWidth,
+          fill,
+          fillStyle,
+          stroke
         ) as ElementInterface;
         break;
 
@@ -334,9 +402,8 @@ const useDraw = () => {
   const handleMouseDown = (e: MouseEvent): void => {
     if (tool === "selection") {
       const element = getElementPosition(e.clientX, e.clientY);
-      console.log(element);
-      if (element) {
-        setSelectedElement(element);
+      if (element.length > 0) {
+        setSelectedElement(element[0]);
         setAction("moving");
       }
     } else if (tool === "default") {
@@ -348,12 +415,18 @@ const useDraw = () => {
       tool === "line"
     ) {
       setAction("drawing");
+      const id = elements.length;
       const newElement = createElement(
         e.clientX,
         e.clientY,
         e.clientX,
         e.clientY,
-        tool
+        tool,
+        id,
+        brushWidth,
+        hex,
+        shapeFillType,
+        hex
       );
 
       setElements([...elements, newElement as ElementInterface]);
@@ -373,9 +446,30 @@ const useDraw = () => {
         e.clientX,
         e.clientY,
         tool,
-        index
+        index,
+        brushWidth,
+        hex,
+        shapeFillType,
+        hex
       );
     } else if (action === "writing") {
+    } else if (action === "moving") {
+      const { x2, x1, y2, y1, id, type, fill, fillStyle, stroke, strokeWidth } =
+        selectedElement;
+      const width = x2 - x1;
+      const height = y2 - y1;
+      updateElement(
+        e.clientX,
+        e.clientY,
+        e.clientX + width,
+        e.clientY + height,
+        type,
+        id,
+        strokeWidth,
+        fill,
+        fillStyle,
+        stroke
+      );
     }
   };
 

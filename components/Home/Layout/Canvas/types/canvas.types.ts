@@ -107,6 +107,7 @@ export type BottomOptionsProps = {
 };
 
 export interface ElementInterface {
+  id: number;
   type: string;
   x1?: number;
   y1?: number;
@@ -117,9 +118,12 @@ export interface ElementInterface {
     x: number;
     y: number;
   }[];
-  color?: string;
+  fill?: string;
   thickness?: number;
   text?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  fillStyle?: string;
 }
 
 export interface Point2 {
