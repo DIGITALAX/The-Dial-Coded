@@ -732,11 +732,11 @@ export type SearchBarProps = {
 
 export type CanvasOptionProps = {
   bool_option?: boolean;
-  string_option?: string[];
+  string_option?: string;
   image: string;
   bgColor?: string;
   setShowBool?: (bool_option: boolean) => void;
-  setShowString?: (string_option: string[]) => void;
+  setShowString?: (string_option: string) => void;
   width: number;
   height: number;
   color?: boolean;

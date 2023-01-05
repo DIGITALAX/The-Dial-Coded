@@ -25,7 +25,7 @@ const CanvasOption: FunctionComponent<CanvasOptionProps> = ({
         setShowBool
           ? () => setShowBool(!bool_option)
           : setShowString
-          ? () => setShowString(string_option)
+          ? () => setShowString(string_option as string)
           : () => {}
       }
     >

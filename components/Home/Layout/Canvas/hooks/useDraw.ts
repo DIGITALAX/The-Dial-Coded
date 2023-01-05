@@ -16,20 +16,14 @@ const useDraw = () => {
     useState<boolean>(false);
   const [showBottomDrawOptions, setShowBottomDrawOptions] =
     useState<boolean>(false);
-  const [shapes, setShapes] = useState<boolean>(false);
-  const [pencil, setPencil] = useState<boolean>(true);
-  const [shapeFillType, setShapeFillType] = useState<string[]>([
-    "solid",
-    "rect",
-  ]);
-  const [pan, setPan] = useState<boolean>(false);
+  const [shapeFillType, setShapeFillType] = useState<string>("solid");
+  const [text, setText] = useState<boolean>(false);
   const [zoom, setZoom] = useState<boolean>(false);
-  const [erase, setErase] = useState<boolean>(false);
+  const [shapes, setShapes] = useState<boolean>(false);
   const [selectedElement, setSelectedElement] = useState<any>(null);
   const [tool, setTool] = useState<string>("pencil");
   const [action, setAction] = useState<string>("none");
   const [draftBoard, setDraftBoard] = useState<boolean>(false);
-  const [onDrawTracker, setOnDrawTracker] = useState<boolean>(true);
   const [hex, setHex] = useState<string>("#000000");
   const [colorPicker, setColorPicker] = useState<boolean>(false);
   const [brushWidth, setBrushWidth] = useState<number>(12);
@@ -38,14 +32,6 @@ const useDraw = () => {
   const generator = rough.generator();
   const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
   const ctx = canvas?.getContext("2d");
-  const MIN_ZOOM = 0.1;
-  const MAX_ZOOM = 5;
-  let dragStart = { x: 0, y: 0 };
-  let cameraOffset = {
-    x: (document.getElementById("parent")?.offsetWidth as number) / 2,
-    y: (document.getElementById("parent")?.offsetHeight as number) / 2,
-  };
-  let cameraZoom = 1;
 
   const getSvgPathFromStroke = (stroke: any) => {
     if (!stroke.length) return "";
@@ -69,7 +55,9 @@ const useDraw = () => {
     ctx: CanvasRenderingContext2D | null
   ) => {
     switch (element?.type) {
-      case "shape":
+      case "line":
+      case "ell":
+      case "rect":
         roughCanvas?.draw(element?.roughElement);
         break;
 
@@ -84,7 +72,12 @@ const useDraw = () => {
         break;
 
       case "text":
-        // coming soon
+        (ctx as CanvasRenderingContext2D).font = "24px san-serif";
+        (ctx as CanvasRenderingContext2D).fillText(
+          element.text as string,
+          element.x1 as number,
+          element.y1 as number
+        );
         break;
 
       default:
@@ -99,17 +92,30 @@ const useDraw = () => {
     xhr.onload = function () {
       let a = document.createElement("a");
       a.href = window.URL.createObjectURL(xhr.response);
-      a.download = "image_name.png";
+      a.download = "thedial.png";
       a.style.display = "none";
       document.body.appendChild(a);
       a.click();
       a.remove();
     };
-    xhr.open("GET", img); // This is to download the canvas Image
+    xhr.open("GET", img);
     xhr.send();
   };
 
-  const handleImageAdd = (e: FormEvent) => {};
+  const handleImageAdd = (e: FormEvent) => {
+    const image = (e.target as HTMLFormElement).files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.onloadend = (e) => {
+      const imageObject = new Image(); // Creates image object
+      imageObject.src = e.target?.result as string;
+      imageObject.onload = function (ev) {
+        ctx?.drawImage(imageObject, 0, 0); // Draws the image on canvas
+        const imgData = canvas.toDataURL("image/jpeg", 0.75); // Assigns image base64 string in jpeg format to a variable
+        console.log(imgData);
+      };
+    };
+  };
 
   useLayoutEffect(() => {
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
@@ -157,23 +163,43 @@ const useDraw = () => {
     element: ElementInterface
   ) => {
     const { type, x1, x2, y1, y2 } = element;
+    console.log(element);
     switch (type) {
-      case "line":
-        const on = onLine(x1, y1, x2, y2, x, y);
-        const start = nearPoint(x, y, x1, y1, "start");
-        const end = nearPoint(x, y, x2, y2, "end");
-        return start || end || on;
-      case "rectangle":
-        const topLeft = nearPoint(x, y, x1, y1, "tl");
-        const topRight = nearPoint(x, y, x2, y1, "tr");
-        const bottomLeft = nearPoint(x, y, x1, y2, "bl");
-        const bottomRight = nearPoint(x, y, x2, y2, "br");
+      case "rect":
+        const topLeft = nearPoint(x, y, x1 as number, y1 as number, "tl");
+        const topRight = nearPoint(x, y, x2 as number, y1 as number, "tr");
+        const bottomLeft = nearPoint(x, y, x1 as number, y2 as number, "bl");
+        const bottomRight = nearPoint(x, y, x2 as number, y2 as number, "br");
         const inside =
-          x >= x1 && x <= x2 && y >= y1 && y <= y2 ? "inside" : null;
+          x >= (x1 as number) &&
+          x <= (x2 as number) &&
+          y >= (y1 as number) &&
+          y <= (y2 as number)
+            ? "inside"
+            : null;
         return topLeft || topRight || bottomLeft || bottomRight || inside;
+      case "ell":
+      // something hrere
+      case "line":
+        const on = onLine(
+          x1 as number,
+          y1 as number,
+          x2 as number,
+          y2 as number,
+          x,
+          y
+        );
+        const start = nearPoint(x, y, x1 as number, y1 as number, "start");
+        const end = nearPoint(x, y, x2 as number, y2 as number, "end");
+        return start || end || on;
       case "pencil":
-        const betweenAnyPoint = element.points.some((point, index) => {
-          const nextPoint = element.points[index + 1];
+        const betweenAnyPoint = element.points?.some((point, index) => {
+          const nextPoint = (
+            element.points as {
+              x: number;
+              y: number;
+            }[]
+          )[index + 1];
           if (!nextPoint) return false;
           return (
             onLine(point.x, point.y, nextPoint.x, nextPoint.y, x, y, 5) != null
@@ -181,7 +207,12 @@ const useDraw = () => {
         });
         return betweenAnyPoint ? "inside" : null;
       case "text":
-        return x >= x1 && x <= x2 && y >= y1 && y <= y2 ? "inside" : null;
+        return x >= (x1 as number) &&
+          x <= (x2 as number) &&
+          y >= (y1 as number) &&
+          y <= (y2 as number)
+          ? "inside"
+          : null;
       default:
         throw new Error(`Type not recognised: ${type}`);
     }
@@ -197,47 +228,47 @@ const useDraw = () => {
     let roughElement;
     const bounds = canvas?.getBoundingClientRect();
     switch (type) {
-      case "shape":
-        if (shapeFillType[1] === "rect") {
-          roughElement = generator.rectangle(
-            x1 - bounds?.left,
-            y1 - bounds?.top,
-            x2 - x1,
-            y2 - y1,
-            {
-              fill: hex,
-              stroke: hex,
-              strokeWidth: brushWidth,
-              fillStyle: shapeFillType[0],
-            }
-          );
-        } else if (shapeFillType[1] === "ell") {
-          roughElement = generator.ellipse(
-            x1 - bounds?.left,
-            y1 - bounds?.top,
-            x2 - x1,
-            y2 - y1,
-            {
-              fill: hex,
-              stroke: hex,
-              strokeWidth: brushWidth,
-              fillStyle: shapeFillType[0],
-            }
-          );
-        } else {
-          roughElement = generator.line(
-            x1 - bounds?.left,
-            y1 - bounds?.top,
-            x2 - bounds?.left,
-            y2 - bounds?.top,
-            {
-              strokeWidth: brushWidth,
-              stroke: hex,
-            }
-          );
-        }
+      case "rect":
+        roughElement = generator.rectangle(
+          x1 - bounds?.left,
+          y1 - bounds?.top,
+          x2 - x1,
+          y2 - y1,
+          {
+            fill: hex,
+            stroke: hex,
+            strokeWidth: brushWidth,
+            fillStyle: shapeFillType,
+          }
+        );
         return { type, x1, y1, x2, y2, roughElement };
+      case "ell":
+        roughElement = generator.ellipse(
+          x1 - bounds?.left,
+          y1 - bounds?.top,
+          x2 - x1,
+          y2 - y1,
+          {
+            fill: hex,
+            stroke: hex,
+            strokeWidth: brushWidth,
+            fillStyle: shapeFillType,
+          }
+        );
+        return { type, x1, y1, x2, y2, roughElement };
+      case "line":
+        roughElement = generator.line(
+          x1 - bounds?.left,
+          y1 - bounds?.top,
+          x2 - bounds?.left,
+          y2 - bounds?.top,
+          {
+            strokeWidth: brushWidth,
+            stroke: hex,
+          }
+        );
 
+        return { type, x1, y1, x2, y2, roughElement };
       case "pencil":
         return {
           type,
@@ -245,11 +276,23 @@ const useDraw = () => {
           color: hex,
           thickness: brushWidth,
         };
+      case "text":
+        const transformedX1 = x1 - bounds?.left;
+        const transformedY1 = y1 - bounds?.top;
+
+        return {
+          type,
+          x1: transformedX1,
+          y1: transformedY1,
+          text: "hello world",
+        };
     }
   };
 
   const getElementPosition = (x: number, y: number) => {
-    return;
+    return elements.find((element) => {
+      positionWithinElement(x, y, element);
+    });
   };
 
   const updateElement = (
@@ -263,7 +306,9 @@ const useDraw = () => {
     const elementsCopy = [...elements];
     const bounds = canvas?.getBoundingClientRect();
     switch (type) {
-      case "shape":
+      case "line":
+      case "ell":
+      case "rect":
         elementsCopy[index] = createElement(
           x1 as number,
           y1 as number,
@@ -279,29 +324,41 @@ const useDraw = () => {
           { x: x2 - bounds?.left, y: y2 - bounds?.top },
         ];
         break;
+
+      case "text":
+        break;
     }
     setElements(elementsCopy);
   };
 
   const handleMouseDown = (e: MouseEvent): void => {
     if (tool === "selection") {
-    } else {
-      if (pan) {
-        setAction("panning");
-        dragStart.x = e.clientX / cameraZoom - cameraOffset.x;
-        dragStart.y = e.clientY / cameraZoom - cameraOffset.y;
-      } else {
-        setAction("drawing");
-        const newElement = createElement(
-          e.clientX,
-          e.clientY,
-          e.clientX,
-          e.clientY,
-          onDrawTracker ? "pencil" : "shape"
-        );
-
-        setElements([...elements, newElement as ElementInterface]);
+      const element = getElementPosition(e.clientX, e.clientY);
+      console.log(element);
+      if (element) {
+        setSelectedElement(element);
+        setAction("moving");
       }
+    } else if (tool === "default") {
+      setAction("none");
+    } else if (
+      tool === "pencil" ||
+      tool === "rect" ||
+      tool === "ell" ||
+      tool === "line"
+    ) {
+      setAction("drawing");
+      const newElement = createElement(
+        e.clientX,
+        e.clientY,
+        e.clientX,
+        e.clientY,
+        tool
+      );
+
+      setElements([...elements, newElement as ElementInterface]);
+    } else if (tool === "text") {
+      setAction("writing");
     }
   };
 
@@ -315,31 +372,16 @@ const useDraw = () => {
         y1 as number,
         e.clientX,
         e.clientY,
-        onDrawTracker ? "pencil" : "shape",
+        tool,
         index
       );
-    } else if (action === "panning") {
-      panAndZoom();
+    } else if (action === "writing") {
     }
   };
 
   const handleMouseUp = (e: MouseEvent): void => {
     setAction("none");
-  };
-
-  const panAndZoom = () => {
-    canvas.width = document.getElementById("parent")?.offsetWidth as number;
-    canvas.height = document.getElementById("parent")?.offsetHeight as number;
-    ctx?.translate(
-      (document.getElementById("parent")?.offsetWidth as number) / 2,
-      (document.getElementById("parent")?.offsetHeight as number) / 2
-    );
-    ctx?.scale(cameraZoom, cameraZoom);
-    ctx?.translate(
-      -(document.getElementById("parent")?.offsetWidth as number) / 2 +
-        cameraOffset.x,
-      -window.innerHeight / 2 + cameraOffset.y
-    );
+    setSelectedElement(null);
   };
 
   return {
@@ -356,23 +398,21 @@ const useDraw = () => {
     setShowBottomDrawOptions,
     colorPicker,
     setColorPicker,
-    shapes,
-    setShapes,
-    pencil,
-    setPencil,
     shapeFillType,
     setShapeFillType,
-    setOnDrawTracker,
     setThickness,
     thickness,
     setBrushWidth,
-    erase,
-    setErase,
-    pan,
-    setPan,
     handleSave,
     setDraftBoard,
-    draftBoard
+    draftBoard,
+    handleImageAdd,
+    setTool,
+    tool,
+    shapes,
+    setShapes,
+    text,
+    setText,
   };
 };
 

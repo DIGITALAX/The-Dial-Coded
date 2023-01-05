@@ -10,21 +10,14 @@ const BottomMenu: FunctionComponent<BottomMenuProps> = ({
   setColorPicker,
   hex,
   setHex,
-  pencil,
-  setPencil,
-  shapes,
-  setShapes,
   setShapeFillType,
-  setOnDrawTracker,
   setThickness,
   thickness,
   setBrushWidth,
   brushWidth,
-  erase,
-  setErase,
-  pan,
-  setPan,
-  handleSave
+  setTool,
+  shapes,
+  setShapes,
 }): JSX.Element => {
   return (
     <div className="absolute w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto justify-self-start self-end p-3 gap-2 z-10">
@@ -42,21 +35,14 @@ const BottomMenu: FunctionComponent<BottomMenuProps> = ({
           hex={hex}
           setHex={setHex}
           setColorPicker={setColorPicker}
-          shapes={shapes}
-          setShapes={setShapes}
-          pencil={pencil}
-          setPencil={setPencil}
           setShapeFillType={setShapeFillType}
-          setOnDrawTracker={setOnDrawTracker}
           setThickness={setThickness}
           thickness={thickness}
           setBrushWidth={setBrushWidth}
           brushWidth={brushWidth}
-          erase={erase}
-          setErase={setErase}
-          pan={pan}
-          setPan={setPan}
-          handleSave={handleSave}
+          setTool={setTool}
+          shapes={shapes}
+          setShapes={setShapes}
         />
       )}
     </div>

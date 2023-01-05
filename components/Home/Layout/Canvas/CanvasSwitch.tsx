@@ -32,22 +32,18 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     setShowBottomDrawOptions,
     colorPicker,
     setColorPicker,
-    shapes,
-    setShapes,
-    pencil,
-    setPencil,
+    tool,
     setShapeFillType,
-    setOnDrawTracker,
     setThickness,
     thickness,
     setBrushWidth,
-    erase,
-    setErase,
-    pan,
-    setPan,
     handleSave,
     setDraftBoard,
-    draftBoard
+    draftBoard,
+    handleImageAdd,
+    setTool,
+    shapes,
+    setShapes,
   } = useDraw();
   const {
     quickSearchResults,
@@ -55,7 +51,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handleChangeSearch,
     searchTarget,
     handleKeyEnter,
-    fillImages
+    fillImages,
   } = useBase();
   let action: string = "canvas";
   const decideStringAction = () => {
@@ -102,12 +98,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           setShowBottomDrawOptions={setShowBottomDrawOptions}
           colorPicker={colorPicker}
           setColorPicker={setColorPicker}
-          shapes={shapes}
-          setShapes={setShapes}
-          pencil={pencil}
-          setPencil={setPencil}
           setShapeFillType={setShapeFillType}
-          setOnDrawTracker={setOnDrawTracker}
           setThickness={setThickness}
           thickness={thickness}
           setBrushWidth={setBrushWidth}
@@ -117,13 +108,14 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           searchTarget={searchTarget}
           quickSearchResults={quickSearchResults}
           fillImages={fillImages}
-          erase={erase}
-          setErase={setErase}
-          pan={pan}
-          setPan={setPan}
+          setTool={setTool}
           handleSave={handleSave}
           draftBoard={draftBoard}
           setDraftBoard={setDraftBoard}
+          handleImageAdd={handleImageAdd}
+          tool={tool}
+          shapes={shapes}
+          setShapes={setShapes}
         />
       );
   }

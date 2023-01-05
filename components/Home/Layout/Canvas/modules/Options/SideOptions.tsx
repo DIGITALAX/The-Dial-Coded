@@ -1,18 +1,33 @@
-import { FunctionComponent } from "react";
+import { FormEvent, FunctionComponent } from "react";
 import CanvasOption from "../../../../../Common/Miscellaneous/CanvasOption";
 import { SideOptionsProps } from "../../types/canvas.types";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 const SideOptions: FunctionComponent<SideOptionsProps> = ({
   handleSave,
   setDraftBoard,
-  draftBoard
+  draftBoard,
+  handleImageAdd,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-4">
-      <CanvasOption
-        image="QmPt4LreaWAN3WRzcUvo7WnVLUrCW73xKPc86vB59HowLz"
-        width={25}
-        height={25}
+      <div id="ai-credits">
+        <CanvasOption
+          image="QmPt4LreaWAN3WRzcUvo7WnVLUrCW73xKPc86vB59HowLz"
+          width={25}
+          height={25}
+        />
+      </div>
+      <ReactTooltip
+        anchorId="ai-credits"
+        place="left"
+        content="Coming Soon 💯"
+        style={{
+          fontSize: "10px",
+          backgroundColor: "#131313",
+          opacity: "0.7",
+        }}
       />
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
         <CanvasOption
@@ -51,6 +66,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
             multiple={false}
             name="images"
             className="caret-transparent"
+            onChange={(e: FormEvent) => handleImageAdd(e)}
           />
         </label>
         <CanvasOption

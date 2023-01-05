@@ -5,7 +5,7 @@ const Board: FunctionComponent<BoardProps> = ({
   canvasRef,
   handleMouseDown,
   handleMouseMove,
-  handleMouseUp
+  handleMouseUp,
 }): JSX.Element => {
   return (
     <canvas
