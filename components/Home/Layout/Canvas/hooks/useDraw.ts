@@ -66,7 +66,7 @@ const useDraw = () => {
         (ctx as CanvasRenderingContext2D).fillStyle = element?.fill as string;
         const pathData = getSvgPathFromStroke(
           getStroke(element?.points as { x: number; y: number }[], {
-            size: element?.thickness,
+            size: element?.strokeWidth,
           })
         );
         ctx?.fill(new Path2D(pathData));
@@ -166,11 +166,18 @@ const useDraw = () => {
     const bounds = canvas.getBoundingClientRect();
     switch (type) {
       case "rect":
-        const minX = Math.min(x1 as number, x2 as number);
-        const maxX = Math.max(x1 as number, x2 as number);
-        const minY = Math.min(y1 as number, y2 as number);
-        const maxY = Math.max(y1 as number, y2 as number);
-        return x >= minX && x <= maxX && y <= maxY && y >= minY;
+        const topLeft = nearPoint(x, y, x1 as number, y1 as number, "tl");
+        const topRight = nearPoint(x, y, x2 as number, y1 as number, "tr");
+        const bottomLeft = nearPoint(x, y, x1 as number, y2 as number, "bl");
+        const bottomRight = nearPoint(x, y, x2 as number, y2 as number, "br");
+        const inside =
+          x >= (x1 as number) &&
+          x <= (x2 as number) &&
+          y >= (y1 as number) &&
+          y <= (y2 as number)
+            ? "inside"
+            : null;
+        return topLeft || topRight || bottomLeft || bottomRight || inside;
       case "ell":
       // something hrere
       case "line":
@@ -179,23 +186,11 @@ const useDraw = () => {
           y1 as number,
           x2 as number,
           y2 as number,
-          x - bounds.left,
-          y - bounds.top
+          x,
+          y
         );
-        const start = nearPoint(
-          x - bounds.left,
-          y - bounds.top,
-          x1 as number,
-          y1 as number,
-          "start"
-        );
-        const end = nearPoint(
-          x - bounds.left,
-          y - bounds.top,
-          x2 as number,
-          y2 as number,
-          "end"
-        );
+        const start = nearPoint(x, y, x1 as number, y1 as number, "start");
+        const end = nearPoint(x, y, x2 as number, y2 as number, "end");
         return start || end || on;
       case "pencil":
         const betweenAnyPoint = element.points?.some((point, index) => {
@@ -327,7 +322,7 @@ const useDraw = () => {
           type,
           points: [{ x: x1 - bounds?.left, y: y1 - bounds?.top }],
           fill,
-          thickness: strokeWidth,
+          strokeWidth,
         };
       case "text":
         const transformedX1 = x1 - bounds?.left;
@@ -387,6 +382,7 @@ const useDraw = () => {
         break;
 
       case "pencil":
+        console.log("in pencil");
         elementsCopy[index].points = [
           ...(elementsCopy[index].points as any),
           { x: x2 - bounds?.left, y: y2 - bounds?.top },
@@ -403,7 +399,20 @@ const useDraw = () => {
     if (tool === "selection") {
       const element = getElementPosition(e.clientX, e.clientY);
       if (element.length > 0) {
-        setSelectedElement(element[0]);
+        if (element[0].type === "pencil") {
+          const offsetXs = element[0].points?.map(
+            (point) => e.clientX - point.x
+          );
+          const offsetYs = element[0].points?.map(
+            (point) => e.clientY - point.y
+          );
+          setSelectedElement({ ...element[0], offsetXs, offsetYs });
+        } else {
+          const offsetX = e.clientX - (element[0]?.x1 as number);
+          const offsetY = e.clientY - (element[0]?.y1 as number);
+          setSelectedElement({ ...element[0], offsetX, offsetY });
+        }
+
         setAction("moving");
       }
     } else if (tool === "default") {
@@ -454,22 +463,53 @@ const useDraw = () => {
       );
     } else if (action === "writing") {
     } else if (action === "moving") {
-      const { x2, x1, y2, y1, id, type, fill, fillStyle, stroke, strokeWidth } =
-        selectedElement;
-      const width = x2 - x1;
-      const height = y2 - y1;
-      updateElement(
-        e.clientX,
-        e.clientY,
-        e.clientX + width,
-        e.clientY + height,
-        type,
-        id,
-        strokeWidth,
-        fill,
-        fillStyle,
-        stroke
-      );
+      console.log("above", selectedElement)
+      if (selectedElement.type === "pencil") {
+        console.log("here", selectedElement)
+        const newPoints = selectedElement.points?.map(
+          (_: ElementInterface, index: number) => ({
+            x: e.clientX - selectedElement?.offsetXs[index],
+            y: e.clientY - selectedElement?.offsetYs[index],
+          })
+        );
+        const elementsCopy = [...elements];
+        elementsCopy[selectedElement.id] = {
+          ...elementsCopy[selectedElement.id],
+          points: newPoints,
+        };
+        setElements(elementsCopy);
+      } else {
+        const {
+          x2,
+          x1,
+          y2,
+          y1,
+          id,
+          type,
+          fill,
+          fillStyle,
+          stroke,
+          strokeWidth,
+          offsetX,
+          offsetY,
+        } = selectedElement;
+        const width = x2 - x1;
+        const height = y2 - y1;
+        const afterOffsetX = e.clientX - offsetX;
+        const afterOffsetY = e.clientY - offsetY;
+        updateElement(
+          afterOffsetX,
+          afterOffsetY,
+          afterOffsetX + width,
+          afterOffsetY + height,
+          type,
+          id,
+          strokeWidth,
+          fill,
+          fillStyle,
+          stroke
+        );
+      }
     }
   };
 
