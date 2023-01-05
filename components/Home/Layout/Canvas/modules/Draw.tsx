@@ -3,7 +3,7 @@ import { DrawProps } from "../types/canvas.types";
 import SideMenu from "./Options/SideMenu";
 import Board from "./Board";
 import BottomMenu from "./Options/BottomMenu";
-import Publish from "./Publish";
+import Publish from "./Options/Publish";
 import Base from "./Base";
 
 const Draw: FunctionComponent<DrawProps> = ({
@@ -38,6 +38,11 @@ const Draw: FunctionComponent<DrawProps> = ({
   tool,
   shapes,
   setShapes,
+  undo,
+  redo,
+  selectedElement,
+  action,
+  writingRef
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -46,7 +51,9 @@ const Draw: FunctionComponent<DrawProps> = ({
         className={`relative w-full h-[70vw] grid grid-flow-col auto-cols-auto ${
           draftBoard ? "bg-board bg-boardSize bg-white" : "bg-spots"
         } ${
-          tool === "selection" && "cursor-move"
+          tool === "selection"
+            ? "cursor-move"
+            : tool === "text" && "cursor-text"
         } rounded-lg border border-white row-start-1`}
       >
         <Publish />
@@ -57,6 +64,8 @@ const Draw: FunctionComponent<DrawProps> = ({
           draftBoard={draftBoard}
           setDraftBoard={setDraftBoard}
           handleImageAdd={handleImageAdd}
+          undo={undo}
+          redo={redo}
         />
         <BottomMenu
           showBottomDrawOptions={showBottomDrawOptions}
@@ -74,6 +83,18 @@ const Draw: FunctionComponent<DrawProps> = ({
           shapes={shapes}
           setShapes={setShapes}
         />
+        {action === "writing" && (
+          <textarea
+          ref={writingRef}
+            className={`w-40 h-16 p-1.5 bg-black border border-white rounded-md text-white font-dosis text-sm z-10`}
+            style={{
+              resize: "none",
+              position: "absolute",
+              top: selectedElement?.y1,
+              left: selectedElement?.x1,
+            }}
+          ></textarea>
+        )}
         <Board
           canvasRef={canvasRef}
           handleMouseDown={handleMouseDown}

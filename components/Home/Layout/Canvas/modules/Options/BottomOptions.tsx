@@ -201,7 +201,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
             />
           </div>
         </div>
-        <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
+        {/* <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
           <div className="relative w-fit h-fit row-start-2 self-end">
             <CanvasOption
               image="QmXXTr7nuQDgTGMivfxbpYYvwykNZcXMwgST7Z1U6SAV6X"
@@ -210,7 +210,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               height={25}
             />
           </div>
-        </div>
+        </div> */}
         {/* <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
           <div className="relative w-fit h-fit row-start-1"></div>
           <div className="relative w-fit h-fit row-start-2 self-end">

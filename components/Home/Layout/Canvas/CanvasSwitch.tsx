@@ -44,6 +44,11 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     setTool,
     shapes,
     setShapes,
+    undo,
+    redo,
+    selectedElement,
+    action,
+    writingRef
   } = useDraw();
   const {
     quickSearchResults,
@@ -53,12 +58,12 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handleKeyEnter,
     fillImages,
   } = useBase();
-  let action: string = "canvas";
+  let actionValue: string = "canvas";
   const decideStringAction = () => {
     if (!profile || !isConnected) {
-      action = "no profile";
+      actionValue = "no profile";
     }
-    return action;
+    return actionValue;
   };
 
   switch (decideStringAction()) {
@@ -116,6 +121,11 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           tool={tool}
           shapes={shapes}
           setShapes={setShapes}
+          undo={undo}
+          redo={redo}
+          selectedElement={selectedElement}
+          action={action}
+          writingRef={writingRef}
         />
       );
   }

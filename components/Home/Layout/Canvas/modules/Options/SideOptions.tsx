@@ -9,6 +9,8 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   setDraftBoard,
   draftBoard,
   handleImageAdd,
+  undo,
+  redo,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-4">
@@ -22,7 +24,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
       <ReactTooltip
         anchorId="ai-credits"
         place="left"
-        content="Coming Soon 💯"
+        content="Api Credits::Coming Soon::💯"
         style={{
           fontSize: "10px",
           backgroundColor: "#131313",
@@ -79,18 +81,28 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
         />
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
-        <CanvasOption
-          image="QmeNcEGW5pAFjPsgLsTDPgUsEm9sy2b1F1WteotshzcKvW"
-          bgColor="black"
-          width={28}
-          height={20}
-        />
-        <CanvasOption
-          image="QmZJQePuwQBP8vsa86vrPSVwsqwzam3PRbEbNxdgH7bBe9"
-          bgColor="black"
-          width={28}
-          height={20}
-        />
+        <div
+          className="relative row-start-1 w-fit h-fit"
+          onClick={() => redo()}
+        >
+          <CanvasOption
+            image="QmeNcEGW5pAFjPsgLsTDPgUsEm9sy2b1F1WteotshzcKvW"
+            bgColor="black"
+            width={28}
+            height={20}
+          />
+        </div>
+        <div
+          className="relative row-start-2 w-fit h-fit"
+          onClick={() => undo()}
+        >
+          <CanvasOption
+            image="QmZJQePuwQBP8vsa86vrPSVwsqwzam3PRbEbNxdgH7bBe9"
+            bgColor="black"
+            width={28}
+            height={20}
+          />
+        </div>
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
         {/* <CanvasOption
