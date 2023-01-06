@@ -157,7 +157,7 @@ const useDraw = () => {
       const roughCanvas = rough?.canvas(canvas);
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
-      elements.forEach((element: any) => {
+      elements?.forEach((element: any) => {
         if (action === "writing" && selectedElement.id === element.id) return;
         drawElement(element, roughCanvas, ctx);
       });
@@ -472,7 +472,7 @@ const useDraw = () => {
   const handleMouseDown = (e: MouseEvent): void => {
     if (tool === "selection") {
       const element = getElementPosition(e.clientX, e.clientY);
-      if (element.length > 0) {
+      if (element?.length > 0) {
         if (element[0].type === "pencil") {
           const offsetXs = element[0].points?.map(
             (point) => e.clientX - point.x
@@ -499,7 +499,7 @@ const useDraw = () => {
       tool === "line" ||
       tool === "text"
     ) {
-      const id = elements.length;
+      const id = elements?.length;
       const newElement = createElement(
         e.clientX,
         e.clientY,
