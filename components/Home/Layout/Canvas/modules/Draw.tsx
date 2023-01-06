@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FormEvent, FunctionComponent } from "react";
 import { DrawProps } from "../types/canvas.types";
 import SideMenu from "./Options/SideMenu";
 import Board from "./Board";
@@ -42,7 +42,8 @@ const Draw: FunctionComponent<DrawProps> = ({
   redo,
   selectedElement,
   action,
-  writingRef
+  writingRef,
+  handleBlur,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -85,8 +86,10 @@ const Draw: FunctionComponent<DrawProps> = ({
         />
         {action === "writing" && (
           <textarea
-          ref={writingRef}
-            className={`w-40 h-16 p-1.5 bg-black border border-white rounded-md text-white font-dosis text-sm z-10`}
+            ref={writingRef}
+            autoFocus
+            className={`w-40 h-16 p-1.5 bg-black/50 border border-white rounded-md text-white font-dosis text-sm z-10 caret-white`}
+            onKeyDown={(e: FormEvent) => handleBlur(e)}
             style={{
               resize: "none",
               position: "absolute",

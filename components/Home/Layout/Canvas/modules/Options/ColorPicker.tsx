@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import Sketch from "@uiw/react-color-sketch";
-import { ColorPickerProps } from "../types/canvas.types";
+import { ColorPickerProps } from "../../types/canvas.types";
 
 const ColorPicker: FunctionComponent<ColorPickerProps> = ({
   hex,

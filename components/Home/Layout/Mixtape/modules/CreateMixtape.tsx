@@ -64,7 +64,10 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
           clickHandle={generateMixtape}
           loader={mixtapeLoading}
         />
-        <div className="relative w-fit h-fit place-self-center" id="save-mixtape">
+        <div
+          className="relative w-fit h-fit place-self-center"
+          id="save-mixtape"
+        >
           <MixSave col={"2"} />
         </div>
         <ReactTooltip

@@ -49,6 +49,7 @@ export type DrawProps = {
   selectedElement: any;
   action: string;
   writingRef: Ref<HTMLTextAreaElement>;
+  handleBlur: (e: FormEvent) => void;
 };
 
 export type ColorPickerProps = {
