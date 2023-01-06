@@ -34,6 +34,7 @@ const useDraw = () => {
   const generator = rough.generator();
   const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
   const ctx = canvas?.getContext("2d");
+  const dosis = new FontFace("dosis", "url(fonts/DosisRegular.ttf)");
 
   const useElementHistory = (initialState: any) => {
     const [index, setIndex] = useState(0);
@@ -102,7 +103,13 @@ const useDraw = () => {
         break;
 
       case "text":
-        (ctx as CanvasRenderingContext2D).font = "24px san-serif";
+        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
+          "source-over";
+        (ctx as CanvasRenderingContext2D).textBaseline = "top";
+        (
+          ctx as CanvasRenderingContext2D
+        ).font = `${element.strokeWidth}px dosis`;
+        (ctx as CanvasRenderingContext2D).fillStyle = element.fill as string;
         (ctx as CanvasRenderingContext2D).fillText(
           element.text as string,
           element.x1 as number,
@@ -137,11 +144,11 @@ const useDraw = () => {
     const reader = new FileReader();
     reader.readAsDataURL(image);
     reader.onloadend = (e) => {
-      const imageObject = new Image(); // Creates image object
+      const imageObject = new Image();
       imageObject.src = e.target?.result as string;
       imageObject.onload = function (ev) {
-        ctx?.drawImage(imageObject, 0, 0); // Draws the image on canvas
-        const imgData = canvas.toDataURL("image/jpeg", 0.75); // Assigns image base64 string in jpeg format to a variable
+        ctx?.drawImage(imageObject, 0, 0);
+        const imgData = canvas.toDataURL("image/jpeg", 0.75);
       };
     };
   };
@@ -151,10 +158,11 @@ const useDraw = () => {
     if (ctx) {
       const roughCanvas = rough?.canvas(canvas);
       elements.forEach((element: any) => {
+        if (action === "writing" && selectedElement.id === element.id) return;
         drawElement(element, roughCanvas, ctx);
       });
     }
-  }, [elements]);
+  }, [elements, action, selectedElement]);
 
   const nearPoint = (
     x: number,
@@ -376,14 +384,15 @@ const useDraw = () => {
           strokeWidth,
         };
       case "text":
-        const transformedX1 = x1 - bounds?.left;
-        const transformedY1 = y1 - bounds?.top;
-
         return {
           id,
           type,
-          x1: transformedX1,
-          y1: transformedY1,
+          x1: x1 - bounds?.left,
+          y1: y1 - bounds?.top,
+          x2,
+          y2,
+          fill,
+          strokeWidth,
           text: "",
         };
     }
@@ -403,15 +412,15 @@ const useDraw = () => {
   const updateElement = (
     x1: number,
     y1: number,
-    x2: number,
-    y2: number,
-    type: string,
+    x2: number | null,
+    y2: number | null,
+    type: string | null,
     index: number,
-    strokeWidth: number,
-    fill: string,
-    fillStyle: string,
-    stroke: string,
-    text: string
+    strokeWidth: number | null,
+    fill: string | null,
+    fillStyle: string | null,
+    stroke: string | null,
+    text?: string
   ) => {
     const elementsCopy = [...elements];
     const bounds = canvas?.getBoundingClientRect();
@@ -422,30 +431,38 @@ const useDraw = () => {
         elementsCopy[index] = createElement(
           x1 as number,
           y1 as number,
-          x2,
-          y2,
+          x2 as number,
+          y2 as number,
           type,
           index,
-          strokeWidth,
-          fill,
-          fillStyle,
-          stroke
+          strokeWidth as number,
+          fill as string,
+          fillStyle as string,
+          stroke as string
         ) as ElementInterface;
         break;
 
       case "pencil":
         elementsCopy[index].points = [
           ...(elementsCopy[index].points as any),
-          { x: x2 - bounds?.left, y: y2 - bounds?.top },
+          { x: (x2 as number) - bounds?.left, y: (y2 as number) - bounds?.top },
         ];
         break;
 
       case "text":
-        const textWidth = ctx?.measureText(text).width as number;
-        const textHeight = 24 as number;
+        const textWidth = ctx?.measureText(text as string).width as number;
         elementsCopy[index] = {
-          ...createElement(x1, y1, x1 + textWidth, y1 + textHeight, type, index, ""),
-          text: text,
+          ...createElement(
+            x1,
+            y1,
+            x1 + textWidth,
+            y1 + (strokeWidth as number),
+            type,
+            index,
+            strokeWidth as number,
+            fill as string
+          ),
+          text,
         };
         break;
     }
@@ -502,6 +519,7 @@ const useDraw = () => {
   };
 
   const handleMouseMove = (e: MouseEvent): void => {
+    if (action === "writing") return;
     if (!action) return;
     if (action === "drawing") {
       const index = elements?.length - 1;
@@ -518,8 +536,6 @@ const useDraw = () => {
         shapeFillType,
         hex
       );
-    } else if (action === "writing") {
-      return;
     } else if (action === "moving") {
       if (selectedElement.type === "pencil") {
         const newPoints = selectedElement.points?.map(
@@ -554,8 +570,8 @@ const useDraw = () => {
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
-          afterOffsetX,
-          afterOffsetY,
+          type === "text" ? e.clientX : afterOffsetX,
+          type === "text" ? e.clientY : afterOffsetY,
           afterOffsetX + width,
           afterOffsetY + height,
           type,
@@ -563,26 +579,46 @@ const useDraw = () => {
           strokeWidth,
           fill,
           fillStyle,
-          stroke
+          stroke,
+          type === "text" && selectedElement?.text
         );
       }
     }
   };
 
-  useEffect(() => {}, [undo, redo]);
+  const handleBlur = (e: FormEvent) => {
+    if ((e as any).key === "Enter") {
+      const { id, x1, y1, x2, y2, type } = selectedElement;
+      const bounds = canvas.getBoundingClientRect();
+      setAction("none");
+      setSelectedElement(null);
+      updateElement(
+        x1 + bounds.left,
+        y1 + bounds.top,
+        x2,
+        y2,
+        type,
+        id,
+        brushWidth,
+        hex,
+        null,
+        null,
+        (e.target as HTMLFormElement)?.value
+      );
+    }
+  };
 
   const handleMouseUp = (e: MouseEvent): void => {
-    // if (selectedElement) {
-    //   if (
-    //     selectedElement.type === "text" &&
-    //     e.clientX - selectedElement.offsetX === selectedElement.x1 &&
-    //     e.clientY - selectedElement.offsetY === selectedElement.y1
-    //   ) {
-    //     setAction("writing");
-    //     return;
-    //   }
-    // }
-
+    if (selectedElement) {
+      if (
+        selectedElement.type === "text" &&
+        e.clientX - selectedElement.offsetX === selectedElement.x1 &&
+        e.clientY - selectedElement.offsetY === selectedElement.y1
+      ) {
+        setAction("writing");
+        return;
+      }
+    }
     if (action === "writing") return;
     setAction("none");
     setSelectedElement(null);
@@ -594,7 +630,16 @@ const useDraw = () => {
       textAreaElement?.focus();
       (textAreaElement as HTMLTextAreaElement).value = selectedElement.text;
     }
-  }, [action, selectedElement]);
+  }, [tool, action, selectedElement]);
+
+  const loadFont = async () => {
+    const doR = await dosis.load();
+    document.fonts.add(doR);
+  };
+
+  useEffect(() => {
+    loadFont();
+  }, []);
 
   return {
     hex,
@@ -630,6 +675,7 @@ const useDraw = () => {
     selectedElement,
     action,
     writingRef,
+    handleBlur,
   };
 };
 

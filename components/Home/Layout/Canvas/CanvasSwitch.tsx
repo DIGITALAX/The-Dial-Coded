@@ -48,7 +48,8 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     redo,
     selectedElement,
     action,
-    writingRef
+    writingRef,
+    handleBlur
   } = useDraw();
   const {
     quickSearchResults,
@@ -126,6 +127,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           selectedElement={selectedElement}
           action={action}
           writingRef={writingRef}
+          handleBlur={handleBlur}
         />
       );
   }

@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import CanvasOption from "../../../../../Common/Miscellaneous/CanvasOption";
 import { BottomOptionsProps } from "../../types/canvas.types";
-import ColorPicker from "../ColorPicker";
+import ColorPicker from "./ColorPicker";
 
 const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
   colorPicker,
