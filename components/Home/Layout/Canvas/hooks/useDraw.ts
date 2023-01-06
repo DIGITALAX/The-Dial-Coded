@@ -389,8 +389,8 @@ const useDraw = () => {
           type,
           x1: x1 - bounds?.left,
           y1: y1 - bounds?.top,
-          x2,
-          y2,
+          x2: x2 + (strokeWidth as number),
+          y2: y2 + (strokeWidth as number),
           fill,
           strokeWidth,
           text: "",
@@ -572,8 +572,8 @@ const useDraw = () => {
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
-          afterOffsetX,
-          afterOffsetY,
+          type === "text" ? e.clientX : afterOffsetX,
+          type === "text" ? e.clientY : afterOffsetY,
           afterOffsetX + width,
           afterOffsetY + height,
           type,
