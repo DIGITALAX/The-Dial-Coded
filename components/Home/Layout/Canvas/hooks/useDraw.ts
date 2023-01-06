@@ -103,8 +103,6 @@ const useDraw = () => {
         break;
 
       case "text":
-        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
-          "source-over";
         (ctx as CanvasRenderingContext2D).textBaseline = "top";
         (
           ctx as CanvasRenderingContext2D
@@ -154,15 +152,17 @@ const useDraw = () => {
   };
 
   useLayoutEffect(() => {
-    ctx?.clearRect(0, 0, canvas.width, canvas.height);
     if (ctx) {
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
       const roughCanvas = rough?.canvas(canvas);
+      (ctx as CanvasRenderingContext2D).globalCompositeOperation =
+        "source-over";
       elements.forEach((element: any) => {
         if (action === "writing" && selectedElement.id === element.id) return;
         drawElement(element, roughCanvas, ctx);
       });
     }
-  }, [elements, action, selectedElement]);
+  }, [elements, action, selectedElement, tool]);
 
   const nearPoint = (
     x: number,
@@ -274,9 +274,9 @@ const useDraw = () => {
         });
         return betweenAnyPoint ? "inside" : null;
       case "text":
-        return x >= (x1 as number) &&
+        return x - bounds.left >= (x1 as number) &&
           x <= (x2 as number) &&
-          y >= (y1 as number) &&
+          y - bounds.top >= (y1 as number) &&
           y <= (y2 as number)
           ? "inside"
           : null;
@@ -515,6 +515,8 @@ const useDraw = () => {
       setElements((prevState: any) => [...prevState, newElement]);
       setSelectedElement(newElement);
       setAction(tool === "text" ? "writing" : "drawing");
+    } else if (tool === "erase") {
+      setAction("erasing");
     }
   };
 
@@ -570,8 +572,8 @@ const useDraw = () => {
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
-          type === "text" ? e.clientX : afterOffsetX,
-          type === "text" ? e.clientY : afterOffsetY,
+          afterOffsetX,
+          afterOffsetY,
           afterOffsetX + width,
           afterOffsetY + height,
           type,
@@ -582,6 +584,15 @@ const useDraw = () => {
           stroke,
           type === "text" && selectedElement?.text
         );
+      }
+    } else if (action === "erasing") {
+      const eraseElement = getElementPosition(e.clientX, e.clientY);
+      if (eraseElement.length > 0) {
+        const filteredElements = lodash.filter(
+          elements,
+          (element) => element.id !== eraseElement[0].id
+        );
+        setElements(filteredElements);
       }
     }
   };

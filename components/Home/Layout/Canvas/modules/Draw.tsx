@@ -54,7 +54,9 @@ const Draw: FunctionComponent<DrawProps> = ({
         } ${
           tool === "selection"
             ? "cursor-move"
-            : tool === "text" && "cursor-text"
+            : tool === "text"
+            ? "cursor-text"
+            : tool === "erase" && "cursor-erase"
         } rounded-lg border border-white row-start-1`}
       >
         <Publish />

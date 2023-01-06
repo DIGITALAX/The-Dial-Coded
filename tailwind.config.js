@@ -51,6 +51,8 @@ module.exports = {
       },
       cursor: {
         focus: "url('/focus.png'), auto",
+        erase:
+          "url('https://thedial.infura-ipfs.io/ipfs/QmQzhmgH7ArRzi3xvEv7PH73vPBbo8vqm9EgNoLmvqwh3f'), auto",
       },
       backgroundImage: {
         spots:
