@@ -24,6 +24,7 @@ export type DrawProps = {
   handleMouseDown: (e: MouseEvent) => void;
   handleMouseMove: (e: MouseEvent) => void;
   handleMouseUp: (e: MouseEvent) => void;
+  handleMouseWheel: (e: MouseEvent) => void;
   colorPicker: boolean;
   setColorPicker: (e: boolean) => void;
   shapes: boolean;
@@ -65,7 +66,8 @@ export type SideMenuProps = {
   setDraftBoard: (e: boolean) => void;
   handleImageAdd: (e: FormEvent) => void;
   undo: () => boolean | void;
-  redo: () => boolean | void;
+  redo: () => boolean | void;  
+  setTool: (e: string) => void;
 };
 
 export type BottomMenuProps = {
@@ -90,6 +92,7 @@ export type BoardProps = {
   handleMouseDown: (e: MouseEvent) => void;
   handleMouseMove: (e: MouseEvent) => void;
   handleMouseUp: (e: MouseEvent) => void;
+  handleMouseWheel: (e: MouseEvent) => void;
 };
 
 export type SideOptionsProps = {
@@ -99,6 +102,7 @@ export type SideOptionsProps = {
   handleImageAdd: (e: FormEvent) => void;
   undo: () => boolean | void;
   redo: () => boolean | void;
+  setTool: (e: string) => void;
 };
 
 export type BottomOptionsProps = {
@@ -147,4 +151,9 @@ export type BaseProps = {
   searchLoading: boolean;
   quickSearchResults: any[];
   fillImages: string[];
+};
+
+export type Point = {
+  x: number;
+  y: number;
 };

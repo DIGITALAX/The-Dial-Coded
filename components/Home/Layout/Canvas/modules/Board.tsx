@@ -6,6 +6,7 @@ const Board: FunctionComponent<BoardProps> = ({
   handleMouseDown,
   handleMouseMove,
   handleMouseUp,
+  handleMouseWheel
 }): JSX.Element => {
   return (
     <canvas
@@ -17,6 +18,7 @@ const Board: FunctionComponent<BoardProps> = ({
       onMouseDown={(e: MouseEvent<HTMLCanvasElement>) => handleMouseDown(e)}
       onMouseUp={(e: MouseEvent<HTMLCanvasElement>) => handleMouseUp(e)}
       onMouseMove={(e: MouseEvent<HTMLCanvasElement>) => handleMouseMove(e)}
+      onWheel={(e: MouseEvent<HTMLCanvasElement>) => handleMouseWheel(e)}
     ></canvas>
   );
 };

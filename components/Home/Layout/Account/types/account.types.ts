@@ -1,3 +1,4 @@
+import { DecodedMessage } from "@xmtp/xmtp-js";
 import { FormEvent } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
@@ -125,10 +126,13 @@ export type ConversationsProps = {
   searchTarget: string | undefined;
   dropdown: boolean;
   chosenProfile: Profile | undefined;
+  previewMessages: Map<string, DecodedMessage> | undefined
 };
 
 export type PreviewProps = {
   searchTarget: string | undefined;
+  previewMessages: Map<string, DecodedMessage> | undefined
+
 };
 
 export type UseConversationResults = {
@@ -144,6 +148,7 @@ export type UseConversationResults = {
   handleChosenProfile: (user: Profile) => void;
   searchTarget: string | undefined;
   dropdown: boolean;
+  previewMessages: Map<string, DecodedMessage> | undefined
 };
 
 export type SearchProps = {

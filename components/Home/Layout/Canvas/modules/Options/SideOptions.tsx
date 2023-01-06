@@ -11,6 +11,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   handleImageAdd,
   undo,
   redo,
+  setTool,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-4">
@@ -49,6 +50,14 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
           bgColor="black"
           width={25}
           height={28}
+        />
+        <CanvasOption
+          image="QmTi6aLhjZrFaahoqzki9TgC3idP1tXrRZQxfnXbpG5iZ9"
+          bgColor="black"
+          width={37}
+          height={37}
+          string_option={"pan"}
+          setShowString={setTool}
         />
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">

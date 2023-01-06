@@ -19,6 +19,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
   searchTarget,
   dropdown,
   chosenProfile,
+  previewMessages
 }): JSX.Element => {
   if (!createdClient) {
     return (
@@ -57,6 +58,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
           />
           <Preview
             searchTarget={searchTarget}
+            previewMessages={previewMessages}
           />
         </div>
       </div>
