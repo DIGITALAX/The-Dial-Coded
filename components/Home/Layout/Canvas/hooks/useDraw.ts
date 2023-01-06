@@ -182,7 +182,7 @@ const useDraw = () => {
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
       const roughCanvas = rough?.canvas(canvas);
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
-        "source-over";
+      "source-over";
       elements?.forEach((element: any) => {
         if (action === "writing" && selectedElement.id === element.id) return;
         drawElement(element, roughCanvas, ctx);
@@ -211,7 +211,7 @@ const useDraw = () => {
     y2: number,
     x: number,
     y: number,
-    maxDistance = 1
+    maxDistance: number
   ) => {
     const a: Point2 = { x: x1, y: y1 };
     const b: Point2 = { x: x2, y: y2 };
@@ -272,12 +272,14 @@ const useDraw = () => {
           x2 as number,
           y2 as number,
           x,
-          y
+          y,
+          element.strokeWidth as number
         );
         const start = nearPoint(x, y, x1 as number, y1 as number, "start");
         const end = nearPoint(x, y, x2 as number, y2 as number, "end");
         return start || end || on;
       case "pencil":
+        console.log(element.points)
         const betweenAnyPoint = element.points?.some((point, index) => {
           const nextPoint = (
             element.points as {
@@ -289,15 +291,16 @@ const useDraw = () => {
           return (
             onLine(
               point.x,
-              point.y,
-              nextPoint.x,
+              point.y ,
+              nextPoint.x ,
               nextPoint.y,
               x - bounds.left,
               y - bounds.top,
-              5
+              element.strokeWidth as number
             ) != null
           );
         });
+        console.log(betweenAnyPoint)
         return betweenAnyPoint ? "inside" : null;
       case "text":
         return x - bounds.left >= (x1 as number) &&
