@@ -51,6 +51,7 @@ export type DrawProps = {
   action: string;
   writingRef: Ref<HTMLTextAreaElement>;
   handleBlur: (e: FormEvent) => void;
+
 };
 
 export type ColorPickerProps = {
@@ -93,6 +94,7 @@ export type BoardProps = {
   handleMouseMove: (e: MouseEvent) => void;
   handleMouseUp: (e: MouseEvent) => void;
   handleMouseWheel: (e: MouseEvent) => void;
+
 };
 
 export type SideOptionsProps = {

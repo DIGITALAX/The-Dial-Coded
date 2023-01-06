@@ -5,6 +5,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
   searchTarget,
   previewMessages
 }): JSX.Element => {
+  console.log(previewMessages)
   return <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto">
     {
       (previewMessages as any)?.forEach((message: any, index: number) => {
