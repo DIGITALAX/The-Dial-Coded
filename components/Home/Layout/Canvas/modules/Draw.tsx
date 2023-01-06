@@ -44,7 +44,8 @@ const Draw: FunctionComponent<DrawProps> = ({
   action,
   writingRef,
   handleBlur,
-  handleMouseWheel
+  handleMouseWheel,
+  ratio
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -112,6 +113,7 @@ const Draw: FunctionComponent<DrawProps> = ({
           handleMouseUp={handleMouseUp}
           handleMouseMove={handleMouseMove}
           handleMouseWheel={handleMouseWheel}
+          ratio={ratio}
         />
       </div>
       <div className="relative w-full h-72 grid grid-flow-col auto-cols-auto">

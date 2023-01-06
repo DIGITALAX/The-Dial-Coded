@@ -43,6 +43,7 @@ const usePublication = () => {
   const [searchGif, setSearchGif] = useState<string>();
   const [results, setResults] = useState<any>([]);
   const [commentArgs, setCommentArgs] = useState<any>();
+  const [cursorPosition, setCursorPosition] = useState<number>(0);
   const [commentLoading, setCommentLoading] = useState<boolean>(false);
   const myDiv = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
@@ -377,21 +378,48 @@ const usePublication = () => {
     }
   };
 
+  // const handleCursorPosition = () => {
+  //   const selection = getSelection();
+  //   const children = selection?.focusNode?.parentNode?.childNodes;
+  //   const foundPosition = Array.prototype.indexOf.call(
+  //     children,
+  //     selection?.focusNode
+  //   );
+  //   const lines = postDescription.split("\n");
+  //   console.log(lines);
+  //   const clickedLine = foundPosition / 2;
+  //   const charPos = selection?.focusOffset as number;
+  //   let prefix: string = "";
+  //   console.log("clciked line", clickedLine);
+  //   for (let i = 0; i < clickedLine; i++) {
+  //     prefix += lines[i];
+  //     console.log(prefix, "prefix state");
+  //   }
+  //   console.log(prefix.length + charPos, "final state");
+  //   setCursorPosition(prefix.length + charPos);
+  // };
+
+  // const addNewKeyStroke = (
+  //   prevState: string,
+  //   key: string
+  // ): string | undefined => {
+  //   const firstPart = prevState.substring(0, cursorPosition);
+  //   const secondPart = prevState.substring(cursorPosition);
+  //   if (key === "Enter") {
+  //     setCursorPosition(cursorPosition + 1);
+  //     return firstPart + "\n" + secondPart;
+  //   } else if (key === "Backspace") {
+  //     setCursorPosition(cursorPosition - 1);
+  //     return firstPart.substring(0, firstPart.length - 1) + secondPart;
+  //   } else {
+  //     setCursorPosition(cursorPosition + 1);
+  //     return firstPart + key + secondPart;
+  //   }
+  // };
+
   const handlePostDescription = async (e: any): Promise<void> => {
-    // console.log(e)
-    // const text = e.target.innerHTML;
-    // const words = text?.split(/\s/);
-    // let html: string[] = [];
-    // words?.forEach((word: string) => {
-    //   if (word[0] === "#" || word[0] === "@") {
-    //     html.push(`<span class="text-offBlue">${word}</span> `);
-    //   } else {
-    //     html.push(`${word} `);
-    //   }
-    // });
-    // e.target.innerHTML = html.join("")
+    // const returnedString = addNewKeyStroke(postDescription, e.key);
     setPostDescription(e.target.value);
-    // console.log(html, "here")
   };
 
   const handleTags = (e: FormEvent) => {

@@ -50,8 +50,8 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     action,
     writingRef,
     handleBlur,
-    handleMouseWheel
-  } = useDraw();
+    handleMouseWheel,
+   } = useDraw();
   const {
     quickSearchResults,
     searchLoading,

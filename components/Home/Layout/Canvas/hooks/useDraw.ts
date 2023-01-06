@@ -6,7 +6,6 @@ import {
   MouseEvent,
   FormEvent,
   useEffect,
-  useCallback,
 } from "react";
 import rough from "roughjs/bundled/rough.cjs";
 import { ElementInterface, Point, Point2 } from "../types/canvas.types";
@@ -33,7 +32,10 @@ const useDraw = () => {
   const [colorPicker, setColorPicker] = useState<boolean>(false);
   const [brushWidth, setBrushWidth] = useState<number>(12);
   const [thickness, setThickness] = useState<boolean>(false);
-  const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
+  const generator = rough.generator();
+  const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
+  const ctx = canvas?.getContext("2d");
+  const dosis = new FontFace("dosis", "url(fonts/DosisRegular.ttf)");
   const [scale, setScale] = useState<number>(1);
   const ZOOM_SENSITIVITY = 500;
   const [offset, setOffset] = useState<Point>(ORIGIN);
@@ -42,13 +44,7 @@ const useDraw = () => {
   const isResetRef = useRef<boolean>(false);
   const lastMousePosRef = useRef<Point>(ORIGIN);
   const lastOffsetRef = useRef<Point>(ORIGIN);
-  const generator = rough.generator();
-  const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
-  const ctx = canvas?.getContext("2d");
-  const dosis = new FontFace("dosis", "url(fonts/DosisRegular.ttf)");
-
-  // adjust to device to avoid blur
-  const { devicePixelRatio: ratio = 1 } = window;
+  
 
   const diffPoints = (p1: Point, p2: Point) => {
     return { x: p1.x - p2.x, y: p1.y - p2.y };
@@ -179,16 +175,31 @@ const useDraw = () => {
 
   useLayoutEffect(() => {
     if (ctx) {
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
-      const roughCanvas = rough?.canvas(canvas);
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
-      "source-over";
+        "source-over";
+      
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      const storedTransform = ctx?.getTransform();
+      ctx.canvas.width = ctx?.canvas.width;
+      ctx?.setTransform(storedTransform);
+      const roughCanvas = rough?.canvas(canvas);
       elements?.forEach((element: any) => {
         if (action === "writing" && selectedElement.id === element.id) return;
         drawElement(element, roughCanvas, ctx);
       });
     }
-  }, [elements, action, selectedElement, tool]);
+  }, [elements, action, selectedElement, tool, scale, offset, ctx]);
+
+  useLayoutEffect(() => {
+    const offsetDiff = scalePoint(
+      diffPoints(offset, lastOffsetRef.current),
+      scale
+    );
+    ctx?.translate(offsetDiff.x, offsetDiff.y);
+    setViewportTopLeft((prevVal) => diffPoints(prevVal, offsetDiff));
+    isResetRef.current = false;
+  }, [scale, offset]);
+
 
   const nearPoint = (
     x: number,
@@ -279,7 +290,7 @@ const useDraw = () => {
         const end = nearPoint(x, y, x2 as number, y2 as number, "end");
         return start || end || on;
       case "pencil":
-        console.log(element.points)
+        console.log(element.points);
         const betweenAnyPoint = element.points?.some((point, index) => {
           const nextPoint = (
             element.points as {
@@ -291,8 +302,8 @@ const useDraw = () => {
           return (
             onLine(
               point.x,
-              point.y ,
-              nextPoint.x ,
+              point.y,
+              nextPoint.x,
               nextPoint.y,
               x - bounds.left,
               y - bounds.top,
@@ -300,7 +311,6 @@ const useDraw = () => {
             ) != null
           );
         });
-        console.log(betweenAnyPoint)
         return betweenAnyPoint ? "inside" : null;
       case "text":
         return x - bounds.left >= (x1 as number) &&
@@ -547,6 +557,7 @@ const useDraw = () => {
     } else if (tool === "erase") {
       setAction("erasing");
     } else if (tool === "pan") {
+      lastMousePosRef.current = { x: e.pageX, y: e.pageY };
       setAction("panning");
     }
   };
@@ -626,72 +637,14 @@ const useDraw = () => {
         setElements(filteredElements);
       }
     } else if (action === "panning") {
+      const lastMousePos = lastMousePosRef.current;
+      const currentMousePos = { x: e.pageX, y: e.pageY }; // use document so can pan off element
+      lastMousePosRef.current = currentMousePos;
+
+      const mouseDiff = diffPoints(currentMousePos, lastMousePos);
+      setOffset((prevOffset) => addPoints(prevOffset, mouseDiff));
     }
   };
-
-  const resetCanvasPosition = useCallback(
-    (context: CanvasRenderingContext2D) => {
-      if (context && !isResetRef.current) {
-        // adjust for device pixel density
-        context.canvas.width = canvas.width * ratio;
-        context.canvas.height = canvas.height * ratio;
-        context.scale(ratio, ratio);
-        setScale(1);
-
-        // reset state and refs
-        setContext(context);
-        setOffset(ORIGIN);
-        setMousePos(ORIGIN);
-        setViewportTopLeft(ORIGIN);
-        lastOffsetRef.current = ORIGIN;
-        lastMousePosRef.current = ORIGIN;
-
-        // this thing is so multiple resets in a row don't clear canvas
-        isResetRef.current = true;
-      }
-    },
-    [canvas?.width, canvas?.height]
-  );
-
-  const mouseMove = useCallback(
-    (event: MouseEvent) => {
-      if (context) {
-        const lastMousePos = lastMousePosRef.current;
-        const currentMousePos = { x: event.pageX, y: event.pageY }; // use document so can pan off element
-        lastMousePosRef.current = currentMousePos;
-
-        const mouseDiff = diffPoints(currentMousePos, lastMousePos);
-        setOffset((prevOffset) => addPoints(prevOffset, mouseDiff));
-      }
-    },
-    [context]
-  );
-
-  const mouseUp = useCallback(() => {
-    document.removeEventListener("mousemove", mouseMove);
-    document.removeEventListener("mouseup", mouseUp);
-  }, [mouseMove]);
-
-  const panCanvas = useCallback(
-    (event: MouseEvent) => {
-      document.addEventListener("mousemove", mouseMove);
-      document.addEventListener("mouseup", mouseUp);
-      lastMousePosRef.current = { x: event.pageX, y: event.pageY };
-    },
-    [mouseMove, mouseUp]
-  );
-
-  useLayoutEffect(() => {
-    if (canvas) {
-      if (ctx) {
-        resetCanvasPosition(ctx);
-      }
-    }
-  }, [resetCanvasPosition, canvas?.height, canvas?.width]);
-
-  useEffect(() => {
-    lastOffsetRef.current = offset;
-  }, [offset]);
 
   const handleBlur = (e: FormEvent) => {
     if ((e as any).key === "Enter") {

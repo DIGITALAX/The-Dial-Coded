@@ -80,7 +80,6 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     handleTags,
     tags,
     handleRemoveTag,
-    myDiv,
   } = usePublication();
 
   return (
@@ -156,23 +155,31 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 id="radialPinkBorder"
                 className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1 rounded-xl"
               >
-                <textarea
+                <div
                   // contentEditable
                   // ref={myDiv}
                   id="post"
                   // role="textbox"
                   // aria-multiline="true"
                   // aria-expanded="false"
-                  onChange={(e: FormEvent) => handlePostDescription(e)}
-                  value={postDescription}
+                  // onChange={(e: FormEvent) => handlePostDescription(e)}
+                  tabIndex={0}
+                  onFocus={(e) => console.log(e)}
+                  onKeyDown={(e) => handlePostDescription(e)}
+                  // value={postDescription}
                   // defaultValue={postDescription}
-                  placeholder="Have something to share..."
+                  // placeholder="Have something to share..."
                   className={`relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 font-dosis text-md p-2 place-self-center caret-transparent`}
-                  disabled={postLoading ? true : false}
-                  style={{
-                    resize: "none",
+                  // disabled={postLoading ? true : false}
+                  // style={{
+                  //   resize: "none",
+                  // }}
+                  dangerouslySetInnerHTML={{
+                    __html: postDescription.replaceAll("\n", "<br/>"),
                   }}
-                ></textarea>
+                >
+                  {/* {postDescription} */}
+                </div>
               </div>
             </div>
             <div className="relative w-full hit row-start-3">
