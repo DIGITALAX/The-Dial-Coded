@@ -55,8 +55,6 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               height={20}
               setShowString={setTool}
               string_option={"pencil"}
-              // setShowBool={setPencil}
-              // bool_option={pencil}
             />
           </div>
         </div>

@@ -40,7 +40,7 @@ const useConversations = (): UseConversationResults => {
     useState<Map<string, Profile>>();
   const [previewMessages, setPreviewMessages] =
     useState<Map<string, DecodedMessage>>();
-  const [profileIds, setProfileIds] = useState<(string | null)[]>();
+  const [profileIds, setProfileIds] = useState<(string[] | null)[]>();
   const [message, setMessage] = useState<string>();
 
   const createClient = async () => {
@@ -51,6 +51,7 @@ const useConversations = (): UseConversationResults => {
       const lensConversations = allConversations.filter((conversation) =>
         conversation.context?.conversationId.startsWith("lens.dev/dm/")
       );
+      console.log(allConversations, "list")
       const conversationKeysResult = lensConversations.map((convo) =>
         buildConversationKey(
           convo.peerAddress,
@@ -64,7 +65,7 @@ const useConversations = (): UseConversationResults => {
           matcherRegex.test(convo.context.conversationId)
       );
       messagePreviews(matchingConvos);
-      const profileIds = conversationKeysResult.map((key) =>
+      const profileIds: (string[] | null)[] = conversationKeysResult.map((key) =>
         getProfileFromKey(key)
       );
       setProfileIds(profileIds);
@@ -92,6 +93,7 @@ const useConversations = (): UseConversationResults => {
         newMessageProfiles.set(key, profile);
       }
       setMessageProfiles(newMessageProfiles);
+      console.log(newMessageProfiles)
     } catch (err: any) {
       console.error(err.message);
     }
@@ -105,6 +107,7 @@ const useConversations = (): UseConversationResults => {
         convo.peerAddress,
         convo.context?.conversationId as string
       );
+      console.log(convo)
       const newMessages = await convo.messages({
         limit: 1,
         direction: SortDirection.SORT_DIRECTION_DESCENDING,
@@ -129,10 +132,14 @@ const useConversations = (): UseConversationResults => {
           newPreviewMessages.set(preview.key, preview.message);
         }
       }
+      console.log(newPreviewMessages.entries(), "here")
       setPreviewMessages(newPreviewMessages);
+
       (messageProfiles as any)?.map(([key, profile]: any[]) => {
         const message = previewMessages?.get(key);
+        console.log(message, "mes")
       });
+      console.log(messageProfiles)
     } catch (err: any) {
       console.error(err.message);
     }
@@ -197,14 +204,14 @@ const useConversations = (): UseConversationResults => {
     };
   };
 
-  const getProfileFromKey = (key: string): string | null => {
+  const getProfileFromKey = (key: string): string[] | null => {
     const parsed = parseConversationKey(key);
     const userProfileId = lensProfile?.id;
     if (!parsed || !userProfileId) {
       return null;
     }
 
-    return parsed.members.find((member) => member !== userProfileId) ?? null;
+    return parsed.members;
   };
 
   const handleMessage = (e: FormEvent): void => {
@@ -259,6 +266,8 @@ const useConversations = (): UseConversationResults => {
     }
   };
 
+  console.log("pre", previewMessages)
+
   useEffect(() => {
     if (profileIds && profileIds?.length > 0) {
       getProfileMessages();
@@ -278,6 +287,7 @@ const useConversations = (): UseConversationResults => {
     handleChosenProfile,
     searchTarget,
     dropdown,
+    previewMessages
   };
 };
 

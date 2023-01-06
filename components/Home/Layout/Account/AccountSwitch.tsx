@@ -63,6 +63,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     handleChosenProfile,
     searchTarget,
     dropdown,
+    previewMessages
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
@@ -141,6 +142,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           searchTarget={searchTarget}
           dropdown={dropdown}
           chosenProfile={chosenProfile}
+          previewMessages={previewMessages}
         />
       );
 
