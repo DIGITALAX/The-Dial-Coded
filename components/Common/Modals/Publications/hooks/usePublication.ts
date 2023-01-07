@@ -432,7 +432,9 @@ const usePublication = () => {
       console.log(
         caret,
         textElement.current?.clientWidth,
-        textElement.current?.clientHeight
+        textElement.current?.clientHeight,
+        textElement.current?.scrollHeight,
+        textElement.current?.scrollWidth
       );
       setCaretCoord({
         x: caret.left,
