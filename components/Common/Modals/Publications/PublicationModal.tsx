@@ -2,7 +2,10 @@ import Image from "next/legacy/image";
 import { FormEvent, FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
+import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
+import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 import { setPublication } from "../../../../redux/reducers/publicationSlice";
 import { RootState } from "../../../../redux/store";
 import useCollectionModal from "./hooks/useCollectionModal";
@@ -81,6 +84,8 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     tags,
     handleRemoveTag,
     syncScroll,
+    mentionProfiles,
+    handleMentionClick
   } = usePublication();
 
   return (
@@ -151,7 +156,10 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 onClick={() => dispatch(setPublication(false))}
               />
             </div>
-            <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2" id="sized">
+            <div
+              className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2"
+              id="sized"
+            >
               <div
                 id="radialPinkBorder"
                 className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1.5 rounded-xl"
@@ -163,24 +171,70 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                     handlePostDescription(e);
                     syncScroll(e);
                   }}
+                  value={postDescription}
                   className={`relative w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-1 font-dosis text-base`}
                   disabled={postLoading ? true : false}
                   style={{
                     resize: "none",
                   }}
                 ></textarea>
-
                 <pre
                   id="highlighting"
                   className={`absolute w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-0 font-dosis text-base whitespace-pre-wrap`}
                 >
                   <code
                     id="highlighted-content"
-                    className={`w-full h-full place-self-center text-left`}
+                    className={`w-full h-full place-self-center text-left whitespace-pre-wrap`}
                   >
                     Have something to share...
                   </code>
                 </pre>
+                {
+                  mentionProfiles?.length > 0 &&
+                    // <InfiniteScroll
+                    //   hasMore={true}
+                    //   dataLength={profileSearch?.length}
+                    //   next={getMoreProfiles}
+                    //   loader={""}
+                    //   height={"10rem"}
+                    //   className="relative w-full h-fit"
+                    // >
+                    mentionProfiles?.map((user: any, index: number) => {
+                      const profileImage: string = createProfilePicture(
+                        user?.picture
+                      );
+                      return (
+                        <div
+                          key={index}
+                          className={`absolute w-44 h-fit px-3 py-2 bg-white col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer border-y border-black hover:bg-offBlue top-10 left-10`}
+                          // onClick={() => {
+                          //   handleMentionClick(user);
+                          // }}
+                        >
+                          <div className="relative w-fit h-fit col-start-1 text-black font-dosis lowercase place-self-center grid grid-flow-col auto-cols-auto gap-2">
+                            <div
+                              className={`relative rounded-full flex bg-white w-3 h-3 place-self-center col-start-1`}
+                              id="crt"
+                            >
+                              {profileImage !== "" && (
+                                <Image
+                                  src={profileImage}
+                                  objectFit="cover"
+                                  alt="pfp"
+                                  layout="fill"
+                                  className="relative w-fit h-fit rounded-full self-center"
+                                />
+                              )}
+                            </div>
+                            <div className="relative col-start-2 place-self-center w-fit h-fit text-sm">
+                              @{user?.handle}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  // </InfiniteScroll>
+                }
               </div>
             </div>
             <div className="relative w-full hit row-start-3">

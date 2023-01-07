@@ -7,6 +7,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import createProfilePicture from "../../../../../../../lib/lens/helpers/createProfilePicture";
 
 const Viewer: FunctionComponent<ViewerProps> = ({
   userTypeOpen,
@@ -61,19 +62,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                   className="relative w-full h-fit"
                 >
                   {profileSearch?.map((user: any, index: number) => {
-                    let profileImage: string;
-                    if (!user?.picture?.original) {
-                      profileImage = "";
-                    } else if (user?.picture?.original) {
-                      if (user?.picture?.original?.url.includes("http")) {
-                        profileImage = user?.picture?.original.url;
-                      } else {
-                        const cut = user?.picture?.original?.url.split("/");
-                        profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
-                      }
-                    } else {
-                      profileImage = user?.picture?.uri;
-                    }
+                    const profileImage = createProfilePicture(user?.picture);
                     return (
                       <div
                         key={index}
