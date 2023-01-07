@@ -26,6 +26,7 @@ import omit from "../../../../../lib/lens/helpers/omit";
 import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
 import { setFollowerOnly } from "../../../../../redux/reducers/followerOnlySlice";
 import { Profile } from "../../../types/lens.types";
+import getCaretCoordinates from "textarea-caret";
 
 const usePublication = () => {
   const {
@@ -33,6 +34,10 @@ const usePublication = () => {
   } = useRouter();
   const [postDescription, setPostDescription] = useState<string>("");
   const [postHTML, setPostHTML] = useState<string>("");
+  const [caretCoord, setCaretCoord] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
   const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [contentURI, setContentURI] = useState<string | undefined>();
@@ -41,7 +46,8 @@ const usePublication = () => {
   const [results, setResults] = useState<any>([]);
   const [commentArgs, setCommentArgs] = useState<any>();
   const [commentLoading, setCommentLoading] = useState<boolean>(false);
-  const myDiv = useRef<HTMLDivElement>(null);
+  const textElement = useRef<HTMLTextAreaElement>(null);
+  const [profilesOpen, setProfilesOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const defaultProfile = useSelector(
     (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
@@ -377,7 +383,21 @@ const usePublication = () => {
     }
   };
 
-  const handleMentionClick = () => {};
+  const handleMentionClick = (user: any) => {
+    setProfilesOpen(false);
+    let result_element = document.querySelector("#highlighted-content");
+    const removedElementHTML = postHTML.split(" ");
+    const removedElementPost = postDescription.split(" ");
+    removedElementHTML.pop();
+    removedElementPost.pop();
+    removedElementHTML.join(",");
+    removedElementPost.join(",");
+    console.log(removedElementHTML, removedElementPost);
+    (result_element as any).innerHTML =
+      removedElementHTML + user?.handle.split(".test")[0];
+    setPostHTML(postHTML + user?.handle.split(".test")[0]);
+    setPostDescription(removedElementPost + user?.handle.split(".test")[0]);
+  };
 
   const handlePostDescription = async (e: any): Promise<void> => {
     let result_element = document.querySelector("#highlighted-content");
@@ -405,6 +425,19 @@ const usePublication = () => {
     setPostHTML(finalHTML);
     setPostDescription(e.target.value);
     if (
+      e.target.value.split(" ")[e.target.value.split(" ").length - 1][0] ===
+        "@" &&
+      e.target.value.split(" ")[e.target.value.split(" ").length - 1].length ===
+        1
+    ) {
+      const caret = getCaretCoordinates(e.target, e.target.selectionEnd);
+      setCaretCoord({
+        x: caret.left,
+        y: caret.top,
+      });
+      setProfilesOpen(true);
+    }
+    if (
       e.target.value.split(" ")[e.target.value.split(" ").length - 1][0] === "@"
     ) {
       const allProfiles = await searchProfile({
@@ -414,13 +447,13 @@ const usePublication = () => {
       });
       setMentionProfiles(allProfiles?.data?.search?.items);
     } else {
+      setProfilesOpen(false);
       setMentionProfiles([]);
     }
   };
 
   const syncScroll = (e: any) => {
     let result_element = document.querySelector("#highlighting");
-    // Get and set x and y
     (result_element as any).scrollTop = e.scrollTop;
     (result_element as any).scrollLeft = e.scrollLeft;
   };
@@ -467,10 +500,12 @@ const usePublication = () => {
     handleTags,
     tags,
     handleRemoveTag,
-    myDiv,
+    textElement,
     syncScroll,
     mentionProfiles,
     handleMentionClick,
+    caretCoord,
+    profilesOpen,
   };
 };
 

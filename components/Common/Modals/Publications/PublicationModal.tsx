@@ -2,9 +2,7 @@ import Image from "next/legacy/image";
 import { FormEvent, FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
-import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 import { setPublication } from "../../../../redux/reducers/publicationSlice";
 import { RootState } from "../../../../redux/store";
@@ -86,6 +84,9 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     syncScroll,
     mentionProfiles,
     handleMentionClick,
+    textElement,
+    caretCoord,
+    profilesOpen,
   } = usePublication();
 
   return (
@@ -171,6 +172,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                     handlePostDescription(e);
                     syncScroll(e);
                   }}
+                  ref={textElement}
                   value={postDescription}
                   className={`relative w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-1 font-dosis text-base`}
                   disabled={postLoading ? true : false}
@@ -189,27 +191,25 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                     Have something to share...
                   </code>
                 </pre>
-                {
-                  mentionProfiles?.length > 0 &&
-                    // <InfiniteScroll
-                    //   hasMore={true}
-                    //   dataLength={profileSearch?.length}
-                    //   next={getMoreProfiles}
-                    //   loader={""}
-                    //   height={"10rem"}
-                    //   className="relative w-full h-fit"
-                    // >
-                    mentionProfiles?.map((user: any, index: number) => {
+                {mentionProfiles?.length > 0 && profilesOpen && (
+                  <div
+                    className={`absolute w-44 max-h-28 h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll z-2`}
+                    style={{
+                      top: caretCoord.y + 30,
+                      left: caretCoord.x,
+                    }}
+                  >
+                    {mentionProfiles?.map((user: any, index: number) => {
                       const profileImage: string = createProfilePicture(
                         user?.picture
                       );
                       return (
                         <div
                           key={index}
-                          className={`absolute w-44 h-fit px-3 py-2 bg-white col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer border-y border-black hover:bg-offBlue top-10 left-10`}
-                          // onClick={() => {
-                          //   handleMentionClick(user);
-                          // }}
+                          className={`relative w-full h-fit px-3 py-2 bg-white col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer border-y border-black hover:bg-offBlue`}
+                          onClick={() => {
+                            handleMentionClick(user);
+                          }}
                         >
                           <div className="relative w-fit h-fit col-start-1 text-black font-dosis lowercase place-self-center grid grid-flow-col auto-cols-auto gap-2">
                             <div
@@ -226,15 +226,15 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                                 />
                               )}
                             </div>
-                            <div className="relative col-start-2 place-self-center w-fit h-fit text-sm">
+                            <div className="relative col-start-2 place-self-center w-fit h-fit text-xs">
                               @{user?.handle}
                             </div>
                           </div>
                         </div>
                       );
-                    })
-                  // </InfiniteScroll>
-                }
+                    })}
+                  </div>
+                )}
               </div>
             </div>
             <div className="relative w-full hit row-start-3">
