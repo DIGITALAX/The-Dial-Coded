@@ -174,7 +174,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   }}
                   ref={textElement}
                   value={postDescription}
-                  className={`relative w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-1 font-dosis text-base`}
+                  className={`relative w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-1 font-dosis text-base overflow-y-scroll`}
                   disabled={postLoading ? true : false}
                   style={{
                     resize: "none",
@@ -182,11 +182,11 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 ></textarea>
                 <pre
                   id="highlighting"
-                  className={`absolute w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-0 font-dosis text-base whitespace-pre-wrap`}
+                  className={`absolute w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-0 font-dosis text-base whitespace-pre-wrap overflow-y-scroll`}
                 >
                   <code
                     id="highlighted-content"
-                    className={`w-full h-full place-self-center text-left whitespace-pre-wrap`}
+                    className={`w-full h-full place-self-center text-left whitespace-pre-wrap overflow-y-scroll`}
                   >
                     Have something to share...
                   </code>

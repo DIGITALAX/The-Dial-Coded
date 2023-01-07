@@ -405,6 +405,10 @@ code {
   overflow-y: scroll;
 }
 
+#highlighted-content {
+  overflow-y: scroll;
+}
+
 #blue {
   color: blue
 }

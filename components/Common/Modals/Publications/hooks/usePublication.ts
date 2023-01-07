@@ -429,6 +429,11 @@ const usePublication = () => {
         1
     ) {
       const caret = getCaretCoordinates(e.target, e.target.selectionEnd);
+      console.log(
+        caret,
+        textElement.current?.clientWidth,
+        textElement.current?.clientHeight
+      );
       setCaretCoord({
         x: caret.left,
         y: caret.top,
@@ -451,9 +456,9 @@ const usePublication = () => {
   };
 
   const syncScroll = (e: any) => {
-    let result_element = document.querySelector("#highlighting");
-    (result_element as any).scrollTop = e.scrollTop;
-    (result_element as any).scrollLeft = e.scrollLeft;
+    let result_element = document.querySelector("#highlighted-content");
+    (result_element as any).scrollTop = e.target.scrollTop;
+    (result_element as any).scrollLeft = e.target.scrollLeft;
   };
 
   const handleTags = (e: FormEvent) => {
