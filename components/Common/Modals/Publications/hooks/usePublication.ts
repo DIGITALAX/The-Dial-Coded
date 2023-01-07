@@ -1,10 +1,4 @@
-import {
-  FormEvent,
-  MutableRefObject,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   useContractWrite,
   usePrepareContractWrite,
@@ -35,7 +29,6 @@ const usePublication = () => {
   const {
     query: { id },
   } = useRouter();
-  // const postboxRef = useRef(null);
   const [postDescription, setPostDescription] = useState<string>("");
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [contentURI, setContentURI] = useState<string | undefined>();
@@ -43,7 +36,6 @@ const usePublication = () => {
   const [searchGif, setSearchGif] = useState<string>();
   const [results, setResults] = useState<any>([]);
   const [commentArgs, setCommentArgs] = useState<any>();
-  const [cursorPosition, setCursorPosition] = useState<number>(0);
   const [commentLoading, setCommentLoading] = useState<boolean>(false);
   const myDiv = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
@@ -378,48 +370,38 @@ const usePublication = () => {
     }
   };
 
-  // const handleCursorPosition = () => {
-  //   const selection = getSelection();
-  //   const children = selection?.focusNode?.parentNode?.childNodes;
-  //   const foundPosition = Array.prototype.indexOf.call(
-  //     children,
-  //     selection?.focusNode
-  //   );
-  //   const lines = postDescription.split("\n");
-  //   console.log(lines);
-  //   const clickedLine = foundPosition / 2;
-  //   const charPos = selection?.focusOffset as number;
-  //   let prefix: string = "";
-  //   console.log("clciked line", clickedLine);
-  //   for (let i = 0; i < clickedLine; i++) {
-  //     prefix += lines[i];
-  //     console.log(prefix, "prefix state");
-  //   }
-  //   console.log(prefix.length + charPos, "final state");
-  //   setCursorPosition(prefix.length + charPos);
-  // };
-
-  // const addNewKeyStroke = (
-  //   prevState: string,
-  //   key: string
-  // ): string | undefined => {
-  //   const firstPart = prevState.substring(0, cursorPosition);
-  //   const secondPart = prevState.substring(cursorPosition);
-  //   if (key === "Enter") {
-  //     setCursorPosition(cursorPosition + 1);
-  //     return firstPart + "\n" + secondPart;
-  //   } else if (key === "Backspace") {
-  //     setCursorPosition(cursorPosition - 1);
-  //     return firstPart.substring(0, firstPart.length - 1) + secondPart;
-  //   } else {
-  //     setCursorPosition(cursorPosition + 1);
-  //     return firstPart + key + secondPart;
-  //   }
-  // };
-
   const handlePostDescription = async (e: any): Promise<void> => {
-    // const returnedString = addNewKeyStroke(postDescription, e.key);
+    let result_element = document.querySelector("#highlighted-content");
+    if (e.target.value[e.target.value.length - 1] == "\n") {
+      e.target.value += " ";
+    }
+    const regexLinks = /\b(https?:\/\/)?(www\.)?\w+\.\b(com|xyz)\b/gi;
+    const regexMentions = /(?:^|\s)(@|#)\w+/g;
+    const linkHighlight = e.target.value.replace(
+      regexLinks,
+      (match: string) => {
+        return `<span style="color: blue">${match}</span>`;
+      }
+    );
+    const mentionHighlight = linkHighlight.replace(
+      regexMentions,
+      (match: string) => {
+        return `<span style="color: blue">${match}</span>`;
+      }
+    );
+    console.log(mentionHighlight);
+    (result_element as any).innerHTML = mentionHighlight
+      .replace(new RegExp("&", "g"), "&")
+      .replace(new RegExp("<", "g"), "<");
+
     setPostDescription(e.target.value);
+  };
+
+  const syncScroll = (e: any) => {
+    let result_element = document.querySelector("#highlighting");
+    // Get and set x and y
+    (result_element as any).scrollTop = e.scrollTop;
+    (result_element as any).scrollLeft = e.scrollLeft;
   };
 
   const handleTags = (e: FormEvent) => {
@@ -465,6 +447,7 @@ const usePublication = () => {
     tags,
     handleRemoveTag,
     myDiv,
+    syncScroll,
   };
 };
 

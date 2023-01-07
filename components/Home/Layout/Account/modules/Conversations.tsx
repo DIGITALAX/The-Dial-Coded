@@ -29,7 +29,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
           onClick={() => createClient()}
         >
           <div
-            className={`relative w-fit h-fit text-md place-self-center ${
+            className={`relative w-fit h-fit text-base place-self-center ${
               clientLoading && "animate-spin"
             }`}
           >

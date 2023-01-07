@@ -15,7 +15,7 @@ const SideText: FunctionComponent<SideTextProps> = ({
       <div className="relative w-fit h-fit row-start-2 text-white font-dosis text-5xl uppercase text-left pb-6 pt-2">
         {imageTitle[currentSetting]}
       </div>
-      <div className="relative w-fit h-fit row-start-3 text-white font-dosis text-md text-left w-96">
+      <div className="relative w-fit h-fit row-start-3 text-white font-dosis text-base text-left w-96">
         {imageDescription[currentSetting]}
       </div>
     </div>

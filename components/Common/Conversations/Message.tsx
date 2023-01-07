@@ -26,7 +26,7 @@ const Message: FunctionComponent<MessageProps> = ({
                 />
               </div>
             </div>
-            <div className="relative col-start-2 place-self-center justify-self-start self-center text-md">
+            <div className="relative col-start-2 place-self-center justify-self-start self-center text-base">
               @{chosenProfile?.handle}
             </div>
           </div>

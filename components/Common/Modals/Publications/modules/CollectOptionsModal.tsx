@@ -159,7 +159,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                   />
                 )}
               </div>
-              <div className="relative w-fit text-md justify-self-center self-center text-center h-fit row-start-2 text-black font-dosis capitalize py-2 px-4">
+              <div className="relative w-fit text-base justify-self-center self-center text-center h-fit row-start-2 text-black font-dosis capitalize py-2 px-4">
                 {collectible === "yes" ? (
                   <p>
                     <a className="underline decoration-offBlue">

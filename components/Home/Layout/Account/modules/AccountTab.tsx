@@ -124,11 +124,11 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               defaultValue={profile?.bio ? profile?.bio : ""}
               style={{ resize: "none" }}
               name="bio"
-              className={`relative w-full h-32 overflow-y-scroll row-start-2 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-2 justify-self-start self-center caret-transparent`}
+              className={`relative w-full h-32 overflow-y-scroll row-start-2 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-base p-2 justify-self-start self-center caret-transparent`}
             ></textarea>
           </div>
           <div className="relative w-full h-fit col-start-2 grid grid-flow-row auto-rows-auto gap-1">
-            <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto font-dosis text-offBlack text-md gap-2">
+            <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto font-dosis text-offBlack text-base gap-2">
               <div className="relative w-fit h-fit col-start-1">
                 Cover Picture
               </div>
@@ -216,7 +216,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
       </form>
       <div className="relative w-fit h-fit row-start-2 grid grid-flow-row auto-rows-auto gap-3">
         <div className="relative w-fit h-fit row-start-1 grid grid-flow-row auto-rows-auto gap-2">
-          <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto font-dosis text-offBlack text-md gap-2">
+          <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto font-dosis text-offBlack text-base gap-2">
             <div className="relative w-fit h-fit col-start-1">
               Profile Picture
             </div>

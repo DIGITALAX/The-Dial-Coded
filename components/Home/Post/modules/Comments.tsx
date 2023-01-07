@@ -180,7 +180,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                 style={{ resize: "none" }}
                 value={commentDescription}
                 placeholder="Have something to share..."
-                className={`relative w-full h-48 overflow-y-scroll row-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-md p-4 place-self-center drop-shadow-lg caret-transparent`}
+                className={`relative w-full h-48 overflow-y-scroll row-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-base p-4 place-self-center drop-shadow-lg caret-transparent`}
                 disabled={commentLoading || followerOnly ? true : false}
               ></textarea>
             ) : (
