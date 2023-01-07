@@ -1,5 +1,5 @@
 import Image from "next/legacy/image";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import Reactions from "../Reactions/Reactions";
 import { FeedPublicationProps } from "../../types/common.types";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
@@ -14,6 +14,7 @@ import { setCommentShow } from "../../../../redux/reducers/commentShowSlice";
 import moment from "moment";
 import { useAccount } from "wagmi";
 import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
+import descriptionRegex from "../../../../lib/lens/helpers/descriptionRegex";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
@@ -25,7 +26,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   hasCommented,
   mixtapeMirror,
   handleHidePost,
-  followerOnly
+  followerOnly,
 }): JSX.Element => {
   const profileImage = createProfilePicture(publication, true);
   const router = useRouter();
@@ -137,14 +138,18 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         <div
           className={`relative w-full h-fit row-start-1 relative w-fit h-fit ${
             mixtapeMirror ? "text-offBlack" : "text-white"
-          } font-dosis self-center  text-md self-center justify-self-start`}
+          } font-dosis self-center text-base self-center justify-self-start`}
         >
           {!mixtapeMirror ? (
-            (publication as any)?.__typename !== "Mirror" ? (
-              (publication as any)?.metadata?.description
-            ) : (
-              (publication as any)?.mirrorOf?.metadata?.description
-            )
+            <div
+              dangerouslySetInnerHTML={{
+                __html: descriptionRegex(
+                  (publication as any)?.__typename !== "Mirror"
+                    ? (publication as any)?.metadata?.description
+                    : (publication as any)?.mirrorOf?.metadata?.description
+                ),
+              }}
+            ></div>
           ) : (
             <>
               {(publication as any)?.mirrorOf?.metadata?.name}
@@ -212,7 +217,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                   <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto">
                     <div
                       id="record2"
-                      className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-2 py-1 text-md"
+                      className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-2 py-1 text-base"
                     >
                       <div className="relative w-fit h-fit place-self-center col-start-1">
                         {

@@ -63,6 +63,9 @@ module.exports = {
       backgroundSize: {
         boardSize: "3em 3em",
       },
+      zIndex: {
+        1: "1",
+      },
     },
   },
   plugins: [],

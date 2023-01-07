@@ -80,6 +80,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     handleTags,
     tags,
     handleRemoveTag,
+    syncScroll,
   } = usePublication();
 
   return (
@@ -150,36 +151,36 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 onClick={() => dispatch(setPublication(false))}
               />
             </div>
-            <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2">
+            <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2" id="sized">
               <div
                 id="radialPinkBorder"
-                className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1 rounded-xl"
+                className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1.5 rounded-xl"
               >
-                <div
-                  // contentEditable
-                  // ref={myDiv}
+                <textarea
                   id="post"
-                  // role="textbox"
-                  // aria-multiline="true"
-                  // aria-expanded="false"
-                  // onChange={(e: FormEvent) => handlePostDescription(e)}
-                  tabIndex={0}
-                  onFocus={(e) => console.log(e)}
-                  onKeyDown={(e) => handlePostDescription(e)}
-                  // value={postDescription}
-                  // defaultValue={postDescription}
-                  // placeholder="Have something to share..."
-                  className={`relative w-full h-32 overflow-y-scroll col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 font-dosis text-md p-2 place-self-center caret-transparent`}
-                  // disabled={postLoading ? true : false}
-                  // style={{
-                  //   resize: "none",
-                  // }}
-                  dangerouslySetInnerHTML={{
-                    __html: postDescription.replaceAll("\n", "<br/>"),
+                  onScroll={(e: any) => syncScroll(e)}
+                  onInput={(e: FormEvent) => {
+                    handlePostDescription(e);
+                    syncScroll(e);
                   }}
+                  className={`relative w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-1 font-dosis text-base`}
+                  disabled={postLoading ? true : false}
+                  style={{
+                    resize: "none",
+                  }}
+                ></textarea>
+
+                <pre
+                  id="highlighting"
+                  className={`absolute w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-0 font-dosis text-base`}
                 >
-                  {/* {postDescription} */}
-                </div>
+                  <code
+                    id="highlighted-content"
+                    className={`w-full h-full place-self-center text-left`}
+                  >
+                    Have something to share...
+                  </code>
+                </pre>
               </div>
             </div>
             <div className="relative w-full hit row-start-3">

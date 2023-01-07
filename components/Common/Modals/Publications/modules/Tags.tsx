@@ -19,7 +19,6 @@ const Tags: FunctionComponent<TagsProps> = ({
         }
       >
         <input
-          id="post"
           className="relative w-32 h-8 text-black rounded-l-md bg-white/60 p-1"
           name={"tag"}
           disabled={tags?.length >= 5 ? true : false}
@@ -27,7 +26,7 @@ const Tags: FunctionComponent<TagsProps> = ({
         <button
           className={`${
             tags?.length >= 5 ? "bg-offBlue/50 cursor-default" : "bg-offBlue"
-          } relative w-fit text-xs rounded-r-md grid grid-flow-col auto-cols-auto px-2`}
+          } relative h-8 w-fit text-xs rounded-r-md grid grid-flow-col auto-cols-auto px-2`}
           type="submit"
         >
           <div className="relative w-fit h-fit place-self-center">

@@ -96,12 +96,12 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
             : "row-start-2"
         } relative w-full h-fit  text-left font-dosis grid grid-flow-row auto-rows-auto gap-6 pl-6`}
       >
-        <div className="relative w-full h-fit row-start-1 text-black text-md self-center justify-self-start grid grid-flow-col auto-cols-auto gap-4">
+        <div className="relative w-full h-fit row-start-1 text-black text-base self-center justify-self-start grid grid-flow-col auto-cols-auto gap-4">
           <div className="relative w-fit h-fit col-start-1 row-start-1 text-2xl text-offBlack">
             {(publication as any)?.metadata?.name}
           </div>
           <div className="relative w-fit h-fit col-start-1 row-start-2 grid grid-flow-col auto-cols-auto">
-            <div className="relative w-fit h-fit rounded-md bg-black text-white text-md grid grid-flow-col auto-cols-auto px-2 py-1">
+            <div className="relative w-fit h-fit rounded-md bg-black text-white text-base grid grid-flow-col auto-cols-auto px-2 py-1">
               <div className="relative w-fit h-fit place-self-center">
                 Src: {(publication as any)?.metadata?.content?.split("\n\n")[0]}{" "}
                 —— {(publication as any)?.metadata?.content?.split("\n\n")[1]}
@@ -155,7 +155,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                 <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto">
                   <div
                     id="record2"
-                    className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-2 py-1 text-md"
+                    className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-2 py-1 text-base"
                   >
                     <div className="relative w-fit h-fit place-self-center col-start-1">
                       {
