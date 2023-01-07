@@ -159,7 +159,6 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
             </div>
             <div
               className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2 z-2"
-              id="sized"
             >
               <div
                 id="radialPinkBorder"
