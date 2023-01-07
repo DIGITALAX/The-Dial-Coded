@@ -172,7 +172,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
 
                 <pre
                   id="highlighting"
-                  className={`absolute w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-0 font-dosis text-base`}
+                  className={`absolute w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-0 font-dosis text-base whitespace-pre-wrap`}
                 >
                   <code
                     id="highlighted-content"

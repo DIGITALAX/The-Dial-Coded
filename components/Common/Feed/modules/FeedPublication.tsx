@@ -1,5 +1,5 @@
 import Image from "next/legacy/image";
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent } from "react";
 import Reactions from "../Reactions/Reactions";
 import { FeedPublicationProps } from "../../types/common.types";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";

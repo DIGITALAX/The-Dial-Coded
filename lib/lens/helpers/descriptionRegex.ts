@@ -10,7 +10,9 @@ const descriptionRegex = (description: string) => {
         `;
     } else if (word[0] && word[1] && word[2] === "w")
       return `
-      <a href="${`${word}`}" target="_blank" rel="noreferrer">
+      <a href=${
+        word.includes("//") ? word : `//${word}`
+      } target="_blank" rel="noreferrer">
       <span style="color: #81A8F8;">${word}</span>
       </a>
       `;
