@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { PostArgsType, PostImage } from "../../../types/common.types";
 import createPostTypedData from "../../../../../graphql/mutations/createPost";
+import { searchProfile } from "../../../../../graphql/queries/search";
 import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import { setSignIn } from "../../../../../redux/reducers/signInSlice";
@@ -24,12 +25,15 @@ import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 import omit from "../../../../../lib/lens/helpers/omit";
 import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
 import { setFollowerOnly } from "../../../../../redux/reducers/followerOnlySlice";
+import { Profile } from "../../../types/lens.types";
 
 const usePublication = () => {
   const {
     query: { id },
   } = useRouter();
   const [postDescription, setPostDescription] = useState<string>("");
+  const [postHTML, setPostHTML] = useState<string>("");
+  const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [contentURI, setContentURI] = useState<string | undefined>();
   const [args, setArgs] = useState<PostArgsType | undefined>();
@@ -128,6 +132,10 @@ const usePublication = () => {
   };
 
   const handleEmoji = (e: any): void => {
+    let result_element = document.querySelector("#highlighted-content");
+    (result_element as any).innerHTML = postHTML + e.emoji;
+    setPostHTML(postHTML + e.emoji);
+    console.log(postHTML + e.emoji);
     setPostDescription(postDescription + e.emoji);
   };
 
@@ -370,6 +378,8 @@ const usePublication = () => {
     }
   };
 
+  const handleMentionClick = () => {};
+
   const handlePostDescription = async (e: any): Promise<void> => {
     let result_element = document.querySelector("#highlighted-content");
     if (e.target.value[e.target.value.length - 1] == "\n") {
@@ -389,11 +399,22 @@ const usePublication = () => {
         return `<span style="color: blue">${match}</span>`;
       }
     );
-    console.log(mentionHighlight);
-    (result_element as any).innerHTML = mentionHighlight
+    const finalHTML = mentionHighlight
       .replace(new RegExp("&", "g"), "&")
       .replace(new RegExp("<", "g"), "<");
+    (result_element as any).innerHTML = finalHTML;
 
+    if (
+      e.target.value.split(" ")[e.target.value.split(" ").length - 1][0] === "@"
+    ) {
+      const allProfiles = await searchProfile({
+        query: e.target.value.split(" ")[e.target.value.split(" ").length - 1],
+        type: "PROFILE",
+        limit: 50,
+      });
+      setMentionProfiles(allProfiles?.data?.search?.items);
+    }
+    setPostHTML(finalHTML);
     setPostDescription(e.target.value);
   };
 
@@ -448,6 +469,8 @@ const usePublication = () => {
     handleRemoveTag,
     myDiv,
     syncScroll,
+    mentionProfiles,
+    handleMentionClick,
   };
 };
 
