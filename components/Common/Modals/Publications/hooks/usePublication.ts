@@ -135,7 +135,6 @@ const usePublication = () => {
     let result_element = document.querySelector("#highlighted-content");
     (result_element as any).innerHTML = postHTML + e.emoji;
     setPostHTML(postHTML + e.emoji);
-    console.log(postHTML + e.emoji);
     setPostDescription(postDescription + e.emoji);
   };
 
@@ -403,7 +402,8 @@ const usePublication = () => {
       .replace(new RegExp("&", "g"), "&")
       .replace(new RegExp("<", "g"), "<");
     (result_element as any).innerHTML = finalHTML;
-
+    setPostHTML(finalHTML);
+    setPostDescription(e.target.value);
     if (
       e.target.value.split(" ")[e.target.value.split(" ").length - 1][0] === "@"
     ) {
@@ -413,9 +413,9 @@ const usePublication = () => {
         limit: 50,
       });
       setMentionProfiles(allProfiles?.data?.search?.items);
+    } else {
+      setMentionProfiles([]);
     }
-    setPostHTML(finalHTML);
-    setPostDescription(e.target.value);
   };
 
   const syncScroll = (e: any) => {
