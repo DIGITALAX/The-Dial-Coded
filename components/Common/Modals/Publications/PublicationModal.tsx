@@ -158,7 +158,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
               />
             </div>
             <div
-              className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2"
+              className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2 z-2"
               id="sized"
             >
               <div
@@ -206,7 +206,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                       return (
                         <div
                           key={index}
-                          className={`relative w-full h-fit px-3 py-2 bg-white col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer border-y border-black hover:bg-offBlue`}
+                          className={`relative w-full h-fit px-3 py-2 bg-white col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer border-y border-black hover:bg-offBlue z-2`}
                           onClick={() => {
                             handleMentionClick(user);
                           }}
@@ -237,7 +237,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 )}
               </div>
             </div>
-            <div className="relative w-full hit row-start-3">
+            <div className="relative w-full hit row-start-3 z-0">
               <Tags
                 handleRemoveTag={handleRemoveTag}
                 tags={tags}
