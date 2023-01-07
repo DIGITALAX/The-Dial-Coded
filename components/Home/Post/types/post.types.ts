@@ -1,6 +1,9 @@
-import { FormEvent } from "react";
+import { FormEvent, Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
-import { PublicationSearchResult } from "../../../Common/types/lens.types";
+import {
+  Profile,
+  PublicationSearchResult,
+} from "../../../Common/types/lens.types";
 
 export type MainPostProps = {
   publicationData: any;
@@ -40,4 +43,10 @@ export type CommentsProps = {
   handleTags: (e: FormEvent) => void;
   handleRemoveTag: (tag: string) => void;
   followerOnly: boolean;
+  syncScroll: (e: any) => void;
+  caretCoord: { x: number; y: number };
+  mentionProfiles: Profile[];
+  profilesOpen: boolean;
+  handleMentionClick: (user: any) => void;
+  textElement: Ref<HTMLTextAreaElement>;
 };

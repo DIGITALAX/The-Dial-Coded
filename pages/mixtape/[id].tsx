@@ -27,7 +27,7 @@ const Post: NextPage = (): JSX.Element => {
     hasPostCommented,
     hasPostMirrored,
     hasPostReacted,
-    followerOnly
+    followerOnly,
   } = usePostPage();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
@@ -55,6 +55,12 @@ const Post: NextPage = (): JSX.Element => {
     tags,
     handleRemoveTag,
     handleTags,
+    syncScroll,
+    caretCoord,
+    mentionProfiles,
+    profilesOpen,
+    handleMentionClick,
+    textElement,
   } = usePublication();
   const {
     commentors,
@@ -178,6 +184,12 @@ const Post: NextPage = (): JSX.Element => {
                 handleTags={handleTags}
                 tags={tags}
                 followerOnly={followerOnly}
+                syncScroll={syncScroll}
+                caretCoord={caretCoord}
+                mentionProfiles={mentionProfiles}
+                profilesOpen={profilesOpen}
+                handleMentionClick={handleMentionClick}
+                textElement={textElement}
               />
             </div>
           </>

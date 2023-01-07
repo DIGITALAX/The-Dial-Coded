@@ -57,6 +57,12 @@ const Post: NextPage = (): JSX.Element => {
     tags,
     handleRemoveTag,
     handleTags,
+    syncScroll,
+    caretCoord,
+    mentionProfiles,
+    profilesOpen,
+    handleMentionClick,
+    textElement,
   } = usePublication();
   const {
     commentors,
@@ -184,6 +190,12 @@ const Post: NextPage = (): JSX.Element => {
                 tags={tags}
                 handleTags={handleTags}
                 handleRemoveTag={handleRemoveTag}
+                syncScroll={syncScroll}
+                caretCoord={caretCoord}
+                mentionProfiles={mentionProfiles}
+                profilesOpen={profilesOpen}
+                handleMentionClick={handleMentionClick}
+                textElement={textElement}
               />
             </div>
           </>

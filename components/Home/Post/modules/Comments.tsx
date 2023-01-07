@@ -4,6 +4,7 @@ import { FormEvent, FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
+import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { RootState } from "../../../../redux/store";
 import FeedPublication from "../../../Common/Feed/modules/FeedPublication";
@@ -44,6 +45,12 @@ const Comments: FunctionComponent<CommentsProps> = ({
   handleTags,
   handleRemoveTag,
   followerOnly,
+  syncScroll,
+  caretCoord,
+  mentionProfiles,
+  profilesOpen,
+  handleMentionClick,
+  textElement,
 }): JSX.Element => {
   const { openConnectModal } = useConnectModal();
   const collectOptionsModal = useSelector(
@@ -175,14 +182,86 @@ const Comments: FunctionComponent<CommentsProps> = ({
         ) : (
           <div className="relative w-full h-full place-self-center col-start-1 grid grid-flow-row auto-rows-auto gap-2">
             {!followerOnly ? (
-              <textarea
-                onChange={(e: FormEvent) => handleCommentDescription(e)}
-                style={{ resize: "none" }}
-                value={commentDescription}
-                placeholder="Have something to share..."
-                className={`relative w-full h-48 overflow-y-scroll row-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-base p-4 place-self-center drop-shadow-lg caret-transparent`}
-                disabled={commentLoading || followerOnly ? true : false}
-              ></textarea>
+              // <textarea
+              //   onChange={(e: FormEvent) => handleCommentDescription(e)}
+              //   style={{ resize: "none" }}
+              //   value={commentDescription}
+              //   placeholder="Have something to share..."
+              //   className={`relative w-full h-48 overflow-y-scroll row-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-base p-4 place-self-center drop-shadow-lg caret-transparent`}
+              //   disabled={commentLoading || followerOnly ? true : false}
+              // ></textarea>
+              <div className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1.5 rounded-xl">
+                <textarea
+                  id="post"
+                  onScroll={(e: any) => syncScroll(e)}
+                  onInput={(e: FormEvent) => {
+                    handleCommentDescription(e);
+                    syncScroll(e);
+                  }}
+                  ref={textElement}
+                  value={commentDescription}
+                  className={`relative w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-1 font-dosis text-base overflow-y-scroll`}
+                  disabled={commentLoading || followerOnly ? true : false}
+                  style={{
+                    resize: "none",
+                  }}
+                ></textarea>
+                <pre
+                  id="highlighting"
+                  className={`absolute w-full h-32 col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 p-2 place-self-center z-0 font-dosis text-base whitespace-pre-wrap overflow-y-scroll`}
+                >
+                  <code
+                    id="highlighted-content"
+                    className={`w-full h-full place-self-center text-left whitespace-pre-wrap overflow-y-scroll`}
+                  >
+                    Have something to share...
+                  </code>
+                </pre>
+                {mentionProfiles?.length > 0 && profilesOpen && (
+                  <div
+                    className={`absolute w-44 max-h-28 h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll z-2`}
+                    style={{
+                      top: caretCoord.y + 30,
+                      left: caretCoord.x,
+                    }}
+                  >
+                    {mentionProfiles?.map((user: any, index: number) => {
+                      const profileImage: string = createProfilePicture(
+                        user?.picture
+                      );
+                      return (
+                        <div
+                          key={index}
+                          className={`relative w-full h-fit px-3 py-2 bg-white col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer border-y border-black hover:bg-offBlue z-2`}
+                          onClick={() => {
+                            handleMentionClick(user);
+                          }}
+                        >
+                          <div className="relative w-fit h-fit col-start-1 text-black font-dosis lowercase place-self-center grid grid-flow-col auto-cols-auto gap-2">
+                            <div
+                              className={`relative rounded-full flex bg-white w-3 h-3 place-self-center col-start-1`}
+                              id="crt"
+                            >
+                              {profileImage !== "" && (
+                                <Image
+                                  src={profileImage}
+                                  objectFit="cover"
+                                  alt="pfp"
+                                  layout="fill"
+                                  className="relative w-fit h-fit rounded-full self-center"
+                                />
+                              )}
+                            </div>
+                            <div className="relative col-start-2 place-self-center w-fit h-fit text-xs">
+                              @{user?.handle}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="relative w-full h-48 row-start-1 bg-white/80 rounded-xl p-4 place-self-center drop-shadow-lg grid grid-flow-col auto-cols-auto font-dosis text-offBlack">
                 Only followers can comment...
