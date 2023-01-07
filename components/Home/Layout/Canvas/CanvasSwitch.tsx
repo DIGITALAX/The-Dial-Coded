@@ -51,7 +51,9 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     writingRef,
     handleBlur,
     handleMouseWheel,
-   } = useDraw();
+    handleClear,
+    handleCanvasPost
+  } = useDraw();
   const {
     quickSearchResults,
     searchLoading,
@@ -130,6 +132,8 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           writingRef={writingRef}
           handleBlur={handleBlur}
           handleMouseWheel={handleMouseWheel}
+          handleClear={handleClear}
+          handleCanvasPost={handleCanvasPost}
         />
       );
   }

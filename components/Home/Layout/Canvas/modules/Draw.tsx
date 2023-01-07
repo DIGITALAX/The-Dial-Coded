@@ -44,7 +44,9 @@ const Draw: FunctionComponent<DrawProps> = ({
   action,
   writingRef,
   handleBlur,
+  handleClear,
   handleMouseWheel,
+  handleCanvasPost
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -61,10 +63,10 @@ const Draw: FunctionComponent<DrawProps> = ({
             ? "cursor-erase"
             : tool === "pan" && action !== "panning"
             ? "cursor-grab"
-            : tool === "pan" && action === "panning" && "cursor-grabbing"
+            : tool === "pan" && action === "panning" ? "cursor-grabbing" : tool === "marquee" && "cursor-crosshair"
         } rounded-lg border border-white row-start-1`}
       >
-        <Publish />
+        <Publish handleCanvasPost={handleCanvasPost} />
         <SideMenu
           showSideDrawOptions={showSideDrawOptions}
           setShowSideDrawOptions={setShowSideDrawOptions}
@@ -75,6 +77,7 @@ const Draw: FunctionComponent<DrawProps> = ({
           undo={undo}
           redo={redo}
           setTool={setTool}
+          handleClear={handleClear}
         />
         <BottomMenu
           showBottomDrawOptions={showBottomDrawOptions}

@@ -8,14 +8,19 @@ const ImageUploads: FunctionComponent<ImageUploadProps> = ({
   mappedFeaturedFiles,
   handleRemoveImage,
   postLoading,
+  postImagesDispatched,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit overflow-x-scroll grid grid-flow-col auto-cols-auto gap-2">
-      {mappedFeaturedFiles?.map((image: string, index: number) => {
+      {(mappedFeaturedFiles?.length === 0
+        ? postImagesDispatched
+        : mappedFeaturedFiles
+      )?.map((image: string, index: number) => {
+        console.log(image);
         return (
           <div
             key={index}
-            className={`relative w-60 h-60 border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
+            className={`relative w-60 h-60 border-2 border-black rounded-lg grid grid-flow-col auto-cols-auto col-start-${
               index + 1
             }`}
           >

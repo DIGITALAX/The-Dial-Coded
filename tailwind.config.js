@@ -58,10 +58,10 @@ module.exports = {
         spots:
           "url('https://thedial.infura-ipfs.io/ipfs/QmdCN3qFCJcao9HfQVbQm3SbCjErMJysefqgP1uogXjtve')",
         board:
-          "linear-gradient(#131313 0.1em, transparent 0.1em),linear-gradient(90deg, #131313 0.1em, transparent 0.1em)",
+          "linear-gradient(#131313 0.05em, transparent 0.05em),linear-gradient(90deg, #131313 0.05em, transparent 0.05em)",
       },
       backgroundSize: {
-        boardSize: "3em 3em",
+        boardSize: "2em 2em",
       },
       zIndex: {
         1: "1",

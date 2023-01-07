@@ -13,34 +13,53 @@ const useImageUpload = (): ImageUploadResults => {
     (state: RootState) => state.app.postImageReducer.value
   );
 
-  const uploadImage = async (e: FormEvent): Promise<void> => {
+  const uploadImage = async (
+    e: FormEvent | File,
+    canvas?: boolean
+  ): Promise<void> => {
     let finalImages: string[] = [];
     setImageUploading(true);
-    Array.from((e.target as HTMLFormElement).files).map(
-      async (file: any, index: number) => {
-        try {
-          const response = await fetch("/api/ipfs", {
-            method: "POST",
-            body: (e.target as HTMLFormElement).files[index],
-          });
-          if (response.status !== 200) {
-            setImageUploading(false);
-          } else {
-            let cid = await response.json();
-            finalImages.push(String(cid?.cid));
-            setMappedFeaturedFiles([...finalImages]);
-            if (
-              finalImages?.length ===
-              (e.target as HTMLFormElement).files?.length
-            ) {
-              setImageUploading(false);
-            }
-          }
-        } catch (err: any) {
-          console.error(err.message);
-        }
+
+    if (canvas) {
+      try {
+        const response = await fetch("/api/ipfs", {
+          method: "POST",
+          body: e as any,
+        });
+        let cid = await response.json();
+        finalImages.push(String(cid?.cid));
+        setMappedFeaturedFiles([...finalImages]);
+      } catch (err: any) {
+        console.error(err.message);
       }
-    );
+      setImageUploading(false);
+    } else {
+      Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(
+        async (file: any, index: number) => {
+          try {
+            const response = await fetch("/api/ipfs", {
+              method: "POST",
+              body: ((e as FormEvent).target as HTMLFormElement).files[index],
+            });
+            if (response.status !== 200) {
+              setImageUploading(false);
+            } else {
+              let cid = await response.json();
+              finalImages.push(String(cid?.cid));
+              setMappedFeaturedFiles([...finalImages]);
+              if (
+                finalImages?.length ===
+                ((e as FormEvent).target as HTMLFormElement).files?.length
+              ) {
+                setImageUploading(false);
+              }
+            }
+          } catch (err: any) {
+            console.error(err.message);
+          }
+        }
+      );
+    }
   };
 
   const handleRemoveImage = (image: string): void => {

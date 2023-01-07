@@ -23,6 +23,9 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
   const imagePickerModal = useSelector(
     (state: RootState) => state.app.emojiPickerReducer.value
   );
+  const postImagesDispatched = useSelector(
+    (state: RootState) => state.app.postImageReducer.value
+  );
   const {
     enabledCurrencies,
     audienceTypes,
@@ -88,7 +91,6 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     caretCoord,
     profilesOpen,
   } = usePublication();
-
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
@@ -130,11 +132,13 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
             setTimeLimitDropDown={setTimeLimitDropDown}
           />
         )}
-        {mappedFeaturedFiles?.length !== 0 && (
+        {(mappedFeaturedFiles?.length !== 0 ||
+          postImagesDispatched?.length !== 0) && (
           <ImageUploads
             mappedFeaturedFiles={mappedFeaturedFiles}
             handleRemoveImage={handleRemoveImage}
             postLoading={postLoading}
+            postImagesDispatched={postImagesDispatched as string[]}
           />
         )}
         {imagePickerModal !== "" && (
@@ -157,9 +161,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 onClick={() => dispatch(setPublication(false))}
               />
             </div>
-            <div
-              className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2 z-2"
-            >
+            <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2 z-2">
               <div
                 id="radialPinkBorder"
                 className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1.5 rounded-xl"
