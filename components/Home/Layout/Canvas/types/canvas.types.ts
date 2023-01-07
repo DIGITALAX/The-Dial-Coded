@@ -51,7 +51,8 @@ export type DrawProps = {
   action: string;
   writingRef: Ref<HTMLTextAreaElement>;
   handleBlur: (e: FormEvent) => void;
-
+  handleClear: () => void
+  handleCanvasPost: () => Promise<void>
 };
 
 export type ColorPickerProps = {
@@ -69,6 +70,7 @@ export type SideMenuProps = {
   undo: () => boolean | void;
   redo: () => boolean | void;  
   setTool: (e: string) => void;
+  handleClear: () => void
 };
 
 export type BottomMenuProps = {
@@ -105,6 +107,7 @@ export type SideOptionsProps = {
   undo: () => boolean | void;
   redo: () => boolean | void;
   setTool: (e: string) => void;
+  handleClear: () => void
 };
 
 export type BottomOptionsProps = {
@@ -139,6 +142,7 @@ export interface ElementInterface {
   stroke?: string;
   strokeWidth?: number;
   fillStyle?: string;
+  image?: HTMLImageElement
 }
 
 export interface Point2 {
@@ -159,3 +163,7 @@ export type Point = {
   x: number;
   y: number;
 };
+
+export type PublishProps = {
+  handleCanvasPost: () => Promise<void>
+}

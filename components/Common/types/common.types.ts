@@ -359,7 +359,7 @@ export type ProfileProps = {
 export type PostOptionsProps = {
   dispatch: Dispatch<AnyAction>;
   imagePicker: string | undefined;
-  uploadImage: (e: FormEvent) => Promise<void>;
+  uploadImage: (e: FormEvent | File, canvas?: boolean) => Promise<void>;
   imageUploading: boolean;
   postLoading: boolean;
 };
@@ -368,10 +368,11 @@ export type ImageUploadProps = {
   mappedFeaturedFiles: string[] | undefined;
   handleRemoveImage: (e: string) => void;
   postLoading: boolean;
+  postImagesDispatched: string[]
 };
 
 export type ImageUploadResults = {
-  uploadImage: (e: FormEvent) => Promise<void>;
+  uploadImage: (e: FormEvent | File, canvas?: boolean) => Promise<void>;
   imageUploading: boolean;
   mappedFeaturedFiles: string[] | undefined;
   handleRemoveImage: (e: string) => void;

@@ -12,7 +12,8 @@ const SideMenu: FunctionComponent<SideMenuProps> = ({
   handleImageAdd,
   undo,
   redo,
-  setTool
+  setTool,
+  handleClear
 }): JSX.Element => {
   return (
     <div className="absolute w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto justify-self-end self-start p-3 gap-2 z-10">
@@ -33,6 +34,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = ({
           undo={undo}
           redo={redo}
           setTool={setTool}
+          handleClear={handleClear}
         />
       )}
     </div>

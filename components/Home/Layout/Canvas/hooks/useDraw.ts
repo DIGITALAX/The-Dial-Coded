@@ -11,8 +11,13 @@ import rough from "roughjs/bundled/rough.cjs";
 import { ElementInterface, Point, Point2 } from "../types/canvas.types";
 import getStroke from "perfect-freehand";
 import lodash from "lodash";
+import { useDispatch } from "react-redux";
+import { setPublication } from "../../../../../redux/reducers/publicationSlice";
+import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImageUpload";
 
 const useDraw = () => {
+  const { uploadImage } = useImageUpload();
+  const dispatch = useDispatch();
   const ORIGIN = Object.freeze({ x: 0, y: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const writingRef = useRef<HTMLTextAreaElement>(null);
@@ -32,8 +37,10 @@ const useDraw = () => {
   const [colorPicker, setColorPicker] = useState<boolean>(false);
   const [brushWidth, setBrushWidth] = useState<number>(12);
   const [thickness, setThickness] = useState<boolean>(false);
+  // const [borderOffset, setBorderOffset] = useState<number>(0);
   const generator = rough.generator();
   const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
+  const [clear, setClear] = useState<boolean>(false);
   const ctx = canvas?.getContext("2d");
   const dosis = new FontFace("dosis", "url(fonts/DosisRegular.ttf)");
   const [scale, setScale] = useState<number>(1);
@@ -44,7 +51,6 @@ const useDraw = () => {
   const isResetRef = useRef<boolean>(false);
   const lastMousePosRef = useRef<Point>(ORIGIN);
   const lastOffsetRef = useRef<Point>(ORIGIN);
-  
 
   const diffPoints = (p1: Point, p2: Point) => {
     return { x: p1.x - p2.x, y: p1.y - p2.y };
@@ -137,13 +143,61 @@ const useDraw = () => {
         );
         break;
 
+      case "image":
+        ctx?.drawImage(element?.image as HTMLImageElement, 0, 0);
+        const imgData = canvas.toDataURL("image/jpeg", 0.75);
+        break;
+
+      case "marquee":
+        ctx?.beginPath();
+        ctx?.setLineDash([10, 10]);
+        (ctx as CanvasRenderingContext2D).strokeStyle = "#929292";
+        // (ctx as CanvasRenderingContext2D).lineDashOffset = -borderOffset;
+        ctx?.strokeRect(
+          element.x1 as number,
+          element.y1 as number,
+          element.x2 as number,
+          element.y2 as number
+        );
+        ctx?.stroke();
+        break;
+
       default:
         throw new Error("type not supported");
     }
   };
 
+  const getCanvas = (): string => {
+    let img: string;
+    const marquee = lodash.find(elements, { type: "marquee" });
+    if (marquee) {
+      const hiddenCanvas = document.createElement("canvas");
+      hiddenCanvas.style.display = "none";
+      document.body.appendChild(hiddenCanvas);
+      const hiddenCanvasCtx = hiddenCanvas.getContext("2d");
+      hiddenCanvas.width = marquee.x2;
+      hiddenCanvas.height = marquee.y2;
+      hiddenCanvasCtx?.drawImage(
+        canvas,
+        marquee.x1,
+        marquee.y1,
+        marquee.x2,
+        marquee.y2,
+        0,
+        0,
+        hiddenCanvas.width,
+        hiddenCanvas.height
+      );
+      img = hiddenCanvas.toDataURL("image/png");
+    } else {
+      img = canvas.toDataURL("image/png");
+    }
+
+    return img;
+  };
+
   const handleSave = (): void => {
-    const img = canvas.toDataURL("image/png");
+    const img = getCanvas();
     let xhr = new XMLHttpRequest();
     xhr.responseType = "blob";
     xhr.onload = function () {
@@ -159,16 +213,42 @@ const useDraw = () => {
     xhr.send();
   };
 
+  const dispatchPostCanvas = async (): Promise<void> => {
+    const imgURL = getCanvas();
+    const res: Response = await fetch(imgURL);
+    const blob: Blob = await res.blob();
+    const postImage = new File([blob], "dialcanvas", { type: "image/png" });
+    await uploadImage(postImage, true);
+  };
+
+  const handleCanvasPost = async (): Promise<void> => {
+    await dispatchPostCanvas();
+    dispatch(setPublication(true)); 
+  };
+
   const handleImageAdd = (e: FormEvent) => {
     const image = (e.target as HTMLFormElement).files[0];
     const reader = new FileReader();
     reader.readAsDataURL(image);
+
     reader.onloadend = (e) => {
       const imageObject = new Image();
       imageObject.src = e.target?.result as string;
       imageObject.onload = function (ev) {
-        ctx?.drawImage(imageObject, 0, 0);
-        const imgData = canvas.toDataURL("image/jpeg", 0.75);
+        const newElement = createElement(
+          0,
+          0,
+          imageObject.width / 2,
+          imageObject.height / 2,
+          "image",
+          elements?.length,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          imageObject
+        );
+        setElements((prevState: any) => [...prevState, newElement]);
       };
     };
   };
@@ -177,7 +257,7 @@ const useDraw = () => {
     if (ctx) {
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
-      
+
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
       const storedTransform = ctx?.getTransform();
       ctx.canvas.width = ctx?.canvas.width;
@@ -199,7 +279,6 @@ const useDraw = () => {
     setViewportTopLeft((prevVal) => diffPoints(prevVal, offsetDiff));
     isResetRef.current = false;
   }, [scale, offset]);
-
 
   const nearPoint = (
     x: number,
@@ -290,9 +369,8 @@ const useDraw = () => {
         const end = nearPoint(x, y, x2 as number, y2 as number, "end");
         return start || end || on;
       case "pencil":
-        console.log(element.points);
         const betweenAnyPoint = element.points?.some((point, index) => {
-          const nextPoint = (
+          const nextPoint: any = (
             element.points as {
               x: number;
               y: number;
@@ -319,6 +397,81 @@ const useDraw = () => {
           y <= (y2 as number)
           ? "inside"
           : null;
+      case "image":
+        const topImageLeft = nearPoint(x, y, x1 as number, y1 as number, "tl");
+        const topImageRight = nearPoint(x, y, x2 as number, y1 as number, "tr");
+        const bottomImageLeft = nearPoint(
+          x,
+          y,
+          x1 as number,
+          y2 as number,
+          "bl"
+        );
+        const bottomImageRight = nearPoint(
+          x,
+          y,
+          x2 as number,
+          y2 as number,
+          "br"
+        );
+        const insideImage =
+          x >= (x1 as number) &&
+          x <= (x2 as number) &&
+          y >= (y1 as number) &&
+          y <= (y2 as number)
+            ? "inside"
+            : null;
+        return (
+          topImageLeft ||
+          topImageRight ||
+          bottomImageLeft ||
+          bottomImageRight ||
+          insideImage
+        );
+      case "marquee":
+        break;
+      // const topMarqueeLeft = nearPoint(
+      //   x - bounds.left,
+      //   y - bounds.top,
+      //   x1 as number,
+      //   y1 as number,
+      //   "tl"
+      // );
+      // const topMarqueeRight = nearPoint(
+      //   x - bounds.left,
+      //   y - bounds.top,
+      //   (x2 as number) + (x1 as number),
+      //   y1 as number,
+      //   "tr"
+      // );
+      // const bottomMarqueeLeft = nearPoint(
+      //   x - bounds.left,
+      //   y - bounds.top,
+      //   x1 as number,
+      //   (y2 as number) + (y1 as number),
+      //   "bl"
+      // );
+      // const bottomMarqueeRight = nearPoint(
+      //   x - bounds.left,
+      //   y - bounds.top,
+      //   (x2 as number) + (x1 as number),
+      //   (y2 as number) + (y1 as number),
+      //   "br"
+      // );
+      // const insideMarquee =
+      //   x - bounds.left >= (x1 as number) &&
+      //   x - bounds.left <= (x2 as number) + (x1 as number);
+      // y - bounds.top >= (y1 as number) &&
+      // y - bounds.top <= (y2 as number) + (y1 as number)
+      //   ? "inside"
+      //   : null;
+      // return (
+      //   topMarqueeLeft ||
+      //   topMarqueeRight ||
+      //   bottomMarqueeLeft ||
+      //   bottomMarqueeRight ||
+      //   insideMarquee
+      // );
       default:
         throw new Error(`Type not recognised: ${type}`);
     }
@@ -334,7 +487,8 @@ const useDraw = () => {
     strokeWidth?: number,
     fill?: string,
     fillStyle?: string,
-    stroke?: string
+    stroke?: string,
+    image?: HTMLImageElement
   ): ElementInterface | undefined => {
     let roughElement;
     const bounds = canvas?.getBoundingClientRect();
@@ -402,7 +556,6 @@ const useDraw = () => {
             stroke,
           }
         );
-
         return {
           id,
           type,
@@ -433,6 +586,25 @@ const useDraw = () => {
           fill,
           strokeWidth,
           text: "",
+        };
+      case "image":
+        return {
+          id,
+          type,
+          x1,
+          y1,
+          x2,
+          y2,
+          image,
+        };
+      case "marquee":
+        return {
+          id,
+          type,
+          x1: x1,
+          y1: y1,
+          x2: x2 - x1,
+          y2: y2 - y1,
         };
     }
   };
@@ -504,8 +676,27 @@ const useDraw = () => {
           text,
         };
         break;
+
+      case "marquee":
+        elementsCopy[index] = createElement(
+          x1 as number,
+          y1 as number,
+          x2 as number,
+          y2 as number,
+          type,
+          index
+        ) as ElementInterface;
+        break;
     }
     setElements(elementsCopy, true);
+  };
+
+  const removeMarquee = (): ElementInterface[] => {
+    const filteredMarqueeElements = lodash.filter(
+      elements,
+      (element) => element.type !== "marquee"
+    );
+    return filteredMarqueeElements;
   };
 
   const handleMouseDown = (e: MouseEvent): void => {
@@ -538,7 +729,8 @@ const useDraw = () => {
       tool === "line" ||
       tool === "text"
     ) {
-      const id = elements?.length;
+      const filteredMarqueeElements = removeMarquee();
+      const id = filteredMarqueeElements?.length;
       const newElement = createElement(
         e.clientX,
         e.clientY,
@@ -551,7 +743,7 @@ const useDraw = () => {
         shapeFillType,
         hex
       );
-      setElements((prevState: any) => [...prevState, newElement]);
+      setElements([...filteredMarqueeElements, newElement]);
       setSelectedElement(newElement);
       setAction(tool === "text" ? "writing" : "drawing");
     } else if (tool === "erase") {
@@ -559,12 +751,27 @@ const useDraw = () => {
     } else if (tool === "pan") {
       lastMousePosRef.current = { x: e.pageX, y: e.pageY };
       setAction("panning");
+    } else if (tool === "marquee") {
+      // remove any previous marquee
+      const filteredMarqueeElements = removeMarquee();
+      const bounds = canvas.getBoundingClientRect();
+      const id = filteredMarqueeElements?.length;
+      const newElement = createElement(
+        e.clientX - bounds.left,
+        e.clientY - bounds.top,
+        e.clientX - bounds.left,
+        e.clientY - bounds.top,
+        tool,
+        id
+      );
+      setAction("marquee");
+      setElements([...filteredMarqueeElements, newElement]);
+      setSelectedElement(newElement);
     }
   };
 
   const handleMouseMove = (e: MouseEvent): void => {
-    if (action === "writing") return;
-    if (!action) return;
+    if (!action || action === "writing") return;
     if (action === "drawing") {
       const index = elements?.length - 1;
       const { x1, y1 } = elements[index];
@@ -643,6 +850,22 @@ const useDraw = () => {
 
       const mouseDiff = diffPoints(currentMousePos, lastMousePos);
       setOffset((prevOffset) => addPoints(prevOffset, mouseDiff));
+    } else if (action === "marquee") {
+      const index = elements?.length - 1;
+      const { x1, y1 } = elements[index];
+      const bounds = canvas.getBoundingClientRect();
+      updateElement(
+        x1 as number,
+        y1 as number,
+        e.clientX - bounds.left,
+        e.clientY - bounds.top,
+        tool,
+        index,
+        brushWidth,
+        hex,
+        shapeFillType,
+        hex
+      );
     }
   };
 
@@ -699,6 +922,18 @@ const useDraw = () => {
     document.fonts.add(doR);
   };
 
+  const handleClear = () => {
+    setClear(true);
+  };
+
+  useLayoutEffect(() => {
+    if (clear) {
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      setElements([]);
+      setClear(false);
+    }
+  }, [clear]);
+
   useEffect(() => {
     loadFont();
   }, []);
@@ -739,6 +974,8 @@ const useDraw = () => {
     writingRef,
     handleBlur,
     handleMouseWheel,
+    handleClear,
+    handleCanvasPost,
   };
 };
 

@@ -12,6 +12,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   undo,
   redo,
   setTool,
+  handleClear,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-4">
@@ -114,12 +115,14 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
         </div>
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
-        {/* <CanvasOption
-          image="QmcX4FjBExCJvbLvxuTs2VPwzhpoCds1sL97AvxygF9EYE"
-          bgColor="black"
-          width={25}
-          height={25}
-        /> */}
+        <div className="relative w-fit h-fit" onClick={() => handleClear()}>
+          <CanvasOption
+            image="QmTXMPNsTNyEExqHeTMM3SvsowEdt4Xn2eeZ2Xe3tteLkK"
+            bgColor="black"
+            width={35}
+            height={35}
+          />
+        </div>
         <div className="relative w-fit h-fit" onClick={() => handleSave()}>
           <CanvasOption
             image="QmYMJJ2U8fCWsoiaX2Twmmks8sj3z4bCU5BMNT9dXhnaBj"
