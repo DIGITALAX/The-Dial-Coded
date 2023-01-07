@@ -386,17 +386,15 @@ const usePublication = () => {
   const handleMentionClick = (user: any) => {
     setProfilesOpen(false);
     let result_element = document.querySelector("#highlighted-content");
-    const removedElementHTML = postHTML.split(" ");
-    const removedElementPost = postDescription.split(" ");
-    removedElementHTML.pop();
-    removedElementPost.pop();
-    removedElementHTML.join(",");
-    removedElementPost.join(",");
-    console.log(removedElementHTML, removedElementPost);
-    (result_element as any).innerHTML =
-      removedElementHTML + user?.handle.split(".test")[0];
-    setPostHTML(postHTML + user?.handle.split(".test")[0]);
-    setPostDescription(removedElementPost + user?.handle.split(".test")[0]);
+    const newHTMLPost =
+      postHTML.substring(0, postHTML.lastIndexOf("@")) +
+      `@${user?.handle.split(".test")[0]}</span>`;
+    const newElementPost =
+      postDescription.substring(0, postDescription.lastIndexOf("@")) +
+      `@${user?.handle.split(".test")[0]}`;
+    setPostDescription(newElementPost);
+    (result_element as any).innerHTML = newHTMLPost;
+    setPostHTML(newHTMLPost);
   };
 
   const handlePostDescription = async (e: any): Promise<void> => {
