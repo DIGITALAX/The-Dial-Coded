@@ -85,7 +85,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     handleRemoveTag,
     syncScroll,
     mentionProfiles,
-    handleMentionClick
+    handleMentionClick,
   } = usePublication();
 
   return (
