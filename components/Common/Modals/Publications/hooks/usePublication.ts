@@ -429,16 +429,16 @@ const usePublication = () => {
         1
     ) {
       const caret = getCaretCoordinates(e.target, e.target.selectionEnd);
-      console.log(
-        caret,
-        textElement.current?.clientWidth,
-        textElement.current?.clientHeight,
-        textElement.current?.scrollHeight,
-        textElement.current?.scrollWidth
-      );
       setCaretCoord({
-        x: caret.left,
-        y: caret.top,
+        x:
+          caret.left > (2 / 3) * (textElement.current?.clientWidth as number)
+            ? caret.left - 150
+            : caret.left,
+        y:
+          (textElement.current?.scrollHeight as number) >
+          (textElement.current?.clientHeight as number)
+            ? -30
+            : caret.top,
       });
       setProfilesOpen(true);
     }
