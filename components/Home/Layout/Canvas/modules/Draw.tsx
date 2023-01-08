@@ -80,7 +80,8 @@ const Draw: FunctionComponent<DrawProps> = ({
               selectedElement?.position === "bl"
                 ? "cursor-nesw-resize"
                 : (selectedElement?.position === "br" ||
-                    selectedElement?.position === "tl") &&
+                    selectedElement?.position === "tl" ||
+                    selectedElement?.position === "edge") &&
                   "cursor-nwse-resize")
         } rounded-lg border border-white row-start-1`}
       >

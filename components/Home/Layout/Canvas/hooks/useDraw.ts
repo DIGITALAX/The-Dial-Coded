@@ -327,8 +327,7 @@ const useDraw = () => {
     const p =
       Math.pow(x - x1, 2) / Math.pow((x2 - x1) * Math.PI, 2) +
       Math.pow(y - y1, 2) / Math.pow((y2 - y1) * Math.PI, 2);
-    console.log(p);
-    return p < 0.3 && "inside";
+    return p;
   };
 
   const positionWithinElement = (
@@ -353,16 +352,6 @@ const useDraw = () => {
             : null;
         return topLeft || topRight || bottomLeft || bottomRight || inside;
       case "ell":
-        const ellTopLeft = nearPoint(x, y, x1 as number, y1 as number, "tl");
-        const ellTopRight = nearPoint(x, y, x2 as number, y1 as number, "tr");
-        const ellBottomLeft = nearPoint(x, y, x1 as number, y2 as number, "bl");
-        const ellBottomRight = nearPoint(
-          x,
-          y,
-          x2 as number,
-          y2 as number,
-          "br"
-        );
         const ellInside = insideEllipse(
           x,
           y,
@@ -371,13 +360,10 @@ const useDraw = () => {
           x2 as number,
           y2 as number
         );
-        return (
-          ellInside ||
-          ellTopLeft ||
-          ellTopRight ||
-          ellBottomLeft ||
-          ellBottomRight
-        );
+
+        return ellInside < 0.3 && ellInside > 0.6 * 0.3
+          ? "edge"
+          : ellInside < 0.3 && "inside";
       case "line":
         const on = onLine(
           x1 as number,
@@ -648,6 +634,7 @@ const useDraw = () => {
     let positionArray: ElementInterface[] = [];
     lodash.filter(elements, (element) => {
       const returned = positionWithinElement(x, y, element);
+
       if (returned) {
         positionArray.push({ ...element, position: returned });
       }
@@ -947,7 +934,8 @@ const useDraw = () => {
       if (
         values?.type !== "text" &&
         values?.position !== "inside" &&
-        values?.type !== "image"
+        values?.type !== "image" &&
+        values.type !== "ell"
       ) {
         const updatedCoordinates = resizedCoordinates(
           e.clientX,
@@ -1016,6 +1004,19 @@ const useDraw = () => {
           null,
           undefined,
           values?.image
+        );
+      } else if (values?.type === "ell" && values?.position !== "inside") {
+        updateElement(
+          values?.x1,
+          values?.y1,
+          e.clientX,
+          e.clientY,
+          values?.type,
+          values?.id,
+          values?.strokeWidth,
+          values?.fill,
+          values?.fillStyle,
+          values?.stroke
         );
       }
     }
@@ -1116,10 +1117,10 @@ const useDraw = () => {
   }, []);
 
   useEffect(() => {
-    if (action === "drawing") {
-      setShapes(false);
-      setThickness(false);
-      setColorPicker(false);
+    if (action !== "none") {
+      if (shapes) setShapes(false);
+      if (thickness) setThickness(false);
+      if (colorPicker) setColorPicker(false);
     }
   }, [action, thickness, shapes]);
 
