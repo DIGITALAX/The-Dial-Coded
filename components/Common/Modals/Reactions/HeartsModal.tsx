@@ -68,7 +68,8 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
                       className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4"
                     >
                       {reacters?.map((reacter: any, index: number) => {
-                        const profileImage = createProfilePicture(reacter);
+                        const profileImage = createProfilePicture(reacter?.profile);
+                        console.log(reacter)
 
                         return (
                           <Link
