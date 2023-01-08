@@ -1,4 +1,3 @@
-import Link from "next/link";
 import React, { FunctionComponent } from "react";
 import { ImCross } from "react-icons/im";
 import { useDispatch } from "react-redux";

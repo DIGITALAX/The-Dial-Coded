@@ -3,9 +3,9 @@ import { NotificationBannerProps } from "../types/common.types";
 import moment from "moment";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import Image from "next/legacy/image";
-import Link from "next/link";
 import { BsFillCollectionFill, BsSuitHeartFill } from "react-icons/bs";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { useRouter } from "next/router";
 
 const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
   notification,
@@ -36,14 +36,18 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
     profileImage = prefix?.picture?.uri;
   }
 
+  const router = useRouter();
+
   return (
-    <Link
-      href={
-        type === "react"
-          ? `/post/${notification?.publication?.id}`
-          : type === "collect"
-          ? `/post/${notification?.collectedPublication?.id}`
-          : `/profile/${prefix?.id}`
+    <div
+      onClick={() =>
+        router.push(
+          type === "react"
+            ? `/post/${notification?.publication?.id}`
+            : type === "collect"
+            ? `/post/${notification?.collectedPublication?.id}`
+            : `/profile/${prefix?.id}`
+        )
       }
       className="relative w-full h-fit rounded-md grid grid-flow-cols auto-cols-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-6 border-2 border-black cursor-pointer"
     >
@@ -93,7 +97,7 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
       <div className="relative justify-self-end self-center text-white font-digiB text-xs col-start-3">
         {moment(`${notification?.createdAt}`).fromNow()}
       </div>
-    </Link>
+    </div>
   );
 };
 

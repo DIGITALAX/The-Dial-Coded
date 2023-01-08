@@ -1,11 +1,9 @@
 import Image from "next/legacy/image";
-import Link from "next/link";
 import React, { FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
-import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import { RootState } from "../../../../redux/store";
 import { ReactionModalProps } from "../../types/common.types";
@@ -13,6 +11,7 @@ import lodash from "lodash";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
+import { useRouter } from "next/router";
 
 const HeartsModal: FunctionComponent<ReactionModalProps> = ({
   reacters,
@@ -22,6 +21,7 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
   reactionInfoLoading,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const pubId = useSelector(
     (state: RootState) => state.app.reactionStateReducer.value
   );
@@ -68,14 +68,19 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
                       className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4"
                     >
                       {reacters?.map((reacter: any, index: number) => {
-                        const profileImage = createProfilePicture(reacter?.profile);
-                  
+                        const profileImage = createProfilePicture(
+                          reacter?.profile
+                        );
 
                         return (
-                          <Link
-                            href={`/profile/${
-                              reacter?.profile?.handle?.split("lens")[0]
-                            }`}
+                          <div
+                            onClick={() =>
+                              router.push(
+                                `/profile/${
+                                  reacter?.profile?.handle?.split("lens")[0]
+                                }`
+                              )
+                            }
                             key={index}
                             className="relative w-full h-fit p-2 drop-shadow-lg grid grid-flow-col bg-gray-50 auto-cols-auto rounded-lg border border-gray-50"
                           >
@@ -96,7 +101,7 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
                                 @{reacter?.profile?.handle}
                               </div>
                             </div>
-                          </Link>
+                          </div>
                         );
                       })}
                     </InfiniteScroll>
