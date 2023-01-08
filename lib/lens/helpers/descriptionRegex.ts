@@ -1,10 +1,10 @@
 const descriptionRegex = (description: string) => {
   const styledText = description?.split(" ")?.map((word: string) => {
     if (word[0] === "#") {
-      return `<span style="color: #81A8F8;">${word}</span>`;
+      return `<em id="hashtags" style="color: #81A8F8; cursor: pointer;">${word}</em>`;
     } else if (word[0] === "@") {
       return `
-        <a href="${`/profile/${word.replace("@", "")}`}" rel="noreferrer">
+        <a href="${`/profile/${word?.replace("@", "")}`}" rel="noreferrer">
         <span style="color: #81A8F8;">${word}</span>
         </a>
         `;
@@ -21,7 +21,7 @@ const descriptionRegex = (description: string) => {
     )
       return `
       <a href=${
-        word.includes("//") ? word : `//${word}`
+        word?.includes("//") ? word : `//${word}`
       } target="_blank" rel="noreferrer">
       <span style="color: #81A8F8;">${word}</span>
       </a>
@@ -30,8 +30,7 @@ const descriptionRegex = (description: string) => {
       return word;
     }
   });
-
-  return styledText.join(",");
+  return styledText.join(" ");
 };
 
 export default descriptionRegex;

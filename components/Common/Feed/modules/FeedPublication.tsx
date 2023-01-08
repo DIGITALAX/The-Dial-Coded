@@ -1,5 +1,5 @@
 import Image from "next/legacy/image";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import Reactions from "../Reactions/Reactions";
 import { FeedPublicationProps } from "../../types/common.types";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
@@ -34,9 +34,28 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
     (state: RootState) => state.app.imageViewerReducer.open
   );
   const { address } = useAccount();
+  const tags = document.querySelectorAll("em");
+  if (tags.length > 0) {
+    for (let i = 0; i < tags.length; i++) {
+      tags[i].addEventListener("click", (e) => {
+        router
+          ?.push(
+            `/?search=${(e.target as any)?.innerText.replaceAll(
+              "#",
+              ""
+            )}/#Slider`
+          )
+          .catch((e) => {
+            if (!e.cancelled) {
+              throw e;
+            }
+          });
+      });
+    }
+  }
   return (
     <div
-      className={`relative w-full h-fit rounded-md grid grid-flow-row auto-rows-auto p-6 gap-6 border-2 border-black z-0 ${
+      className={`relative w-full h-full rounded-md grid grid-flow-row auto-rows-auto p-6 gap-6 border-2 border-black z-0 ${
         mixtapeMirror
           ? "bg-white"
           : "bg-gradient-to-r from-offBlack via-gray-600 to-black"
@@ -71,7 +90,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
             router.push(
               `/profile/${
                 (publication as any)?.__typename !== "Mirror"
-                  ? (publication as any)?.profile?.handle.split(".lens")[0]
+                  ? (publication as any)?.profile?.handle?.split(".lens")[0]
                   : (publication as any)?.mirrorOf?.profile?.handle?.split(
                       ".lens"
                     )[0]
@@ -193,7 +212,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
           return (
             <div
               key={index}
-              className={`relative w-60 h-60 border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
+              className={`relative w-60 h-60 border-2 border-black rounded-lg bg-spots grid grid-flow-col auto-cols-auto col-start-${
                 index + 1
               } cursor-pointer hover:opacity-70 active:scale-95`}
               onClick={() =>

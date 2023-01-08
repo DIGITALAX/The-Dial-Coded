@@ -138,8 +138,8 @@ const usePublication = () => {
   };
 
   const handleEmoji = (e: any): void => {
-    let result_element = document.querySelector("#highlighted-content");
-    (result_element as any).innerHTML = postHTML + e.emoji;
+    let resultElement = document.querySelector("#highlighted-content");
+    (resultElement as any).innerHTML = postHTML + e.emoji;
     setPostHTML(postHTML + e.emoji);
     setPostDescription(postDescription + e.emoji);
   };
@@ -300,6 +300,11 @@ const usePublication = () => {
         })
       );
       setPostDescription("");
+      setPostHTML("");
+      setGifs([]);
+      setTags([]);
+      (document as any).getElementById("tagSearch").value = "";
+      (document as any).querySelector("#highlighted-content").innerHTML = "";
       const res = await tx?.wait();
       const indexedStatus = await checkIndexed(res?.transactionHash);
       if (
@@ -341,6 +346,11 @@ const usePublication = () => {
       const tx = await commentWriteAsync?.();
       setCommentLoading(false);
       setPostDescription("");
+      setPostHTML("");
+      setGifs([]);
+      setTags([]);
+      (document as any).getElementById("tagSearch").value = "";
+      (document as any).querySelector("#highlighted-content").innerHTML = "";
       dispatch(setFollowerOnly(false));
       dispatch(
         setIndexModal({
@@ -385,7 +395,7 @@ const usePublication = () => {
 
   const handleMentionClick = (user: any) => {
     setProfilesOpen(false);
-    let result_element = document.querySelector("#highlighted-content");
+    let resultElement = document.querySelector("#highlighted-content");
     const newHTMLPost =
       postHTML.substring(0, postHTML.lastIndexOf("@")) +
       `@${user?.handle.split(".test")[0]}</span>`;
@@ -393,12 +403,12 @@ const usePublication = () => {
       postDescription.substring(0, postDescription.lastIndexOf("@")) +
       `@${user?.handle.split(".test")[0]}`;
     setPostDescription(newElementPost);
-    (result_element as any).innerHTML = newHTMLPost;
+    (resultElement as any).innerHTML = newHTMLPost;
     setPostHTML(newHTMLPost);
   };
 
   const handlePostDescription = async (e: any): Promise<void> => {
-    let result_element = document.querySelector("#highlighted-content");
+    let resultElement = document.querySelector("#highlighted-content");
     if (e.target.value[e.target.value.length - 1] == "\n") {
       e.target.value += " ";
     }
@@ -419,7 +429,7 @@ const usePublication = () => {
     const finalHTML = mentionHighlight
       .replace(new RegExp("&", "g"), "&")
       .replace(new RegExp("<", "g"), "<");
-    (result_element as any).innerHTML = finalHTML;
+    (resultElement as any).innerHTML = finalHTML;
     setPostHTML(finalHTML);
     setPostDescription(e.target.value);
     if (
@@ -458,9 +468,9 @@ const usePublication = () => {
   };
 
   const syncScroll = (e: any) => {
-    let result_element = document.querySelector("#highlighted-content");
-    (result_element as any).scrollTop = e.target.scrollTop;
-    (result_element as any).scrollLeft = e.target.scrollLeft;
+    let resultElement = document.querySelector("#highlighted-content");
+    (resultElement as any).scrollTop = e.target.scrollTop;
+    (resultElement as any).scrollLeft = e.target.scrollLeft;
   };
 
   const handleTags = (e: FormEvent) => {

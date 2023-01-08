@@ -20,7 +20,7 @@ const ImageUploads: FunctionComponent<ImageUploadProps> = ({
         return (
           <div
             key={index}
-            className={`relative w-60 h-60 border-2 border-black rounded-lg grid grid-flow-col auto-cols-auto col-start-${
+            className={`relative w-60 h-60 border-2 border-black rounded-lg bg-spots grid grid-flow-col auto-cols-auto col-start-${
               index + 1
             }`}
           >
