@@ -14,8 +14,8 @@ const PublicationsFound: FunctionComponent<PublicationsFoundProps> = ({
   followerOnly,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
-      <div className="relative w-fit h-full grid grid-flow-col auto-cols-auto overflow-x-scroll gap-3 col-start-1">
+    <div className="relative w-full h-full grid grid-flow-col auto-cols-auto overflow-x-scroll">
+      <div className="relative w-fit h-full grid grid-flow-col auto-cols-auto gap-3 col-start-1">
         {publicationsSearch?.map((publication: any, index: number) => {
           return (
             <div
