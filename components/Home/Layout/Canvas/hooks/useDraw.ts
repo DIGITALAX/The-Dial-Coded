@@ -327,7 +327,7 @@ const useDraw = () => {
     const p =
       Math.pow(x - x1, 2) / Math.pow((x2 - x1) * Math.PI, 2) +
       Math.pow(y - y1, 2) / Math.pow((y2 - y1) * Math.PI, 2);
-      console.log(p)
+    console.log(p);
     return p < 0.3 && "inside";
   };
 
@@ -558,8 +558,8 @@ const useDraw = () => {
         roughElement = generator.ellipse(
           x1 - bounds?.left,
           y1 - bounds?.top,
-          (x2 - x1) * Math.PI ,
-          (y2 - y1) * Math.PI ,
+          (x2 - x1) * Math.PI,
+          (y2 - y1) * Math.PI,
           {
             fill,
             stroke,
@@ -1114,6 +1114,14 @@ const useDraw = () => {
   useEffect(() => {
     loadFont();
   }, []);
+
+  useEffect(() => {
+    if (action === "drawing") {
+      setShapes(false);
+      setThickness(false);
+      setColorPicker(false);
+    }
+  }, [action, thickness, shapes]);
 
   return {
     hex,
