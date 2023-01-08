@@ -168,6 +168,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                     : (publication as any)?.mirrorOf?.metadata?.description
                 ),
               }}
+              className="relative grid grid-flow-col auto-cols-auto place-self-center"
             ></div>
           ) : (
             <>

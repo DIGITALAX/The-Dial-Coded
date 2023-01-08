@@ -30,7 +30,9 @@ const descriptionRegex = (description: string) => {
       return word;
     }
   });
-  return styledText.join(" ");
+
+  const wrappedText = `<div>${styledText.join(" ")}</div>`
+  return wrappedText;
 };
 
 export default descriptionRegex;
