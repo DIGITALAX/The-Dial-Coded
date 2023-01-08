@@ -136,6 +136,7 @@ const whoReactedublications = (pubId: any) => {
     variables: {
       request: pubId,
     },
+    fetchPolicy: "no-cache"
   });
 };
 

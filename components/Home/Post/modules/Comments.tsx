@@ -1,6 +1,6 @@
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Image from "next/legacy/image";
-import { FormEvent, FunctionComponent } from "react";
+import { FormEvent, FunctionComponent, useEffect } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";

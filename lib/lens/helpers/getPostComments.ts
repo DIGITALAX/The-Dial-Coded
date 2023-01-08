@@ -1,4 +1,3 @@
-import { PaginatedResultInfo } from "../../../components/Common/types/lens.types";
 import { whoCommentedPublications } from "../../../graphql/queries/profilePublication";
 import checkIfCommented from "./checkIfCommented";
 import checkIfMirrored from "./checkIfMirrored";

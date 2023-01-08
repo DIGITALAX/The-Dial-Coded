@@ -368,7 +368,7 @@ export type ImageUploadProps = {
   mappedFeaturedFiles: string[] | undefined;
   handleRemoveImage: (e: string) => void;
   postLoading: boolean;
-  postImagesDispatched: string[]
+  postImagesDispatched?: string[]
 };
 
 export type ImageUploadResults = {
