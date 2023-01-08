@@ -144,7 +144,11 @@ const useDraw = () => {
         break;
 
       case "image":
-        ctx?.drawImage(element?.image as HTMLImageElement, 0, 0);
+        ctx?.drawImage(
+          element?.image as HTMLImageElement,
+          element.x1 as number,
+          element.y1 as number
+        );
         const imgData = canvas.toDataURL("image/jpeg", 0.75);
         break;
 
@@ -223,7 +227,7 @@ const useDraw = () => {
 
   const handleCanvasPost = async (): Promise<void> => {
     await dispatchPostCanvas();
-    dispatch(setPublication(true)); 
+    dispatch(setPublication(true));
   };
 
   const handleImageAdd = (e: FormEvent) => {
@@ -236,10 +240,10 @@ const useDraw = () => {
       imageObject.src = e.target?.result as string;
       imageObject.onload = function (ev) {
         const newElement = createElement(
-          0,
-          0,
-          imageObject.width / 2,
-          imageObject.height / 2,
+          50,
+          50,
+          50 + imageObject.width,
+          50 + imageObject.height,
           "image",
           elements?.length,
           undefined,
@@ -321,7 +325,7 @@ const useDraw = () => {
     const p =
       Math.pow(x - x1, 2) / Math.pow(x2 - x1, 2) +
       Math.pow(y - y1, 2) / Math.pow(y2 - y1, 2);
-    return p < 1;
+    return p < 1 && "inside";
   };
 
   const positionWithinElement = (
@@ -346,6 +350,16 @@ const useDraw = () => {
             : null;
         return topLeft || topRight || bottomLeft || bottomRight || inside;
       case "ell":
+        const ellTopLeft = nearPoint(x, y, x1 as number, y1 as number, "tl");
+        const ellTopRight = nearPoint(x, y, x2 as number, y1 as number, "tr");
+        const ellBottomLeft = nearPoint(x, y, x1 as number, y2 as number, "bl");
+        const ellBottomRight = nearPoint(
+          x,
+          y,
+          x2 as number,
+          y2 as number,
+          "br"
+        );
         const ellInside = insideEllipse(
           x,
           y,
@@ -354,7 +368,13 @@ const useDraw = () => {
           x2 as number,
           y2 as number
         );
-        return ellInside;
+        return (
+          ellInside ||
+          ellTopLeft ||
+          ellTopRight ||
+          ellBottomLeft ||
+          ellBottomRight
+        );
       case "line":
         const on = onLine(
           x1 as number,
@@ -398,27 +418,40 @@ const useDraw = () => {
           ? "inside"
           : null;
       case "image":
-        const topImageLeft = nearPoint(x, y, x1 as number, y1 as number, "tl");
-        const topImageRight = nearPoint(x, y, x2 as number, y1 as number, "tr");
+        console.log(x, y, x1, x2, y1, y2);
+        const topImageLeft = nearPoint(
+          x - bounds.left,
+          y - bounds.top,
+          x1 as number,
+          y1 as number,
+          "tl"
+        );
+        const topImageRight = nearPoint(
+          x - bounds.left,
+          y - bounds.top,
+          x2 as number,
+          y1 as number,
+          "tr"
+        );
         const bottomImageLeft = nearPoint(
-          x,
-          y,
+          x - bounds.left,
+          y - bounds.top,
           x1 as number,
           y2 as number,
           "bl"
         );
         const bottomImageRight = nearPoint(
-          x,
-          y,
+          x - bounds.left,
+          y - bounds.top,
           x2 as number,
           y2 as number,
           "br"
         );
         const insideImage =
-          x >= (x1 as number) &&
-          x <= (x2 as number) &&
-          y >= (y1 as number) &&
-          y <= (y2 as number)
+          x - bounds.left >= (x1 as number) &&
+          x - bounds.left <= (x2 as number) &&
+          y - bounds.top >= (y1 as number) &&
+          y - bounds.top <= (y2 as number)
             ? "inside"
             : null;
         return (
@@ -614,7 +647,7 @@ const useDraw = () => {
     lodash.filter(elements, (element) => {
       const returned = positionWithinElement(x, y, element);
       if (returned) {
-        positionArray.push(element);
+        positionArray.push({ ...element, position: returned });
       }
     });
     return positionArray;
@@ -631,7 +664,8 @@ const useDraw = () => {
     fill: string | null,
     fillStyle: string | null,
     stroke: string | null,
-    text?: string
+    text?: string,
+    image?: any
   ) => {
     const elementsCopy = [...elements];
     const bounds = canvas?.getBoundingClientRect();
@@ -650,6 +684,23 @@ const useDraw = () => {
           fill as string,
           fillStyle as string,
           stroke as string
+        ) as ElementInterface;
+        break;
+
+      case "image":
+        console.log("on image");
+        elementsCopy[index] = createElement(
+          x1 as number,
+          y1 as number,
+          x2 as number,
+          y2 as number,
+          type,
+          index,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          image
         ) as ElementInterface;
         break;
 
@@ -700,8 +751,9 @@ const useDraw = () => {
   };
 
   const handleMouseDown = (e: MouseEvent): void => {
-    if (tool === "selection") {
+    if (tool === "selection" || tool === "resize") {
       const element = getElementPosition(e.clientX, e.clientY);
+      console.log(element[0]);
       if (element?.length > 0) {
         if (element[0].type === "pencil") {
           const offsetXs = element[0].points?.map(
@@ -717,8 +769,11 @@ const useDraw = () => {
           setSelectedElement({ ...element[0], offsetX, offsetY });
         }
         setElements((prevState: any) => prevState);
-
-        setAction("moving");
+        if (tool === "resize") {
+          setAction("resizing");
+        } else if (tool === "selection") {
+          setAction("moving");
+        }
       }
     } else if (tool === "default") {
       setAction("none");
@@ -801,6 +856,27 @@ const useDraw = () => {
           points: newPoints,
         };
         setElements(elementsCopy, true);
+      } else if (selectedElement.type === "image") {
+        const { x2, x1, y2, y1, id, type, offsetX, offsetY, image } =
+          selectedElement;
+        const width = x2 - x1;
+        const height = y2 - y1;
+        const afterOffsetX = e.clientX - offsetX;
+        const afterOffsetY = e.clientY - offsetY;
+        updateElement(
+          afterOffsetX,
+          afterOffsetY,
+          afterOffsetX + width,
+          afterOffsetY + height,
+          type,
+          id,
+          null,
+          null,
+          null,
+          null,
+          undefined,
+          image
+        );
       } else {
         const {
           x2,
@@ -866,6 +942,56 @@ const useDraw = () => {
         shapeFillType,
         hex
       );
+    } else if (action === "resizing") {
+      const values = selectedElement;
+      if (values?.type !== "text" && values?.position !== "inside") {
+        const updatedCoordinates = resizedCoordinates(
+          e.clientX,
+          e.clientY,
+          values?.position,
+          values?.x1,
+          values?.y1,
+          values?.x2,
+          values?.y2
+        );
+        updateElement(
+          updatedCoordinates?.x1 as number,
+          updatedCoordinates?.y1 as number,
+          updatedCoordinates?.x2 as number,
+          updatedCoordinates?.y2 as number,
+          values?.type,
+          values?.id,
+          values?.strokeWidth,
+          values?.fill,
+          values?.fillStyle,
+          values?.stroke
+        );
+      }
+    }
+  };
+
+  const resizedCoordinates = (
+    mouseX: number,
+    mouseY: number,
+    position: any,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+  ): { x1: number; y1: number; x2: number; y2: number } | null => {
+    switch (position) {
+      case "tl":
+      case "start":
+        return { x1: mouseX, y1: mouseY, x2, y2 };
+      case "tr":
+        return { x1, y1: mouseY, x2: mouseX, y2 };
+      case "bl":
+        return { x1: mouseX, y1, x2, y2: mouseY };
+      case "br":
+      case "end":
+        return { x1, y1, x2: mouseX, y2: mouseY };
+      default:
+        return null;
     }
   };
 

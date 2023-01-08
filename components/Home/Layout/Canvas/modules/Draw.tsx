@@ -46,7 +46,7 @@ const Draw: FunctionComponent<DrawProps> = ({
   handleBlur,
   handleClear,
   handleMouseWheel,
-  handleCanvasPost
+  handleCanvasPost,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -63,7 +63,25 @@ const Draw: FunctionComponent<DrawProps> = ({
             ? "cursor-erase"
             : tool === "pan" && action !== "panning"
             ? "cursor-grab"
-            : tool === "pan" && action === "panning" ? "cursor-grabbing" : tool === "marquee" && "cursor-crosshair"
+            : tool === "pan" && action === "panning"
+            ? "cursor-grabbing"
+            : tool === "marquee"
+            ? "cursor-crosshair"
+            : tool === "resize" &&
+              (
+                selectedElement?.position === "start" ||
+                selectedElement?.position === "end") &&
+              selectedElement?.type !== "text" &&
+              selectedElement?.position !== "inside"
+            ? "cursor-ew-resize"
+            : tool === "resize" &&
+              selectedElement?.type !== "text" &&
+              (selectedElement?.position === "tr" ||
+              selectedElement?.position === "bl"
+                ? "cursor-nesw-resize"
+                : (selectedElement?.position === "br" ||
+                    selectedElement?.position === "tl") &&
+                  "cursor-nwse-resize")
         } rounded-lg border border-white row-start-1`}
       >
         <Publish handleCanvasPost={handleCanvasPost} />

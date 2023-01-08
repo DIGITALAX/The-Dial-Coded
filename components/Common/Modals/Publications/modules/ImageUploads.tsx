@@ -16,7 +16,6 @@ const ImageUploads: FunctionComponent<ImageUploadProps> = ({
         ? postImagesDispatched
         : mappedFeaturedFiles
       )?.map((image: string, index: number) => {
-        console.log(image);
         return (
           <div
             key={index}
