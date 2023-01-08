@@ -81,6 +81,24 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
             onChange={(e: FormEvent) => handleImageAdd(e)}
           />
         </label>
+        <div id="pattern-seg">
+          <CanvasOption
+            image="QmR5aDNEr6iBzcNv1CFkG3ypRWTesvT6fbuqGCnRf7yNcB"
+            bgColor="black"
+            width={25}
+            height={25}
+          />
+        </div>
+        <ReactTooltip
+          anchorId="pattern-seg"
+          place="left"
+          content="Pattern Segmentation::Coming Soon::👗"
+          style={{
+            fontSize: "10px",
+            backgroundColor: "#131313",
+            opacity: "0.7",
+          }}
+        />
         <CanvasOption
           image="QmZZhPPzhmsicoiHGKPvqATdQ3JGakrZ2G3mK67goHA9CN"
           bgColor="black"
