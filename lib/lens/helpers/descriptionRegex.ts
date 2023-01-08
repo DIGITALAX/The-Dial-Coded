@@ -1,7 +1,7 @@
 const descriptionRegex = (description: string) => {
   const styledText = description?.split(" ")?.map((word: string) => {
     if (word[0] === "#") {
-      return `<em id="hashtags" style="color: #81A8F8; cursor: pointer;">${word}</em>`;
+      return `<em id="hashtags" style="color: #81A8F8; cursor: pointer; font-style: normal;">${word}</em>`; 
     } else if (word[0] === "@") {
       return `
         <a href="${`/profile/${word?.replace("@", "")}`}" rel="noreferrer">

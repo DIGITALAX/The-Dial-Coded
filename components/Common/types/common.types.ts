@@ -42,6 +42,7 @@ export type ReactionProps = {
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   canDelete: boolean;
   followerOnly: boolean;
+  isMixtape: boolean;
 };
 
 export type InterfaceProps = {
@@ -368,7 +369,7 @@ export type ImageUploadProps = {
   mappedFeaturedFiles: string[] | undefined;
   handleRemoveImage: (e: string) => void;
   postLoading: boolean;
-  postImagesDispatched?: string[]
+  postImagesDispatched?: string[];
 };
 
 export type ImageUploadResults = {
@@ -595,6 +596,7 @@ export type CommentsModalProps = {
   hasCommented: boolean[];
   reactionsFeed: any[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
+  isMixtape: boolean;
 };
 
 export type ReactionModalProps = {

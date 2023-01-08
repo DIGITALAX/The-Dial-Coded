@@ -40,6 +40,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   id,
   canDelete,
   followerOnly,
+  isMixtape
 }): JSX.Element => {
   const inCommentBox = useSelector(
     (state: RootState) => state.app.commentShowReducer
@@ -120,6 +121,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                       actionType: "comment",
                       actionValue: commentValue,
                       actionFollower: followerOnly,
+                      actionMixtape: isMixtape
                     })
                   );
               }
@@ -131,6 +133,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                       actionOpen: true,
                       actionType: "comment",
                       actionValue: commentValue,
+                      actionMixtape: isMixtape
                     })
                   );
               }

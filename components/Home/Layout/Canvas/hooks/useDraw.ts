@@ -18,7 +18,6 @@ import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImag
 const useDraw = () => {
   const { uploadImage } = useImageUpload();
   const dispatch = useDispatch();
-  const ORIGIN = Object.freeze({ x: 0, y: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const writingRef = useRef<HTMLTextAreaElement>(null);
   const [showSideDrawOptions, setShowSideDrawOptions] =
@@ -37,32 +36,12 @@ const useDraw = () => {
   const [colorPicker, setColorPicker] = useState<boolean>(false);
   const [brushWidth, setBrushWidth] = useState<number>(12);
   const [thickness, setThickness] = useState<boolean>(false);
-  // const [borderOffset, setBorderOffset] = useState<number>(0);
+  const [clear, setClear] = useState<boolean>(false);
   const generator = rough.generator();
   const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
-  const [clear, setClear] = useState<boolean>(false);
   const ctx = canvas?.getContext("2d");
   const dosis = new FontFace("dosis", "url(fonts/DosisRegular.ttf)");
   const [scale, setScale] = useState<number>(1);
-  const ZOOM_SENSITIVITY = 500;
-  const [offset, setOffset] = useState<Point>(ORIGIN);
-  const [mousePos, setMousePos] = useState<Point>(ORIGIN);
-  const [viewportTopLeft, setViewportTopLeft] = useState<Point>(ORIGIN);
-  const isResetRef = useRef<boolean>(false);
-  const lastMousePosRef = useRef<Point>(ORIGIN);
-  const lastOffsetRef = useRef<Point>(ORIGIN);
-
-  const diffPoints = (p1: Point, p2: Point) => {
-    return { x: p1.x - p2.x, y: p1.y - p2.y };
-  };
-
-  const addPoints = (p1: Point, p2: Point) => {
-    return { x: p1.x + p2.x, y: p1.y + p2.y };
-  };
-
-  const scalePoint = (p1: Point, scale: number) => {
-    return { x: p1.x / scale, y: p1.y / scale };
-  };
 
   const useElementHistory = (initialState: any) => {
     const [index, setIndex] = useState(0);
@@ -113,6 +92,7 @@ const useDraw = () => {
     roughCanvas: any,
     ctx: CanvasRenderingContext2D | null
   ) => {
+    (ctx as CanvasRenderingContext2D).imageSmoothingEnabled = false;
     switch (element?.type) {
       case "line":
       case "ell":
@@ -223,7 +203,7 @@ const useDraw = () => {
     const imgURL = getCanvas();
     const res: Response = await fetch(imgURL);
     const blob: Blob = await res.blob();
-    const postImage = new File([blob], "dialcanvas", { type: "image/png" });
+    const postImage = new File([blob], "thedial_drafts", { type: "image/png" });
     await uploadImage(postImage, true);
   };
 
@@ -274,17 +254,7 @@ const useDraw = () => {
         drawElement(element, roughCanvas, ctx);
       });
     }
-  }, [elements, action, selectedElement, tool, scale, offset, ctx]);
-
-  useLayoutEffect(() => {
-    const offsetDiff = scalePoint(
-      diffPoints(offset, lastOffsetRef.current),
-      scale
-    );
-    ctx?.translate(offsetDiff.x, offsetDiff.y);
-    setViewportTopLeft((prevVal) => diffPoints(prevVal, offsetDiff));
-    isResetRef.current = false;
-  }, [scale, offset]);
+  }, [elements, action, selectedElement, tool, ctx]);
 
   const nearPoint = (
     x: number,
@@ -791,12 +761,11 @@ const useDraw = () => {
     } else if (tool === "erase") {
       setAction("erasing");
     } else if (tool === "pan") {
-      lastMousePosRef.current = { x: e.pageX, y: e.pageY };
       setAction("panning");
     } else if (tool === "marquee") {
       // remove any previous marquee
       const filteredMarqueeElements = removeMarquee();
-      const bounds = canvas.getBoundingClientRect();
+      const bounds = canvas?.getBoundingClientRect();
       const id = filteredMarqueeElements?.length;
       const newElement = createElement(
         e.clientX - bounds.left,
@@ -900,23 +869,21 @@ const useDraw = () => {
     } else if (action === "erasing") {
       const eraseElement = getElementPosition(e.clientX, e.clientY);
       if (eraseElement.length > 0) {
-        const filteredElements = lodash.filter(
-          elements,
-          (element) => element.id !== eraseElement[0].id
-        );
+        const filteredElements = lodash.filter(elements, (element) => {
+          if (element.id !== eraseElement[0].id) {
+            return true;
+          } else {
+            if (element.type === "image") return true;
+          }
+        });
         setElements(filteredElements);
       }
     } else if (action === "panning") {
-      const lastMousePos = lastMousePosRef.current;
-      const currentMousePos = { x: e.pageX, y: e.pageY }; // use document so can pan off element
-      lastMousePosRef.current = currentMousePos;
-
-      const mouseDiff = diffPoints(currentMousePos, lastMousePos);
-      setOffset((prevOffset) => addPoints(prevOffset, mouseDiff));
+      // panning
     } else if (action === "marquee") {
       const index = elements?.length - 1;
       const { x1, y1 } = elements[index];
-      const bounds = canvas.getBoundingClientRect();
+      const bounds = canvas?.getBoundingClientRect();
       updateElement(
         x1 as number,
         y1 as number,
@@ -968,7 +935,7 @@ const useDraw = () => {
           values?.x2,
           values?.y2
         );
-        const bounds = canvas.getBoundingClientRect();
+        const bounds = canvas?.getBoundingClientRect();
         const sizedx1 =
           values?.position === "tl" || values?.position === "bl"
             ? (updatedCoordinates?.x1 as number) - values.offsetX
@@ -1050,7 +1017,7 @@ const useDraw = () => {
   const handleBlur = (e: FormEvent) => {
     if ((e as any).key === "Enter") {
       const { id, x1, y1, x2, y2, type } = selectedElement;
-      const bounds = canvas.getBoundingClientRect();
+      const bounds = canvas?.getBoundingClientRect();
       setAction("none");
       setSelectedElement(null);
       updateElement(

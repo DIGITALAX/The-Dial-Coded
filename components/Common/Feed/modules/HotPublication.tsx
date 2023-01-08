@@ -147,6 +147,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
             handleHidePost={handleHidePost}
             canDelete={address === data?.profile?.ownedBy ? true : false}
             followerOnly={false}
+            isMixtape={true}
           />
         </div>
       </div>
