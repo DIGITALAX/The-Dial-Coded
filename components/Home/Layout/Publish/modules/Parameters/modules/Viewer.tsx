@@ -62,7 +62,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                   className="relative w-full h-fit"
                 >
                   {profileSearch?.map((user: any, index: number) => {
-                    console.log(user)
+                    
                     const profileImage = createProfilePicture(user);
                     return (
                       <div

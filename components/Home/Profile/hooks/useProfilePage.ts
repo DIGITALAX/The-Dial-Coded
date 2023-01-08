@@ -589,13 +589,13 @@ const useProfilePage = (): UseProfilePageResults => {
         setFollowingLoading,
         setPaginatedFollowing,
         setUserFollowing,
-        address
+        profileData?.ownedBy
       );
       getFollowers(
         setFollowersLoading,
         setPaginatedFollowers,
         setUserFollowers,
-        lensProfile
+        profileData?.id
       );
     }
   }, [

@@ -5,6 +5,7 @@ export interface CommentShowState {
   type?: string;
   value?: any;
   follower?: boolean;
+  mixtape?: boolean;
 }
 
 const initialCommentShowState: CommentShowState = {
@@ -12,6 +13,7 @@ const initialCommentShowState: CommentShowState = {
   type: undefined,
   value: undefined,
   follower: undefined,
+  mixtape: false,
 };
 
 export const commentShowSlice = createSlice({
@@ -20,12 +22,21 @@ export const commentShowSlice = createSlice({
   reducers: {
     setCommentShow: (
       state: CommentShowState,
-      { payload: { actionOpen, actionType, actionValue, actionFollower } }
+      {
+        payload: {
+          actionOpen,
+          actionType,
+          actionValue,
+          actionFollower,
+          actionMixtape,
+        },
+      }
     ) => {
       state.open = actionOpen;
       state.type = actionType;
       state.value = actionValue;
       state.follower = actionFollower;
+      state.mixtape = actionMixtape;
     },
   },
 });

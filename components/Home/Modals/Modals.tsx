@@ -148,6 +148,7 @@ const Modals = () => {
           hasCommented={hasCommented}
           reactionsFeed={reactionsFeed}
           handleHidePost={handleHidePost}
+          isMixtape={commentShow.mixtape as boolean}
         />
       )}
       {follow?.open && (

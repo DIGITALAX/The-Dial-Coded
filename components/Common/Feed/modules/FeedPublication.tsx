@@ -1,5 +1,5 @@
 import Image from "next/legacy/image";
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent } from "react";
 import Reactions from "../Reactions/Reactions";
 import { FeedPublicationProps } from "../../types/common.types";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
@@ -306,6 +306,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
           }
           handleHidePost={handleHidePost}
           followerOnly={followerOnly}
+          isMixtape={mixtapeMirror as boolean}
         />
         {!router.asPath.includes((publication as any)?.id) && (
           <div
@@ -316,7 +317,11 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               viewerOpen
                 ? () => {}
                 : () => {
-                    router.push(`/post/${(publication as any)?.id}`);
+                    router.push(
+                      `/${mixtapeMirror ? "mixtape" : "post"}/${
+                        (publication as any)?.id
+                      }`
+                    );
                     dispatch(
                       setCommentShow({
                         actionOpen: false,

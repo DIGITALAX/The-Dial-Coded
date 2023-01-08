@@ -226,6 +226,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
               address === (publication as any)?.profile?.id ? true : false
             }
             followerOnly={false}
+            isMixtape={true}
           />
         </div>
         <div className="relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto justify-self-end">

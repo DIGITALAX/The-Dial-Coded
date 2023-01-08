@@ -12,6 +12,7 @@ const getFollowers = async (
       profileId: profileId,
       limit: 50,
     });
+    
     setFollowers(data?.followers?.items);
     setPaginated;
     setPaginated(data?.followers?.pageInfo);

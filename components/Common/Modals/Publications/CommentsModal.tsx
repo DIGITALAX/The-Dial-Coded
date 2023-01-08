@@ -18,6 +18,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
   hasCommented,
   reactionsFeed,
   handleHidePost,
+  isMixtape,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
   const pubId = useSelector((state: RootState) => state.app.commentShowReducer);
@@ -38,6 +39,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
                     actionType: "comment",
                     actionValue: pubId.value,
                     actionFollower: pubId?.follower,
+                    actionMixtape: isMixtape,
                   })
                 )
               }
@@ -96,12 +98,15 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
                   <div
                     className="relative w-20 h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center cursor-pointer hover:opacity-70 active:scale-95"
                     onClick={() => {
-                      router.push(`/post/${pubId?.value}`);
+                      isMixtape
+                        ? router.push(`/mixtape/${pubId?.value}`)
+                        : router.push(`/post/${pubId?.value}`);
                       dispatch(
                         setCommentShow({
                           actionOpen: false,
                           actionType: "comment",
                           actionValue: pubId?.value,
+                          actionMixtape: isMixtape,
                         })
                       );
                     }}

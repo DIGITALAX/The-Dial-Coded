@@ -87,25 +87,28 @@ const useHearted = () => {
           reaction: "UPVOTE",
           publicationId: id ? id : pubId,
         });
-        dispatch(setHearted({
-          actionDirection: "up",
-          actionId: id ? id : pubId
-        }));
+        dispatch(
+          setHearted({
+            actionDirection: "up",
+            actionId: id ? id : pubId,
+          })
+        );
       } else {
         const remove = await removeReaction({
           profileId: profileId,
           reaction: "DOWNVOTE",
           publicationId: id ? id : pubId,
         });
-        dispatch(setHearted({
-          actionDirection: "down",
-          actionId: id ? id : pubId
-        }));
+        dispatch(
+          setHearted({
+            actionDirection: "down",
+            actionId: id ? id : pubId,
+          })
+        );
       }
     } catch (err: any) {
       console.error(err.message);
     }
-    setReactionLoading(false);
     dispatch(
       setReactionState({
         actionOpen: false,
@@ -113,13 +116,14 @@ const useHearted = () => {
         actionValue: id ? id : pubId,
       })
     );
+    setReactionLoading(false);
   };
 
   useEffect(() => {
     if (reactions.type === "heart") {
       getReactions();
     }
-  }, [reactions.type, reactions.open, id, pubId]);
+  }, [reactions.type, reactions.open, id, pubId, reactionLoading]);
 
   return {
     reactionPost,
