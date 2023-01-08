@@ -26,6 +26,15 @@ const useDraw = () => {
     useState<boolean>(false);
   const [shapeFillType, setShapeFillType] = useState<string>("solid");
   const [text, setText] = useState<boolean>(false);
+  const [transformCtx, setTransformCtx] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const [panStart, setPanStart] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const [wheel, setWheel] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(1);
   const [shapes, setShapes] = useState<boolean>(false);
   const [selectedElement, setSelectedElement] = useState<any>(null);
@@ -85,6 +94,17 @@ const useDraw = () => {
 
     d.push("Z");
     return d.join(" ");
+  };
+
+  const handleMouseWheel = (e: WheelEvent) => {
+    setWheel(!wheel);
+    const zoom = e.deltaY < 0 ? 1.1 : 0.9;
+    console.log(transformCtx);
+    ctx?.translate(transformCtx?.x, transformCtx?.y);
+    ctx?.scale(zoom, zoom);
+    ctx?.translate(-transformCtx?.x, -transformCtx?.y);
+
+    e.preventDefault();
   };
 
   const drawElement = (
@@ -245,16 +265,32 @@ const useDraw = () => {
         "source-over";
 
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
-      const storedTransform = ctx?.getTransform();
-      ctx.canvas.width = ctx?.canvas.width;
-      ctx?.setTransform(storedTransform);
+
       const roughCanvas = rough?.canvas(canvas);
       elements?.forEach((element: any) => {
         if (action === "writing" && selectedElement.id === element.id) return;
         drawElement(element, roughCanvas, ctx);
       });
     }
-  }, [elements, action, selectedElement, tool, ctx]);
+  }, [
+    elements,
+    action,
+    selectedElement,
+    tool,
+    ctx,
+    transformCtx,
+    panStart,
+    wheel,
+  ]);
+
+  useEffect(() => {
+    if (action === "panning") {
+      ctx?.save();
+      ctx?.setTransform(1, 0, 0, 1, 0, 0);
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      ctx?.restore();
+    }
+  }, [action, transformCtx, panStart, wheel]);
 
   const nearPoint = (
     x: number,
@@ -761,6 +797,7 @@ const useDraw = () => {
     } else if (tool === "erase") {
       setAction("erasing");
     } else if (tool === "pan") {
+      setPanStart(getTransformedPoint(e.clientX, e.clientY) as DOMPoint);
       setAction("panning");
     } else if (tool === "marquee") {
       // remove any previous marquee
@@ -879,7 +916,18 @@ const useDraw = () => {
         setElements(filteredElements);
       }
     } else if (action === "panning") {
-      // panning
+      console.log(e)
+      setTransformCtx(
+        getTransformedPoint(
+          e.clientX - e.nativeEvent.offsetX,
+          e.clientY - e.nativeEvent.offsetY
+        ) as DOMPoint
+      );
+
+      ctx?.translate(
+        transformCtx?.x - panStart.x,
+        transformCtx?.y - panStart.y
+      );
     } else if (action === "marquee") {
       const index = elements?.length - 1;
       const { x1, y1 } = elements[index];
@@ -1052,8 +1100,6 @@ const useDraw = () => {
     setSelectedElement(null);
   };
 
-  const handleMouseWheel = (e: MouseEvent) => {};
-
   useEffect(() => {
     const textAreaElement = writingRef.current;
     if (action === "writing") {
@@ -1090,6 +1136,12 @@ const useDraw = () => {
       if (colorPicker) setColorPicker(false);
     }
   }, [action, thickness, shapes]);
+
+  const getTransformedPoint = (x: number, y: number) => {
+    const bounds = canvas.getBoundingClientRect();
+    const originalPoint = new DOMPoint(x - bounds.left, y - bounds.top);
+    return ctx?.getTransform().invertSelf().transformPoint(originalPoint);
+  };
 
   return {
     hex,
