@@ -1,4 +1,5 @@
-import { FormEvent, useState } from "react";
+import { useRouter } from "next/router";
+import { FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   searchPublication,
@@ -15,6 +16,7 @@ import { RootState } from "../../../../../../../redux/store";
 import { UseSliderSearchResults } from "../types/slidersearch.types";
 
 const useSliderSearch = (): UseSliderSearchResults => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
@@ -145,6 +147,81 @@ const useSliderSearch = (): UseSliderSearchResults => {
     }
     setSearchLoading(false);
   };
+
+  const handleHashtagSearch = async (): Promise<void> => {
+    let publications: any;
+    setSearchLoading(true);
+    try {
+      if (lensProfile) {
+        publications = await searchPublicationAuth({
+          query: router.asPath?.split("?search=")?.[1]?.split("/#")?.[0],
+          type: "PUBLICATION",
+          sources: "thedial",
+          limit: 50,
+        });
+      } else {
+        publications = await searchPublication({
+          query: router.asPath?.split("?search=")?.[1]?.split("/#")?.[0],
+          type: "PUBLICATION",
+          sources: "thedial",
+          limit: 50,
+        });
+      }
+      const arr: any[] = [...publications?.data?.search?.items];
+      const sortedPublicationArr = arr?.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+      setPublicationsSearchNotDispatch(sortedPublicationArr);
+      await callLexicaPrompts(searchTarget, setPrompts);
+      const {
+        mixtapeMirrors,
+        reactionsFeed,
+        hasCommented,
+        hasMirrored,
+        hasReacted,
+      } = await getPublicationReactions(sortedPublicationArr, lensProfile);
+      const followerOnly = await checkIfFollowerOnly(
+        sortedPublicationArr,
+        lensProfile
+      );
+      console.log(sortedPublicationArr);
+      dispatch(
+        setPreSearch({
+          actionItems: sortedPublicationArr,
+          actionTarget: router.asPath?.split("?search=")?.[1]?.split("/#")?.[0],
+          actionMixtapeMirrors: mixtapeMirrors,
+          actionReactionsFeed: reactionsFeed,
+          actionCommented: hasCommented,
+          actionMirrored: hasMirrored,
+          actionReacted: hasReacted,
+          actionFollower: followerOnly,
+        })
+      );
+      if (
+        router.asPath?.split("?search=")?.[1]?.split("/#")?.[0] !== "" ||
+        !router.asPath?.split("?search=")?.[1]?.split("/#")?.[0]
+      ) {
+        await callLexicaSearch(
+          router.asPath?.split("?search=")?.[1]?.split("/#")?.[0],
+          dispatch
+        );
+        dispatch(
+          setSearchTarget(
+            router.asPath?.split("?search=")?.[1]?.split("/#")?.[0]
+          )
+        );
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setSearchLoading(false);
+  };
+
+  useEffect(() => {
+    if (router.asPath.includes("/#Slider")) {
+      handleHashtagSearch();
+    }
+  }, [router.asPath]);
 
   return {
     handleKeyEnter,

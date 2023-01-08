@@ -17,6 +17,12 @@ const Home: NextPage<HomeProps> = ({ newLink }): JSX.Element => {
   useEffect(() => {
     if (router?.asPath?.includes("#")) {
       dispatch(setLayout(router.asPath.split("/#")[1]));
+    } else {
+      router?.push("/#Post").catch((e) => {
+        if (!e.cancelled) {
+          throw e;
+        }
+      });
     }
   }, [router?.asPath]);
   return (

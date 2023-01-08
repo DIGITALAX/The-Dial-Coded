@@ -19,6 +19,7 @@ const Tags: FunctionComponent<TagsProps> = ({
         }
       >
         <input
+          id="tagSearch"
           className="relative w-32 h-8 text-black rounded-l-md bg-white/60 p-1"
           name={"tag"}
           disabled={tags?.length >= 5 ? true : false}
