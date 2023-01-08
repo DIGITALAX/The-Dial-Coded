@@ -1,5 +1,4 @@
 import Image from "next/legacy/image";
-import Link from "next/link";
 import React, { FunctionComponent } from "react";
 import { ImCross } from "react-icons/im";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -11,6 +10,7 @@ import { CollectsModalProps } from "../../types/common.types";
 import moment from "moment";
 import CollectInfo from "../../Feed/Reactions/CollectInfo";
 import { AiOutlineLoading } from "react-icons/ai";
+import { useRouter } from "next/router";
 
 const CollectsModal: FunctionComponent<CollectsModalProps> = ({
   collectors,
@@ -23,6 +23,7 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
   approvalLoading,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const pubId = useSelector(
     (state: RootState) => state.app.reactionStateReducer.value
   );
@@ -92,10 +93,14 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                         ?.uri;
                     }
                     return (
-                      <Link
-                        href={`/profile/${
-                          collector?.defaultProfile?.handle.split("lens")[0]
-                        }`}
+                      <div
+                        onClick={() =>
+                          router.push(
+                            `/profile/${
+                              collector?.defaultProfile?.handle.split("lens")[0]
+                            }`
+                          )
+                        }
                         key={index}
                         className="relative w-full h-fit p-2 drop-shadow-lg grid grid-flow-col bg-gray-50 auto-cols-auto rounded-lg border border-gray-50"
                       >
@@ -116,7 +121,7 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                             @{collector?.defaultProfile?.handle}
                           </div>
                         </div>
-                      </Link>
+                      </div>
                     );
                   })}
                 </InfiniteScroll>

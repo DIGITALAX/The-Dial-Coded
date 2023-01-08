@@ -1,6 +1,6 @@
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Image from "next/legacy/image";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
@@ -20,6 +20,7 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
   mirrorInfoLoading,
 }): JSX.Element | null => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const pubId = useSelector(
     (state: RootState) => state.app.reactionStateReducer?.value
   );
@@ -90,10 +91,12 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                           profileImage = (mirrorer?.picture as any)?.uri;
                         }
                         return (
-                          <Link
-                            href={`/profile/${
-                              mirrorer.handle.split("lens")[0]
-                            }`}
+                          <div
+                            onClick={() =>
+                              router.push(
+                                `/profile/${mirrorer.handle.split("lens")[0]}`
+                              )
+                            }
                             key={index}
                             className="relative w-full h-fit p-2 drop-shadow-lg grid grid-flow-col bg-gray-50 auto-cols-auto rounded-lg border border-gray-50"
                           >
@@ -114,7 +117,7 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                                 @{mirrorer?.handle}
                               </div>
                             </div>
-                          </Link>
+                          </div>
                         );
                       })}
                     </InfiniteScroll>
