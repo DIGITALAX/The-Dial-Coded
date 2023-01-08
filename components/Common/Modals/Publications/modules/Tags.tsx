@@ -31,7 +31,7 @@ const Tags: FunctionComponent<TagsProps> = ({
           type="submit"
         >
           <div className="relative w-fit h-fit place-self-center">
-            Add Search Tag
+            Add Discover Tag
           </div>
         </button>
       </form>

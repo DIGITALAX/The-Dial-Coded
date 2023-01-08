@@ -51,8 +51,8 @@ export type DrawProps = {
   action: string;
   writingRef: Ref<HTMLTextAreaElement>;
   handleBlur: (e: FormEvent) => void;
-  handleClear: () => void
-  handleCanvasPost: () => Promise<void>
+  handleClear: () => void;
+  handleCanvasPost: () => Promise<void>;
 };
 
 export type ColorPickerProps = {
@@ -68,9 +68,9 @@ export type SideMenuProps = {
   setDraftBoard: (e: boolean) => void;
   handleImageAdd: (e: FormEvent) => void;
   undo: () => boolean | void;
-  redo: () => boolean | void;  
+  redo: () => boolean | void;
   setTool: (e: string) => void;
-  handleClear: () => void
+  handleClear: () => void;
 };
 
 export type BottomMenuProps = {
@@ -96,7 +96,6 @@ export type BoardProps = {
   handleMouseMove: (e: MouseEvent) => void;
   handleMouseUp: (e: MouseEvent) => void;
   handleMouseWheel: (e: MouseEvent) => void;
-
 };
 
 export type SideOptionsProps = {
@@ -107,7 +106,7 @@ export type SideOptionsProps = {
   undo: () => boolean | void;
   redo: () => boolean | void;
   setTool: (e: string) => void;
-  handleClear: () => void
+  handleClear: () => void;
 };
 
 export type BottomOptionsProps = {
@@ -142,7 +141,8 @@ export interface ElementInterface {
   stroke?: string;
   strokeWidth?: number;
   fillStyle?: string;
-  image?: HTMLImageElement
+  image?: HTMLImageElement;
+  position?: string;
 }
 
 export interface Point2 {
@@ -165,5 +165,5 @@ export type Point = {
 };
 
 export type PublishProps = {
-  handleCanvasPost: () => Promise<void>
-}
+  handleCanvasPost: () => Promise<void>;
+};

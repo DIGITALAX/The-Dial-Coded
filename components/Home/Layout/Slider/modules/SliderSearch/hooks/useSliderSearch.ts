@@ -184,7 +184,6 @@ const useSliderSearch = (): UseSliderSearchResults => {
         sortedPublicationArr,
         lensProfile
       );
-      console.log(sortedPublicationArr);
       dispatch(
         setPreSearch({
           actionItems: sortedPublicationArr,

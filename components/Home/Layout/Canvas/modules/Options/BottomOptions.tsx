@@ -44,6 +44,18 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
             />
           </div>
         </div>
+        <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
+          <div className="relative w-fit h-fit row-start-2 self-end">
+            <CanvasOption
+              bgColor="black"
+              image="QmPVmyozQu3DwX2f5dQnv6MgRtmDckrnKNje2A4ettN9qS"
+              width={40}
+              height={40}
+              setShowString={setTool}
+              string_option={"resize"}
+            />
+          </div>
+        </div>
       </div>
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2 self-end">
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
