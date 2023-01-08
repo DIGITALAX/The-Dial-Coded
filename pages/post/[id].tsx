@@ -104,6 +104,7 @@ const Post: NextPage = (): JSX.Element => {
     indexerModal.message,
     hearted,
   ]);
+
   const { isConnected } = useAccount();
   useEffect(() => {
     dispatch(setWalletConnected(isConnected));

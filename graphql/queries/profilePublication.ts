@@ -380,5 +380,6 @@ export const whoCommentedPublications = (request: any) => {
     variables: {
       request: request,
     },
+    fetchPolicy: "no-cache"
   });
 };
