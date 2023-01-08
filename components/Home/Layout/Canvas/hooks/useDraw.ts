@@ -147,7 +147,9 @@ const useDraw = () => {
         ctx?.drawImage(
           element?.image as HTMLImageElement,
           element.x1 as number,
-          element.y1 as number
+          element.y1 as number,
+          (element.x2 as number) - (element.x1 as number),
+          (element.y2 as number) - (element.y1 as number)
         );
         const imgData = canvas.toDataURL("image/jpeg", 0.75);
         break;
@@ -418,7 +420,6 @@ const useDraw = () => {
           ? "inside"
           : null;
       case "image":
-        console.log(x, y, x1, x2, y1, y2);
         const topImageLeft = nearPoint(
           x - bounds.left,
           y - bounds.top,
@@ -688,7 +689,6 @@ const useDraw = () => {
         break;
 
       case "image":
-        console.log("on image");
         elementsCopy[index] = createElement(
           x1 as number,
           y1 as number,
@@ -753,7 +753,6 @@ const useDraw = () => {
   const handleMouseDown = (e: MouseEvent): void => {
     if (tool === "selection" || tool === "resize") {
       const element = getElementPosition(e.clientX, e.clientY);
-      console.log(element[0]);
       if (element?.length > 0) {
         if (element[0].type === "pencil") {
           const offsetXs = element[0].points?.map(
@@ -944,7 +943,11 @@ const useDraw = () => {
       );
     } else if (action === "resizing") {
       const values = selectedElement;
-      if (values?.type !== "text" && values?.position !== "inside") {
+      if (
+        values?.type !== "text" &&
+        values?.position !== "inside" &&
+        values?.type !== "image"
+      ) {
         const updatedCoordinates = resizedCoordinates(
           e.clientX,
           e.clientY,
@@ -965,6 +968,53 @@ const useDraw = () => {
           values?.fill,
           values?.fillStyle,
           values?.stroke
+        );
+      } else if (values?.type === "image" && values?.position !== "inside") {
+        const updatedCoordinates = resizedCoordinates(
+          e.clientX,
+          e.clientY,
+          values?.position,
+          values?.x1,
+          values?.y1,
+          values?.x2,
+          values?.y2
+        );
+        const bounds = canvas.getBoundingClientRect();
+        const sizedx1 =
+          values?.position === "tl" || values?.position === "bl"
+            ? (updatedCoordinates?.x1 as number) - values.offsetX
+            : (values?.position === "tr" || values?.position === "br") &&
+              updatedCoordinates?.x1;
+        const sizedx2 =
+          values?.position === "tl" || values?.position === "bl"
+            ? updatedCoordinates?.x2
+            : (values?.position === "tr" || values?.position === "br") &&
+              (updatedCoordinates?.x2 as number) - bounds.left;
+        const sizedy1 =
+          values?.position === "tl"
+            ? (updatedCoordinates?.y1 as number) - values.offsetY
+            : values?.position === "tr"
+            ? (updatedCoordinates?.y1 as number) - bounds.top
+            : (values?.position === "bl" || values?.position === "br") &&
+              updatedCoordinates?.y1;
+        const sizedy2 =
+          values?.position === "tl" || values?.position === "tr"
+            ? updatedCoordinates?.y2
+            : (values?.position === "bl" || values?.position === "br") &&
+              (updatedCoordinates?.y2 as number) - bounds.top;
+        updateElement(
+          sizedx1 as number,
+          sizedy1 as number,
+          sizedx2 as number,
+          sizedy2 as number,
+          values?.type,
+          values?.id,
+          null,
+          null,
+          null,
+          null,
+          undefined,
+          values?.image
         );
       }
     }
