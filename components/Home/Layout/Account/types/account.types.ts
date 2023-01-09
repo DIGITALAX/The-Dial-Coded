@@ -49,7 +49,7 @@ export type ProfileTabProps = {
   profileDataLoading?: boolean;
   mixtapeMirror: boolean[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
-  followerOnly: boolean[]
+  followerOnly: boolean[];
 };
 
 export type StatsTabProps = {
@@ -126,13 +126,16 @@ export type ConversationsProps = {
   searchTarget: string | undefined;
   dropdown: boolean;
   chosenProfile: Profile | undefined;
-  previewMessages: Map<string, DecodedMessage> | undefined
+  previewMessages: Map<string, DecodedMessage> | undefined;
+  messageProfiles: Map<string, Profile> | undefined;
+  profileLensData: Profile[]
 };
 
 export type PreviewProps = {
   searchTarget: string | undefined;
-  previewMessages: Map<string, DecodedMessage> | undefined
-
+  previewMessages: Map<string, DecodedMessage> | undefined;
+  messageProfiles: Map<string, Profile> | undefined;
+  profileLensData: Profile[]
 };
 
 export type UseConversationResults = {
@@ -148,7 +151,9 @@ export type UseConversationResults = {
   handleChosenProfile: (user: Profile) => void;
   searchTarget: string | undefined;
   dropdown: boolean;
-  previewMessages: Map<string, DecodedMessage> | undefined
+  previewMessages: Map<string, DecodedMessage> | undefined;
+  messageProfiles: Map<string, Profile> | undefined;
+  profileLensData: Profile[]
 };
 
 export type SearchProps = {
