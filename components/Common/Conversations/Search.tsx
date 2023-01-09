@@ -24,7 +24,7 @@ const Search: FunctionComponent<SearchProps> = ({
         onChange={(e: FormEvent) => searchMessages(e)}
       />
       <div
-        className={`relative row-start-2 grid grid-flow-row auto-rows-auto w-full h-fit overflow-y-scroll z-10`}
+        className={`absolute row-start-2 grid grid-flow-row auto-rows-auto w-full h-fit overflow-y-scroll z-10`}
       >
         {searchLoading ? (
           <div className="relative w-full h-10 px-3 py-2 bg-white col-start-1 grid grid-flow-col auto-cols-auto border-x-2 border-black border-b-2">

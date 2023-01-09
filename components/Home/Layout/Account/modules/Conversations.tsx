@@ -63,6 +63,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
             previewMessages={previewMessages}
             messageProfiles={messageProfiles}
             profileLensData={profileLensData}
+            handleChosenProfile={handleChosenProfile}
           />
         </div>
       </div>
