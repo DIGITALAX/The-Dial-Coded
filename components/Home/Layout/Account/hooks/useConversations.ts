@@ -45,7 +45,6 @@ const useConversations = (): UseConversationResults => {
   const [results, setResults] = useState<any[]>([]);
   const [openImagePicker, setOpenImagePicker] = useState<string>("");
   const [allConversations, setAllConversations] = useState<any[]>([]);
-  const [createdClient, setCreatedClient] = useState<boolean>(false);
   const [clientLoading, setClientLoading] = useState<boolean>(false);
   const [searchTarget, setSearchTarget] = useState<string>("");
   const [dropdown, setDropdown] = useState<boolean>(false);
@@ -70,7 +69,6 @@ const useConversations = (): UseConversationResults => {
       const xmtp = await Client.create(signer as Signer | null);
       setClient(xmtp);
       getAllConversations(xmtp);
-      setCreatedClient(true);
     } catch (err: any) {
       console.error(err?.message);
     }
@@ -434,14 +432,32 @@ const useConversations = (): UseConversationResults => {
   };
 
   const handleSetGif = async (result: any): Promise<void> => {
-    setOpenImagePicker("");
-    await sendConversation(result);
+    try {
+      setOpenImagePicker("");
+      await sendConversation(result);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const handleUploadImage = async (e: any): Promise<void> => {
+    setMessageLoading(true);
+    try {
+      const response = await fetch("/api/ipfs", {
+        method: "POST",
+        body: e.target.files[0] as any,
+      });
+      let { cid } = await response.json();
+      await sendConversation("ipfs://" + cid);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setMessageLoading(false);
   };
 
   return {
     createClient,
     sendConversation,
-    createdClient,
     searchMessages,
     clientLoading,
     searchLoading,
@@ -472,6 +488,7 @@ const useConversations = (): UseConversationResults => {
     handleSetGif,
     handleGifSubmit,
     results,
+    handleUploadImage,
   };
 };
 

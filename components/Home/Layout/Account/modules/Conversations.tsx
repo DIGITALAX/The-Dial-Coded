@@ -7,7 +7,7 @@ import { ConversationsProps } from "../types/account.types";
 
 const Conversations: FunctionComponent<ConversationsProps> = ({
   createClient,
-  createdClient,
+  handleUploadImage,
   searchMessages,
   clientLoading,
   searchLoading,
@@ -107,7 +107,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
           handleGifSubmit={handleGifSubmit}
           results={results}
           handleSetGif={handleSetGif}
-          
+          handleUploadImage={handleUploadImage}
         />
       </div>
     </div>

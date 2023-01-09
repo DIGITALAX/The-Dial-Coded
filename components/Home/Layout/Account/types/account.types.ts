@@ -126,11 +126,11 @@ export type MessageProps = {
   handleSetGif: (result: any) => void;
   handleGifSubmit: (e: any) => Promise<void>;
   results: any[];
+  handleUploadImage: (e: any) => Promise<void>;
 };
 
 export type ConversationsProps = {
   createClient: () => Promise<void>;
-  createdClient: boolean;
   searchMessages: (e: FormEvent) => Promise<void>;
   clientLoading: boolean;
   searchLoading: boolean;
@@ -163,6 +163,7 @@ export type ConversationsProps = {
   handleSetGif: (result: any) => void;
   handleGifSubmit: (e: any) => Promise<void>;
   results: any[];
+  handleUploadImage: (e: any) => Promise<void>;
 };
 
 export type PreviewProps = {
@@ -176,7 +177,6 @@ export type PreviewProps = {
 export type UseConversationResults = {
   sendConversation: () => Promise<void>;
   createClient: () => Promise<void>;
-  createdClient: boolean;
   searchMessages: (e: FormEvent) => Promise<void>;
   clientLoading: boolean;
   searchLoading: boolean;
@@ -207,6 +207,7 @@ export type UseConversationResults = {
   handleSetGif: (result: any) => void;
   handleGifSubmit: (e: any) => Promise<void>;
   results: any[];
+  handleUploadImage: (e: any) => Promise<void>;
 };
 
 export type SearchProps = {

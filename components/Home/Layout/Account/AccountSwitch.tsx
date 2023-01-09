@@ -52,7 +52,6 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   } = useProfile();
   const {
     createClient,
-    createdClient,
     searchMessages,
     clientLoading,
     searchLoading,
@@ -84,6 +83,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     handleSetGif,
     handleGifSubmit,
     results,
+    handleUploadImage
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
@@ -149,7 +149,6 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     case "conversations":
       return (
         <Conversations
-          createdClient={createdClient}
           createClient={createClient}
           searchMessages={searchMessages}
           clientLoading={clientLoading}
@@ -183,6 +182,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           handleGifSubmit={handleGifSubmit}
           results={results}
           handleSetGif={handleSetGif}
+          handleUploadImage={handleUploadImage}
         />
       );
 
