@@ -121,6 +121,7 @@ export type MessageProps = {
   openImagePicker: string;
   setOpenImagePicker: (e: string) => void;
   conversationLoading: boolean;
+  onNetwork: boolean;
 };
 
 export type ConversationsProps = {
@@ -152,7 +153,8 @@ export type ConversationsProps = {
   openImagePicker: string;
   setOpenImagePicker: (e: string) => void;
   conversationLoading: boolean;
-  client: any
+  client: any;
+  onNetwork: boolean;
 };
 
 export type PreviewProps = {
@@ -191,7 +193,8 @@ export type UseConversationResults = {
   openImagePicker: string;
   setOpenImagePicker: (e: string) => void;
   conversationLoading: boolean;
-  client: any
+  client: any;
+  onNetwork: boolean;
 };
 
 export type SearchProps = {

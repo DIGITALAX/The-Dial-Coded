@@ -29,11 +29,13 @@ const Message: FunctionComponent<MessageProps> = ({
   openImagePicker,
   setOpenImagePicker,
   conversationLoading,
+  onNetwork,
 }): JSX.Element => {
   const profileImage = createProfilePicture(chosenProfile);
   const lensProfileAddress = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.ownedBy
   );
+  console.log(onNetwork)
   const router = useRouter();
   const tags = document.querySelectorAll("em");
   if (tags.length > 0) {
@@ -91,8 +93,9 @@ const Message: FunctionComponent<MessageProps> = ({
             dataLength={conversationMessages?.length}
             next={() => {}}
           >
-            {Array.from(conversationMessages.values())?.reverse()?.map(
-              (convo: any, index: number) => {
+            {Array.from(conversationMessages.values())
+              ?.reverse()
+              ?.map((convo: any, index: number) => {
                 return (
                   <div
                     key={index}
@@ -110,8 +113,7 @@ const Message: FunctionComponent<MessageProps> = ({
                     ></div>
                   </div>
                 );
-              }
-            )}
+              })}
           </InfiniteScroll>
         </div>
       ) : (
@@ -154,7 +156,7 @@ const Message: FunctionComponent<MessageProps> = ({
             ref={textElement}
             value={message}
             className="relative bg-white grid grid-flow-col auto-cols-auto px-2 py-1 w-full h-10 col-start-1 justify-self-start col-span-4 border-2 border-black z-1 text-black"
-            disabled={messageLoading ? true : false}
+            disabled={messageLoading || !onNetwork ? true : false}
           ></textarea>
           <pre
             id="highlighting-message"
@@ -212,19 +214,31 @@ const Message: FunctionComponent<MessageProps> = ({
             </div>
           )}
         </div>
-        <div className="relative w-28 h-full bg-black rounded-r-md grid grid-flow-col auto-cols-auto justify-self-end">
+        <div
+          className={`relative w-28 h-full rounded-r-md grid grid-flow-col auto-cols-auto justify-self-end ${
+            !onNetwork ? "bg-black/70" : "bg-black"
+          }`}
+        >
           {!messageLoading ? (
             <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto place-self-center gap-4">
               <div
-                className="relative text-white col-start-1 place-self-center w-fit h-fit cursor-pointer active:scale-95"
-                onClick={() => sendConversation()}
+                className={`relative text-white col-start-1 place-self-center w-fit h-fit ${
+                  onNetwork && "cursor-pointer active:scale-95"
+                }`}
+                onClick={onNetwork ? () => sendConversation() : () => {}}
               >
                 <TbSend size={15} />
               </div>
               <div
-                className="relative text-white col-start-2 place-self-center w-fit h-fit cursor-pointer active:scale-95"
+                className={`relative text-white col-start-2 place-self-center w-fit h-fit ${
+                  onNetwork && "cursor-pointer active:scale-95"
+                }`}
                 onClick={() =>
-                  setOpenImagePicker(openImagePicker === "emoji" ? "" : "emoji")
+                  onNetwork
+                    ? setOpenImagePicker(
+                        openImagePicker === "emoji" ? "" : "emoji"
+                      )
+                    : {}
                 }
               >
                 <BsFillEmojiLaughingFill size={15} />

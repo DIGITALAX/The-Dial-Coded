@@ -34,6 +34,7 @@ const useConversations = (): UseConversationResults => {
   const dispatch = useDispatch();
   const [conversationLoading, setConversationLoading] =
     useState<boolean>(false);
+  const [onNetwork, setOnNetwork] = useState<boolean>(false);
   const [messageLoading, setMessageLoading] = useState<boolean>(false);
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [profileSearch, setProfileSearch] = useState<Profile[]>([]);
@@ -147,6 +148,11 @@ const useConversations = (): UseConversationResults => {
   }, [chosenProfile]);
 
   const getConversationMessages = async (start: boolean) => {
+    if (!onNetwork) {
+      setConversationMessages([]);
+      return;
+    }
+
     setConversationLoading(start);
     try {
       let chosenConversation: any[] = [];
@@ -163,7 +169,7 @@ const useConversations = (): UseConversationResults => {
         setConversationMessages(messagesInConversation);
       }
     } catch (err: any) {
-      console.error(err.message);
+      console.error(err.message, "HEY");
     }
     setConversationLoading(false);
   };
@@ -355,10 +361,16 @@ const useConversations = (): UseConversationResults => {
     }
   };
 
+  const checkOnNetwork = async () => {
+    const res = await Client.canMessage(chosenProfile?.ownedBy);
+    if (res && chosenProfile?.ownedBy) setOnNetwork(true);
+  };
+
   const handleChosenProfile = async (user: Profile): Promise<void> => {
     setSearchTarget(user?.handle);
     dispatch(setChosenDMProfile(user));
     setDropdown(false);
+    await checkOnNetwork();
   };
 
   const searchMessages = async (e: FormEvent): Promise<void> => {
@@ -432,6 +444,7 @@ const useConversations = (): UseConversationResults => {
     setOpenImagePicker,
     conversationLoading,
     client,
+    onNetwork,
   };
 };
 
