@@ -34,6 +34,7 @@ const useDraw = () => {
     x: 0,
     y: 0,
   });
+  const [reset, setReset] = useState<boolean>(false);
   const [wheel, setWheel] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(1);
   const [shapes, setShapes] = useState<boolean>(false);
@@ -97,14 +98,29 @@ const useDraw = () => {
   };
 
   const handleMouseWheel = (e: WheelEvent) => {
-    setWheel(!wheel);
-    const zoom = e.deltaY < 0 ? 1.1 : 0.9;
-    console.log(transformCtx);
-    ctx?.translate(transformCtx?.x, transformCtx?.y);
-    ctx?.scale(zoom, zoom);
-    ctx?.translate(-transformCtx?.x, -transformCtx?.y);
-
-    e.preventDefault();
+    // if (ctx) {
+    //   setWheel(!wheel);
+    //   const bounds = canvas?.getBoundingClientRect();
+    //   console.log(e);
+    //   setMx(e.clientX / scale + ox);
+    //   setMy(e.clientY / scale + oy);
+    //   mousex = e.clientX / scale + ox;
+    //   mousey = e.clientY / scale + oy;
+    //   const zoom = e.deltaY < 0 ? 1.1 : 0.9;
+    //   // var zoom = 1 + wheelMouse / 2;
+    //   ctx?.clearRect(0, 0, canvas.width / (scale * zoom), canvas.height) /
+    //     (scale * zoom);
+    //   ctx?.translate(ox, oy);
+    //   ctx?.scale(zoom, zoom);
+    //   ctx?.translate(
+    //     -(mousex / scale + ox - mousex / (scale * zoom)),
+    //     -(mousey / scale + oy - mousey / (scale * zoom))
+    //   );
+    //   setOx(mousex / scale + ox - mousex / (scale * zoom));
+    //   setOy(mousey / scale + oy - mousey / (scale * zoom));
+    //   setScale(scale * zoom);
+    //   e.preventDefault();
+    // }
   };
 
   const drawElement = (
@@ -282,15 +298,6 @@ const useDraw = () => {
     panStart,
     wheel,
   ]);
-
-  useEffect(() => {
-    if (action === "panning") {
-      ctx?.save();
-      ctx?.setTransform(1, 0, 0, 1, 0, 0);
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
-      ctx?.restore();
-    }
-  }, [action, transformCtx, panStart, wheel]);
 
   const nearPoint = (
     x: number,
@@ -598,7 +605,12 @@ const useDraw = () => {
         return {
           id,
           type,
-          points: [{ x: x1 - bounds?.left, y: y1 - bounds?.top }],
+          points: [
+            {
+              x: x1 - bounds?.left,
+              y: y1 - bounds?.top,
+            },
+          ],
           fill,
           strokeWidth,
         };
@@ -640,7 +652,6 @@ const useDraw = () => {
     let positionArray: ElementInterface[] = [];
     lodash.filter(elements, (element) => {
       const returned = positionWithinElement(x, y, element);
-
       if (returned) {
         positionArray.push({ ...element, position: returned });
       }
@@ -797,7 +808,6 @@ const useDraw = () => {
     } else if (tool === "erase") {
       setAction("erasing");
     } else if (tool === "pan") {
-      setPanStart(getTransformedPoint(e.clientX, e.clientY) as DOMPoint);
       setAction("panning");
     } else if (tool === "marquee") {
       // remove any previous marquee
@@ -822,10 +832,10 @@ const useDraw = () => {
     if (!action || action === "writing") return;
     if (action === "drawing") {
       const index = elements?.length - 1;
-      const { x1, y1 } = elements[index];
+      const values = elements?.[index];
       updateElement(
-        x1 as number,
-        y1 as number,
+        values?.x1 as number,
+        values?.y1 as number,
         e.clientX,
         e.clientY,
         tool,
@@ -906,28 +916,13 @@ const useDraw = () => {
     } else if (action === "erasing") {
       const eraseElement = getElementPosition(e.clientX, e.clientY);
       if (eraseElement.length > 0) {
-        const filteredElements = lodash.filter(elements, (element) => {
-          if (element.id !== eraseElement[0].id) {
-            return true;
-          } else {
-            if (element.type === "image") return true;
-          }
-        });
+        const filteredElements = lodash.filter(
+          elements,
+          (element) => element.id !== eraseElement[0].id
+        );
         setElements(filteredElements);
       }
     } else if (action === "panning") {
-      console.log(e)
-      setTransformCtx(
-        getTransformedPoint(
-          e.clientX - e.nativeEvent.offsetX,
-          e.clientY - e.nativeEvent.offsetY
-        ) as DOMPoint
-      );
-
-      ctx?.translate(
-        transformCtx?.x - panStart.x,
-        transformCtx?.y - panStart.y
-      );
     } else if (action === "marquee") {
       const index = elements?.length - 1;
       const { x1, y1 } = elements[index];
@@ -1181,6 +1176,7 @@ const useDraw = () => {
     handleMouseWheel,
     handleClear,
     handleCanvasPost,
+    elements,
   };
 };
 
