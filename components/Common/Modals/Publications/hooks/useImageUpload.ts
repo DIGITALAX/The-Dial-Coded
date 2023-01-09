@@ -19,7 +19,6 @@ const useImageUpload = (): ImageUploadResults => {
   ): Promise<void> => {
     let finalImages: string[] = [];
     setImageUploading(true);
-
     if (canvas) {
       try {
         const response = await fetch("/api/ipfs", {

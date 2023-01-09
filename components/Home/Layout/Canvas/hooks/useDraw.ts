@@ -8,7 +8,7 @@ import {
   useEffect,
 } from "react";
 import rough from "roughjs/bundled/rough.cjs";
-import { ElementInterface, Point, Point2 } from "../types/canvas.types";
+import { ElementInterface, Point2 } from "../types/canvas.types";
 import getStroke from "perfect-freehand";
 import lodash from "lodash";
 import { useDispatch } from "react-redux";

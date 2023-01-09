@@ -37,6 +37,7 @@ const Message: FunctionComponent<MessageProps> = ({
   handleSetGif,
   handleGifSubmit,
   results,
+  handleUploadImage,
 }): JSX.Element => {
   const profileImage = createProfilePicture(chosenProfile);
   const lensProfileAddress = useSelector(
@@ -112,7 +113,7 @@ const Message: FunctionComponent<MessageProps> = ({
                   >
                     {type === "html" ? (
                       <div
-                        className={`relative w-fit max-w-full whitespace-prewrap col-start-1 py-1 px-3 rounded-full text-base select-text selection:text-fuchsia-900 ${
+                        className={`relative h-fit w-fit max-w-full whitespace-prewrap col-start-1 py-1 px-3 rounded-full text-base select-text selection:text-fuchsia-900 ${
                           convo?.senderAddress === lensProfileAddress
                             ? "justify-self-end bg-offBlue text-white"
                             : "justify-self-start bg-white text-black"
@@ -123,7 +124,7 @@ const Message: FunctionComponent<MessageProps> = ({
                       ></div>
                     ) : (
                       <div
-                        className="relative w-40 h-40 max-w-full rounded-lg grid grid-flow-col auto-cols-auto cursor-pointer"
+                        className={`relative w-full h-fit max-w-full rounded-lg grid grid-flow-col auto-cols-auto cursor-pointer`}
                         onClick={() =>
                           dispatch(
                             setImageViewer({
@@ -133,12 +134,20 @@ const Message: FunctionComponent<MessageProps> = ({
                           )
                         }
                       >
-                        <Image
-                          src={src}
-                          layout="fill"
-                          objectFit="cover"
-                          className="rounded-2xl flex"
-                        />
+                        <div
+                          className={`relative w-40 h-40 grid grid-flow-col auto-cols-auto ${
+                            convo?.senderAddress === lensProfileAddress
+                              ? "justify-self-end"
+                              : "justify-self-start"
+                          }`}
+                        >
+                          <Image
+                            src={src}
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-2xl flex"
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
@@ -269,13 +278,26 @@ const Message: FunctionComponent<MessageProps> = ({
               >
                 <TbSend size={15} />
               </div>
-              <div
+              <label
                 className={`relative text-white col-start-2 place-self-center w-fit h-fit ${
                   onNetwork && "cursor-pointer active:scale-95"
                 }`}
               >
                 <IoMdImage color="white" size={15} />
-              </div>
+                <input
+                  type="file"
+                  accept="image/png"
+                  hidden
+                  id="files"
+                  multiple={false}
+                  name="images"
+                  className="caret-transparent"
+                  disabled={onNetwork && !messageLoading ? false : true}
+                  onChange={(e: FormEvent) => {
+                    !messageLoading ? handleUploadImage(e) : {};
+                  }}
+                />
+              </label>
               <div
                 className={`relative text-white col-start-3 place-self-center w-fit h-fit ${
                   onNetwork && "cursor-pointer active:scale-95"
