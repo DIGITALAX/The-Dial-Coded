@@ -34,7 +34,8 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
   openImagePicker,
   setOpenImagePicker,
   conversationLoading,
-  client
+  client,
+  onNetwork
 }): JSX.Element => {
   if (!client) {
     return (
@@ -97,6 +98,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
           openImagePicker={openImagePicker}
           setOpenImagePicker={setOpenImagePicker}
           conversationLoading={conversationLoading}
+          onNetwork={onNetwork}
         />
       </div>
     </div>

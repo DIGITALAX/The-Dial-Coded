@@ -78,7 +78,8 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     openImagePicker,
     setOpenImagePicker,
     conversationLoading,
-    client
+    client,
+    onNetwork
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
@@ -173,6 +174,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           setOpenImagePicker={setOpenImagePicker}
           conversationLoading={conversationLoading}
           client={client}
+          onNetwork={onNetwork}
         />
       );
 
