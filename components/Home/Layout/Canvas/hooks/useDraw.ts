@@ -24,6 +24,7 @@ const useDraw = () => {
     useState<boolean>(false);
   const [showBottomDrawOptions, setShowBottomDrawOptions] =
     useState<boolean>(false);
+  const [postLoading, setPostLoading] = useState<boolean>(false);
   const [shapeFillType, setShapeFillType] = useState<string>("solid");
   const [text, setText] = useState<boolean>(false);
   const [transformCtx, setTransformCtx] = useState<{ x: number; y: number }>({
@@ -34,6 +35,7 @@ const useDraw = () => {
     x: 0,
     y: 0,
   });
+  const [pattern, setPattern] = useState<any>();
   const [reset, setReset] = useState<boolean>(false);
   const [wheel, setWheel] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(1);
@@ -128,6 +130,7 @@ const useDraw = () => {
     roughCanvas: any,
     ctx: CanvasRenderingContext2D | null
   ) => {
+    ctx?.setLineDash(element.lineDash ? element.lineDash : [0]);
     (ctx as CanvasRenderingContext2D).imageSmoothingEnabled = false;
     switch (element?.type) {
       case "line":
@@ -136,6 +139,7 @@ const useDraw = () => {
         roughCanvas?.draw(element?.roughElement);
         break;
 
+      case "erase":
       case "pencil":
         (ctx as CanvasRenderingContext2D).fillStyle = element?.fill as string;
         const pathData = getSvgPathFromStroke(
@@ -172,16 +176,15 @@ const useDraw = () => {
 
       case "marquee":
         ctx?.beginPath();
-        ctx?.setLineDash([10, 10]);
-        (ctx as CanvasRenderingContext2D).strokeStyle = "#929292";
-        // (ctx as CanvasRenderingContext2D).lineDashOffset = -borderOffset;
+        (ctx as CanvasRenderingContext2D).strokeStyle =
+          element.stroke as string;
         ctx?.strokeRect(
           element.x1 as number,
           element.y1 as number,
           element.x2 as number,
           element.y2 as number
         );
-        ctx?.stroke();
+        ctx?.closePath();
         break;
 
       default:
@@ -201,10 +204,10 @@ const useDraw = () => {
       hiddenCanvas.height = marquee.y2;
       hiddenCanvasCtx?.drawImage(
         canvas,
-        marquee.x1,
-        marquee.y1,
-        marquee.x2,
-        marquee.y2,
+        marquee.x1 + 1,
+        marquee.y1 + 1,
+        marquee.x2 - 2,
+        marquee.y2 - 2,
         0,
         0,
         hiddenCanvas.width,
@@ -244,8 +247,10 @@ const useDraw = () => {
   };
 
   const handleCanvasPost = async (): Promise<void> => {
+    setPostLoading(true);
     await dispatchPostCanvas();
     dispatch(setPublication(true));
+    setPostLoading(false);
   };
 
   const handleImageAdd = (e: FormEvent) => {
@@ -277,14 +282,14 @@ const useDraw = () => {
 
   useLayoutEffect(() => {
     if (ctx) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
-
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
-
       const roughCanvas = rough?.canvas(canvas);
       elements?.forEach((element: any) => {
         if (action === "writing" && selectedElement.id === element.id) return;
+
         drawElement(element, roughCanvas, ctx);
       });
     }
@@ -390,6 +395,7 @@ const useDraw = () => {
         const start = nearPoint(x, y, x1 as number, y1 as number, "start");
         const end = nearPoint(x, y, x2 as number, y2 as number, "end");
         return start || end || on;
+      case "erase":
       case "pencil":
         const betweenAnyPoint = element.points?.some((point, index) => {
           const nextPoint: any = (
@@ -601,6 +607,7 @@ const useDraw = () => {
           stroke,
           strokeWidth,
         };
+      case "erase":
       case "pencil":
         return {
           id,
@@ -611,7 +618,7 @@ const useDraw = () => {
               y: y1 - bounds?.top,
             },
           ],
-          fill,
+          fill: type === "erase" ? pattern : fill,
           strokeWidth,
         };
       case "text":
@@ -644,9 +651,23 @@ const useDraw = () => {
           y1: y1,
           x2: x2 - x1,
           y2: y2 - y1,
+          stroke: "#929292",
+          lineDash: [10, 10],
         };
     }
   };
+
+  useEffect(() => {
+    if (ctx) {
+      const img = new Image();
+      img.src =
+        "https://thedial.infura-ipfs.io/ipfs/QmdCN3qFCJcao9HfQVbQm3SbCjErMJysefqgP1uogXjtve";
+      img.setAttribute("crossorigin", "anonymous");
+      img.onload = () => {
+        setPattern(ctx?.createPattern(img, "repeat"));
+      };
+    }
+  }, [ctx]);
 
   const getElementPosition = (x: number, y: number) => {
     let positionArray: ElementInterface[] = [];
@@ -709,6 +730,7 @@ const useDraw = () => {
         ) as ElementInterface;
         break;
 
+      case "erase":
       case "pencil":
         elementsCopy[index].points = [
           ...(elementsCopy[index].points as any),
@@ -786,7 +808,8 @@ const useDraw = () => {
       tool === "rect" ||
       tool === "ell" ||
       tool === "line" ||
-      tool === "text"
+      tool === "text" ||
+      tool === "erase"
     ) {
       const filteredMarqueeElements = removeMarquee();
       const id = filteredMarqueeElements?.length;
@@ -805,9 +828,12 @@ const useDraw = () => {
       setElements([...filteredMarqueeElements, newElement]);
       setSelectedElement(newElement);
       setAction(tool === "text" ? "writing" : "drawing");
-    } else if (tool === "erase") {
-      setAction("erasing");
-    } else if (tool === "pan") {
+    }
+
+    // else if (tool === "erase") {
+    //   setAction("erasing");
+    // }
+    else if (tool === "pan") {
       setAction("panning");
     } else if (tool === "marquee") {
       // remove any previous marquee
@@ -913,16 +939,19 @@ const useDraw = () => {
           type === "text" && selectedElement?.text
         );
       }
-    } else if (action === "erasing") {
-      const eraseElement = getElementPosition(e.clientX, e.clientY);
-      if (eraseElement.length > 0) {
-        const filteredElements = lodash.filter(
-          elements,
-          (element) => element.id !== eraseElement[0].id
-        );
-        setElements(filteredElements);
-      }
-    } else if (action === "panning") {
+    }
+
+    // else if (action === "erasing") {
+    //   const eraseElement = getElementPosition(e.clientX, e.clientY);
+    //   if (eraseElement.length > 0) {
+    //     const filteredElements = lodash.filter(
+    //       elements,
+    //       (element) => element.id !== eraseElement[0].id
+    //     );
+    //     setElements(filteredElements);
+    //   }
+    // }
+    else if (action === "panning") {
     } else if (action === "marquee") {
       const index = elements?.length - 1;
       const { x1, y1 } = elements[index];
@@ -1177,6 +1206,7 @@ const useDraw = () => {
     handleClear,
     handleCanvasPost,
     elements,
+    postLoading
   };
 };
 

@@ -5,9 +5,11 @@ import "react-tooltip/dist/react-tooltip.css";
 import { RootState } from "../../../../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { PublishProps } from "../../types/canvas.types";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const Publish: FunctionComponent<PublishProps> = ({
   handleCanvasPost,
+  postLoading,
 }): JSX.Element => {
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
@@ -34,14 +36,24 @@ const Publish: FunctionComponent<PublishProps> = ({
       />
       <div
         className="relative row-start-2 w-fit h-fit"
-        onClick={lensProfile ? () => handleCanvasPost() : () => {}}
+        onClick={
+          lensProfile && !postLoading ? () => handleCanvasPost() : () => {}
+        }
       >
-        <CanvasOption
-          bgColor="black"
-          image="QmUBtNtbovXo6iXuRofDyg1JvzHND8YwvVr2x9TvyjPv82"
-          width={20}
-          height={20}
-        />
+        {!postLoading ? (
+          <CanvasOption
+            bgColor="black"
+            image="QmUBtNtbovXo6iXuRofDyg1JvzHND8YwvVr2x9TvyjPv82"
+            width={20}
+            height={20}
+          />
+        ) : (
+          <div className="relative w-fit h-fit place-self border border-white bg-offBlack w-12 h-12 rounded-md grid grid-flow-col auto-cols-auto">
+            <div className="relative w-fit h-fit animate-spin place-self-center">
+              <AiOutlineLoading size={20} color={"white"} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -53,6 +53,7 @@ export type DrawProps = {
   handleBlur: (e: FormEvent) => void;
   handleClear: () => void;
   handleCanvasPost: () => Promise<void>;
+  postLoading: boolean;
 };
 
 export type ColorPickerProps = {
@@ -143,6 +144,7 @@ export interface ElementInterface {
   fillStyle?: string;
   image?: HTMLImageElement;
   position?: string;
+  lineDash?: number[];
 }
 
 export interface Point2 {
@@ -166,4 +168,5 @@ export type Point = {
 
 export type PublishProps = {
   handleCanvasPost: () => Promise<void>;
+  postLoading: boolean;
 };
