@@ -59,17 +59,18 @@ const Tape: FunctionComponent<TapeProps> = ({
           sideImage ? "col-start-2" : "col-start-1"
         } grid grid-flow-col auto-cols-auto self-center justify-self-end`}
       >
+        <div className="relative grid grid-flow-col auto-cols-auto w-fit h-fit max-w-72 truncate">
         <div
           className={`relative ${
             sideImage ? "w-52" : "w-fit"
-          } h-10 rounded-tl-2xl font-digiB text-black text-2xl grid grid-flow-col auto-cols-auto border border-bright whitespace-nowrap ${
+          } h-10 rounded-tl-2xl font-digiB text-black text-2xl grid grid-flow-col auto-cols-auto border border-bright whitespace-nowrap truncate ${
             notifications && title === "notifications"
               ? "bg-offBlue animate-pulse"
               : "bg-white"
           }`}
         >
           <div
-            className={`relative w-fit h-fit place-self-center p-1 truncate ${
+            className={`relative w-fit h-fit place-self-center p-1 ${
               loader && "animate-spin"
             }`}
           >
@@ -83,6 +84,7 @@ const Tape: FunctionComponent<TapeProps> = ({
               title
             )}
           </div>
+        </div>
         </div>
       </div>
     </div>

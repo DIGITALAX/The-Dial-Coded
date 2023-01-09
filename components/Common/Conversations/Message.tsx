@@ -71,7 +71,7 @@ const Message: FunctionComponent<MessageProps> = ({
         {chosenProfile && (
           <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-3">
             <div className="relative w-fit h-fit col-start-1 justify-self-start self-center">
-              <div className="relative w-7 h-7 rounded-full border-black border flex">
+              <div id="crt" className="relative w-7 h-7 rounded-full border-black border flex">
                 <Image
                   src={profileImage}
                   layout="fill"
@@ -135,7 +135,7 @@ const Message: FunctionComponent<MessageProps> = ({
                         }
                       >
                         <div
-                          className={`relative w-40 h-40 grid grid-flow-col auto-cols-auto ${
+                          className={`relative w-40 h-40 rounded-2xl grid grid-flow-col auto-cols-auto bg-offWhite ${
                             convo?.senderAddress === lensProfileAddress
                               ? "justify-self-end"
                               : "justify-self-start"
