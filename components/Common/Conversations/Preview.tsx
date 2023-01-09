@@ -9,8 +9,8 @@ const Preview: FunctionComponent<PreviewProps> = ({
   previewMessages,
   messageProfiles,
   profileLensData,
+  handleChosenProfile,
 }): JSX.Element => {
-  console.log(profileLensData);
   return (
     <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll">
       {previewMessages &&
@@ -18,7 +18,10 @@ const Preview: FunctionComponent<PreviewProps> = ({
           (message: any, index: number) => {
             const profileImage = createProfilePicture(profileLensData[index]);
             return (
-              <div className="relative w-full h-full grid grid-flow-col auto-cols-auto text-black font-dosis text-sm cursor-pointer border-x border-b border-black/50 drop-shadow-md rounded-lg p-2 hover:opacity-70">
+              <div
+                className="relative w-full h-full grid grid-flow-col auto-cols-auto text-black font-dosis text-sm cursor-pointer border-x border-b border-black/50 drop-shadow-md rounded-lg p-2 hover:opacity-70"
+                onClick={() => handleChosenProfile(profileLensData[index])}
+              >
                 <div className="relative col-start-1 w-fit h-fit justify-self-start self-center grid grid-flow-col auto-cols-auto left-4 gap-4">
                   <div
                     className={`relative rounded-full flex bg-white w-6 h-6 place-self-center col-start-1`}
