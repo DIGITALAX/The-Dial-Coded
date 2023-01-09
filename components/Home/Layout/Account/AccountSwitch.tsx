@@ -48,7 +48,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     followersLoading,
     followingLoading,
     mixtapeMirror,
-    followerOnly
+    followerOnly,
   } = useProfile();
   const {
     createClient,
@@ -73,7 +73,12 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     caretCoord,
     handleMentionClick,
     profilesOpen,
-    mentionProfiles
+    mentionProfiles,
+    handleEmoji,
+    openImagePicker,
+    setOpenImagePicker,
+    conversationLoading,
+    client
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
@@ -163,6 +168,11 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           handleMentionClick={handleMentionClick}
           profilesOpen={profilesOpen}
           mentionProfiles={mentionProfiles}
+          handleEmoji={handleEmoji}
+          openImagePicker={openImagePicker}
+          setOpenImagePicker={setOpenImagePicker}
+          conversationLoading={conversationLoading}
+          client={client}
         />
       );
 

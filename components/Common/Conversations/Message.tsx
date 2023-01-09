@@ -6,6 +6,12 @@ import descriptionRegex from "../../../lib/lens/helpers/descriptionRegex";
 import syncScroll from "../../../lib/lens/helpers/syncScroll";
 import { RootState } from "../../../redux/store";
 import { MessageProps } from "../../Home/Layout/Account/types/account.types";
+import { TbSend } from "react-icons/tb";
+import { BsFillEmojiLaughingFill } from "react-icons/bs";
+import { AiOutlineLoading } from "react-icons/ai";
+import Emoji from "emoji-picker-react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useRouter } from "next/router";
 
 const Message: FunctionComponent<MessageProps> = ({
   sendConversation,
@@ -19,11 +25,35 @@ const Message: FunctionComponent<MessageProps> = ({
   mentionProfiles,
   handleMentionClick,
   profilesOpen,
+  handleEmoji,
+  openImagePicker,
+  setOpenImagePicker,
+  conversationLoading,
 }): JSX.Element => {
   const profileImage = createProfilePicture(chosenProfile);
   const lensProfileAddress = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.ownedBy
   );
+  const router = useRouter();
+  const tags = document.querySelectorAll("em");
+  if (tags.length > 0) {
+    for (let i = 0; i < tags.length; i++) {
+      tags[i].addEventListener("click", (e) => {
+        router
+          ?.push(
+            `/?search=${(e.target as any)?.innerText.replaceAll(
+              "#",
+              ""
+            )}/#Slider`
+          )
+          .catch((e) => {
+            if (!e.cancelled) {
+              throw e;
+            }
+          });
+      });
+    }
+  }
   return (
     <div className="relative w-full h-full flex flex-col rounded-x-md bg-white/50 text-black font-dosis">
       <div className="relative w-full h-12 p-2 col-start-1 self-start grid grid-flow-col auto-cols-auto bg-white/70">
@@ -45,32 +75,73 @@ const Message: FunctionComponent<MessageProps> = ({
           </div>
         )}
       </div>
-      {conversationMessages && (
-        <div className="relative h-full w-full grid grid-flow-col auto-cols-auto pb-4 px-3">
-          <div
-            className={`relative w-full h-fit self-end col-start-1 text-right gap-2 grid grid-flow-row auto-rows-auto`}
+      {conversationMessages && !conversationLoading ? (
+        <div
+          className="relative h-full w-full grid grid-flow-col auto-cols-auto pb-4 px-3"
+          id="scrollableDiv"
+        >
+          <InfiniteScroll
+            className={`relative w-full h-full self-end col-start-1 text-right gap-2 grid grid-flow-row auto-rows-auto`}
+            hasMore={true}
+            height={"42rem"}
+            loader={""}
+            style={{ display: "flex", flexDirection: "column-reverse" }}
+            inverse={true}
+            scrollableTarget="scrollableDiv"
+            dataLength={conversationMessages?.length}
+            next={() => {}}
           >
-            {Array.from(conversationMessages.values())?.map(
+            {Array.from(conversationMessages.values())?.reverse()?.map(
               (convo: any, index: number) => {
                 return (
                   <div
                     key={index}
-                    className={`relative w-fit py-1 px-3 rounded-full text-base ${
-                      convo?.senderAddress === lensProfileAddress
-                        ? "justify-self-end bg-offBlue text-white"
-                        : "justify-self-start bg-white text-black"
-                    }`}
-                    dangerouslySetInnerHTML={{
-                      __html: descriptionRegex(convo?.content),
-                    }}
-                  ></div>
+                    className="relative w-full h-fit grid grid-flow-col auto-cols-auto"
+                  >
+                    <div
+                      className={`relative w-fit col-start-1 py-1 px-3 rounded-full text-base ${
+                        convo?.senderAddress === lensProfileAddress
+                          ? "justify-self-end bg-offBlue text-white"
+                          : "justify-self-start bg-white text-black"
+                      }`}
+                      dangerouslySetInnerHTML={{
+                        __html: descriptionRegex(convo?.content, true),
+                      }}
+                    ></div>
+                  </div>
                 );
               }
             )}
+          </InfiniteScroll>
+        </div>
+      ) : (
+        conversationLoading && (
+          <div className="relative grid grid-flow-col auto-cols-auto w-full h-full">
+            <div className="relative w-fit h-fit col-start-1 place-self-center animate-spin">
+              <AiOutlineLoading color="black" size={20} />
+            </div>
+          </div>
+        )
+      )}
+      {openImagePicker !== "" && (
+        <div className="absolute w-full h-full grid grid-flow-col auto-cols-auto pb-10">
+          <div className="relative w-fit h-fit self-end col-start-1 justify-self-center">
+            <Emoji onEmojiClick={handleEmoji} />
           </div>
         </div>
       )}
-      <div className="relative w-full h-10 col-start-1 grid grid-flow-col auto-cols-auto self-end">
+      {/* {openImagePicker !== "" && (
+          <ImagePicker
+            imagePicker={openImagePicker as string}
+            handleEmoji={handleEmoji}
+            handleGif={() => {}}
+            handleGifSubmit={async () => {}}
+            results={[]}
+            searchGif={""}
+            handleSetGif={() => {}}
+          />
+        )} */}
+      <div className="relative w-full h-10 col-start-1 flex flex-row self-end">
         <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
           <textarea
             id="message"
@@ -93,7 +164,7 @@ const Message: FunctionComponent<MessageProps> = ({
               id="highlighted-message"
               className={`w-full h-full place-self-center text-left whitespace-pre-wrap overflow-y-scroll`}
             >
-              Have something to share...
+              Send a message...
             </code>
           </pre>
           {mentionProfiles?.length > 0 && profilesOpen && (
@@ -141,13 +212,29 @@ const Message: FunctionComponent<MessageProps> = ({
             </div>
           )}
         </div>
-        <div
-          className="relative w-full h-full bg-black rounded-r-md grid grid-flow-col auto-cols-auto justify-self-end cursor-pointer active:scale-95"
-          onClick={() => sendConversation()}
-        >
-          <div className="relative text-white col-start-1 place-self-center w-fit h-fit">
-            Send
-          </div>
+        <div className="relative w-28 h-full bg-black rounded-r-md grid grid-flow-col auto-cols-auto justify-self-end">
+          {!messageLoading ? (
+            <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto place-self-center gap-4">
+              <div
+                className="relative text-white col-start-1 place-self-center w-fit h-fit cursor-pointer active:scale-95"
+                onClick={() => sendConversation()}
+              >
+                <TbSend size={15} />
+              </div>
+              <div
+                className="relative text-white col-start-2 place-self-center w-fit h-fit cursor-pointer active:scale-95"
+                onClick={() =>
+                  setOpenImagePicker(openImagePicker === "emoji" ? "" : "emoji")
+                }
+              >
+                <BsFillEmojiLaughingFill size={15} />
+              </div>
+            </div>
+          ) : (
+            <div className="relative w-fit h-fit place-self-center animate-spin">
+              <AiOutlineLoading color="white" size={10} />
+            </div>
+          )}
         </div>
       </div>
     </div>
