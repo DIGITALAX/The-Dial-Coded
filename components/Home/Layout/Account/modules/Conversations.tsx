@@ -35,7 +35,11 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
   setOpenImagePicker,
   conversationLoading,
   client,
-  onNetwork
+  onNetwork,
+  handleGif,
+  handleSetGif,
+  handleGifSubmit,
+  results,
 }): JSX.Element => {
   if (!client) {
     return (
@@ -99,6 +103,11 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
           setOpenImagePicker={setOpenImagePicker}
           conversationLoading={conversationLoading}
           onNetwork={onNetwork}
+          handleGif={handleGif}
+          handleGifSubmit={handleGifSubmit}
+          results={results}
+          handleSetGif={handleSetGif}
+          
         />
       </div>
     </div>

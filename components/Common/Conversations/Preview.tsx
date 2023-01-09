@@ -11,6 +11,8 @@ const Preview: FunctionComponent<PreviewProps> = ({
   profileLensData,
   handleChosenProfile,
 }): JSX.Element => {
+  let ipfsRegex = /ipfs:\/\//;
+  let gifRegex = /https:\/\/media\.tenor\.com/;
   return (
     <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll">
       {previewMessages &&
@@ -43,7 +45,11 @@ const Preview: FunctionComponent<PreviewProps> = ({
                       @{profileLensData[index]?.handle}
                     </div>
                     <div className="relative w-fit h-fit row-start-2 text-sm">
-                      {message?.content}
+                      {ipfsRegex.test(message?.content)
+                        ? "Sent Image"
+                        : gifRegex.test(message?.content)
+                        ? "Sent Gif"
+                        : message?.content}
                     </div>
                   </div>
                 </div>

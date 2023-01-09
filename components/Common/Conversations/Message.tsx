@@ -1,17 +1,20 @@
 import Image from "next/legacy/image";
 import { FunctionComponent, FormEvent } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import createProfilePicture from "../../../lib/lens/helpers/createProfilePicture";
-import descriptionRegex from "../../../lib/lens/helpers/descriptionRegex";
 import syncScroll from "../../../lib/lens/helpers/syncScroll";
 import { RootState } from "../../../redux/store";
 import { MessageProps } from "../../Home/Layout/Account/types/account.types";
 import { TbSend } from "react-icons/tb";
 import { BsFillEmojiLaughingFill } from "react-icons/bs";
-import { AiOutlineLoading } from "react-icons/ai";
+import { AiOutlineGif, AiOutlineLoading } from "react-icons/ai";
 import Emoji from "emoji-picker-react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
+import { IoMdImage } from "react-icons/io";
+import Grid from "../Giphy/Grid";
+import messageRichMedia from "../../../lib/lens/helpers/messageRichMedia";
+import { setImageViewer } from "../../../redux/reducers/imageViewerSlice";
 
 const Message: FunctionComponent<MessageProps> = ({
   sendConversation,
@@ -30,14 +33,19 @@ const Message: FunctionComponent<MessageProps> = ({
   setOpenImagePicker,
   conversationLoading,
   onNetwork,
+  handleGif,
+  handleSetGif,
+  handleGifSubmit,
+  results,
 }): JSX.Element => {
   const profileImage = createProfilePicture(chosenProfile);
   const lensProfileAddress = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.ownedBy
   );
-  console.log(onNetwork)
   const router = useRouter();
   const tags = document.querySelectorAll("em");
+  const dispatch = useDispatch();
+
   if (tags.length > 0) {
     for (let i = 0; i < tags.length; i++) {
       tags[i].addEventListener("click", (e) => {
@@ -77,7 +85,7 @@ const Message: FunctionComponent<MessageProps> = ({
           </div>
         )}
       </div>
-      {conversationMessages && !conversationLoading ? (
+      {conversationMessages && !conversationLoading && onNetwork ? (
         <div
           className="relative h-full w-full grid grid-flow-col auto-cols-auto pb-4 px-3"
           id="scrollableDiv"
@@ -96,53 +104,85 @@ const Message: FunctionComponent<MessageProps> = ({
             {Array.from(conversationMessages.values())
               ?.reverse()
               ?.map((convo: any, index: number) => {
+                const { src, type } = messageRichMedia(convo?.content);
                 return (
                   <div
                     key={index}
                     className="relative w-full h-fit grid grid-flow-col auto-cols-auto"
                   >
-                    <div
-                      className={`relative w-fit col-start-1 py-1 px-3 rounded-full text-base ${
-                        convo?.senderAddress === lensProfileAddress
-                          ? "justify-self-end bg-offBlue text-white"
-                          : "justify-self-start bg-white text-black"
-                      }`}
-                      dangerouslySetInnerHTML={{
-                        __html: descriptionRegex(convo?.content, true),
-                      }}
-                    ></div>
+                    {type === "html" ? (
+                      <div
+                        className={`relative w-fit max-w-full whitespace-prewrap col-start-1 py-1 px-3 rounded-full text-base select-text selection:text-fuchsia-900 ${
+                          convo?.senderAddress === lensProfileAddress
+                            ? "justify-self-end bg-offBlue text-white"
+                            : "justify-self-start bg-white text-black"
+                        }`}
+                        dangerouslySetInnerHTML={{
+                          __html: src,
+                        }}
+                      ></div>
+                    ) : (
+                      <div
+                        className="relative w-40 h-40 max-w-full rounded-lg grid grid-flow-col auto-cols-auto cursor-pointer"
+                        onClick={() =>
+                          dispatch(
+                            setImageViewer({
+                              actionOpen: true,
+                              actionImage: src,
+                            })
+                          )
+                        }
+                      >
+                        <Image
+                          src={src}
+                          layout="fill"
+                          objectFit="cover"
+                          className="rounded-2xl flex"
+                        />
+                      </div>
+                    )}
                   </div>
                 );
               })}
           </InfiniteScroll>
         </div>
-      ) : (
-        conversationLoading && (
-          <div className="relative grid grid-flow-col auto-cols-auto w-full h-full">
-            <div className="relative w-fit h-fit col-start-1 place-self-center animate-spin">
-              <AiOutlineLoading color="black" size={20} />
-            </div>
+      ) : conversationLoading && onNetwork && chosenProfile ? (
+        <div className="relative grid grid-flow-col auto-cols-auto w-full h-full">
+          <div className="relative w-fit h-fit col-start-1 place-self-center animate-spin">
+            <AiOutlineLoading color="black" size={20} />
           </div>
-        )
+        </div>
+      ) : !onNetwork && chosenProfile && !conversationLoading ? (
+        <div className="relative w-full h-full text-xs font-dosis text-offBlack grid grid-flow-col auto-cols-auto">
+          <div className="relative w-fit h-fit place-self-center">
+            Profile Not Registered to Message
+          </div>
+        </div>
+      ) : (
+        <div className="relative w-full h-full"></div>
       )}
-      {openImagePicker !== "" && (
+      {openImagePicker === "emoji" ? (
         <div className="absolute w-full h-full grid grid-flow-col auto-cols-auto pb-10">
           <div className="relative w-fit h-fit self-end col-start-1 justify-self-center">
             <Emoji onEmojiClick={handleEmoji} />
           </div>
         </div>
+      ) : (
+        openImagePicker === "gif" && (
+          <div className="absolute pb-16 w-full h-full grid grid-flow-col auto-cols-auto">
+            <div className="relative w-full h-fit self-end col-start-1">
+              <Grid
+                handleGif={handleGif}
+                handleGifSubmit={handleGifSubmit}
+                results={results}
+                handleSetGif={handleSetGif}
+                width={"full"}
+                background={"dullY"}
+              />
+            </div>
+          </div>
+        )
       )}
-      {/* {openImagePicker !== "" && (
-          <ImagePicker
-            imagePicker={openImagePicker as string}
-            handleEmoji={handleEmoji}
-            handleGif={() => {}}
-            handleGifSubmit={async () => {}}
-            results={[]}
-            searchGif={""}
-            handleSetGif={() => {}}
-          />
-        )} */}
       <div className="relative w-full h-10 col-start-1 flex flex-row self-end">
         <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
           <textarea
@@ -215,12 +255,12 @@ const Message: FunctionComponent<MessageProps> = ({
           )}
         </div>
         <div
-          className={`relative w-28 h-full rounded-r-md grid grid-flow-col auto-cols-auto justify-self-end ${
+          className={`relative w-36 h-full rounded-r-md grid grid-flow-col auto-cols-auto justify-self-end ${
             !onNetwork ? "bg-black/70" : "bg-black"
           }`}
         >
           {!messageLoading ? (
-            <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto place-self-center gap-4">
+            <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto place-self-center gap-2">
               <div
                 className={`relative text-white col-start-1 place-self-center w-fit h-fit ${
                   onNetwork && "cursor-pointer active:scale-95"
@@ -231,6 +271,25 @@ const Message: FunctionComponent<MessageProps> = ({
               </div>
               <div
                 className={`relative text-white col-start-2 place-self-center w-fit h-fit ${
+                  onNetwork && "cursor-pointer active:scale-95"
+                }`}
+              >
+                <IoMdImage color="white" size={15} />
+              </div>
+              <div
+                className={`relative text-white col-start-3 place-self-center w-fit h-fit ${
+                  onNetwork && "cursor-pointer active:scale-95"
+                }`}
+                onClick={() =>
+                  onNetwork
+                    ? setOpenImagePicker(openImagePicker === "gif" ? "" : "gif")
+                    : {}
+                }
+              >
+                <AiOutlineGif color="white" size={15} />
+              </div>
+              <div
+                className={`relative text-white col-start-4 place-self-center w-fit h-fit ${
                   onNetwork && "cursor-pointer active:scale-95"
                 }`}
                 onClick={() =>

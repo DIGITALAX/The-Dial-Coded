@@ -122,6 +122,10 @@ export type MessageProps = {
   setOpenImagePicker: (e: string) => void;
   conversationLoading: boolean;
   onNetwork: boolean;
+  handleGif: (e: FormEvent) => void;
+  handleSetGif: (result: any) => void;
+  handleGifSubmit: (e: any) => Promise<void>;
+  results: any[];
 };
 
 export type ConversationsProps = {
@@ -134,7 +138,7 @@ export type ConversationsProps = {
   searchMoreMessages: () => Promise<void>;
   sendConversation: () => Promise<void>;
   handleMessage: (e: FormEvent) => void;
-  handleChosenProfile: (user: Profile) => Promise<void>;
+  handleChosenProfile: (user: Profile) => void;
   searchTarget: string | undefined;
   dropdown: boolean;
   chosenProfile: Profile | undefined;
@@ -155,6 +159,10 @@ export type ConversationsProps = {
   conversationLoading: boolean;
   client: any;
   onNetwork: boolean;
+  handleGif: (e: FormEvent) => void;
+  handleSetGif: (result: any) => void;
+  handleGifSubmit: (e: any) => Promise<void>;
+  results: any[];
 };
 
 export type PreviewProps = {
@@ -162,7 +170,7 @@ export type PreviewProps = {
   previewMessages: Map<string, DecodedMessage> | undefined;
   messageProfiles: Map<string, Profile> | undefined;
   profileLensData: Profile[];
-  handleChosenProfile: (user: Profile) => Promise<void>;
+  handleChosenProfile: (user: Profile) => void;
 };
 
 export type UseConversationResults = {
@@ -175,7 +183,7 @@ export type UseConversationResults = {
   profileSearch: Profile[];
   searchMoreMessages: () => Promise<void>;
   handleMessage: (e: FormEvent) => void;
-  handleChosenProfile: (user: Profile) => Promise<void>;
+  handleChosenProfile: (user: Profile) => void;
   searchTarget: string | undefined;
   dropdown: boolean;
   previewMessages: Map<string, DecodedMessage> | undefined;
@@ -195,6 +203,10 @@ export type UseConversationResults = {
   conversationLoading: boolean;
   client: any;
   onNetwork: boolean;
+  handleGif: (e: FormEvent) => void;
+  handleSetGif: (result: any) => void;
+  handleGifSubmit: (e: any) => Promise<void>;
+  results: any[];
 };
 
 export type SearchProps = {
@@ -202,7 +214,7 @@ export type SearchProps = {
   searchLoading: boolean;
   profileSearch: Profile[];
   searchMoreMessages: () => Promise<void>;
-  handleChosenProfile: (user: Profile) => Promise<void>;
+  handleChosenProfile: (user: Profile) => void;
   searchTarget: string | undefined;
   dropdown: boolean;
 };
