@@ -52,7 +52,8 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handleBlur,
     handleMouseWheel,
     handleClear,
-    handleCanvasPost
+    handleCanvasPost,
+    postLoading
   } = useDraw();
   const {
     quickSearchResults,
@@ -134,6 +135,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           handleMouseWheel={handleMouseWheel}
           handleClear={handleClear}
           handleCanvasPost={handleCanvasPost}
+          postLoading={postLoading}
         />
       );
   }
