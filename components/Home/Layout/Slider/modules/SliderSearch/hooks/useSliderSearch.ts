@@ -217,7 +217,10 @@ const useSliderSearch = (): UseSliderSearchResults => {
   };
 
   useEffect(() => {
-    if (router.asPath.includes("/#Slider")) {
+    if (
+      router.asPath.includes("/#Slider") &&
+      router.asPath.includes("?search=")
+    ) {
       handleHashtagSearch();
     }
   }, [router.asPath]);

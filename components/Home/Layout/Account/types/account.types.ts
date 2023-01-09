@@ -117,6 +117,10 @@ export type MessageProps = {
   mentionProfiles: any[];
   handleMentionClick: (user: any) => void;
   profilesOpen: boolean;
+  handleEmoji: (e: any) => void;
+  openImagePicker: string;
+  setOpenImagePicker: (e: string) => void;
+  conversationLoading: boolean;
 };
 
 export type ConversationsProps = {
@@ -144,6 +148,11 @@ export type ConversationsProps = {
   mentionProfiles: any[];
   handleMentionClick: (user: any) => void;
   profilesOpen: boolean;
+  handleEmoji: (e: any) => void;
+  openImagePicker: string;
+  setOpenImagePicker: (e: string) => void;
+  conversationLoading: boolean;
+  client: any
 };
 
 export type PreviewProps = {
@@ -178,6 +187,11 @@ export type UseConversationResults = {
   mentionProfiles: any[];
   handleMentionClick: (user: any) => void;
   profilesOpen: boolean;
+  handleEmoji: (e: any) => void;
+  openImagePicker: string;
+  setOpenImagePicker: (e: string) => void;
+  conversationLoading: boolean;
+  client: any
 };
 
 export type SearchProps = {

@@ -32,12 +32,15 @@ const useConversations = (): UseConversationResults => {
   );
   const textElement = useRef<HTMLTextAreaElement>(null);
   const dispatch = useDispatch();
+  const [conversationLoading, setConversationLoading] =
+    useState<boolean>(false);
   const [messageLoading, setMessageLoading] = useState<boolean>(false);
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [profileSearch, setProfileSearch] = useState<Profile[]>([]);
   const [profileLensData, setProfileLensData] = useState<Profile[]>([]);
   const [pageCursor, setPageCursor] = useState<any>();
   const [conversationMessages, setConversationMessages] = useState<any[]>([]);
+  const [openImagePicker, setOpenImagePicker] = useState<string>("");
   const [allConversations, setAllConversations] = useState<any[]>([]);
   const [createdClient, setCreatedClient] = useState<boolean>(false);
   const [clientLoading, setClientLoading] = useState<boolean>(false);
@@ -63,33 +66,7 @@ const useConversations = (): UseConversationResults => {
     try {
       const xmtp = await Client.create(signer as Signer | null);
       setClient(xmtp);
-      const allConversations = await xmtp.conversations.list();
-      const lensConversations = allConversations.filter((conversation) =>
-        conversation.context?.conversationId.startsWith("lens.dev/dm/")
-      );
-      setAllConversations(lensConversations);
-      const conversationKeysResult = lensConversations.map((convo) =>
-        buildConversationKey(
-          convo.peerAddress,
-          convo.context?.conversationId as string
-        )
-      );
-      const matcherRegex = conversationMatchesProfile(lensProfile?.id);
-      const matchingConvos = allConversations.filter(
-        (convo) =>
-          convo.context?.conversationId &&
-          matcherRegex.test(convo.context.conversationId)
-      );
-      messagePreviews(matchingConvos);
-
-      const profileIds: (string[] | null)[] = conversationKeysResult.map(
-        (key) => getProfileFromKey(key)
-      );
-      let messagedProfilesArray: string[] = [];
-      profileIds.forEach((value) => {
-        messagedProfilesArray.push(value?.[1] as string);
-      });
-      setProfileIds(messagedProfilesArray);
+      getAllConversations(xmtp);
       setCreatedClient(true);
     } catch (err: any) {
       console.error(err?.message);
@@ -97,21 +74,98 @@ const useConversations = (): UseConversationResults => {
     setClientLoading(false);
   };
 
-  const getConversationMessages = async () => {
-    let chosenConversation: any[] = [];
-    const prof = (chosenProfile as any)?.id
-      ? (chosenProfile as any)?.id
-      : (chosenProfile as any)?.profileId;
-    allConversations.filter((convo) => {
-      if (convo.context.conversationId.split("-")[1] === prof) {
-        chosenConversation.push(convo);
-      }
-    });
-    for (const conversation of chosenConversation) {
-      const messagesInConversation = await conversation.messages();
-      console.log(messagesInConversation);
-      setConversationMessages(messagesInConversation);
+  const getAllConversations = async (clientInput?: any) => {
+    try {
+      const conversationList = await (clientInput
+        ? clientInput
+        : client
+      ).conversations.list();
+      const lensConversations = conversationList.filter((conversation: any) =>
+        conversation.context?.conversationId.startsWith("lens.dev/dm/")
+      );
+      setAllConversations(lensConversations);
+      const messagedProfilesArray =
+        buildConversationforDisplay(lensConversations);
+      setProfileIds(messagedProfilesArray);
+    } catch (err: any) {
+      console.error(err.message);
     }
+  };
+
+  const buildConversationforDisplay = (lensConversations: any[]): any[] => {
+    const conversationKeysResult = lensConversations.map((convo: any) =>
+      buildConversationKey(
+        convo.peerAddress,
+        convo.context?.conversationId as string
+      )
+    );
+    const matcherRegex = conversationMatchesProfile(lensProfile?.id);
+    const matchingConvos = lensConversations.filter(
+      (convo: any) =>
+        convo.context?.conversationId &&
+        matcherRegex.test(convo.context.conversationId)
+    );
+    messagePreviews(matchingConvos);
+
+    const profiles: (string[] | null)[] = conversationKeysResult.map(
+      (key: any) => getProfileFromKey(key)
+    );
+    let messagedProfilesArray: string[] = [];
+    profiles.forEach((value) => {
+      messagedProfilesArray.push(value?.[1] as string);
+    });
+
+    return messagedProfilesArray;
+  };
+
+  useEffect(() => {
+    if (!client) {
+      dispatch(setChosenDMProfile(undefined));
+    } else {
+      conversationStream();
+    }
+  }, [client]);
+
+  useEffect(() => {
+    if (profileIds && profileIds?.length > 0) {
+      getProfileMessages();
+    }
+  }, [profileIds]);
+
+  useEffect(() => {
+    if (client) {
+      getAllConversations();
+      getConversationMessages(false);
+    }
+  }, [messageLoading]);
+
+  useEffect(() => {
+    if (chosenProfile) {
+      getConversationMessages(true);
+      messageStream();
+    }
+  }, [chosenProfile]);
+
+  const getConversationMessages = async (start: boolean) => {
+    setConversationLoading(start);
+    try {
+      let chosenConversation: any[] = [];
+      const prof = (chosenProfile as any)?.id
+        ? (chosenProfile as any)?.id
+        : (chosenProfile as any)?.profileId;
+      allConversations.filter((convo) => {
+        if (convo.context.conversationId.split("-")[1] === prof) {
+          chosenConversation.push(convo);
+        }
+      });
+      for (const conversation of chosenConversation) {
+        const messagesInConversation = await conversation.messages();
+        setConversationMessages(messagesInConversation);
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setConversationLoading(false);
   };
 
   const getProfileMessages = async () => {
@@ -171,9 +225,11 @@ const useConversations = (): UseConversationResults => {
       }
       setPreviewMessages(newPreviewMessages);
 
-      (messageProfiles as any)?.map(([key, profile]: any[]) => {
-        const message = previewMessages?.get(key);
-      });
+      (Array.from(messageProfiles?.keys() as any) as any)?.map(
+        ([key, profile]: any[]) => {
+          const message = previewMessages?.get(key);
+        }
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -194,10 +250,13 @@ const useConversations = (): UseConversationResults => {
           metadata: {},
         }
       );
-      const response = await conversation.send(message);
+      await conversation.send(message);
     } catch (err: any) {
       console.error(err.message);
     }
+    setMessage("");
+    setMessageHTML("");
+    (document as any).querySelector("#highlighted-message").innerHTML = "";
     setMessageLoading(false);
   };
 
@@ -205,9 +264,29 @@ const useConversations = (): UseConversationResults => {
     try {
       const newStream = await client.conversations.stream();
       for await (const conversation of newStream) {
-        if (conversation.context?.conversationId) {
-          // listen to new messages and useeffect / show them
+        if (conversation.context?.conversationId.startsWith("lens.dev/dm/")) {
+          const newArray = [...allConversations, conversation];
+          setAllConversations(newArray);
+          const newMessagedProfilesArray =
+            buildConversationforDisplay(newArray);
+          setProfileIds(newMessagedProfilesArray);
         }
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const messageStream = async () => {
+    try {
+      const conversation = await client.conversations.newConversation(
+        chosenProfile?.ownedBy
+      );
+      for await (const message of await conversation.streamMessages()) {
+        if (message.senderAddress === client.address) {
+          continue;
+        }
+        setConversationMessages([...conversationMessages, message]);
       }
     } catch (err: any) {
       console.error(err.message);
@@ -221,6 +300,13 @@ const useConversations = (): UseConversationResults => {
       return null;
     }
     return parsed.members;
+  };
+
+  const handleEmoji = (e: any): void => {
+    let resultElement = document.querySelector("#highlighted-message");
+    (resultElement as any).innerHTML = messageHTML + e.emoji;
+    setMessageHTML(messageHTML + e.emoji);
+    setMessage(message + e.emoji);
   };
 
   const handleMentionClick = (user: any) => {
@@ -273,14 +359,7 @@ const useConversations = (): UseConversationResults => {
     setSearchTarget(user?.handle);
     dispatch(setChosenDMProfile(user));
     setDropdown(false);
-    // await getConversationMessages();
   };
-
-  useEffect(() => {
-    if (chosenProfile) {
-      getConversationMessages();
-    }
-  }, [chosenProfile]);
 
   const searchMessages = async (e: FormEvent): Promise<void> => {
     setSearchLoading(true);
@@ -324,12 +403,6 @@ const useConversations = (): UseConversationResults => {
     }
   };
 
-  useEffect(() => {
-    if (profileIds && profileIds?.length > 0) {
-      getProfileMessages();
-    }
-  }, [profileIds]);
-
   return {
     createClient,
     sendConversation,
@@ -353,7 +426,12 @@ const useConversations = (): UseConversationResults => {
     caretCoord,
     handleMentionClick,
     profilesOpen,
-    mentionProfiles
+    mentionProfiles,
+    handleEmoji,
+    openImagePicker,
+    setOpenImagePicker,
+    conversationLoading,
+    client,
   };
 };
 

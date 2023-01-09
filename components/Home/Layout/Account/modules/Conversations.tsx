@@ -29,9 +29,14 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
   caretCoord,
   handleMentionClick,
   profilesOpen,
-  mentionProfiles
+  mentionProfiles,
+  handleEmoji,
+  openImagePicker,
+  setOpenImagePicker,
+  conversationLoading,
+  client
 }): JSX.Element => {
-  if (!createdClient) {
+  if (!client) {
     return (
       <div className="relative w-full h-full grid grid-flow-col auto-cols-auto bg-white bg-opacity-30 backdrop-blur-sm rounded-md">
         <div
@@ -88,6 +93,10 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
           handleMentionClick={handleMentionClick}
           profilesOpen={profilesOpen}
           mentionProfiles={mentionProfiles}
+          handleEmoji={handleEmoji}
+          openImagePicker={openImagePicker}
+          setOpenImagePicker={setOpenImagePicker}
+          conversationLoading={conversationLoading}
         />
       </div>
     </div>
