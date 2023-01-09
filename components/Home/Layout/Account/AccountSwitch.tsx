@@ -65,7 +65,15 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     dropdown,
     previewMessages,
     messageProfiles,
-    profileLensData
+    profileLensData,
+    conversationMessages,
+    message,
+    textElement,
+    messageLoading,
+    caretCoord,
+    handleMentionClick,
+    profilesOpen,
+    mentionProfiles
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
@@ -147,6 +155,14 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           previewMessages={previewMessages}
           messageProfiles={messageProfiles}
           profileLensData={profileLensData}
+          conversationMessages={conversationMessages}
+          message={message}
+          textElement={textElement}
+          messageLoading={messageLoading}
+          caretCoord={caretCoord}
+          handleMentionClick={handleMentionClick}
+          profilesOpen={profilesOpen}
+          mentionProfiles={mentionProfiles}
         />
       );
 

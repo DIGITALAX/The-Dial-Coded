@@ -21,7 +21,15 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
   chosenProfile,
   previewMessages,
   messageProfiles,
-  profileLensData
+  profileLensData,
+  conversationMessages,
+  message,
+  textElement,
+  messageLoading,
+  caretCoord,
+  handleMentionClick,
+  profilesOpen,
+  mentionProfiles
 }): JSX.Element => {
   if (!createdClient) {
     return (
@@ -71,8 +79,15 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
         <Message
           sendConversation={sendConversation}
           handleMessage={handleMessage}
-          searchTarget={searchTarget}
           chosenProfile={chosenProfile}
+          conversationMessages={conversationMessages}
+          message={message}
+          textElement={textElement}
+          messageLoading={messageLoading}
+          caretCoord={caretCoord}
+          handleMentionClick={handleMentionClick}
+          profilesOpen={profilesOpen}
+          mentionProfiles={mentionProfiles}
         />
       </div>
     </div>

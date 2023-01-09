@@ -26,7 +26,8 @@ import omit from "../../../../../lib/lens/helpers/omit";
 import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
 import { setFollowerOnly } from "../../../../../redux/reducers/followerOnlySlice";
 import { Profile } from "../../../types/lens.types";
-import getCaretCoordinates from "textarea-caret";
+import getPostHTML from "../../../../../lib/lens/helpers/postHTML";
+import getCaretPos from "../../../../../lib/lens/helpers/getCaretPos";
 
 const usePublication = () => {
   const {
@@ -412,25 +413,7 @@ const usePublication = () => {
     if (e.target.value[e.target.value.length - 1] == "\n") {
       e.target.value += " ";
     }
-    const regexLinks = /\b(https?:\/\/)?(www\.)?\w+\.\b(com|xyz)\b/gi;
-    const regexMentions = /(?:^|\s)(@|#)\w+/g;
-    const linkHighlight = e.target.value.replace(
-      regexLinks,
-      (match: string) => {
-        return `<span style="color: blue">${match}</span>`;
-      }
-    );
-    const mentionHighlight = linkHighlight.replace(
-      regexMentions,
-      (match: string) => {
-        return `<span style="color: blue">${match}</span>`;
-      }
-    );
-    const finalHTML = mentionHighlight
-      .replace(new RegExp("&", "g"), "&")
-      .replace(new RegExp("<", "g"), "<");
-    (resultElement as any).innerHTML = finalHTML;
-    setPostHTML(finalHTML);
+    setPostHTML(getPostHTML(e, resultElement as Element));
     setPostDescription(e.target.value);
     if (
       e.target.value.split(" ")[e.target.value.split(" ").length - 1][0] ===
@@ -438,18 +421,7 @@ const usePublication = () => {
       e.target.value.split(" ")[e.target.value.split(" ").length - 1].length ===
         1
     ) {
-      const caret = getCaretCoordinates(e.target, e.target.selectionEnd);
-      setCaretCoord({
-        x:
-          caret.left > (2 / 3) * (textElement.current?.clientWidth as number)
-            ? caret.left - 150
-            : caret.left,
-        y:
-          (textElement.current?.scrollHeight as number) >
-          (textElement.current?.clientHeight as number)
-            ? -30
-            : caret.top,
-      });
+      setCaretCoord(getCaretPos(e, textElement));
       setProfilesOpen(true);
     }
     if (
@@ -465,12 +437,6 @@ const usePublication = () => {
       setProfilesOpen(false);
       setMentionProfiles([]);
     }
-  };
-
-  const syncScroll = (e: any) => {
-    let resultElement = document.querySelector("#highlighted-content");
-    (resultElement as any).scrollTop = e.target.scrollTop;
-    (resultElement as any).scrollLeft = e.target.scrollLeft;
   };
 
   const handleTags = (e: FormEvent) => {
@@ -516,7 +482,6 @@ const usePublication = () => {
     tags,
     handleRemoveTag,
     textElement,
-    syncScroll,
     mentionProfiles,
     handleMentionClick,
     caretCoord,

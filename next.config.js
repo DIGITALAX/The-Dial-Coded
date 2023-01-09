@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+const removeImports = require("next-remove-imports")();
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -31,7 +34,8 @@ const nextConfig = {
   experimental: {
     scrollRestoration: true,
     appDir: false,
+    esmExternals: true,
   },
 };
 
-module.exports = nextConfig;
+module.exports = removeImports(nextConfig);

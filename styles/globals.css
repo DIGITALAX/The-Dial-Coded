@@ -397,24 +397,45 @@ input[type="range"]::-moz-range-thumb {
   white-space: pre-wrap;
 }
 
-
 code {
   font-family: "Dosis Regular";
-  font-size: 1rem; /* 16px */
-  line-height: 1.5rem; 
+  font-size: 1rem;
+  line-height: 1.5rem;
   overflow-y: scroll;
-  scrollbar-width: none; 
+  scrollbar-width: none;
 }
 
-code::-webkit-scrollbar { 
-  display: none;  /* Safari and Chrome */
+code::-webkit-scrollbar {
+  display: none;
 }
 
 #highlighted-content {
   overflow-y: scroll;
-  scrollbar-width: none; 
+  scrollbar-width: none;
 }
 
 #blue {
-  color: blue
+  color: blue;
+}
+
+
+#message {
+  color: transparent;
+  background: transparent;
+  caret-color: black;
+}
+
+#message #highlighting-message * {
+  font-family: "Dosis Regular";
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem;
+  overflow-y: scroll;
+  white-space: pre-wrap;
+  color: black
+}
+
+#highlighted-message {
+  overflow-y: scroll;
+  scrollbar-width: none;
+  color: black
 }

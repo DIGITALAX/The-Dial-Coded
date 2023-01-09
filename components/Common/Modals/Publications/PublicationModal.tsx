@@ -4,6 +4,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
 import { useDispatch, useSelector } from "react-redux";
 import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
+import syncScroll from "../../../../lib/lens/helpers/syncScroll";
 import { setPublication } from "../../../../redux/reducers/publicationSlice";
 import { RootState } from "../../../../redux/store";
 import useCollectionModal from "./hooks/useCollectionModal";
@@ -84,13 +85,13 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     handleTags,
     tags,
     handleRemoveTag,
-    syncScroll,
     mentionProfiles,
     handleMentionClick,
     textElement,
     caretCoord,
     profilesOpen,
   } = usePublication();
+
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
@@ -168,10 +169,10 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
               >
                 <textarea
                   id="post"
-                  onScroll={(e: any) => syncScroll(e)}
+                  onScroll={(e: any) => syncScroll(e, "highlighted-content")}
                   onInput={(e: FormEvent) => {
                     handlePostDescription(e);
-                    syncScroll(e);
+                    syncScroll(e, "highlighted-content");
                   }}
                   ref={textElement}
                   value={postDescription}
