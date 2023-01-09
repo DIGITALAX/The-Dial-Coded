@@ -8,17 +8,19 @@ import {
 } from "@xmtp/xmtp-js";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import {
-  CONVERSATION_KEY_RE,
-  XMTP_PREFIX,
-} from "../../../../../lib/lens/constants";
 import { Profile } from "../../../../Common/types/lens.types";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { getAllProfiles } from "../../../../../graphql/queries/whoMirroredPublications";
 import { UseConversationResults } from "../types/account.types";
 import { searchProfile } from "../../../../../graphql/queries/search";
 import lodash from "lodash";
 import { setChosenDMProfile } from "../../../../../redux/reducers/chosenDMProfileSlice";
+import parseConversationKey from "../../../../../lib/xmtp/helpers/parseConversationKey";
+import buildConversationKey from "../../../../../lib/xmtp/helpers/buildConversationKey";
+import buildConversationId from "../../../../../lib/xmtp/helpers/buildConversationId";
+import conversationMatchesProfile from "../../../../../lib/xmtp/helpers/conversationMatchesProfile";
+import getPostHTML from "../../../../../lib/lens/helpers/postHTML";
+import getCaretPos from "../../../../../lib/lens/helpers/getCaretPos";
 
 const useConversations = (): UseConversationResults => {
   const { data: signer } = useSigner();
@@ -28,30 +30,44 @@ const useConversations = (): UseConversationResults => {
   const chosenProfile = useSelector(
     (state: RootState) => state.app.chosenDMProfileReducer.profile
   );
+  const textElement = useRef<HTMLTextAreaElement>(null);
   const dispatch = useDispatch();
+  const [messageLoading, setMessageLoading] = useState<boolean>(false);
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [profileSearch, setProfileSearch] = useState<Profile[]>([]);
   const [profileLensData, setProfileLensData] = useState<Profile[]>([]);
   const [pageCursor, setPageCursor] = useState<any>();
+  const [conversationMessages, setConversationMessages] = useState<any[]>([]);
+  const [allConversations, setAllConversations] = useState<any[]>([]);
   const [createdClient, setCreatedClient] = useState<boolean>(false);
   const [clientLoading, setClientLoading] = useState<boolean>(false);
-  const [searchTarget, setSearchTarget] = useState<string>();
+  const [searchTarget, setSearchTarget] = useState<string>("");
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [messageProfiles, setMessageProfiles] =
     useState<Map<string, Profile>>();
   const [previewMessages, setPreviewMessages] =
     useState<Map<string, DecodedMessage>>();
   const [profileIds, setProfileIds] = useState<string[]>();
-  const [message, setMessage] = useState<string>();
+  const [message, setMessage] = useState<string>("");
+  const [messageHTML, setMessageHTML] = useState<string>("");
+  const [client, setClient] = useState<any>();
+  const [caretCoord, setCaretCoord] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
+  const [profilesOpen, setProfilesOpen] = useState<boolean>(false);
 
   const createClient = async () => {
     setClientLoading(true);
     try {
       const xmtp = await Client.create(signer as Signer | null);
+      setClient(xmtp);
       const allConversations = await xmtp.conversations.list();
       const lensConversations = allConversations.filter((conversation) =>
         conversation.context?.conversationId.startsWith("lens.dev/dm/")
       );
+      setAllConversations(lensConversations);
       const conversationKeysResult = lensConversations.map((convo) =>
         buildConversationKey(
           convo.peerAddress,
@@ -79,6 +95,23 @@ const useConversations = (): UseConversationResults => {
       console.error(err?.message);
     }
     setClientLoading(false);
+  };
+
+  const getConversationMessages = async () => {
+    let chosenConversation: any[] = [];
+    const prof = (chosenProfile as any)?.id
+      ? (chosenProfile as any)?.id
+      : (chosenProfile as any)?.profileId;
+    allConversations.filter((convo) => {
+      if (convo.context.conversationId.split("-")[1] === prof) {
+        chosenConversation.push(convo);
+      }
+    });
+    for (const conversation of chosenConversation) {
+      const messagesInConversation = await conversation.messages();
+      console.log(messagesInConversation);
+      setConversationMessages(messagesInConversation);
+    }
   };
 
   const getProfileMessages = async () => {
@@ -146,18 +179,17 @@ const useConversations = (): UseConversationResults => {
     }
   };
 
-  const conversationMatchesProfile = (profileId: string) =>
-    new RegExp(`lens.dev/dm/.*${profileId}`);
-
   const sendConversation = async () => {
+    setMessageLoading(true);
     try {
-      const xmtp = await Client.create(signer as Signer | null);
-      const conversation = await xmtp.conversations.newConversation(
+      const conversation = await client.conversations.newConversation(
         chosenProfile?.ownedBy,
         {
           conversationId: buildConversationId(
             lensProfile?.id,
             (chosenProfile as any)?.profileId
+              ? (chosenProfile as any)?.profileId
+              : (chosenProfile as any)?.id
           ),
           metadata: {},
         }
@@ -166,42 +198,20 @@ const useConversations = (): UseConversationResults => {
     } catch (err: any) {
       console.error(err.message);
     }
+    setMessageLoading(false);
   };
 
-  const buildConversationId = (profileIdA: string, profileIdB: string) => {
-    const profileIdAParsed = parseInt(profileIdA, 16);
-    const profileIdBParsed = parseInt(profileIdB, 16);
-    return profileIdAParsed < profileIdBParsed
-      ? `${XMTP_PREFIX}/${profileIdA}-${profileIdB}`
-      : `${XMTP_PREFIX}/${profileIdB}-${profileIdA}`;
-  };
-
-  const buildConversationKey = (
-    peerAddress: string,
-    conversationId: string
-  ) => {
-    return `${peerAddress.toLowerCase()}/${conversationId}`;
-  };
-
-  const parseConversationKey = (
-    conversationKey: string
-  ): {
-    peerAddress: string;
-    members: string[];
-    conversationId: string;
-  } | null => {
-    const matches = conversationKey.match(CONVERSATION_KEY_RE);
-    if (!matches || matches.length !== 4) {
-      return null;
+  const conversationStream = async () => {
+    try {
+      const newStream = await client.conversations.stream();
+      for await (const conversation of newStream) {
+        if (conversation.context?.conversationId) {
+          // listen to new messages and useeffect / show them
+        }
+      }
+    } catch (err: any) {
+      console.error(err.message);
     }
-
-    const [, peerAddress, memberA, memberB] = Array.from(matches);
-
-    return {
-      peerAddress,
-      members: [memberA, memberB],
-      conversationId: `${XMTP_PREFIX}/${memberA}-${memberB}`,
-    };
   };
 
   const getProfileFromKey = (key: string): string[] | null => {
@@ -210,19 +220,67 @@ const useConversations = (): UseConversationResults => {
     if (!parsed || !userProfileId) {
       return null;
     }
-
     return parsed.members;
   };
 
-  const handleMessage = (e: FormEvent): void => {
-    setMessage((e.target as HTMLFormElement).value);
+  const handleMentionClick = (user: any) => {
+    setProfilesOpen(false);
+    let resultElement = document.querySelector("#highlighted-message");
+    const newHTMLPost =
+      messageHTML.substring(0, messageHTML.lastIndexOf("@")) +
+      `@${user?.handle.split(".test")[0]}</span>`;
+    const newElementPost =
+      message.substring(0, message.lastIndexOf("@")) +
+      `@${user?.handle.split(".test")[0]}`;
+    setMessage(newElementPost);
+    (resultElement as any).innerHTML = newHTMLPost;
+    setMessageHTML(newHTMLPost);
   };
 
-  const handleChosenProfile = (user: Profile) => {
+  const handleMessage = async (e: any): Promise<void> => {
+    setMessage((e.target as HTMLFormElement).value);
+    let resultElement = document.querySelector("#highlighted-message");
+    if (e.target.value[e.target.value.length - 1] == "\n") {
+      e.target.value += " ";
+    }
+    setMessageHTML(getPostHTML(e, resultElement as Element));
+    setMessage(e.target.value);
+    if (
+      e.target.value.split(" ")[e.target.value.split(" ").length - 1][0] ===
+        "@" &&
+      e.target.value.split(" ")[e.target.value.split(" ").length - 1].length ===
+        1
+    ) {
+      setCaretCoord(getCaretPos(e, textElement));
+      setProfilesOpen(true);
+    }
+    if (
+      e.target.value.split(" ")[e.target.value.split(" ").length - 1][0] === "@"
+    ) {
+      const allProfiles = await searchProfile({
+        query: e.target.value.split(" ")[e.target.value.split(" ").length - 1],
+        type: "PROFILE",
+        limit: 50,
+      });
+      setMentionProfiles(allProfiles?.data?.search?.items);
+    } else {
+      setProfilesOpen(false);
+      setMentionProfiles([]);
+    }
+  };
+
+  const handleChosenProfile = async (user: Profile): Promise<void> => {
     setSearchTarget(user?.handle);
     dispatch(setChosenDMProfile(user));
     setDropdown(false);
+    // await getConversationMessages();
   };
+
+  useEffect(() => {
+    if (chosenProfile) {
+      getConversationMessages();
+    }
+  }, [chosenProfile]);
 
   const searchMessages = async (e: FormEvent): Promise<void> => {
     setSearchLoading(true);
@@ -287,7 +345,15 @@ const useConversations = (): UseConversationResults => {
     dropdown,
     previewMessages,
     profileLensData,
-    messageProfiles
+    messageProfiles,
+    conversationMessages,
+    message,
+    textElement,
+    messageLoading,
+    caretCoord,
+    handleMentionClick,
+    profilesOpen,
+    mentionProfiles
   };
 };
 

@@ -1,5 +1,5 @@
 import { DecodedMessage } from "@xmtp/xmtp-js";
-import { FormEvent } from "react";
+import { FormEvent, Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Attribute,
@@ -108,8 +108,15 @@ export type NotificationsProps = {
 export type MessageProps = {
   sendConversation: () => Promise<void>;
   handleMessage: (e: FormEvent) => void;
-  searchTarget: string | undefined;
   chosenProfile: Profile | undefined;
+  conversationMessages: any[];
+  message: string;
+  textElement: Ref<HTMLTextAreaElement>;
+  messageLoading: boolean;
+  caretCoord: { x: number; y: number };
+  mentionProfiles: any[];
+  handleMentionClick: (user: any) => void;
+  profilesOpen: boolean;
 };
 
 export type ConversationsProps = {
@@ -122,21 +129,29 @@ export type ConversationsProps = {
   searchMoreMessages: () => Promise<void>;
   sendConversation: () => Promise<void>;
   handleMessage: (e: FormEvent) => void;
-  handleChosenProfile: (user: Profile) => void;
+  handleChosenProfile: (user: Profile) => Promise<void>;
   searchTarget: string | undefined;
   dropdown: boolean;
   chosenProfile: Profile | undefined;
   previewMessages: Map<string, DecodedMessage> | undefined;
   messageProfiles: Map<string, Profile> | undefined;
-  profileLensData: Profile[]
+  profileLensData: Profile[];
+  conversationMessages: any[];
+  message: string;
+  textElement: Ref<HTMLTextAreaElement>;
+  messageLoading: boolean;
+  caretCoord: { x: number; y: number };
+  mentionProfiles: any[];
+  handleMentionClick: (user: any) => void;
+  profilesOpen: boolean;
 };
 
 export type PreviewProps = {
   searchTarget: string | undefined;
   previewMessages: Map<string, DecodedMessage> | undefined;
   messageProfiles: Map<string, Profile> | undefined;
-  profileLensData: Profile[]
-  handleChosenProfile: (user: Profile) => void;
+  profileLensData: Profile[];
+  handleChosenProfile: (user: Profile) => Promise<void>;
 };
 
 export type UseConversationResults = {
@@ -149,12 +164,20 @@ export type UseConversationResults = {
   profileSearch: Profile[];
   searchMoreMessages: () => Promise<void>;
   handleMessage: (e: FormEvent) => void;
-  handleChosenProfile: (user: Profile) => void;
+  handleChosenProfile: (user: Profile) => Promise<void>;
   searchTarget: string | undefined;
   dropdown: boolean;
   previewMessages: Map<string, DecodedMessage> | undefined;
   messageProfiles: Map<string, Profile> | undefined;
-  profileLensData: Profile[]
+  profileLensData: Profile[];
+  conversationMessages: any[];
+  message: string;
+  textElement: Ref<HTMLTextAreaElement>;
+  messageLoading: boolean;
+  caretCoord: { x: number; y: number };
+  mentionProfiles: any[];
+  handleMentionClick: (user: any) => void;
+  profilesOpen: boolean;
 };
 
 export type SearchProps = {
@@ -162,7 +185,7 @@ export type SearchProps = {
   searchLoading: boolean;
   profileSearch: Profile[];
   searchMoreMessages: () => Promise<void>;
-  handleChosenProfile: (user: Profile) => void;
+  handleChosenProfile: (user: Profile) => Promise<void>;
   searchTarget: string | undefined;
   dropdown: boolean;
 };

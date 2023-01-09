@@ -19,6 +19,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
             const profileImage = createProfilePicture(profileLensData[index]);
             return (
               <div
+                key={index}
                 className="relative w-full h-full grid grid-flow-col auto-cols-auto text-black font-dosis text-sm cursor-pointer border-x border-b border-black/50 drop-shadow-md rounded-lg p-2 hover:opacity-70"
                 onClick={() => handleChosenProfile(profileLensData[index])}
               >
