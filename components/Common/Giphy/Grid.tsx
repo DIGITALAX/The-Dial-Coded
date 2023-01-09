@@ -1,19 +1,25 @@
 import Image from "next/legacy/image";
 import { FormEvent, FunctionComponent } from "react";
-import Tenor from "react-tenor";
 import { GridProps } from "../types/common.types";
 
 const Grid: FunctionComponent<GridProps> = ({
   handleGif,
   handleGifSubmit,
-  searchGif,
   results,
   handleSetGif,
+  width,
+  background,
 }): JSX.Element => {
   return (
-    <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
+    <div
+      className={`relative ${
+        width ? "w-full" : "w-fit"
+      } h-fit grid grid-flow-row auto-rows-auto gap-2`}
+    >
       <input
-        className="relative row-start-1 col-start-1 w-96 h-10 bg-white font-dosis text-offBlack p-2 rounded-md caret-transparent"
+        className={`relative row-start-1 col-start-1 h-10 bg-white font-dosis text-offBlack p-2 rounded-md caret-transparent ${
+          width ? "w-full" : "w-96"
+        }`}
         name="gif"
         onChange={(e: FormEvent) => handleGif(e)}
       />
@@ -26,10 +32,18 @@ const Grid: FunctionComponent<GridProps> = ({
         </div>
       </div>
       {results?.length !== 0 && (
-        <div className="relative w-full h-40 row-start-3 col-span-2 col-start-1 grid grid-cols-3 overflow-y-scroll pb-3 gap-2">
+        <div
+          className={`relative w-full h-40 row-start-3 col-span-2 col-start-1 grid grid-cols-3 overflow-y-scroll pb-3 gap-2 ${
+            background && `bg-${background}`
+          }`}
+        >
           {results?.map((result: any, index: number) => {
             return (
-              <div key={index} className="relative w-32 h-20 bg-offBlue cursor-pointer active:scale-95 place-self-center" onClick={() => handleSetGif(result?.media_formats?.gif?.url)}>
+              <div
+                key={index}
+                className="relative w-32 h-20 bg-offBlue cursor-pointer active:scale-95 place-self-center"
+                onClick={() => handleSetGif(result?.media_formats?.gif?.url)}
+              >
                 <Image
                   layout="fill"
                   objectFit="cover"

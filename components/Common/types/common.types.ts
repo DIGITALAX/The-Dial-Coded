@@ -392,9 +392,11 @@ export type ImagePickerProps = {
 export type GridProps = {
   handleGif: (e: FormEvent) => void;
   handleGifSubmit: (e: FormEvent) => Promise<void>;
-  searchGif: string | undefined;
+  searchGif?: string | undefined;
   results: any[];
   handleSetGif: (result: string) => void;
+  width?: string;
+  background?: string
 };
 
 export type CollectButtonProps = {

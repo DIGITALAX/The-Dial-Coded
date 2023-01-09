@@ -79,7 +79,11 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     setOpenImagePicker,
     conversationLoading,
     client,
-    onNetwork
+    onNetwork,
+    handleGif,
+    handleSetGif,
+    handleGifSubmit,
+    results,
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
@@ -175,6 +179,10 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           conversationLoading={conversationLoading}
           client={client}
           onNetwork={onNetwork}
+          handleGif={handleGif}
+          handleGifSubmit={handleGifSubmit}
+          results={results}
+          handleSetGif={handleSetGif}
         />
       );
 

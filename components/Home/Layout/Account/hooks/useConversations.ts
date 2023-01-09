@@ -41,6 +41,8 @@ const useConversations = (): UseConversationResults => {
   const [profileLensData, setProfileLensData] = useState<Profile[]>([]);
   const [pageCursor, setPageCursor] = useState<any>();
   const [conversationMessages, setConversationMessages] = useState<any[]>([]);
+  const [searchGif, setSearchGif] = useState<string>("");
+  const [results, setResults] = useState<any[]>([]);
   const [openImagePicker, setOpenImagePicker] = useState<string>("");
   const [allConversations, setAllConversations] = useState<any[]>([]);
   const [createdClient, setCreatedClient] = useState<boolean>(false);
@@ -141,19 +143,22 @@ const useConversations = (): UseConversationResults => {
   }, [messageLoading]);
 
   useEffect(() => {
-    if (chosenProfile) {
+    if (chosenProfile?.ownedBy) {
       getConversationMessages(true);
       messageStream();
     }
   }, [chosenProfile]);
 
   const getConversationMessages = async (start: boolean) => {
-    if (!onNetwork) {
-      setConversationMessages([]);
-      return;
-    }
-
     setConversationLoading(start);
+    if (start) {
+      const res = await checkOnNetwork();
+      if (!res) {
+        setConversationMessages([]);
+        setConversationLoading(false);
+        return;
+      }
+    }
     try {
       let chosenConversation: any[] = [];
       const prof = (chosenProfile as any)?.id
@@ -241,7 +246,7 @@ const useConversations = (): UseConversationResults => {
     }
   };
 
-  const sendConversation = async () => {
+  const sendConversation = async (media?: string) => {
     setMessageLoading(true);
     try {
       const conversation = await client.conversations.newConversation(
@@ -256,7 +261,7 @@ const useConversations = (): UseConversationResults => {
           metadata: {},
         }
       );
-      await conversation.send(message);
+      await conversation.send(media ? media : message);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -361,16 +366,16 @@ const useConversations = (): UseConversationResults => {
     }
   };
 
-  const checkOnNetwork = async () => {
+  const checkOnNetwork = async (): Promise<boolean> => {
     const res = await Client.canMessage(chosenProfile?.ownedBy);
     if (res && chosenProfile?.ownedBy) setOnNetwork(true);
+    return res && chosenProfile?.ownedBy;
   };
 
-  const handleChosenProfile = async (user: Profile): Promise<void> => {
+  const handleChosenProfile = (user: Profile): void => {
     setSearchTarget(user?.handle);
     dispatch(setChosenDMProfile(user));
     setDropdown(false);
-    await checkOnNetwork();
   };
 
   const searchMessages = async (e: FormEvent): Promise<void> => {
@@ -415,6 +420,24 @@ const useConversations = (): UseConversationResults => {
     }
   };
 
+  const handleGif = (e: FormEvent): void => {
+    setSearchGif((e.target as HTMLFormElement).value);
+  };
+
+  const handleGifSubmit = async (e: any): Promise<void> => {
+    const getGifs = await fetch("/api/giphy", {
+      method: "POST",
+      body: JSON.stringify(searchGif),
+    });
+    const allGifs = await getGifs.json();
+    setResults(allGifs?.json?.results);
+  };
+
+  const handleSetGif = async (result: any): Promise<void> => {
+    setOpenImagePicker("");
+    await sendConversation(result);
+  };
+
   return {
     createClient,
     sendConversation,
@@ -445,6 +468,10 @@ const useConversations = (): UseConversationResults => {
     conversationLoading,
     client,
     onNetwork,
+    handleGif,
+    handleSetGif,
+    handleGifSubmit,
+    results,
   };
 };
 
