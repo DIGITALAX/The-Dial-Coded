@@ -42,7 +42,6 @@ const useDraw = () => {
     x: 0,
     y: 0,
   });
-  const [pattern, setPattern] = useState<any>();
   const [reset, setReset] = useState<boolean>(false);
   const [wheel, setWheel] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(1);
@@ -247,6 +246,87 @@ const useDraw = () => {
     }
 
     return img;
+  };
+
+  const handleEraseElements = () => {
+    const latestErasedElement: ElementInterface = elements[elements.length - 1];
+    const elementsCopy = [...elements]
+    const normalElements: ElementInterface[] = lodash.filter(
+      elements,
+      (element) => {
+        if (element.type !== "erase") {
+          return true;
+        }
+      }
+    );
+    let idCounter = elements.length - 2;
+    let newEraseShapeArray: ElementInterface[] = [];
+    for (let i = 0; i < normalElements.length; i++) {
+      const currentElement: ElementInterface = normalElements[i];
+      
+      const betweenAnyPoint = latestErasedElement.points?.some((point, index) => {
+        const nextPoint: any = (
+          latestErasedElement.points as {
+            x: number;
+            y: number;
+          }[]
+        )[index + 1];
+        if (!nextPoint) return false;
+        return (
+          onLine(
+            point.x,
+            point.y,
+            nextPoint.x,
+            nextPoint.y,
+            currentElement.points?.[index]?.x  as number,
+            currentElement.points?.[index]?.y as number,
+            currentElement.strokeWidth as number
+          ) != null
+        );
+      });
+      
+      console.log(betweenAnyPoint)
+    }
+      
+      
+   
+    //   console.log(currentElement, "CURRENT");
+    //   console.log(latestErasedElement, "LATEST")
+    //   let pointsArr: any[] = [];
+    //   currentElement.points?.filter((item) => {
+    //     let subPointsArr = [];
+    //     for (
+    //       let i = 0;
+    //       i < (latestErasedElement.points?.length as number);
+    //       i++
+    //     ) {
+    //       if (
+    //         latestErasedElement.points?.[i].x === item.x &&
+    //         latestErasedElement.points?.[i].y === item.y
+    //       ) {
+    //         subPointsArr.push(latestErasedElement.points?.[i]);
+    //       }
+    //     }
+
+    //     if (subPointsArr.length === 0) {
+    //       pointsArr.push(item);
+    //     }
+    //   });
+    //   elementsCopy.pop();
+    //   if ((pointsArr?.length as number) > 0) {
+    //     newEraseShapeArray.push({
+    //       id: idCounter,
+    //       type: "erase",
+    //       points: pointsArr,
+    //       fill: "#000000",
+    //       strokeWidth: brushWidth,
+    //     });
+    //     elementsCopy.splice(i,1)
+    //   }
+    // }
+    // console.log(newEraseShapeArray, elements);
+    // setElements([...elementsCopy, ...newEraseShapeArray]);
+    // console.log([...elementsCopy, ...newEraseShapeArray]);
   };
 
   const handleTitle = (e: any) => {
@@ -461,6 +541,7 @@ const useDraw = () => {
         const end = nearPoint(x, y, x2 as number, y2 as number, "end");
         return start || end || on;
       case "erase":
+        return "erase";
       case "pencil":
         const betweenAnyPoint = element.points?.some((point, index) => {
           const nextPoint: any = (
@@ -683,7 +764,7 @@ const useDraw = () => {
               y: y1 - bounds?.top,
             },
           ],
-          fill: type === "erase" ? pattern : fill,
+          fill: fill,
           strokeWidth,
         };
       case "text":
@@ -721,18 +802,6 @@ const useDraw = () => {
         };
     }
   };
-
-  useEffect(() => {
-    if (ctx) {
-      const img = new Image();
-      img.src =
-        "https://thedial.infura-ipfs.io/ipfs/QmXcLBvsHDC8kNDe3WFQHzPpotVKG1AHsAHou1AbiYe6yp";
-      img.setAttribute("crossorigin", "anonymous");
-      img.onload = () => {
-        setPattern(ctx?.createPattern(img, "repeat"));
-      };
-    }
-  }, [ctx]);
 
   const getElementPosition = (x: number, y: number) => {
     let positionArray: ElementInterface[] = [];
@@ -775,7 +844,8 @@ const useDraw = () => {
           strokeWidth as number,
           fill as string,
           fillStyle as string,
-          stroke as string
+          stroke as string,
+          undefined
         ) as ElementInterface;
         break;
 
@@ -814,7 +884,10 @@ const useDraw = () => {
             type,
             index,
             strokeWidth as number,
-            fill as string
+            fill as string,
+            undefined,
+            undefined,
+            undefined
           ),
           text,
         };
@@ -848,10 +921,10 @@ const useDraw = () => {
       if (element?.length > 0) {
         if (element[0].type === "pencil") {
           const offsetXs = element[0].points?.map(
-            (point) => e.clientX - point.x
+            (point: any) => e.clientX - point.x
           );
           const offsetYs = element[0].points?.map(
-            (point) => e.clientY - point.y
+            (point: any) => e.clientY - point.y
           );
           setSelectedElement({ ...element[0], offsetXs, offsetYs });
         } else {
@@ -893,12 +966,7 @@ const useDraw = () => {
       setElements([...filteredMarqueeElements, newElement]);
       setSelectedElement(newElement);
       setAction(tool === "text" ? "writing" : "drawing");
-    }
-
-    // else if (tool === "erase") {
-    //   setAction("erasing");
-    // }
-    else if (tool === "pan") {
+    } else if (tool === "pan") {
       setAction("panning");
     } else if (tool === "marquee") {
       // remove any previous marquee
@@ -916,6 +984,8 @@ const useDraw = () => {
       setAction("marquee");
       setElements([...filteredMarqueeElements, newElement]);
       setSelectedElement(newElement);
+    } else if (tool === "erase") {
+      setAction("erasing");
     }
   };
 
@@ -1004,19 +1074,7 @@ const useDraw = () => {
           type === "text" && selectedElement?.text
         );
       }
-    }
-
-    // else if (action === "erasing") {
-    //   const eraseElement = getElementPosition(e.clientX, e.clientY);
-    //   if (eraseElement.length > 0) {
-    //     const filteredElements = lodash.filter(
-    //       elements,
-    //       (element) => element.id !== eraseElement[0].id
-    //     );
-    //     setElements(filteredElements);
-    //   }
-    // }
-    else if (action === "panning") {
+    } else if (action === "panning") {
     } else if (action === "marquee") {
       const index = elements?.length - 1;
       const { x1, y1 } = elements[index];
@@ -1174,6 +1232,9 @@ const useDraw = () => {
   };
 
   const handleMouseUp = (e: MouseEvent): void => {
+    if (tool === "erase") {
+      handleEraseElements();
+    }
     if (selectedElement) {
       if (
         selectedElement.type === "text" &&

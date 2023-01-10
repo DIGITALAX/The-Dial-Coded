@@ -202,10 +202,10 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
           <div className="relative w-fit h-fit row-start-2 self-end">
             <CanvasOption
-              image="QmbaGF6cm1Hh89y3yV6RDUSnLEoPMEEBB3TPt5Xy2mzdYh"
+              image="QmSfhjtPDNBq4FZZMkFNRna8e9gwL1fEU7oxdyysGGVhnU"
               bgColor="black"
-              width={25}
-              height={25}
+              width={35}
+              height={35}
               setShowString={setTool}
               string_option={"erase"}
             />
