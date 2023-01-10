@@ -10,12 +10,6 @@ import {
   getCeramicSession,
   setCeramicSession,
 } from "../../../../../lib/lens/utils";
-import { DID } from "dids";
-import { getResolver as getKeyResolver } from "key-did-resolver";
-// import { getResolver as get3IDResolver } from '@ceramicnetwork/3id-did-resolver'
-import { EthereumAuthProvider, ThreeIdConnect } from "@3id/connect";
-import { Eip1193Bridge } from "@ethersproject/experimental";
-import { Signer } from "ethers";
 
 const useDrafts = () => {
   const { address } = useAccount();
@@ -23,11 +17,7 @@ const useDrafts = () => {
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
-  const ethersSigner = useSigner().data as Signer;
-  const wagmiProvider = useProvider({
-    chainId: 8001,
-  });
-  const provider = new Eip1193Bridge(ethersSigner, wagmiProvider);
+
   useEffect(() => {
     if (lensProfile && !client) {
       createAuthProvider();
@@ -36,17 +26,18 @@ const useDrafts = () => {
 
   const createAuthProvider = async () => {
     try {
-      const auth = new EthereumAuthProvider(provider, address as string);
-      const threeIDConnect = new ThreeIdConnect();
-      await threeIDConnect.connect(auth);
-      const accountId = await getAccountId(provider, address as string);
-      const authProv = await EthereumWebAuth.getAuthMethod(provider, accountId);
-      const session = await loadSession(authProv);
+      const accountId = await getAccountId(window.ethereum, address as string);
+      const authMethod = await EthereumWebAuth.getAuthMethod(
+        window.ethereum,
+        accountId
+      );
+
+      const session = await loadSession(authMethod);
       const ceramic = new CeramicClient();
       ceramic.did = session.did;
       setClient(ceramic);
     } catch (err: any) {
-      console.error(err.message, err, "HERE");
+      console.error(err.message);
     }
   };
 
