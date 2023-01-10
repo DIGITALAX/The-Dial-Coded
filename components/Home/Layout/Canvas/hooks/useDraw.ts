@@ -142,27 +142,11 @@ const useDraw = () => {
       case "line":
       case "ell":
       case "rect":
-        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
-          "source-over";
         roughCanvas?.draw(element?.roughElement);
-        break;
-
-      case "erase":
-        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
-          "destination-out";
-        const pathEraseData = getSvgPathFromStroke(
-          getStroke(element?.points as { x: number; y: number }[], {
-            size: element?.strokeWidth,
-          })
-        );
-        ctx?.fill(new Path2D(pathEraseData));
         break;
 
       case "pencil":
         (ctx as CanvasRenderingContext2D).fillStyle = element?.fill as string;
-        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
-          "source-over";
-
         const pathData = getSvgPathFromStroke(
           getStroke(element?.points as { x: number; y: number }[], {
             size: element?.strokeWidth,
@@ -172,8 +156,6 @@ const useDraw = () => {
         break;
 
       case "text":
-        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
-          "source-over";
         (ctx as CanvasRenderingContext2D).textBaseline = "top";
         (
           ctx as CanvasRenderingContext2D
@@ -187,8 +169,6 @@ const useDraw = () => {
         break;
 
       case "image":
-        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
-          "source-over";
         ctx?.drawImage(
           element?.image as HTMLImageElement,
           element.x1 as number,
@@ -200,8 +180,6 @@ const useDraw = () => {
         break;
 
       case "marquee":
-        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
-          "source-over";
         ctx?.beginPath();
         (ctx as CanvasRenderingContext2D).strokeStyle =
           element.stroke as string;
@@ -248,102 +226,12 @@ const useDraw = () => {
     return img;
   };
 
-  const handleEraseElements = () => {
-    const latestErasedElement: ElementInterface = elements[elements.length - 1];
-    const elementsCopy = [...elements]
-    const normalElements: ElementInterface[] = lodash.filter(
-      elements,
-      (element) => {
-        if (element.type !== "erase") {
-          return true;
-        }
-      }
-    );
-    let idCounter = elements.length - 2;
-    let newEraseShapeArray: ElementInterface[] = [];
-    for (let i = 0; i < normalElements.length; i++) {
-      const currentElement: ElementInterface = normalElements[i];
-      
-      const betweenAnyPoint = latestErasedElement.points?.some((point, index) => {
-        const nextPoint: any = (
-          latestErasedElement.points as {
-            x: number;
-            y: number;
-          }[]
-        )[index + 1];
-        if (!nextPoint) return false;
-        return (
-          onLine(
-            point.x,
-            point.y,
-            nextPoint.x,
-            nextPoint.y,
-            currentElement.points?.[index]?.x  as number,
-            currentElement.points?.[index]?.y as number,
-            currentElement.strokeWidth as number
-          ) != null
-        );
-      });
-      
-      console.log(betweenAnyPoint)
-    }
-      
-      
-   
-    //   console.log(currentElement, "CURRENT");
-    //   console.log(latestErasedElement, "LATEST")
-    //   let pointsArr: any[] = [];
-    //   currentElement.points?.filter((item) => {
-    //     let subPointsArr = [];
-    //     for (
-    //       let i = 0;
-    //       i < (latestErasedElement.points?.length as number);
-    //       i++
-    //     ) {
-    //       if (
-    //         latestErasedElement.points?.[i].x === item.x &&
-    //         latestErasedElement.points?.[i].y === item.y
-    //       ) {
-    //         subPointsArr.push(latestErasedElement.points?.[i]);
-    //       }
-    //     }
-
-    //     if (subPointsArr.length === 0) {
-    //       pointsArr.push(item);
-    //     }
-    //   });
-    //   elementsCopy.pop();
-    //   if ((pointsArr?.length as number) > 0) {
-    //     newEraseShapeArray.push({
-    //       id: idCounter,
-    //       type: "erase",
-    //       points: pointsArr,
-    //       fill: "#000000",
-    //       strokeWidth: brushWidth,
-    //     });
-    //     elementsCopy.splice(i,1)
-    //   }
-    // }
-    // console.log(newEraseShapeArray, elements);
-    // setElements([...elementsCopy, ...newEraseShapeArray]);
-    // console.log([...elementsCopy, ...newEraseShapeArray]);
-  };
-
   const handleTitle = (e: any) => {
     setTitle(e.target.value);
   };
 
-  const removeImageBackground = async (img: string) => {
-    // const input = sharp(img);
-    // const rembg = new Rembg();
-    // const output = await rembg.remove(input);
-    // await output.png().toFile("thedial_drafts.png");
-  };
-
   const handleSave = async (): Promise<void> => {
     const img = getCanvas();
-    const removedBg = await removeImageBackground(img);
-    console.log(removedBg);
     let xhr = new XMLHttpRequest();
     xhr.responseType = "blob";
     xhr.onload = function () {
@@ -431,9 +319,10 @@ const useDraw = () => {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
       const roughCanvas = rough?.canvas(canvas);
+      (ctx as CanvasRenderingContext2D).globalCompositeOperation =
+        "source-over";
       elements?.forEach((element: any) => {
         if (action === "writing" && selectedElement.id === element.id) return;
-
         drawElement(element, roughCanvas, ctx);
       });
       ctx.save();
@@ -541,7 +430,7 @@ const useDraw = () => {
         const end = nearPoint(x, y, x2 as number, y2 as number, "end");
         return start || end || on;
       case "erase":
-        return "erase";
+        break;
       case "pencil":
         const betweenAnyPoint = element.points?.some((point, index) => {
           const nextPoint: any = (
@@ -753,7 +642,7 @@ const useDraw = () => {
           stroke,
           strokeWidth,
         };
-      case "erase":
+
       case "pencil":
         return {
           id,
@@ -865,7 +754,6 @@ const useDraw = () => {
         ) as ElementInterface;
         break;
 
-      case "erase":
       case "pencil":
         elementsCopy[index].points = [
           ...(elementsCopy[index].points as any),
@@ -946,8 +834,7 @@ const useDraw = () => {
       tool === "rect" ||
       tool === "ell" ||
       tool === "line" ||
-      tool === "text" ||
-      tool === "erase"
+      tool === "text"
     ) {
       const filteredMarqueeElements = removeMarquee();
       const id = filteredMarqueeElements?.length;
@@ -985,7 +872,35 @@ const useDraw = () => {
       setElements([...filteredMarqueeElements, newElement]);
       setSelectedElement(newElement);
     } else if (tool === "erase") {
-      setAction("erasing");
+      const eraseElement = getElementPosition(e.clientX, e.clientY);
+      if (eraseElement?.length > 0) {
+        const elementsCopy = [...elements];
+        const index = lodash.findIndex(elementsCopy, (elem) => {
+          if (elem.id === eraseElement[0].id) {
+            return true;
+          }
+        });
+        if (eraseElement[0].type !== "marquee") {
+          if (
+            eraseElement[0].type === "pencil" ||
+            eraseElement[0].type === "text" ||
+            eraseElement[0].type === "image"
+          ) {
+            elementsCopy[index] = {
+              ...elementsCopy[index],
+              fill: "#078FD6",
+              stroke: "#078FD6",
+            };
+          } else {
+            elementsCopy[index].fill = "#078FD6";
+            elementsCopy[index].stroke = "#078FD6";
+            elementsCopy[index].roughElement.options.stroke = "#078FD6";
+            elementsCopy[index].roughElement.options.fill = "#078FD6";
+          }
+          setSelectedElement(elementsCopy[index]);
+          setElements(elementsCopy);
+        }
+      }
     }
   };
 
@@ -1232,17 +1147,24 @@ const useDraw = () => {
   };
 
   const handleMouseUp = (e: MouseEvent): void => {
-    if (tool === "erase") {
-      handleEraseElements();
-    }
     if (selectedElement) {
-      if (
-        selectedElement.type === "text" &&
-        e.clientX - selectedElement.offsetX === selectedElement.x1 &&
-        e.clientY - selectedElement.offsetY === selectedElement.y1
-      ) {
-        setAction("writing");
-        return;
+      if (tool == "erase") {
+        if (selectedElement) {
+          const filteredElements = lodash.filter(
+            elements,
+            (element) => element.id !== selectedElement.id
+          );
+          setElements(filteredElements);
+        }
+      } else {
+        if (
+          selectedElement.type === "text" &&
+          e.clientX - selectedElement.offsetX === selectedElement.x1 &&
+          e.clientY - selectedElement.offsetY === selectedElement.y1
+        ) {
+          setAction("writing");
+          return;
+        }
       }
     }
     if (action === "writing") return;
