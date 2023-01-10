@@ -13,12 +13,15 @@ import getStroke from "perfect-freehand";
 import lodash from "lodash";
 import { useDispatch } from "react-redux";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
-import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImageUpload";
-import fileLimitAlert from "../../../../../lib/misc/fileLimitAlert";
+import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
+import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImageUpload";
+import useDrafts from "./useDrafts";
+import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 
 const useDraw = () => {
   const { uploadImage } = useImageUpload();
+  const { saveCanvasCeramic } = useDrafts();
   const dispatch = useDispatch();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const writingRef = useRef<HTMLTextAreaElement>(null);
@@ -26,6 +29,8 @@ const useDraw = () => {
     useState<boolean>(false);
   const [showBottomDrawOptions, setShowBottomDrawOptions] =
     useState<boolean>(false);
+  const [title, setTitle] = useState<string>("untitled draft");
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [shapeFillType, setShapeFillType] = useState<string>("solid");
   const [text, setText] = useState<boolean>(false);
@@ -223,6 +228,10 @@ const useDraw = () => {
     return img;
   };
 
+  const handleTitle = (e: any) => {
+    setTitle(e.target.value);
+  };
+
   const handleSave = (): void => {
     const img = getCanvas();
     let xhr = new XMLHttpRequest();
@@ -251,8 +260,29 @@ const useDraw = () => {
   const handleCanvasPost = async (): Promise<void> => {
     setPostLoading(true);
     await dispatchPostCanvas();
-    dispatch(setPublication(true));
+    dispatch(
+      setPublication({
+        actionOpen: true,
+        actionCanvas: true,
+      })
+    );
     setPostLoading(false);
+  };
+
+  const handleCanvasSave = async (): Promise<void> => {
+    if (title === "untitled draft" || title === "" || !title) {
+      alert("Please Choose A Title");
+      return;
+    }
+    setSaveLoading(true);
+    try {
+      await saveCanvasCeramic(JSON.stringify(elements), title);
+      dispatch(setInsufficientFunds("saved"));
+    } catch (err: any) {
+      dispatch(setInsufficientFunds("unsaved"));
+      console.error(err.message);
+    }
+    setSaveLoading(false);
   };
 
   const handleImageAdd = async (e: FormEvent): Promise<void> => {
@@ -1213,6 +1243,9 @@ const useDraw = () => {
     handleCanvasPost,
     elements,
     postLoading,
+    title,
+    handleTitle,
+    handleCanvasSave,
   };
 };
 

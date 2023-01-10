@@ -39,6 +39,9 @@ const usePublication = () => {
     x: 0,
     y: 0,
   });
+  const isCanvas = useSelector(
+    (state: RootState) => state.app.publicationReducer.canvas
+  );
   const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [contentURI, setContentURI] = useState<string | undefined>();
@@ -198,6 +201,15 @@ const usePublication = () => {
       });
     }
 
+    if (isCanvas) {
+      if (formattedTags.length < 5) {
+        formattedTags.push("dialCanvasDraft");
+      } else {
+        formattedTags.pop();
+        formattedTags.push("dialCanvasDraft");
+      }
+    }
+
     const data = {
       version: "2.0.0",
       metadata_id: uuidv4(),
@@ -291,7 +303,12 @@ const usePublication = () => {
     setPostLoading(true);
     try {
       const tx = await writeAsync?.();
-      dispatch(setPublication(false));
+      dispatch(
+        setPublication({
+          actionOpen: false,
+          actionCanvas: false,
+        })
+      );
       dispatch(setFollowerOnly(false));
       setPostLoading(false);
       dispatch(

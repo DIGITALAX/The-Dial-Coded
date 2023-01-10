@@ -22,7 +22,7 @@ import conversationMatchesProfile from "../../../../../lib/xmtp/helpers/conversa
 import getPostHTML from "../../../../../lib/lens/helpers/postHTML";
 import getCaretPos from "../../../../../lib/lens/helpers/getCaretPos";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
-import fileLimitAlert from "../../../../../lib/misc/fileLimitAlert";
+import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 
 const useConversations = (): UseConversationResults => {
   const { data: signer } = useSigner();

@@ -26,6 +26,7 @@ import checkIfCommented from "../../../../../../../lib/lens/helpers/checkIfComme
 import checkIfMixtapeMirror from "../../../../../../../lib/lens/helpers/checkIfMixtapeMirror";
 import getPostComments from "../../../../../../../lib/lens/helpers/getPostComments";
 import checkIfFollowerOnly from "../../../../../../../lib/lens/helpers/checkIfFollowerOnly";
+import checkFeedTypes from "../../../../../../../lib/lens/helpers/checkFeedTypes";
 
 const useMainFeed = () => {
   const router = useRouter();
@@ -42,6 +43,9 @@ const useMainFeed = () => {
   const feedPriorityState = useSelector(
     (state: RootState) => state.app.feedPriorityReducer?.value
   );
+  const feedTypeState = useSelector(
+    (state: RootState) => state.app.feedTypeReducer?.value
+  );
   const layout = useSelector(
     (state: RootState) => state.app.layoutReducer?.value
   );
@@ -52,7 +56,7 @@ const useMainFeed = () => {
     (state: RootState) => state.app.walletConnectedReducer?.value
   );
   const publicationModal = useSelector(
-    (state: RootState) => state.app.publicationReducer?.value
+    (state: RootState) => state.app.publicationReducer?.open
   );
   const reactions = useSelector(
     (state: RootState) => state.app.reactionStateReducer
@@ -83,6 +87,7 @@ const useMainFeed = () => {
 
   const fetchPublications = async (): Promise<void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
+    const feedType = checkFeedTypes(feedTypeState as string);
     try {
       const publicationsList = await explorePublications({
         sources: "thedial",
@@ -90,6 +95,7 @@ const useMainFeed = () => {
         limit: 20,
         sortCriteria: "LATEST",
         noRandomize: true,
+        metadata: feedType,
       });
       const arr: any[] = [...publicationsList?.data.explorePublications.items];
       const sortedArr: any[] = arr.sort(
@@ -107,10 +113,7 @@ const useMainFeed = () => {
         }
       });
       setPublicationsFeed(filteredArr);
-      const isOnlyFollowers = await checkIfFollowerOnly(
-        filteredArr,
-        undefined
-      );
+      const isOnlyFollowers = await checkIfFollowerOnly(filteredArr, undefined);
       setFollowerOnly(isOnlyFollowers as boolean[]);
       setPaginatedResults(publicationsList?.data?.explorePublications.pageInfo);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
@@ -124,6 +127,7 @@ const useMainFeed = () => {
 
   const getUserSelectFeed = async (): Promise<void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
+    const feedType = checkFeedTypes(feedTypeState as string);
     let sortedArr: any[];
     let pageData: any;
     try {
@@ -133,6 +137,7 @@ const useMainFeed = () => {
           profileId: (userView as any)?.profileId,
           publicationTypes: feedOrder,
           limit: 20,
+          metadata: feedType,
         });
         if (data?.publications?.items?.length < 1 || !data) {
           dispatch(setNoUserData(true));
@@ -151,6 +156,7 @@ const useMainFeed = () => {
           profileId: (userView as any)?.profileId,
           publicationTypes: feedOrder,
           limit: 20,
+          metadata: feedType,
         });
         if (data?.publications?.items?.length < 1 || !data) {
           dispatch(setNoUserData(true));
@@ -205,10 +211,13 @@ const useMainFeed = () => {
 
   const getFeedTimeline = async (): Promise<void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
+    const feedType = checkFeedTypes(feedTypeState as string);
     try {
       const { data } = await feedTimeline({
+        sources: "thedial",
         profileId: lensProfile,
         limit: 50,
+        metadata: feedType,
       });
       const arr: any[] = [...data.feed.items];
       const sortedArr: any[] = arr.sort(
@@ -232,6 +241,7 @@ const useMainFeed = () => {
           limit: 20,
           sortCriteria: "LATEST",
           noRandomize: true,
+          metadata: feedType,
         });
         const auth_arr: any[] = [...authPub?.data.explorePublications.items];
         const auth_sortedArr: any[] = auth_arr.sort(
@@ -300,10 +310,11 @@ const useMainFeed = () => {
   // fetch more
   const fetchMorePublications = async (): Promise<void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
+    const feedType = checkFeedTypes(feedTypeState as string);
     try {
       if (!paginatedResults?.next) {
         // fix apollo duplications on null next
-        return
+        return;
       }
       const morePublications = await explorePublications({
         sources: "thedial",
@@ -312,6 +323,7 @@ const useMainFeed = () => {
         sortCriteria: "LATEST",
         noRandomize: true,
         cursor: paginatedResults?.next,
+        metadata: feedType,
       });
       const arr: PublicationSearchResult[] = [
         ...morePublications?.data.explorePublications.items,
@@ -332,11 +344,8 @@ const useMainFeed = () => {
       });
       setPublicationsFeed([...publicationsFeed, ...filteredArr]);
       setPaginatedResults(morePublications?.data.explorePublications.pageInfo);
-      const isOnlyFollowers = await checkIfFollowerOnly(
-        filteredArr,
-        undefined
-      );
-      setFollowerOnly([...followerOnly, ...isOnlyFollowers as boolean[]]);
+      const isOnlyFollowers = await checkIfFollowerOnly(filteredArr, undefined);
+      setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       const response = await checkPostReactions(filteredArr, lensProfile);
@@ -348,10 +357,11 @@ const useMainFeed = () => {
 
   const getMoreFeedTimeline = async (): Promise<void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
+    const feedType = checkFeedTypes(feedTypeState as string);
     try {
       if (!paginatedResults?.next) {
         // fix apollo duplications on null next
-        return
+        return;
       }
       const morePublications = await feedTimeline({
         profileId: lensProfile,
@@ -378,7 +388,7 @@ const useMainFeed = () => {
       if (filteredArr.length < 1) {
         if (!paginatedResults?.next) {
           // fix apollo duplications on null next
-          return
+          return;
         }
         const authPub = await explorePublicationsAuth({
           sources: "thedial",
@@ -387,6 +397,7 @@ const useMainFeed = () => {
           sortCriteria: "LATEST",
           noRandomize: true,
           cursor: paginatedResults?.next,
+          metadata: feedType,
         });
         const auth_arr: PublicationSearchResult[] = [
           ...authPub?.data.explorePublications.items,
@@ -414,7 +425,7 @@ const useMainFeed = () => {
           orderedArr,
           lensProfile
         );
-        setFollowerOnly([...followerOnly, ...isOnlyFollowers as boolean[]]);
+        setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
         setPublicationsFeed([...publicationsFeed, ...orderedArr]);
@@ -436,7 +447,7 @@ const useMainFeed = () => {
           orderedArr,
           lensProfile
         );
-        setFollowerOnly([...followerOnly, ...isOnlyFollowers as boolean[]]);
+        setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
         setPublicationsFeed([...publicationsFeed, ...orderedArr]);
@@ -456,13 +467,14 @@ const useMainFeed = () => {
 
   const getMoreUserSelectFeed = async (): Promise<void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
+    const feedType = checkFeedTypes(feedTypeState as string);
     let sortedArr: any[];
     let pageData: any;
     try {
       if (!lensProfile) {
         if (!paginatedResults?.next) {
           // fix apollo duplications on null next
-          return
+          return;
         }
         const { data } = await profilePublications({
           sources: "thedial",
@@ -470,6 +482,7 @@ const useMainFeed = () => {
           publicationTypes: feedOrder,
           limit: 20,
           cursor: paginatedResults?.next,
+          metadata: feedType,
         });
         const arr: any[] = [...data?.publications?.items];
         sortedArr = arr.sort(
@@ -479,7 +492,7 @@ const useMainFeed = () => {
       } else {
         if (!paginatedResults?.next) {
           // fix apollo duplications on null next
-          return
+          return;
         }
         const { data } = await profilePublicationsAuth({
           sources: "thedial",
@@ -487,6 +500,7 @@ const useMainFeed = () => {
           publicationTypes: feedOrder,
           limit: 20,
           cursor: paginatedResults?.next,
+          metadata: feedType,
         });
         const arr: any[] = [...data?.publications?.items];
         sortedArr = arr.sort(
@@ -514,7 +528,7 @@ const useMainFeed = () => {
         orderedArr,
         lensProfile
       );
-      setFollowerOnly([...followerOnly, ...isOnlyFollowers as boolean[]]);
+      setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
       const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       setPublicationsFeed([...publicationsFeed, ...orderedArr]);
@@ -549,7 +563,7 @@ const useMainFeed = () => {
     try {
       if (!commentPageInfo?.next) {
         // fix apollo duplications on null next
-        return
+        return;
       }
       const comments = await whoCommentedPublications({
         commentsOf: id ? id : commentId,
@@ -617,6 +631,7 @@ const useMainFeed = () => {
     publicationModal,
     feedOrderState,
     feedPriorityState,
+    feedTypeState,
     commentShow,
     indexerModal.message,
     indexerModal.value,

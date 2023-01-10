@@ -23,7 +23,7 @@ import handleHidePost from "../../../lib/lens/helpers/handleHidePost";
 const Modals = () => {
   const dispatch = useDispatch();
   const makePublication = useSelector(
-    (state: RootState) => state.app.publicationReducer.value
+    (state: RootState) => state.app.publicationReducer.open
   );
   const collectNotificationModal = useSelector(
     (state: RootState) => state.app.collectNotificationReducer.open
@@ -174,7 +174,11 @@ const Modals = () => {
           inputText={
             failed === "insufficient"
               ? "Insufficient Funds."
-              : "Transaction Failed. Please try again."
+              : failed === "Transaction Failed. Please try again."
+              ? "Transaction Failed. Please try again."
+              : failed === "saved"
+              ? "Draft Saved."
+              : "Could Not Save Draft, Try Again."
           }
         />
       )}

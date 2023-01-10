@@ -35,7 +35,7 @@ import { setNotifications } from "../../../../../redux/reducers/notificationsSli
 import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
 import omit from "../../../../../lib/lens/helpers/omit";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
-import fileLimitAlert from "../../../../../lib/misc/fileLimitAlert";
+import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = [

@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import fileLimitAlert from "../../../../../lib/misc/fileLimitAlert";
+import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import { setAddTrack } from "../../../../../redux/reducers/addTrackSlice";
 import { RootState } from "../../../../../redux/store";

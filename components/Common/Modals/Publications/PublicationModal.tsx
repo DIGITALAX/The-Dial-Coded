@@ -159,7 +159,10 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
               <ImCross
                 color="white"
                 size={15}
-                onClick={() => dispatch(setPublication(false))}
+                onClick={() => dispatch(setPublication({
+                  actionOpen: false,
+                  actionCanvas: false
+                }))}
               />
             </div>
             <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2 z-2">

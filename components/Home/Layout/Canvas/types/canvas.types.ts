@@ -13,6 +13,8 @@ export interface SketchProps
 }
 
 export type DrawProps = {
+  title: string;
+  handleTitle: (e: FormEvent) => void;
   hex: string;
   setHex: (e: string) => void;
   showSideDrawOptions: boolean;
@@ -54,6 +56,8 @@ export type DrawProps = {
   handleClear: () => void;
   handleCanvasPost: () => Promise<void>;
   postLoading: boolean;
+  handleCanvasSave: () => Promise<void>;
+  saveLoading: boolean;
 };
 
 export type ColorPickerProps = {
@@ -169,4 +173,11 @@ export type Point = {
 export type PublishProps = {
   handleCanvasPost: () => Promise<void>;
   postLoading: boolean;
+  handleCanvasSave: () => Promise<void>;
+  saveLoading: boolean;
+};
+
+export type TitleProps = {
+  title: string;
+  handleTitle: (e: FormEvent) => void;
 };
