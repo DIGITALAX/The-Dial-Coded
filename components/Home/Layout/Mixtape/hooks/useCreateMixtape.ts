@@ -143,7 +143,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
       ],
       media: newImages,
       locale: "en",
-      tags: ["mixtape"],
+      tags: ["dialMixtape"],
       createdOn: new Date(),
       appId: "thedial",
     };

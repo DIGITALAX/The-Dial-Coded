@@ -2,6 +2,7 @@ import refresh from "../../graphql/mutations/refresh";
 
 const AUTH_STORAGE_KEY = "LH_STORAGE_KEY";
 const NOTIF_STORAGE_KEY = "LH_NOTIFICATIONS";
+const CERAMIC_STORAGE_KEY = "CER_DID_SESSION";
 
 interface authToken {
   token: {
@@ -94,5 +95,22 @@ export const getNotificationLength = () => {
     return JSON.parse(data) as {
       notifLength: number;
     };
+  }
+};
+
+export const setCeramicSession = (session: any) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(CERAMIC_STORAGE_KEY, session.serialize());
+    return;
+  }
+};
+
+export const getCeramicSession = () => {
+  if (typeof window !== "undefined") {
+    const session = localStorage.getItem(CERAMIC_STORAGE_KEY);
+
+    if (!session) return null;
+
+    return session;
   }
 };

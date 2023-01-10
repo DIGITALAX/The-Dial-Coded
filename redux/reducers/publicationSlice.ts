@@ -1,11 +1,13 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface PublicationState {
-  value?: boolean;
+  open?: boolean;
+  canvas?: boolean;
 }
 
 const initialPublicationState: PublicationState = {
-  value: false,
+  open: false,
+  canvas: false,
 };
 
 export const publicationSlice = createSlice({
@@ -14,9 +16,10 @@ export const publicationSlice = createSlice({
   reducers: {
     setPublication: (
       state: PublicationState,
-      action: PayloadAction<boolean>
+      { payload: { actionOpen, actionCanvas } }
     ) => {
-      state.value = action.payload;
+      state.open = actionOpen;
+      state.canvas = actionCanvas;
     },
   },
 });

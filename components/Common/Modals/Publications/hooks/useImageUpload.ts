@@ -5,7 +5,7 @@ import { RootState } from "../../../../../redux/store";
 import lodash from "lodash";
 import { ImageUploadResults } from "../../../types/common.types";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
-import fileLimitAlert from "../../../../../lib/misc/fileLimitAlert";
+import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 
 const useImageUpload = (): ImageUploadResults => {
   const [imageUploading, setImageUploading] = useState<boolean>(false);
@@ -19,12 +19,13 @@ const useImageUpload = (): ImageUploadResults => {
     e: FormEvent | File,
     canvas?: boolean
   ): Promise<void> => {
-    if (fileLimitAlert((e as any).target.files[0])) {
-      return;
-    }
     let finalImages: string[] = [];
     setImageUploading(true);
     if (canvas) {
+      console.log("here")
+      if (fileLimitAlert(e as any)) {
+        return;
+      }
       try {
         const compressedImage = await compressImageFiles(e as File);
         const response = await fetch("/api/ipfs", {
@@ -39,6 +40,9 @@ const useImageUpload = (): ImageUploadResults => {
       }
       setImageUploading(false);
     } else {
+      if (fileLimitAlert((e as any).target.files[0])) {
+        return;
+      }
       Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(
         async (file: any, index: number) => {
           try {

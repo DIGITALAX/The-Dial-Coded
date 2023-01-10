@@ -5,6 +5,7 @@ import Board from "./Board";
 import BottomMenu from "./Options/BottomMenu";
 import Publish from "./Options/Publish";
 import Base from "./Base";
+import Title from "./Title";
 
 const Draw: FunctionComponent<DrawProps> = ({
   setShowSideDrawOptions,
@@ -47,7 +48,11 @@ const Draw: FunctionComponent<DrawProps> = ({
   handleClear,
   handleMouseWheel,
   handleCanvasPost,
-  postLoading
+  postLoading,
+  handleTitle,
+  title,
+  handleCanvasSave,
+  saveLoading
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -69,8 +74,7 @@ const Draw: FunctionComponent<DrawProps> = ({
             : tool === "marquee"
             ? "cursor-crosshair"
             : tool === "resize" &&
-              (
-                selectedElement?.position === "start" ||
+              (selectedElement?.position === "start" ||
                 selectedElement?.position === "end") &&
               selectedElement?.type !== "text" &&
               selectedElement?.position !== "inside"
@@ -86,7 +90,13 @@ const Draw: FunctionComponent<DrawProps> = ({
                   "cursor-nwse-resize")
         } rounded-lg border border-white row-start-1`}
       >
-        <Publish handleCanvasPost={handleCanvasPost} postLoading={postLoading} />
+        <Publish
+          handleCanvasPost={handleCanvasPost}
+          postLoading={postLoading}
+          handleCanvasSave={handleCanvasSave}
+          saveLoading={saveLoading}
+        />
+        <Title title={title} handleTitle={handleTitle} />
         <SideMenu
           showSideDrawOptions={showSideDrawOptions}
           setShowSideDrawOptions={setShowSideDrawOptions}

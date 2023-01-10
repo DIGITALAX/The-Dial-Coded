@@ -1,6 +1,6 @@
 const checkPublicationTypes = (
   feedOrderState: string | undefined,
-  feedPriorityState: string | undefined
+  feedPriorityState: string | undefined,
 ): string[] => {
   let feedOrder: string[];
   if (!feedOrderState && !feedPriorityState) {

@@ -1,5 +1,4 @@
 import { FormEvent, useState } from "react";
-import callLexicaSearch from "../../../../../lib/lens/helpers/callLexicaSearch";
 
 const useBase = () => {
   const [searchLoading, setSearchLoading] = useState<boolean>(false);

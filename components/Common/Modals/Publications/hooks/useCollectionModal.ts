@@ -41,7 +41,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
   const { address } = useAccount();
   const audienceTypes: string[] = ["only followers", "everyone"];
   const publicationModuleOpen = useSelector(
-    (state: RootState) => state.app.publicationReducer.value
+    (state: RootState) => state.app.publicationReducer.open
   );
   const mixtapePage = useSelector(
     (state: RootState) => state.app.mixtapePageReducer.value
