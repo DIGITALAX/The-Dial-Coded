@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImageUpload";
 import fileLimitAlert from "../../../../../lib/misc/fileLimitAlert";
+import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 
 const useDraw = () => {
   const { uploadImage } = useImageUpload();
@@ -254,13 +255,14 @@ const useDraw = () => {
     setPostLoading(false);
   };
 
-  const handleImageAdd = (e: FormEvent) => {
+  const handleImageAdd = async (e: FormEvent): Promise<void> => {
     if (fileLimitAlert((e as any).target.files[0])) {
       return;
     }
     const image = (e.target as HTMLFormElement).files[0];
+    const compressedImage = await compressImageFiles(image);
     const reader = new FileReader();
-    reader.readAsDataURL(image);
+    reader.readAsDataURL(compressedImage as File);
 
     reader.onloadend = (e) => {
       const imageObject = new Image();

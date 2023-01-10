@@ -42,7 +42,7 @@ export type DrawProps = {
   handleSave: () => void;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
-  handleImageAdd: (e: FormEvent) => void;
+  handleImageAdd: (e: FormEvent) => Promise<void>;
   setTool: (e: string) => void;
   tool: string;
   undo: () => boolean | void;
@@ -67,7 +67,7 @@ export type SideMenuProps = {
   handleSave: () => void;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
-  handleImageAdd: (e: FormEvent) => void;
+  handleImageAdd: (e: FormEvent) => Promise<void>;
   undo: () => boolean | void;
   redo: () => boolean | void;
   setTool: (e: string) => void;
@@ -103,7 +103,7 @@ export type SideOptionsProps = {
   handleSave: () => void;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
-  handleImageAdd: (e: FormEvent) => void;
+  handleImageAdd: (e: FormEvent) => Promise<void>;
   undo: () => boolean | void;
   redo: () => boolean | void;
   setTool: (e: string) => void;
