@@ -21,6 +21,8 @@ import buildConversationId from "../../../../../lib/xmtp/helpers/buildConversati
 import conversationMatchesProfile from "../../../../../lib/xmtp/helpers/conversationMatchesProfile";
 import getPostHTML from "../../../../../lib/lens/helpers/postHTML";
 import getCaretPos from "../../../../../lib/lens/helpers/getCaretPos";
+import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
+import fileLimitAlert from "../../../../../lib/misc/fileLimitAlert";
 
 const useConversations = (): UseConversationResults => {
   const { data: signer } = useSigner();
@@ -441,11 +443,17 @@ const useConversations = (): UseConversationResults => {
   };
 
   const handleUploadImage = async (e: any): Promise<void> => {
+    if (fileLimitAlert((e as any).target.files[0])) {
+      return;
+    }
     setMessageLoading(true);
     try {
+      const compressedImage = await compressImageFiles(
+        (e.target as HTMLFormElement).files[0]
+      );
       const response = await fetch("/api/ipfs", {
         method: "POST",
-        body: e.target.files[0] as any,
+        body: compressedImage as any,
       });
       let { cid } = await response.json();
       await sendConversation("ipfs://" + cid);
