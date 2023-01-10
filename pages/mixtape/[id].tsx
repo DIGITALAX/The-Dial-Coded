@@ -13,6 +13,7 @@ import { BsFillChatDotsFill } from "react-icons/bs";
 import MainPost from "../../components/Home/Mixtape/MainPost";
 import handleHidePost from "../../lib/lens/helpers/handleHidePost";
 import getPostComments from "../../lib/lens/helpers/getPostComments";
+import syncScroll from "../../lib/lens/helpers/syncScroll";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -55,7 +56,6 @@ const Post: NextPage = (): JSX.Element => {
     tags,
     handleRemoveTag,
     handleTags,
-    syncScroll,
     caretCoord,
     mentionProfiles,
     profilesOpen,

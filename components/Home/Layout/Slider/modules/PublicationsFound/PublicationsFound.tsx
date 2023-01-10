@@ -37,6 +37,7 @@ const PublicationsFound: FunctionComponent<PublicationsFoundProps> = ({
                 }
                 followerOnly={followerOnly?.length > 0 && followerOnly[index]}
                 handleHidePost={handleHidePost}
+                height={"full"}
               />
             </div>
           );

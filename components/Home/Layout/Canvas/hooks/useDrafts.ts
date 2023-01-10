@@ -28,7 +28,6 @@ const useDrafts = () => {
     chainId: 8001,
   });
   const provider = new Eip1193Bridge(ethersSigner, wagmiProvider);
-  console.log(ethersSigner);
   useEffect(() => {
     if (lensProfile && !client) {
       createAuthProvider();
@@ -39,8 +38,6 @@ const useDrafts = () => {
     try {
       const auth = new EthereumAuthProvider(provider, address as string);
       const threeIDConnect = new ThreeIdConnect();
-
-      console.log(auth, threeIDConnect);
       await threeIDConnect.connect(auth);
       const accountId = await getAccountId(provider, address as string);
       const authProv = await EthereumWebAuth.getAuthMethod(provider, accountId);

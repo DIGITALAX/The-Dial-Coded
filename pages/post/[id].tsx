@@ -14,6 +14,7 @@ import { BsFillChatDotsFill } from "react-icons/bs";
 import handleHidePost from "../../lib/lens/helpers/handleHidePost";
 import getPostComments from "../../lib/lens/helpers/getPostComments";
 import NotFound from "../../components/Common/NotFound/NotFound";
+import syncScroll from "../../lib/lens/helpers/syncScroll";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -57,7 +58,6 @@ const Post: NextPage = (): JSX.Element => {
     tags,
     handleRemoveTag,
     handleTags,
-    syncScroll,
     caretCoord,
     mentionProfiles,
     profilesOpen,

@@ -178,7 +178,9 @@ const Modals = () => {
               ? "Transaction Failed. Please try again."
               : failed === "saved"
               ? "Draft Saved."
-              : "Could Not Save Draft, Try Again."
+              : failed === "unsaved"
+              ? "Could Not Save Draft, Try Again."
+              : "Unsuccessful. Please Try Again."
           }
         />
       )}

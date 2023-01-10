@@ -15,6 +15,7 @@ export const addReaction = (request: any) => {
     variables: {
       request: request,
     },
+    fetchPolicy: "no-cache"
   });
 };
 
@@ -24,5 +25,6 @@ export const removeReaction = (request: any) => {
     variables: {
       request: request,
     },
+    fetchPolicy: "no-cache"
   });
 };

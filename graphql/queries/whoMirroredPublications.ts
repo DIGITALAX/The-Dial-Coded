@@ -94,6 +94,7 @@ export const whoMirroredPublications = (request: any) => {
     variables: {
       request: request,
     },
+    fetchPolicy: "no-cache"
   });
 };
 
@@ -103,5 +104,6 @@ export const getAllProfiles = (request: any) => {
     variables: {
       request: request,
     },
+    fetchPolicy: "no-cache"
   });
 };

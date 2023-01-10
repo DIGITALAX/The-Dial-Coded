@@ -359,7 +359,7 @@ export const profilePublicationsAuth = (request: any) => {
       request: request,
     },
     fetchPolicy: "no-cache",
-    errorPolicy: 'all'
+    errorPolicy: "all",
   });
 };
 
@@ -370,7 +370,7 @@ export const profilePublications = (request: any) => {
       request: request,
     },
     fetchPolicy: "no-cache",
-    errorPolicy: 'all'
+    errorPolicy: "all",
   });
 };
 
@@ -380,6 +380,16 @@ export const whoCommentedPublications = (request: any) => {
     variables: {
       request: request,
     },
-    fetchPolicy: "no-cache"
+    fetchPolicy: "no-cache",
+  });
+};
+
+export const whoCommentedPublicationsAuth = (request: any) => {
+  return apolloClient.query({
+    query: gql(PROFILE_PUBLICATION),
+    variables: {
+      request: request,
+    },
+    fetchPolicy: "no-cache",
   });
 };

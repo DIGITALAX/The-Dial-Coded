@@ -143,6 +143,7 @@ export type FeedPublicationProps = {
   mixtapeMirror?: boolean;
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   followerOnly: boolean;
+  height?: string;
 };
 
 export type OptionMenuProps = {

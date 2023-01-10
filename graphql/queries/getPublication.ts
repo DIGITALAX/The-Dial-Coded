@@ -1,5 +1,5 @@
 import { ApolloQueryResult, gql } from "@apollo/client";
-import { apolloClient } from "./../../lib/lens/client";
+import { apolloClient, authClient } from "./../../lib/lens/client";
 
 const GET_PUBLICATION = `query Publication($request: PublicationQueryRequest!) {
     publication(request: $request) {
@@ -358,7 +358,7 @@ const GET_PUBLICATION = `query Publication($request: PublicationQueryRequest!) {
   }
   `;
 
-const getPublication = async (
+export const getPublicationAuth = async (
   request: any
 ): Promise<ApolloQueryResult<any>> => {
   return apolloClient.query({
@@ -370,4 +370,14 @@ const getPublication = async (
   });
 };
 
-export default getPublication;
+export const getPublication = async (
+  request: any
+): Promise<ApolloQueryResult<any>> => {
+  return authClient.query({
+    query: gql(GET_PUBLICATION),
+    variables: {
+      request: request,
+    },
+    fetchPolicy: "no-cache",
+  });
+};

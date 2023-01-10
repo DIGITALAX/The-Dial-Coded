@@ -43,7 +43,7 @@ export type CommentsProps = {
   handleTags: (e: FormEvent) => void;
   handleRemoveTag: (tag: string) => void;
   followerOnly: boolean;
-  syncScroll: (e: any) => void;
+  syncScroll: (e: any, element: string) => void;
   caretCoord: { x: number; y: number };
   mentionProfiles: Profile[];
   profilesOpen: boolean;

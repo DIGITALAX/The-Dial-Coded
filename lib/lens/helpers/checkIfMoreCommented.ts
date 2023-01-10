@@ -1,15 +1,29 @@
-import { whoCommentedPublications } from "../../../graphql/queries/profilePublication";
+import {
+  whoCommentedPublications,
+  whoCommentedPublicationsAuth,
+} from "../../../graphql/queries/profilePublication";
 
 const checkIfMoreCommented = async (
   pageData: any,
-  id: string
+  id: string,
+  lensProfile: string | undefined
 ): Promise<any> => {
   try {
-    const comments = await whoCommentedPublications({
-      commentsOf: id,
-      limit: 30,
-      cursor: pageData?.next,
-    });
+    let comments: any;
+    if (lensProfile) {
+      comments = await whoCommentedPublicationsAuth({
+        commentsOf: id,
+        limit: 50,
+        cursor: pageData?.next,
+      });
+    } else {
+      comments = await whoCommentedPublications({
+        commentsOf: id,
+        limit: 50,
+        cursor: pageData?.next,
+      });
+    }
+
     const arr: any[] = [...comments.data.publications.items];
     const commentedValues: any[] = arr.sort(
       (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)

@@ -38,7 +38,7 @@ const useHearted = () => {
     setReactionInfoLoading(true);
     try {
       const reactions = await whoReactedublications({
-        publicationId: id ? id : pubId,
+        publicationId: pubId,
       });
       const upvoteArr = lodash.filter(
         reactions?.data?.whoReactedPublication.items,
@@ -59,7 +59,7 @@ const useHearted = () => {
   const getMorePostReactions = async (): Promise<void> => {
     try {
       const reactions = await whoReactedublications({
-        publicationId: id ? id : pubId,
+        publicationId: pubId,
         cursor: reactionPageInfo?.next,
       });
       const arr: any[] = [...reactions?.data?.whoReactedPublication?.items];
@@ -85,24 +85,24 @@ const useHearted = () => {
         const add = await addReaction({
           profileId: profileId,
           reaction: "UPVOTE",
-          publicationId: id ? id : pubId,
+          publicationId: pubId,
         });
         dispatch(
           setHearted({
             actionDirection: "up",
-            actionId: id ? id : pubId,
+            actionId: pubId,
           })
         );
       } else {
         const remove = await removeReaction({
           profileId: profileId,
           reaction: "DOWNVOTE",
-          publicationId: id ? id : pubId,
+          publicationId: pubId,
         });
         dispatch(
           setHearted({
             actionDirection: "down",
-            actionId: id ? id : pubId,
+            actionId: pubId,
           })
         );
       }
@@ -113,7 +113,7 @@ const useHearted = () => {
       setReactionState({
         actionOpen: false,
         actionType: "heart",
-        actionValue: id ? id : pubId,
+        actionValue: pubId,
       })
     );
     setReactionLoading(false);
