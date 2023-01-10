@@ -34,6 +34,8 @@ import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 import { setNotifications } from "../../../../../redux/reducers/notificationsSlice";
 import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
 import omit from "../../../../../lib/lens/helpers/omit";
+import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
+import fileLimitAlert from "../../../../../lib/misc/fileLimitAlert";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = [
@@ -41,7 +43,7 @@ const useAccount = (): UseAccountResult => {
     "profile feed",
     "stats",
     "notifications",
-    "conversations"
+    "conversations",
   ];
   const dispatch = useDispatch();
   const { address } = useAccountWagmi();
@@ -105,7 +107,9 @@ const useAccount = (): UseAccountResult => {
 
   const accountImageUpload = async (e: FormEvent): Promise<void> => {
     let finalImages: string[] = [];
-
+    if (fileLimitAlert((e as any).target.files[0])) {
+      return;
+    }
     if ((e.target as HTMLFormElement).name === "profile") {
       setProfileImageUploading(true);
     } else {
@@ -114,9 +118,12 @@ const useAccount = (): UseAccountResult => {
     Array.from((e.target as HTMLFormElement).files).map(
       async (file: any, index: number) => {
         try {
+          const compressedImage = await compressImageFiles(
+            (e.target as HTMLFormElement).files[index]
+          );
           const response = await fetch("/api/ipfs", {
             method: "POST",
-            body: (e.target as HTMLFormElement).files[index],
+            body: compressedImage as any,
           });
           if (response.status !== 200) {
             if ((e.target as HTMLFormElement).name === "profile") {
@@ -358,8 +365,9 @@ const useAccount = (): UseAccountResult => {
 
       const res = await tx?.wait();
       const result = await checkIndexed(res?.transactionHash);
-      if ( result?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS") {
+      if (
+        result?.data?.hasTxHashBeenIndexed?.metadataStatus?.status === "SUCCESS"
+      ) {
         dispatch(
           setIndexModal({
             actionValue: true,

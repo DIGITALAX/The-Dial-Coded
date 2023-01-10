@@ -49,7 +49,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     (state: RootState) => state.app.mixtapeTitleReducer.value
   );
   const mixTapeSource = useSelector(
-    (state: RootState) => state.app.mixtapeTitleReducer.value
+    (state: RootState) => state.app.mixtapeSourceReducer.value
   );
   const [contentURI, setContentURI] = useState<string>();
   const dispatch = useDispatch();

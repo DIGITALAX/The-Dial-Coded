@@ -4,6 +4,8 @@ import { setPostImages } from "../../../../../redux/reducers/postImagesSlice";
 import { RootState } from "../../../../../redux/store";
 import lodash from "lodash";
 import { ImageUploadResults } from "../../../types/common.types";
+import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
+import fileLimitAlert from "../../../../../lib/misc/fileLimitAlert";
 
 const useImageUpload = (): ImageUploadResults => {
   const [imageUploading, setImageUploading] = useState<boolean>(false);
@@ -17,13 +19,17 @@ const useImageUpload = (): ImageUploadResults => {
     e: FormEvent | File,
     canvas?: boolean
   ): Promise<void> => {
+    if (fileLimitAlert((e as any).target.files[0])) {
+      return;
+    }
     let finalImages: string[] = [];
     setImageUploading(true);
     if (canvas) {
       try {
+        const compressedImage = await compressImageFiles(e as File);
         const response = await fetch("/api/ipfs", {
           method: "POST",
-          body: e as any,
+          body: compressedImage as any,
         });
         let cid = await response.json();
         finalImages.push(String(cid?.cid));
@@ -36,9 +42,12 @@ const useImageUpload = (): ImageUploadResults => {
       Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(
         async (file: any, index: number) => {
           try {
+            const compressedImage = await compressImageFiles(
+              (e as any).target.files[index] as File
+            );
             const response = await fetch("/api/ipfs", {
               method: "POST",
-              body: ((e as FormEvent).target as HTMLFormElement).files[index],
+              body: compressedImage as any,
             });
             if (response.status !== 200) {
               setImageUploading(false);
