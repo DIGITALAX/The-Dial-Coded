@@ -143,12 +143,27 @@ const useDraw = () => {
       case "line":
       case "ell":
       case "rect":
+        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
+          "source-over";
         roughCanvas?.draw(element?.roughElement);
         break;
 
       case "erase":
+        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
+          "destination-out";
+        const pathEraseData = getSvgPathFromStroke(
+          getStroke(element?.points as { x: number; y: number }[], {
+            size: element?.strokeWidth,
+          })
+        );
+        ctx?.fill(new Path2D(pathEraseData));
+        break;
+
       case "pencil":
         (ctx as CanvasRenderingContext2D).fillStyle = element?.fill as string;
+        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
+          "source-over";
+
         const pathData = getSvgPathFromStroke(
           getStroke(element?.points as { x: number; y: number }[], {
             size: element?.strokeWidth,
@@ -158,6 +173,8 @@ const useDraw = () => {
         break;
 
       case "text":
+        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
+          "source-over";
         (ctx as CanvasRenderingContext2D).textBaseline = "top";
         (
           ctx as CanvasRenderingContext2D
@@ -171,6 +188,8 @@ const useDraw = () => {
         break;
 
       case "image":
+        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
+          "source-over";
         ctx?.drawImage(
           element?.image as HTMLImageElement,
           element.x1 as number,
@@ -182,6 +201,8 @@ const useDraw = () => {
         break;
 
       case "marquee":
+        (ctx as CanvasRenderingContext2D).globalCompositeOperation =
+          "source-over";
         ctx?.beginPath();
         (ctx as CanvasRenderingContext2D).strokeStyle =
           element.stroke as string;
@@ -232,8 +253,17 @@ const useDraw = () => {
     setTitle(e.target.value);
   };
 
-  const handleSave = (): void => {
+  const removeImageBackground = async (img: string) => {
+    // const input = sharp(img);
+    // const rembg = new Rembg();
+    // const output = await rembg.remove(input);
+    // await output.png().toFile("thedial_drafts.png");
+  };
+
+  const handleSave = async (): Promise<void> => {
     const img = getCanvas();
+    const removedBg = await removeImageBackground(img);
+    console.log(removedBg);
     let xhr = new XMLHttpRequest();
     xhr.responseType = "blob";
     xhr.onload = function () {
@@ -318,16 +348,15 @@ const useDraw = () => {
 
   useLayoutEffect(() => {
     if (ctx) {
-      // ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
-      (ctx as CanvasRenderingContext2D).globalCompositeOperation =
-        "source-over";
       const roughCanvas = rough?.canvas(canvas);
       elements?.forEach((element: any) => {
         if (action === "writing" && selectedElement.id === element.id) return;
 
         drawElement(element, roughCanvas, ctx);
       });
+      ctx.save();
     }
   }, [
     elements,
@@ -697,7 +726,7 @@ const useDraw = () => {
     if (ctx) {
       const img = new Image();
       img.src =
-        "https://thedial.infura-ipfs.io/ipfs/QmdCN3qFCJcao9HfQVbQm3SbCjErMJysefqgP1uogXjtve";
+        "https://thedial.infura-ipfs.io/ipfs/QmXcLBvsHDC8kNDe3WFQHzPpotVKG1AHsAHou1AbiYe6yp";
       img.setAttribute("crossorigin", "anonymous");
       img.onload = () => {
         setPattern(ctx?.createPattern(img, "repeat"));
@@ -1246,6 +1275,7 @@ const useDraw = () => {
     title,
     handleTitle,
     handleCanvasSave,
+    saveLoading,
   };
 };
 
