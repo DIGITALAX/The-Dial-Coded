@@ -12,7 +12,10 @@ import {
 import collect from "../../../../graphql/mutations/collect";
 import approvedData from "../../../../graphql/queries/approveData";
 import approvedModuleAllowance from "../../../../graphql/queries/approvedModuleAllowance";
-import getPublication from "../../../../graphql/queries/getPublication";
+import {
+  getPublication,
+  getPublicationAuth,
+} from "../../../../graphql/queries/getPublication";
 import whoCollectedPublications from "../../../../graphql/queries/whoCollectPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
 import { setApprovalArgs } from "../../../../redux/reducers/approvalArgsSlice";
@@ -70,7 +73,7 @@ const useCollected = () => {
     setPostCollectInfoLoading(true);
     try {
       const collects = await whoCollectedPublications({
-        publicationId: id ? id : pubId,
+        publicationId: pubId,
         limit: 30,
       });
       const arr: any[] = [...collects.data.whoCollectedPublication.items];
@@ -88,7 +91,7 @@ const useCollected = () => {
   const getMorePostCollects = async (): Promise<void> => {
     try {
       const collects = await whoCollectedPublications({
-        publicationId: id ? id : pubId,
+        publicationId: pubId,
         limit: 30,
         cursor: collectPageInfo?.next,
       });
@@ -158,10 +161,19 @@ const useCollected = () => {
   const getCollectInfo = async (): Promise<void> => {
     setCollectInfoLoading(true);
     try {
-      const { data } = await getPublication({
-        publicationId: reactions.value,
-      });
-      const collectModule = data?.publication?.collectModule;
+      let pubData: any;
+      if (profileId) {
+        const { data } = await getPublicationAuth({
+          publicationId: reactions.value,
+        });
+        pubData = data;
+      } else {
+        const { data } = await getPublication({
+          publicationId: reactions.value,
+        });
+        pubData = data;
+      }
+      const collectModule = pubData?.publication?.collectModule;
       const convertedValue = await handleCoinUSDConversion(
         collectModule?.amount?.asset?.symbol,
         collectModule?.amount?.value
@@ -193,13 +205,14 @@ const useCollected = () => {
             value: collectModule?.amount?.value,
           },
           actionUSD: convertedValue ? convertedValue : null,
-          actionCanCollect: data?.publication?.hasCollectedByMe,
+          actionCanCollect: pubData?.publication?.hasCollectedByMe,
           actionApproved:
             collectModule?.type === "FreeCollectModule" ||
             isApproved > collectModule?.amount?.value
               ? true
               : false,
-          actionTotalCollects: data?.publication?.stats?.totalAmountOfCollects,
+          actionTotalCollects:
+            pubData?.publication?.stats?.totalAmountOfCollects,
         })
       );
     } catch (err: any) {
@@ -264,7 +277,7 @@ const useCollected = () => {
     setCollectLoading(true);
     try {
       const collectPost = await collect({
-        publicationId: id ? id : pubId,
+        publicationId: pubId,
       });
       const typedData: any = collectPost.data.createCollectTypedData.typedData;
       const signature: any = await signTypedDataAsync({
@@ -304,7 +317,7 @@ const useCollected = () => {
         setReactionState({
           actionOpen: false,
           actionType: "collect",
-          actionValue: id ? id : pubId,
+          actionValue: pubId,
         })
       );
       dispatch(

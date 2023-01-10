@@ -14,6 +14,7 @@ import {
   profilePublicationsAuth,
   profilePublications,
   whoCommentedPublications,
+  whoCommentedPublicationsAuth,
 } from "../../../../../../../graphql/queries/profilePublication";
 import feedTimeline from "../../../../../../../graphql/queries/feedTimeline";
 import { useRouter } from "next/router";
@@ -565,13 +566,22 @@ const useMainFeed = () => {
         // fix apollo duplications on null next
         return;
       }
-      const comments = await whoCommentedPublications({
-        commentsOf: id ? id : commentId,
-        limit: 30,
-        cursor: commentPageInfo?.next,
-      });
+      let comments: any;
+      if (lensProfile) {
+        comments = await whoCommentedPublicationsAuth({
+          commentsOf: id ? id : commentId,
+          limit: 30,
+          cursor: commentPageInfo?.next,
+        });
+      } else {
+        comments = await whoCommentedPublications({
+          commentsOf: id ? id : commentId,
+          limit: 30,
+          cursor: commentPageInfo?.next,
+        });
+      }
       const arr: any[] = [...comments.data.publications.items];
-      const sortedArr: any[] = arr.sort(
+      const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       setCommentors([...commentors, ...sortedArr]);
@@ -614,13 +624,15 @@ const useMainFeed = () => {
   ]);
 
   useEffect(() => {
-    if (userView?.handle) {
-      getUserSelectFeed();
-    } else {
-      if (!lensProfile) {
-        fetchPublications();
+    if (!router.asPath.includes("post") && !router.asPath.includes("mixtape")) {
+      if (userView?.handle) {
+        getUserSelectFeed();
       } else {
-        getFeedTimeline();
+        if (!lensProfile) {
+          fetchPublications();
+        } else {
+          getFeedTimeline();
+        }
       }
     }
   }, [

@@ -48,7 +48,7 @@ const useMirrored = () => {
     setMirrorInfoLoading(true);
     try {
       const mirrors = await whoMirroredPublications({
-        whoMirroredPublicationId: id ? id : pubId,
+        whoMirroredPublicationId: pubId,
         limit: 30,
       });
       const arr: any[] = [...mirrors.data.profiles.items];
@@ -66,7 +66,7 @@ const useMirrored = () => {
   const getMorePostMirrors = async (): Promise<void> => {
     try {
       const mirrors = await whoMirroredPublications({
-        whoMirroredPublicationId: id ? id : pubId,
+        whoMirroredPublicationId: pubId,
         limit: 30,
         cursor: mirrorPageInfo?.next,
       });
@@ -97,7 +97,7 @@ const useMirrored = () => {
     try {
       const mirrorPost = await mirror({
         profileId: profileId,
-        publicationId: id ? id : pubId,
+        publicationId: pubId,
         referenceModule: {
           followerOnlyReferenceModule: false,
         },
@@ -143,7 +143,7 @@ const useMirrored = () => {
         setReactionState({
           actionOpen: false,
           actionType: "mirror",
-          actionValue: id ? id : pubId,
+          actionValue: pubId,
         })
       );
       dispatch(

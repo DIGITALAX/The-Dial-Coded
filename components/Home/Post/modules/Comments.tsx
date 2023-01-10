@@ -193,10 +193,10 @@ const Comments: FunctionComponent<CommentsProps> = ({
               <div className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1.5 rounded-xl">
                 <textarea
                   id="post"
-                  onScroll={(e: any) => syncScroll(e)}
+                  onScroll={(e: any) => syncScroll(e, "highlighted-content")}
                   onInput={(e: FormEvent) => {
                     handleCommentDescription(e);
-                    syncScroll(e);
+                    syncScroll(e, "highlighted-content");
                   }}
                   ref={textElement}
                   value={commentDescription}

@@ -1,5 +1,8 @@
 import { useState } from "react";
-import getPublication from "../../../../graphql/queries/getPublication";
+import {
+  getPublication,
+  getPublicationAuth,
+} from "../../../../graphql/queries/getPublication";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import checkPostReactions from "../../../../lib/lens/helpers/checkPostReactions";
@@ -23,27 +26,37 @@ const usePostPage = () => {
   const getPublicationData = async (id: string): Promise<void> => {
     setPublicationDataLoading(true);
     try {
-      const { data } = await getPublication({
-        publicationId: id,
-      });
-      setPublicationData(data?.publication);
+      let pubData: any;
+      if (lensProfile) {
+        const { data } = await getPublicationAuth({
+          publicationId: id,
+        });
+        pubData = data;
+      } else {
+        const { data } = await getPublication({
+          publicationId: id,
+        });
+        pubData = data;
+      }
+
+      setPublicationData(pubData?.publication);
       const response = await checkPostReactions(
-        [data?.publication],
+        [pubData?.publication],
         lensProfile
       );
       const isOnlyFollowers = await checkIfFollowerOnly(
-        data?.publication,
+        pubData?.publication,
         lensProfile
       );
       setFollowerOnly(isOnlyFollowers as boolean);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(
-          [data?.publication],
+          [pubData?.publication],
           lensProfile
         );
         setHasPostMirrored(hasMirroredArr);
         const hasCommentedArr = await checkIfCommented(
-          [data?.publication],
+          [pubData?.publication],
           lensProfile
         );
         setHasPostCommented(hasCommentedArr);

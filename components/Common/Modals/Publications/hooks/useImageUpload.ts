@@ -22,7 +22,6 @@ const useImageUpload = (): ImageUploadResults => {
     let finalImages: string[] = [];
     setImageUploading(true);
     if (canvas) {
-      console.log("here")
       if (fileLimitAlert(e as any)) {
         return;
       }

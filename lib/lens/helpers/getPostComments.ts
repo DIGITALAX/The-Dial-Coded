@@ -1,4 +1,7 @@
-import { whoCommentedPublications } from "../../../graphql/queries/profilePublication";
+import {
+  whoCommentedPublications,
+  whoCommentedPublicationsAuth,
+} from "../../../graphql/queries/profilePublication";
 import checkIfCommented from "./checkIfCommented";
 import checkIfMirrored from "./checkIfMirrored";
 import checkPostReactions from "./checkPostReactions";
@@ -17,12 +20,21 @@ const getPostComments = async (
 ): Promise<void> => {
   setLoading(true);
   try {
-    const comments = await whoCommentedPublications({
-      commentsOf: id ? id : commentId,
-      limit: 30,
-    });
+    let comments: any;
+
+    if (profile) {
+      comments = await whoCommentedPublicationsAuth({
+        commentsOf: id ? id : commentId,
+        limit: 30,
+      });
+    } else {
+      comments = await whoCommentedPublications({
+        commentsOf: id ? id : commentId,
+        limit: 30,
+      });
+    }
     const arr: any[] = [...comments.data.publications.items];
-    const sortedArr: any[] = arr.sort(
+    const sortedArr = arr.sort(
       (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
     );
     setCommentors(sortedArr);

@@ -28,7 +28,6 @@ import lodash from "lodash";
 import {
   profilePublications,
   profilePublicationsAuth,
-  whoCommentedPublications,
 } from "../../../../graphql/queries/profilePublication";
 import following from "../../../../graphql/queries/following";
 import followers from "../../../../graphql/queries/followers";
