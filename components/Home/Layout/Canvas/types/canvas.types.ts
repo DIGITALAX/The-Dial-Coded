@@ -26,7 +26,7 @@ export type DrawProps = {
   handleMouseDown: (e: MouseEvent) => void;
   handleMouseMove: (e: MouseEvent) => void;
   handleMouseUp: (e: MouseEvent) => void;
-  handleMouseWheel: (e: MouseEvent) => void;
+  handleMouseWheel: (e: WheelEvent) => void;
   colorPicker: boolean;
   setColorPicker: (e: boolean) => void;
   shapes: boolean;
@@ -41,7 +41,7 @@ export type DrawProps = {
   searchLoading: boolean;
   quickSearchResults: any[];
   fillImages: string[];
-  handleSave: () => void;
+  handleSave: () => Promise<void>;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
   handleImageAdd: (e: FormEvent) => Promise<void>;
@@ -68,7 +68,7 @@ export type ColorPickerProps = {
 export type SideMenuProps = {
   showSideDrawOptions: boolean;
   setShowSideDrawOptions: (e: boolean) => void;
-  handleSave: () => void;
+  handleSave: () => Promise<void>;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
   handleImageAdd: (e: FormEvent) => Promise<void>;
@@ -100,11 +100,11 @@ export type BoardProps = {
   handleMouseDown: (e: MouseEvent) => void;
   handleMouseMove: (e: MouseEvent) => void;
   handleMouseUp: (e: MouseEvent) => void;
-  handleMouseWheel: (e: MouseEvent) => void;
+  handleMouseWheel: (e: WheelEvent) => void;
 };
 
 export type SideOptionsProps = {
-  handleSave: () => void;
+  handleSave: () => Promise<void>;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
   handleImageAdd: (e: FormEvent) => Promise<void>;

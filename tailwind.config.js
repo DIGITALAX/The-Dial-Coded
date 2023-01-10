@@ -56,7 +56,7 @@ module.exports = {
       },
       backgroundImage: {
         spots:
-          "url('https://thedial.infura-ipfs.io/ipfs/QmdCN3qFCJcao9HfQVbQm3SbCjErMJysefqgP1uogXjtve')",
+          "url('https://thedial.infura-ipfs.io/ipfs/QmXcLBvsHDC8kNDe3WFQHzPpotVKG1AHsAHou1AbiYe6yp')",
         board:
           "linear-gradient(#131313 0.05em, transparent 0.05em),linear-gradient(90deg, #131313 0.05em, transparent 0.05em)",
       },
