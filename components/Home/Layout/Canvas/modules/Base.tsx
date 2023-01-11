@@ -12,6 +12,7 @@ const Base: FunctionComponent<BaseProps> = ({
   searchLoading,
   quickSearchResults,
   fillImages,
+  addImageToCanvas,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-72 grid grid-flow-col auto-cols-auto justify-self-center self-end gap-3">
@@ -49,7 +50,14 @@ const Base: FunctionComponent<BaseProps> = ({
             return (
               <div
                 key={index}
-                className="relative w-40 h-44 bg-offBlue rounded-md flex"
+                className="relative w-40 h-44 bg-offBlue rounded-md flex cursor-pointer"
+                onClick={() =>
+                  addImageToCanvas(
+                    quickSearchResults?.length > 0
+                      ? (result as LexicaImages)?.srcSmall
+                      : `${INFURA_GATEWAY}/ipfs/${result as string}`
+                  )
+                }
               >
                 <Image
                   src={

@@ -60,6 +60,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     saveLoading,
     zoom,
     setZoom,
+    addImageToCanvas,
   } = useDraw();
   const {
     quickSearchResults,
@@ -150,6 +151,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           setZoom={setZoom}
           draftCanvases={draftCanvases}
           handleShowDraft={handleShowDraft}
+          addImageToCanvas={addImageToCanvas}
         />
       );
   }
