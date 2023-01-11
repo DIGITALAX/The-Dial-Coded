@@ -61,6 +61,7 @@ export type DrawProps = {
   setZoom: (e: number) => void;
   draftCanvases: Draft[];
   handleShowDraft: (draft: Draft) => void
+  addImageToCanvas: (image: string) => Promise<void>
 };
 
 export type ColorPickerProps = {
@@ -170,6 +171,7 @@ export type BaseProps = {
   searchLoading: boolean;
   quickSearchResults: any[];
   fillImages: string[];
+  addImageToCanvas: (image: string) => Promise<void>;
 };
 
 export type Point = {

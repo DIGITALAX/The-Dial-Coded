@@ -277,11 +277,18 @@ const useDraw = () => {
     setSaveLoading(false);
   };
 
-  const handleImageAdd = async (e: FormEvent): Promise<void> => {
-    if (fileLimitAlert((e as any).target.files[0])) {
-      return;
+  const handleImageAdd = async (e: any, lexica?: boolean): Promise<void> => {
+    if (!lexica) {
+      if (fileLimitAlert((e as any).target.files[0])) {
+        return;
+      }
     }
-    const image = (e.target as HTMLFormElement).files[0];
+    let image: File;
+    if (lexica) {
+      image = e;
+    } else {
+      image = (e.target as HTMLFormElement).files[0];
+    }
     const compressedImage = await compressImageFiles(image);
     const reader = new FileReader();
     reader.readAsDataURL(compressedImage as File);
@@ -306,6 +313,19 @@ const useDraw = () => {
         setElements((prevState: any) => [...prevState, newElement]);
       };
     };
+  };
+
+  const addImageToCanvas = async (imgURL: string): Promise<void> => {
+    try {
+      const res: Response = await fetch(imgURL);
+      const blob: Blob = await res.blob();
+      const postImage = new File([blob], "thedial_drafts", {
+        type: "image/png",
+      });
+      await handleImageAdd(postImage, true);
+    } catch (err: any) {
+      console.error(err.message);
+    }
   };
 
   useLayoutEffect(() => {
@@ -1266,6 +1286,7 @@ const useDraw = () => {
     zoom,
     setZoom,
     setElements,
+    addImageToCanvas
   };
 };
 
