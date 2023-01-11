@@ -60,6 +60,7 @@
   "devDependencies": {
     "@types/coingecko-api": "^1.0.10",
     "@types/draft-js": "^0.11.10",
+    "@types/hammerjs": "^2.0.41",
     "@types/lodash": "^4.14.191",
     "@types/multiparty": "^0.0.33",
     "@types/node": "18.11.11",

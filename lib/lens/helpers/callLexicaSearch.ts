@@ -10,6 +10,7 @@ const callLexicaSearch = async (
   dispatch: Dispatch<AnyAction>
 ): Promise<void> => {
   try {
+    console.log(JSON.stringify(searchTarget))
     const getLexicaImages = await fetch("/api/lexica", {
       method: "POST",
       body: JSON.stringify(searchTarget),

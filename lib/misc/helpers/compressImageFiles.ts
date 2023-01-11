@@ -6,9 +6,21 @@ const options = {
   fileType: "image/png",
 };
 
-const compressImageFiles = async (file: File): Promise<File | void> => {
+const options_small = {
+  maxSizeMB: 0.2,
+  maxWidthOrHeight: 300,
+  fileType: "image/png",
+};
+
+const compressImageFiles = async (
+  file: File,
+  small?: boolean
+): Promise<File | void> => {
   try {
-    const compressedImage = await imageCompression(file, options);
+    const compressedImage = await imageCompression(
+      file,
+      small ? options_small : options
+    );
     return compressedImage;
   } catch (err: any) {
     console.error(err.message);

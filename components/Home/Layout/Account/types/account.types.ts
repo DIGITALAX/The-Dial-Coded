@@ -201,7 +201,6 @@ export type UseConversationResults = {
   openImagePicker: string;
   setOpenImagePicker: (e: string) => void;
   conversationLoading: boolean;
-  client: any;
   onNetwork: boolean;
   handleGif: (e: FormEvent) => void;
   handleSetGif: (result: any) => void;

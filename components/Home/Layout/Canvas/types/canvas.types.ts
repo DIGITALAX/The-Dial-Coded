@@ -26,7 +26,6 @@ export type DrawProps = {
   handleMouseDown: (e: MouseEvent) => void;
   handleMouseMove: (e: MouseEvent) => void;
   handleMouseUp: (e: MouseEvent) => void;
-  handleMouseWheel: (e: WheelEvent) => void;
   colorPicker: boolean;
   setColorPicker: (e: boolean) => void;
   shapes: boolean;
@@ -58,6 +57,10 @@ export type DrawProps = {
   postLoading: boolean;
   handleCanvasSave: () => Promise<void>;
   saveLoading: boolean;
+  zoom: number;
+  setZoom: (e: number) => void;
+  draftCanvases: Draft[];
+  handleShowDraft: (draft: Draft) => void
 };
 
 export type ColorPickerProps = {
@@ -76,6 +79,8 @@ export type SideMenuProps = {
   redo: () => boolean | void;
   setTool: (e: string) => void;
   handleClear: () => void;
+  zoom: number;
+  setZoom: (e: number) => void;
 };
 
 export type BottomMenuProps = {
@@ -100,7 +105,7 @@ export type BoardProps = {
   handleMouseDown: (e: MouseEvent) => void;
   handleMouseMove: (e: MouseEvent) => void;
   handleMouseUp: (e: MouseEvent) => void;
-  handleMouseWheel: (e: WheelEvent) => void;
+  zoom: number;
 };
 
 export type SideOptionsProps = {
@@ -112,6 +117,8 @@ export type SideOptionsProps = {
   redo: () => boolean | void;
   setTool: (e: string) => void;
   handleClear: () => void;
+  zoom: number;
+  setZoom: (e: number) => void;
 };
 
 export type BottomOptionsProps = {
@@ -180,4 +187,26 @@ export type PublishProps = {
 export type TitleProps = {
   title: string;
   handleTitle: (e: FormEvent) => void;
+};
+
+export interface Draft {
+  title: string;
+  elements: string;
+  image: string;
+  tags: string[];
+  date: string;
+}
+
+export type DraftsProps = {
+  draftCanvases: Draft[];
+  handleShowDraft: (draft: Draft) => void
+};
+
+export type UseDraftsResult = {
+  saveCanvasNetwork: (
+    file: File,
+    elements: string[]
+  ) => Promise<void>;
+  draftCanvases: Draft[];
+  handleShowDraft: (draft: Draft) => void
 };

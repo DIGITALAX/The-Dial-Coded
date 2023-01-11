@@ -14,8 +14,8 @@ const Base: FunctionComponent<BaseProps> = ({
   fillImages,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto justify-self-center self-end gap-3">
-      <div className="relative w-80 h-4/5 col-start-1 border border-white bg-black rounded-md grid grid-flow-col auto-cols-auto justify-self-start self-end">
+    <div className="relative w-full h-72 grid grid-flow-col auto-cols-auto justify-self-center self-end gap-3">
+      <div className="relative w-80 h-3/5 col-start-1 border border-white bg-black rounded-md grid grid-flow-col auto-cols-auto justify-self-start self-end">
         <div className="relative w-fit h-fit place-self-center grid grid-flow-row auto-rows-auto gap-3 p-2">
           <div className="relative w-fit h-fit text-white font-digiB place-self-center row-start-1 text-2xl text-dialY">
             THE INFINITE CANVAS
@@ -25,7 +25,7 @@ const Base: FunctionComponent<BaseProps> = ({
           </div>
         </div>
       </div>
-      <div className="relative w-full h-full col-start-2 grid grid-flow-row auto-rows-auto place-self-center col-span-3 gap-4">
+      <div className="relative w-full h-4/5 col-start-2 grid grid-flow-row auto-rows-auto self-end col-span-3 gap-3">
         <div className="relative w-full h-fit justify-self-start self-center">
           <SearchBar
             bg="grayBlue"

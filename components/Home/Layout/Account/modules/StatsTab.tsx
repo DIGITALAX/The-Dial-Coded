@@ -14,7 +14,7 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
   followingLoading,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-6">
+    <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-6">
       <div className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto place-self-start gap-4">
         <div className="relative w-full h-fit row-start-1 col-start-1 text-offBlack text-xl grid grid-flow-row auto-rows-auto justify-self-start self-center gap-2">
           <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-3">
@@ -37,7 +37,7 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
               dataLength={userFollowers?.length}
               next={getMoreFollowers}
               loader={""}
-              height={"25rem"}
+              // height={"25rem"}
               className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto gap-3 pt-3 pr-3"
             >
               {userFollowers?.map((follow: any, index: number) => {
@@ -72,7 +72,7 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
               dataLength={userFollowing?.length}
               next={getMoreFollowing}
               loader={""}
-              height={"25rem"}
+              // height={"25rem"}
               className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto pt-3 pr-3 gap-3"
             >
               {userFollowing?.map((follow: any, index: number) => {

@@ -13,6 +13,8 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   redo,
   setTool,
   handleClear,
+  zoom,
+  setZoom,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-4">
@@ -34,24 +36,37 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
         }}
       />
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
-        <CanvasOption
-          image="QmbzpjweonLJNdKqJ2Ybs6c5DwNGewYf77q3ySMbGJzfJN"
-          bgColor="black"
-          width={20}
-          height={20}
-        />
-        <CanvasOption
-          bgColor="black"
-          image="QmXeUfWYdWwtec82XniTA7c2dNjfVWqrUUipEg9XyM1kPn"
-          width={20}
-          height={6}
-        />
-        <CanvasOption
-          image="QmRKP7reAbEFgGrv2KmPdUe1eZgAwVmTzZoWfSLAH4gMEc"
-          bgColor="black"
-          width={25}
-          height={28}
-        />
+        <div
+          className="relative w-fit h-fit"
+          onClick={() => setZoom(zoom < 20 ? zoom + 0.2 : 20)}
+        >
+          <CanvasOption
+            image="QmbzpjweonLJNdKqJ2Ybs6c5DwNGewYf77q3ySMbGJzfJN"
+            bgColor="black"
+            width={20}
+            height={20}
+          />
+        </div>
+        <div
+          className="relative w-fit h-fit"
+          onClick={() => setZoom(zoom > 1 ? zoom - 0.2 : 1)}
+        >
+          <CanvasOption
+            bgColor="black"
+            image="QmXeUfWYdWwtec82XniTA7c2dNjfVWqrUUipEg9XyM1kPn"
+            width={20}
+            height={6}
+          />
+        </div>
+        <div className="relative w-fit h-fit" onClick={() => setZoom(1)}>
+          <CanvasOption
+            image="QmRKP7reAbEFgGrv2KmPdUe1eZgAwVmTzZoWfSLAH4gMEc"
+            bgColor="black"
+            width={25}
+            height={28}
+          />
+        </div>
+
         <CanvasOption
           image="QmTi6aLhjZrFaahoqzki9TgC3idP1tXrRZQxfnXbpG5iZ9"
           bgColor="black"

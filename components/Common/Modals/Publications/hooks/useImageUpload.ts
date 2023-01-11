@@ -22,9 +22,6 @@ const useImageUpload = (): ImageUploadResults => {
     let finalImages: string[] = [];
     setImageUploading(true);
     if (canvas) {
-      if (fileLimitAlert(e as any)) {
-        return;
-      }
       try {
         const compressedImage = await compressImageFiles(e as File);
         const response = await fetch("/api/ipfs", {

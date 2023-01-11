@@ -91,7 +91,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
       dispatch(
         setPreSearch({
           actionItems: publicationsSearchNotDispatch,
-          actionTarget: e.target?.value,
+          actionTarget: searchTarget,
           actionMixtapeMirrors: mixtapeMirrors,
           actionReactionsFeed: reactionsFeed,
           actionCommented: hasCommented,
@@ -100,9 +100,11 @@ const useSliderSearch = (): UseSliderSearchResults => {
           actionFollower: followerOnly,
         })
       );
-      if (e.target?.value !== "" || !e.target?.value) {
-        await callLexicaSearch(e.target?.value, dispatch);
-        dispatch(setSearchTarget(e.target?.value));
+      console.log("here")
+      console.log(searchTarget)
+      if (searchTarget !== "" || !searchTarget) {
+        await callLexicaSearch(searchTarget, dispatch);
+        dispatch(setSearchTarget(searchTarget));
       }
     }
     setSearchLoading(false);
@@ -141,6 +143,8 @@ const useSliderSearch = (): UseSliderSearchResults => {
       if (prompt) {
         dispatch(setSearchTarget(prompt as string));
       }
+      console.log("here")
+      console.log(searchTarget)
       await callLexicaSearch(prompt ? prompt : searchTarget, dispatch);
     } catch (err: any) {
       console.error(err.message);

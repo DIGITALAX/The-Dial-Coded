@@ -23,6 +23,10 @@ import getPostHTML from "../../../../../lib/lens/helpers/postHTML";
 import getCaretPos from "../../../../../lib/lens/helpers/getCaretPos";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
+import { setXmtpClient } from "../../../../../redux/reducers/xmtpClientSlice";
+import removeElements, {
+  elementRegex,
+} from "../../../../../lib/xmtp/helpers/removeElements";
 
 const useConversations = (): UseConversationResults => {
   const { data: signer } = useSigner();
@@ -57,7 +61,9 @@ const useConversations = (): UseConversationResults => {
   const [profileIds, setProfileIds] = useState<string[]>();
   const [message, setMessage] = useState<string>("");
   const [messageHTML, setMessageHTML] = useState<string>("");
-  const [client, setClient] = useState<any>();
+  const client = useSelector(
+    (state: RootState) => state.app.xmtpClientReducer.value
+  );
   const [caretCoord, setCaretCoord] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
@@ -69,7 +75,7 @@ const useConversations = (): UseConversationResults => {
     setClientLoading(true);
     try {
       const xmtp = await Client.create(signer as Signer | null);
-      setClient(xmtp);
+      dispatch(setXmtpClient(xmtp));
       getAllConversations(xmtp);
     } catch (err: any) {
       console.error(err?.message);
@@ -171,7 +177,13 @@ const useConversations = (): UseConversationResults => {
       });
       for (const conversation of chosenConversation) {
         const messagesInConversation = await conversation.messages();
-        setConversationMessages(messagesInConversation);
+        let filteredMessages: any[] = [];
+        lodash.filter(messagesInConversation, (message) => {
+          if (!elementRegex.test(message.content)) {
+            filteredMessages.push(message);
+          }
+        });
+        setConversationMessages(filteredMessages);
       }
     } catch (err: any) {
       console.error(err.message, "HEY");
@@ -234,7 +246,8 @@ const useConversations = (): UseConversationResults => {
           newPreviewMessages.set(preview.key, preview.message);
         }
       }
-      setPreviewMessages(newPreviewMessages);
+      const filteredPreviews = removeElements(newPreviewMessages);
+      setPreviewMessages(filteredPreviews);
 
       (Array.from(messageProfiles?.keys() as any) as any)?.map(
         ([key, profile]: any[]) => {
@@ -490,7 +503,6 @@ const useConversations = (): UseConversationResults => {
     openImagePicker,
     setOpenImagePicker,
     conversationLoading,
-    client,
     onNetwork,
     handleGif,
     handleSetGif,

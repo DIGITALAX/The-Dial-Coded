@@ -243,7 +243,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
         )}
         <div className="relative w-fit h-fit row-start-2 self-end">
           <CanvasOption
-            image="QmQCDFSndEbNgGHWyRV5s8VFKF6xPdQxanzt5s3nRpoaxa"
+            image="Qmd3CpLhtiUhYkWw12DDmWf8M5mRMs3jZdz9JhhX7m1NLW"
             color
             width={40}
             height={40}

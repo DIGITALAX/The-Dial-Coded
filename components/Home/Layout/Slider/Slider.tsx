@@ -12,6 +12,7 @@ import useSliderSearch from "./modules/SliderSearch/hooks/useSliderSearch";
 import SliderSearch from "./modules/SliderSearch/SliderSearch";
 import SliderSwitch from "./SliderSwitch";
 import shuffle from "shuffle-array";
+import { useRouter } from "next/router";
 
 const Slider: FunctionComponent = (): JSX.Element => {
   const { handleBackward, handleForward, currentValue, promptString } =
@@ -32,12 +33,16 @@ const Slider: FunctionComponent = (): JSX.Element => {
   const publicationsSearch = useSelector(
     (state: RootState) => state.app.preSearchReducer
   );
+  const router = useRouter();
   useEffect(() => {
-    if (!searchTarget || searchTarget === "") {
+    if (
+      (!searchTarget || searchTarget === "") &&
+      router.asPath.includes("Slider")
+    ) {
       const shuffledLinks: number[] = shuffle([0, 1, 2, 3]);
       callLexicaSearch(promptString[shuffledLinks[0]], dispatch);
     }
-  }, []);
+  }, [router.asPath]);
 
   return (
     <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-white py-10 pl-10 gap-10">
