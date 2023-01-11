@@ -16,7 +16,7 @@ const useSlider = (): UseSliderResults => {
   const promptString: string[] = [
     "cybernetic style",
     "alphonse mucha",
-    "Studio ghibli",
+    "studio ghibli",
     "makoto shinkai",
   ];
 

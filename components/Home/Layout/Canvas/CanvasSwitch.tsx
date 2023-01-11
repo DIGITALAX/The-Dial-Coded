@@ -8,6 +8,7 @@ import useDraw from "./hooks/useDraw";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import useBase from "./hooks/useBase";
+import useDrafts from "./hooks/useDrafts";
 
 const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   const profile = useSelector(
@@ -50,14 +51,15 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     action,
     writingRef,
     handleBlur,
-    handleMouseWheel,
     handleClear,
     handleCanvasPost,
     postLoading,
     handleTitle,
     title,
     handleCanvasSave,
-    saveLoading
+    saveLoading,
+    zoom,
+    setZoom,
   } = useDraw();
   const {
     quickSearchResults,
@@ -67,6 +69,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handleKeyEnter,
     fillImages,
   } = useBase();
+  const { draftCanvases, handleShowDraft } = useDrafts();
   let actionValue: string = "canvas";
   const decideStringAction = () => {
     if (!profile || !isConnected) {
@@ -136,7 +139,6 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           action={action}
           writingRef={writingRef}
           handleBlur={handleBlur}
-          handleMouseWheel={handleMouseWheel}
           handleClear={handleClear}
           handleCanvasPost={handleCanvasPost}
           postLoading={postLoading}
@@ -144,6 +146,10 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           handleTitle={handleTitle}
           handleCanvasSave={handleCanvasSave}
           saveLoading={saveLoading}
+          zoom={zoom}
+          setZoom={setZoom}
+          draftCanvases={draftCanvases}
+          handleShowDraft={handleShowDraft}
         />
       );
   }

@@ -21,6 +21,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const chosenProfile = useSelector(
     (state: RootState) => state.app.chosenDMProfileReducer.profile
   );
+  const client = useSelector(
+    (state: RootState) => state.app.xmtpClientReducer.value
+  );
   const {
     profileImage,
     coverImage,
@@ -77,13 +80,12 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     openImagePicker,
     setOpenImagePicker,
     conversationLoading,
-    client,
     onNetwork,
     handleGif,
     handleSetGif,
     handleGifSubmit,
     results,
-    handleUploadImage
+    handleUploadImage,
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();

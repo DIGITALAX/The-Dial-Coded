@@ -6,6 +6,7 @@ import BottomMenu from "./Options/BottomMenu";
 import Publish from "./Options/Publish";
 import Base from "./Base";
 import Title from "./Title";
+import Drafts from "./Drafts";
 
 const Draw: FunctionComponent<DrawProps> = ({
   setShowSideDrawOptions,
@@ -46,20 +47,23 @@ const Draw: FunctionComponent<DrawProps> = ({
   writingRef,
   handleBlur,
   handleClear,
-  handleMouseWheel,
   handleCanvasPost,
   postLoading,
   handleTitle,
   title,
   handleCanvasSave,
-  saveLoading
+  saveLoading,
+  zoom,
+  setZoom,
+  draftCanvases,
+  handleShowDraft,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
       <div
         id="parent"
         className={`relative w-full h-[70vw] grid grid-flow-col auto-cols-auto ${
-          draftBoard ? "bg-board bg-boardSize bg-white" : "bg-spots"
+          draftBoard ? `bg-board bg-boardSize bg-white` : `bg-spots`
         } ${
           tool === "selection"
             ? "cursor-move"
@@ -108,6 +112,8 @@ const Draw: FunctionComponent<DrawProps> = ({
           redo={redo}
           setTool={setTool}
           handleClear={handleClear}
+          zoom={zoom}
+          setZoom={setZoom}
         />
         <BottomMenu
           showBottomDrawOptions={showBottomDrawOptions}
@@ -144,10 +150,14 @@ const Draw: FunctionComponent<DrawProps> = ({
           handleMouseDown={handleMouseDown}
           handleMouseUp={handleMouseUp}
           handleMouseMove={handleMouseMove}
-          handleMouseWheel={handleMouseWheel}
+          zoom={zoom}
         />
       </div>
-      <div className="relative w-full h-72 grid grid-flow-col auto-cols-auto">
+      <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-3">
+        <Drafts
+          draftCanvases={draftCanvases}
+          handleShowDraft={handleShowDraft}
+        />
         <Base
           searchTarget={searchTarget}
           handleChangeSearch={handleChangeSearch}

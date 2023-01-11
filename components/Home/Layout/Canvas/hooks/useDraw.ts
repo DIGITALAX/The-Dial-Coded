@@ -11,25 +11,33 @@ import rough from "roughjs/bundled/rough.cjs";
 import { ElementInterface, Point2 } from "../types/canvas.types";
 import getStroke from "perfect-freehand";
 import lodash from "lodash";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImageUpload";
 import useDrafts from "./useDrafts";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
+import { RootState } from "../../../../../redux/store";
+import { setDraftTitle } from "../../../../../redux/reducers/draftTitleSlice";
+import { setDraftElements } from "../../../../../redux/reducers/draftElementsSlice";
 
 const useDraw = () => {
   const { uploadImage } = useImageUpload();
-  const { saveCanvasCeramic } = useDrafts();
+  const { saveCanvasNetwork } = useDrafts();
   const dispatch = useDispatch();
+  const title = useSelector(
+    (state: RootState) => state.app.draftTitleReducer.value
+  );
+  const parsedElems = useSelector(
+    (state: RootState) => state.app.draftElementsReducer.value
+  );
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const writingRef = useRef<HTMLTextAreaElement>(null);
   const [showSideDrawOptions, setShowSideDrawOptions] =
     useState<boolean>(false);
   const [showBottomDrawOptions, setShowBottomDrawOptions] =
     useState<boolean>(false);
-  const [title, setTitle] = useState<string>("untitled draft");
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [shapeFillType, setShapeFillType] = useState<string>("solid");
@@ -105,32 +113,6 @@ const useDraw = () => {
     return d.join(" ");
   };
 
-  const handleMouseWheel = (e: WheelEvent) => {
-    // if (ctx) {
-    //   setWheel(!wheel);
-    //   const bounds = canvas?.getBoundingClientRect();
-    //   console.log(e);
-    //   setMx(e.clientX / scale + ox);
-    //   setMy(e.clientY / scale + oy);
-    //   mousex = e.clientX / scale + ox;
-    //   mousey = e.clientY / scale + oy;
-    //   const zoom = e.deltaY < 0 ? 1.1 : 0.9;
-    //   // var zoom = 1 + wheelMouse / 2;
-    //   ctx?.clearRect(0, 0, canvas.width / (scale * zoom), canvas.height) /
-    //     (scale * zoom);
-    //   ctx?.translate(ox, oy);
-    //   ctx?.scale(zoom, zoom);
-    //   ctx?.translate(
-    //     -(mousex / scale + ox - mousex / (scale * zoom)),
-    //     -(mousey / scale + oy - mousey / (scale * zoom))
-    //   );
-    //   setOx(mousex / scale + ox - mousex / (scale * zoom));
-    //   setOy(mousey / scale + oy - mousey / (scale * zoom));
-    //   setScale(scale * zoom);
-    //   e.preventDefault();
-    // }
-  };
-
   const drawElement = (
     element: ElementInterface,
     roughCanvas: any,
@@ -138,18 +120,19 @@ const useDraw = () => {
   ) => {
     ctx?.setLineDash(element.lineDash ? element.lineDash : [0]);
     (ctx as CanvasRenderingContext2D).imageSmoothingEnabled = false;
+    const bounds = canvas.getBoundingClientRect();
     switch (element?.type) {
       case "line":
       case "ell":
       case "rect":
-        roughCanvas?.draw(element?.roughElement);
+        roughCanvas?.draw(element.roughElement);
         break;
 
       case "pencil":
         (ctx as CanvasRenderingContext2D).fillStyle = element?.fill as string;
         const pathData = getSvgPathFromStroke(
           getStroke(element?.points as { x: number; y: number }[], {
-            size: element?.strokeWidth,
+            size: element?.strokeWidth as number,
           })
         );
         ctx?.fill(new Path2D(pathData));
@@ -157,9 +140,9 @@ const useDraw = () => {
 
       case "text":
         (ctx as CanvasRenderingContext2D).textBaseline = "top";
-        (
-          ctx as CanvasRenderingContext2D
-        ).font = `${element.strokeWidth}px dosis`;
+        (ctx as CanvasRenderingContext2D).font = `${
+          (element.strokeWidth as number) * zoom
+        }px dosis`;
         (ctx as CanvasRenderingContext2D).fillStyle = element.fill as string;
         (ctx as CanvasRenderingContext2D).fillText(
           element.text as string,
@@ -227,7 +210,7 @@ const useDraw = () => {
   };
 
   const handleTitle = (e: any) => {
-    setTitle(e.target.value);
+    dispatch(setDraftTitle(e.target.value));
   };
 
   const handleSave = async (): Promise<void> => {
@@ -274,7 +257,18 @@ const useDraw = () => {
     }
     setSaveLoading(true);
     try {
-      await saveCanvasCeramic(JSON.stringify(elements), title);
+      const imgURL = getCanvas();
+      const res: Response = await fetch(imgURL);
+      const blob: Blob = await res.blob();
+      const postImage = new File([blob], "thedial_drafts", {
+        type: "image/png",
+      });
+      let stringElements = [];
+      for (const elem in elements) {
+        stringElements.push(JSON.stringify(elements[elem]));
+      }
+      dispatch(setDraftElements(stringElements));
+      await saveCanvasNetwork(postImage, stringElements);
       dispatch(setInsufficientFunds("saved"));
     } catch (err: any) {
       dispatch(setInsufficientFunds("unsaved"));
@@ -336,6 +330,8 @@ const useDraw = () => {
     transformCtx,
     panStart,
     wheel,
+    zoom,
+    parsedElems,
   ]);
 
   const nearPoint = (
@@ -442,13 +438,13 @@ const useDraw = () => {
           if (!nextPoint) return false;
           return (
             onLine(
-              point.x,
-              point.y,
-              nextPoint.x,
-              nextPoint.y,
-              x - bounds.left,
-              y - bounds.top,
-              element.strokeWidth as number
+              point.x / zoom,
+              point.y / zoom,
+              nextPoint.x / zoom,
+              nextPoint.y / zoom,
+              x / zoom - bounds.left / zoom,
+              y / zoom - bounds.top / zoom,
+              (element.strokeWidth as number) / zoom
             ) != null
           );
         });
@@ -570,10 +566,10 @@ const useDraw = () => {
     switch (type) {
       case "rect":
         roughElement = generator.rectangle(
-          x1 - bounds?.left,
-          y1 - bounds?.top,
-          x2 - x1,
-          y2 - y1,
+          x1 / zoom - bounds?.left / zoom,
+          y1 / zoom - bounds?.top / zoom,
+          (x2 - x1) / zoom,
+          (y2 - y1) / zoom,
           {
             fill,
             stroke,
@@ -596,10 +592,10 @@ const useDraw = () => {
         };
       case "ell":
         roughElement = generator.ellipse(
-          x1 - bounds?.left,
-          y1 - bounds?.top,
-          (x2 - x1) * Math.PI,
-          (y2 - y1) * Math.PI,
+          x1 / zoom - bounds?.left / zoom,
+          y1 / zoom - bounds?.top / zoom,
+          (((x2 - x1) / zoom) * Math.PI) / zoom,
+          (((y2 - y1) / zoom) * Math.PI) / zoom,
           {
             fill,
             stroke,
@@ -622,10 +618,10 @@ const useDraw = () => {
         };
       case "line":
         roughElement = generator.line(
-          x1 - bounds?.left,
-          y1 - bounds?.top,
-          x2 - bounds?.left,
-          y2 - bounds?.top,
+          x1 / zoom - bounds?.left / zoom,
+          y1 / zoom - bounds?.top / zoom,
+          x2 / zoom - bounds?.left / zoom,
+          y2 / zoom - bounds?.top / zoom,
           {
             strokeWidth,
             stroke,
@@ -649,8 +645,8 @@ const useDraw = () => {
           type,
           points: [
             {
-              x: x1 - bounds?.left,
-              y: y1 - bounds?.top,
+              x: x1 / zoom - bounds?.left / zoom,
+              y: y1 / zoom - bounds?.top / zoom,
             },
           ],
           fill: fill,
@@ -757,7 +753,10 @@ const useDraw = () => {
       case "pencil":
         elementsCopy[index].points = [
           ...(elementsCopy[index].points as any),
-          { x: (x2 as number) - bounds?.left, y: (y2 as number) - bounds?.top },
+          {
+            x: (x2 as number) / zoom - bounds?.left / zoom,
+            y: (y2 as number) / zoom - bounds?.top / zoom,
+          },
         ];
         break;
 
@@ -765,10 +764,10 @@ const useDraw = () => {
         const textWidth = ctx?.measureText(text as string).width as number;
         elementsCopy[index] = {
           ...createElement(
-            x1,
-            y1,
-            x1 + textWidth,
-            y1 + (strokeWidth as number),
+            x1 / zoom,
+            y1 / zoom,
+            x1 / zoom + textWidth / zoom,
+            y1 / zoom + (strokeWidth as number),
             type,
             index,
             strokeWidth as number,
@@ -809,10 +808,10 @@ const useDraw = () => {
       if (element?.length > 0) {
         if (element[0].type === "pencil") {
           const offsetXs = element[0].points?.map(
-            (point: any) => e.clientX - point.x
+            (point) => e.clientX - point.x
           );
           const offsetYs = element[0].points?.map(
-            (point: any) => e.clientY - point.y
+            (point) => e.clientY - point.y
           );
           setSelectedElement({ ...element[0], offsetXs, offsetYs });
         } else {
@@ -1148,7 +1147,15 @@ const useDraw = () => {
 
   const handleMouseUp = (e: MouseEvent): void => {
     if (selectedElement) {
-      if (tool == "erase") {
+      if (
+        selectedElement.type === "text" &&
+        e.clientX - selectedElement.offsetX === selectedElement.x1 &&
+        e.clientY - selectedElement.offsetY === selectedElement.y1
+      ) {
+        setAction("writing");
+        return;
+      }
+      if (tool === "erase") {
         if (selectedElement) {
           const filteredElements = lodash.filter(
             elements,
@@ -1157,14 +1164,6 @@ const useDraw = () => {
           setElements(filteredElements);
         }
       } else {
-        if (
-          selectedElement.type === "text" &&
-          e.clientX - selectedElement.offsetX === selectedElement.x1 &&
-          e.clientY - selectedElement.offsetY === selectedElement.y1
-        ) {
-          setAction("writing");
-          return;
-        }
       }
     }
     if (action === "writing") return;
@@ -1200,6 +1199,12 @@ const useDraw = () => {
   useEffect(() => {
     loadFont();
   }, []);
+
+  useEffect(() => {
+    if (parsedElems.length > 0) {
+      setElements(parsedElems);
+    }
+  }, [parsedElems]);
 
   useEffect(() => {
     if (action !== "none") {
@@ -1250,7 +1255,6 @@ const useDraw = () => {
     action,
     writingRef,
     handleBlur,
-    handleMouseWheel,
     handleClear,
     handleCanvasPost,
     elements,
@@ -1259,6 +1263,9 @@ const useDraw = () => {
     handleTitle,
     handleCanvasSave,
     saveLoading,
+    zoom,
+    setZoom,
+    setElements,
   };
 };
 

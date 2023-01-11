@@ -50,6 +50,9 @@ import lexicaImagesReducer from "./reducers/lexicaImagesSlice";
 import searchTargetReducer from "./reducers/searchTargetSlice";
 import searchCategoriesReducer from "./reducers/searchCategoriesSlice";
 import followerOnlyReducer from "./reducers/followerOnlySlice";
+import xmtpClientReducer from "./reducers/xmtpClientSlice";
+import draftTitleReducer from "./reducers/draftTitleSlice";
+import draftElementsReducer from "./reducers/draftElementsSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -102,12 +105,19 @@ const reducer = combineReducers({
   searchTargetReducer,
   searchCategoriesReducer,
   followerOnlyReducer,
+  xmtpClientReducer,
+  draftElementsReducer,
+  draftTitleReducer,
 });
 
 export const store = configureStore({
   reducer: {
     app: reducer,
   },
+  middleware: (getDefaultMiddleware: any) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

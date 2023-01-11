@@ -49,7 +49,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
                         ? "Sent Image"
                         : gifRegex.test(message?.content)
                         ? "Sent Gif"
-                        : message?.content}
+                        : message?.content.substring(0,30)}
                     </div>
                   </div>
                 </div>
