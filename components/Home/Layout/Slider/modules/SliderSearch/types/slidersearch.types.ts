@@ -8,6 +8,8 @@ export type UseSliderSearchResults = {
   handleChosenSearch: (prompt?: string) => Promise<void>;
   publicationsSearchNotDispatch: any[];
   prompts: string[];
+  imagesLoading: boolean;
+  setImagesLoading: (e: boolean) => void;
 };
 
 export type SliderSearchProps = {

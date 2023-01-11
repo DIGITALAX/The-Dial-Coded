@@ -13,6 +13,7 @@ import SliderSearch from "./modules/SliderSearch/SliderSearch";
 import SliderSwitch from "./SliderSwitch";
 import shuffle from "shuffle-array";
 import { useRouter } from "next/router";
+import useScan from "../../Scan/hooks/useScan";
 
 const Slider: FunctionComponent = (): JSX.Element => {
   const { handleBackward, handleForward, currentValue, promptString } =
@@ -21,6 +22,7 @@ const Slider: FunctionComponent = (): JSX.Element => {
     (state: RootState) => state.app.searchTargetReducer.value
   );
   const dispatch = useDispatch();
+  const { imagesScanLoading } = useScan();
   const {
     handleKeyEnter,
     handleChangeSearch,
@@ -29,6 +31,8 @@ const Slider: FunctionComponent = (): JSX.Element => {
     handleChosenSearch,
     publicationsSearchNotDispatch,
     prompts,
+    setImagesLoading,
+    imagesLoading,
   } = useSliderSearch();
   const publicationsSearch = useSelector(
     (state: RootState) => state.app.preSearchReducer
@@ -40,7 +44,11 @@ const Slider: FunctionComponent = (): JSX.Element => {
       router.asPath.includes("Slider")
     ) {
       const shuffledLinks: number[] = shuffle([0, 1, 2, 3]);
-      callLexicaSearch(promptString[shuffledLinks[0]], dispatch);
+      callLexicaSearch(
+        promptString[shuffledLinks[0]],
+        dispatch,
+        setImagesLoading
+      );
     }
   }, [router.asPath]);
 
@@ -86,7 +94,10 @@ const Slider: FunctionComponent = (): JSX.Element => {
             currentValue={currentValue}
           />
         </div>
-        <SliderSwitch />
+        <SliderSwitch
+          imagesLoading={imagesLoading}
+          imagesScanLoading={imagesScanLoading}
+        />
       </div>
       <Presets />
     </div>

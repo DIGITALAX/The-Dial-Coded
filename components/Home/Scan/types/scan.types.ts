@@ -33,6 +33,7 @@ export type UseScanResult = {
   dropDown: boolean;
   handleKeyDownEnter: (e: any) => Promise<void>;
   scanSearchTarget: string;
+  imagesScanLoading: boolean;
 };
 
 export type BackgroundImageProps = {
@@ -50,7 +51,6 @@ export type ScanProps = {
   newLink: string;
 };
 
-
 export interface LexicaImages {
   id: string;
   gallery: string;
@@ -66,3 +66,8 @@ export interface LexicaImages {
   promptid: string;
   nsfw: boolean;
 }
+
+export type SliderSwitchProps = {
+  imagesLoading: boolean;
+  imagesScanLoading: boolean;
+};

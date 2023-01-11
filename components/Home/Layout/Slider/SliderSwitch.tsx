@@ -3,8 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import Viewer from "./modules/Viewer";
 import lodash from "lodash";
+import { SliderSwitchProps } from "../../Scan/types/scan.types";
 
-const SliderSwitch: FunctionComponent = (): JSX.Element => {
+const SliderSwitch: FunctionComponent<SliderSwitchProps> = ({
+  imagesLoading,
+  imagesScanLoading,
+}): JSX.Element => {
   const dialType: string | undefined = useSelector(
     (state: RootState) => state.app.dialReducer.value
   );
@@ -25,6 +29,8 @@ const SliderSwitch: FunctionComponent = (): JSX.Element => {
           slider={lodash.slice(lexicaImages, 0, 10)}
           width={"60"}
           dispatch={dispatch}
+          imagesLoading={imagesLoading}
+          imagesScanLoading={imagesScanLoading}
         />
       );
 
@@ -34,6 +40,8 @@ const SliderSwitch: FunctionComponent = (): JSX.Element => {
           slider={lodash.slice(lexicaImages, 10, 20)}
           width={"96"}
           dispatch={dispatch}
+          imagesLoading={imagesLoading}
+          imagesScanLoading={imagesScanLoading}
         />
       );
 
@@ -43,6 +51,8 @@ const SliderSwitch: FunctionComponent = (): JSX.Element => {
           slider={lodash.slice(lexicaImages, 20, 30)}
           width={"40"}
           dispatch={dispatch}
+          imagesLoading={imagesLoading}
+          imagesScanLoading={imagesScanLoading}
         />
       );
 
@@ -52,6 +62,8 @@ const SliderSwitch: FunctionComponent = (): JSX.Element => {
           slider={lodash.slice(lexicaImages, 30, 40)}
           width={"60"}
           dispatch={dispatch}
+          imagesLoading={imagesLoading}
+          imagesScanLoading={imagesScanLoading}
         />
       );
 
@@ -61,6 +73,8 @@ const SliderSwitch: FunctionComponent = (): JSX.Element => {
           slider={lodash.slice(lexicaImages, 40, 50)}
           width={"60"}
           dispatch={dispatch}
+          imagesLoading={imagesLoading}
+          imagesScanLoading={imagesScanLoading}
         />
       );
   }

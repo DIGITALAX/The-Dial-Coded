@@ -142,7 +142,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           handleClear={handleClear}
           handleCanvasPost={handleCanvasPost}
           postLoading={postLoading}
-          title={title}
+          title={title as string}
           handleTitle={handleTitle}
           handleCanvasSave={handleCanvasSave}
           saveLoading={saveLoading}
