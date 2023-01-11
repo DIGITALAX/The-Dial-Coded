@@ -5,6 +5,8 @@ export type ViewerProps = {
   slider: LexicaImages[];
   width: string;
   dispatch: Dispatch<AnyAction>;
+  imagesLoading: boolean;
+  imagesScanLoading: boolean;
 };
 
 export type UseSliderResults = {

@@ -180,6 +180,8 @@ const Modals = () => {
               ? "Draft Saved."
               : failed === "unsaved"
               ? "Could Not Save Draft, Try Again."
+              : failed === "images"
+              ? "Couldn't Fetch Images. Please Try Again."
               : "Unsuccessful. Please Try Again."
           }
         />

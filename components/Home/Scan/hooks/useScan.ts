@@ -32,6 +32,7 @@ const useScan = (): UseScanResult => {
     (state: RootState) => state.app.searchTargetReducer.value
   );
   const [profileSearchValues, setProfileSearchValues] = useState<any[]>([]);
+  const [imagesScanLoading, setImagesScanLoading] = useState<boolean>(false);
   const [scanSearchTarget, setScanSearchTarget] = useState<string>("");
   const [currentSetting, setCurrentSetting] = useState<number>(0);
   const [dropDown, setDropDown] = useState<boolean>(false);
@@ -146,7 +147,7 @@ const useScan = (): UseScanResult => {
         );
         if (e.target?.value !== "" || !e.target?.value) {
           dispatch(setSearchTarget(e.target?.value));
-          await callLexicaSearch(e.target?.value, dispatch);
+          await callLexicaSearch(e.target?.value, dispatch, setImagesScanLoading);
         }
         document.getElementById("sliderSearch")?.scrollIntoView({
           block: "start",
@@ -194,7 +195,11 @@ const useScan = (): UseScanResult => {
             actionFollower: followerOnly,
           })
         );
-        await callLexicaSearch(scanSearchTarget as string, dispatch);
+        await callLexicaSearch(
+          scanSearchTarget as string,
+          dispatch,
+          setImagesScanLoading
+        );
         dispatch(setSearchTarget(scanSearchTarget));
         document.getElementById("sliderSearch")?.scrollIntoView({
           block: "start",
@@ -370,6 +375,7 @@ const useScan = (): UseScanResult => {
     handleChosenSearch,
     handleKeyDownEnter,
     scanSearchTarget,
+    imagesScanLoading
   };
 };
 

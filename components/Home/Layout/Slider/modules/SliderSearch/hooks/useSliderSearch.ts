@@ -24,6 +24,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
   const searchTarget = useSelector(
     (state: RootState) => state.app.searchTargetReducer.value
   );
+  const [imagesLoading, setImagesLoading] = useState<boolean>(false);
   const [prompts, setPrompts] = useState<string[]>([]);
   const [dropDown, setDropDown] = useState<boolean>(false);
   const [publicationsSearchNotDispatch, setPublicationsSearchNotDispatch] =
@@ -100,10 +101,8 @@ const useSliderSearch = (): UseSliderSearchResults => {
           actionFollower: followerOnly,
         })
       );
-      console.log("here")
-      console.log(searchTarget)
       if (searchTarget !== "" || !searchTarget) {
-        await callLexicaSearch(searchTarget, dispatch);
+        await callLexicaSearch(searchTarget, dispatch, setImagesLoading);
         dispatch(setSearchTarget(searchTarget));
       }
     }
@@ -143,9 +142,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
       if (prompt) {
         dispatch(setSearchTarget(prompt as string));
       }
-      console.log("here")
-      console.log(searchTarget)
-      await callLexicaSearch(prompt ? prompt : searchTarget, dispatch);
+      await callLexicaSearch(prompt ? prompt : searchTarget, dispatch, setImagesLoading);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -206,7 +203,8 @@ const useSliderSearch = (): UseSliderSearchResults => {
       ) {
         await callLexicaSearch(
           router.asPath?.split("?search=")?.[1]?.split("/#")?.[0],
-          dispatch
+          dispatch,
+          setImagesLoading
         );
         dispatch(
           setSearchTarget(
@@ -237,6 +235,8 @@ const useSliderSearch = (): UseSliderSearchResults => {
     handleChosenSearch,
     publicationsSearchNotDispatch,
     prompts,
+    imagesLoading,
+    setImagesLoading
   };
 };
 

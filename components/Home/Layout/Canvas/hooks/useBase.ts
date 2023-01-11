@@ -1,19 +1,29 @@
 import { FormEvent, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 
 const useBase = () => {
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [searchTarget, setSearchTarget] = useState<string>("");
   const [quickSearchResults, setQuickSearchResults] = useState<any[]>([]);
+  const dispatch = useDispatch();
   const handleKeyEnter = async (e: any): Promise<void> => {
     setSearchLoading(true);
     if (e.key === "Enter") {
+      console.log("now", e.target);
       if (e.target?.value !== "" || !e.target?.value) {
         const getLexicaImages = await fetch("/api/lexica", {
           method: "POST",
           body: JSON.stringify(searchTarget),
         });
-        const { json } = await getLexicaImages.json();
-        setQuickSearchResults(json?.images);
+
+        if (getLexicaImages.status === 200) {
+          const { json } = await getLexicaImages.json();
+          setQuickSearchResults(json?.images);
+        } else {
+          dispatch(setInsufficientFunds("images"));
+          setSearchLoading(false);
+        }
       }
     }
     setSearchLoading(false);

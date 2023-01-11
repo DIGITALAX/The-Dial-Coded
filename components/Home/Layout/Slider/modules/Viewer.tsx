@@ -1,5 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
 import { setImageViewer } from "../../../../../redux/reducers/imageViewerSlice";
 import { LexicaImages } from "../../../Scan/types/scan.types";
 import { ViewerProps } from "../types/slider.types";
@@ -8,6 +9,8 @@ const Viewer: FunctionComponent<ViewerProps> = ({
   slider,
   width,
   dispatch,
+  imagesLoading,
+  imagesScanLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-full grid grid-flow-col auto-cols-auto col-start-2">
@@ -30,13 +33,21 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                   )
                 }
               >
-                <Image
-                  src={`${result?.src}`}
-                  layout="fill"
-                  objectFit="cover"
-                  objectPosition={"center"}
-                  className="rounded-t-2xl relative w-full h-full"
-                />
+                {!imagesLoading && !imagesScanLoading ? (
+                  <Image
+                    src={`${result?.src}`}
+                    layout="fill"
+                    objectFit="cover"
+                    objectPosition={"center"}
+                    className="rounded-t-2xl relative w-full h-full"
+                  />
+                ) : (
+                  <div className="relative w-full h-full animate-spin grid grid-flow-col auto-cols-auto">
+                    <div className="relative w-fit h-fit place-self-center">
+                      <AiOutlineLoading color="black" size={15} />
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="relative w-full h-80 bg-offBlack rounded-b-2xl grid grid-flow-row auto-rows-auto">
                 <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto text-center text-white font-dosis text-xs self-start p-3">
