@@ -63,7 +63,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     args: [args],
   });
 
-  const { writeAsync, error } = useContractWrite(config);
+  const { writeAsync } = useContractWrite(config);
 
   const checkValues: string[] = [
     "lens post url",

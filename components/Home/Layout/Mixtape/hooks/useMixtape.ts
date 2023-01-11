@@ -40,7 +40,7 @@ const useMixtape = (): UseMixtapeResults => {
         limit: 30,
         metadata: {
           tags: {
-            all: ["dialMixtape"],
+            all: ["mixtape"],
           },
         },
       });
@@ -75,7 +75,7 @@ const useMixtape = (): UseMixtapeResults => {
         cursor: paginatedResults?.next,
         metadata: {
           tags: {
-            all: ["dialMixtape"],
+            all: ["mixtape"],
           },
         },
       });

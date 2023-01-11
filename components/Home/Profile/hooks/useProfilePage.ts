@@ -344,7 +344,7 @@ const useProfilePage = (): UseProfilePageResults => {
           limit: 30,
           metadata: {
             tags: {
-              all: ["dialMixtape"],
+              all: ["mixtape"],
             },
           },
         });
@@ -361,7 +361,7 @@ const useProfilePage = (): UseProfilePageResults => {
           limit: 30,
           metadata: {
             tags: {
-              all: ["dialMixtape"],
+              all: ["mixtape"],
             },
           },
         });
@@ -400,7 +400,7 @@ const useProfilePage = (): UseProfilePageResults => {
           limit: 30,
           metadata: {
             tags: {
-              all: ["dialMixtape"],
+              all: ["mixtape"],
             },
           },
           cursor: mixtapePaginated?.next,
@@ -418,7 +418,7 @@ const useProfilePage = (): UseProfilePageResults => {
           limit: 30,
           metadata: {
             tags: {
-              all: ["dialMixtape"],
+              all: ["mixtape"],
             },
           },
           cursor: mixtapePaginated?.next,

@@ -60,8 +60,11 @@ export type DrawProps = {
   zoom: number;
   setZoom: (e: number) => void;
   draftCanvases: Draft[];
-  handleShowDraft: (draft: Draft) => void
-  addImageToCanvas: (image: string) => Promise<void>
+  handleShowDraft: (draft: Draft) => void;
+  addImageToCanvas: (image: string) => Promise<void>;
+  createXmtpClient: () => Promise<void>;
+  client: any;
+  draftsLoading: boolean;
 };
 
 export type ColorPickerProps = {
@@ -201,14 +204,16 @@ export interface Draft {
 
 export type DraftsProps = {
   draftCanvases: Draft[];
-  handleShowDraft: (draft: Draft) => void
+  handleShowDraft: (draft: Draft) => void;
+  createXmtpClient: () => Promise<void>;
+  client: any;
+  draftsLoading: boolean;
 };
 
 export type UseDraftsResult = {
-  saveCanvasNetwork: (
-    file: File,
-    elements: string[]
-  ) => Promise<void>;
+  saveCanvasNetwork: (file: File, elements: string[]) => Promise<void>;
   draftCanvases: Draft[];
-  handleShowDraft: (draft: Draft) => void
+  handleShowDraft: (draft: Draft) => void;
+  createXmtpClient: () => Promise<void>;
+  draftsLoading: boolean;
 };

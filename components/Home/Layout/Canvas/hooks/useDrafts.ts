@@ -31,9 +31,10 @@ const useDrafts = (): UseDraftsResult => {
   );
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const [draftCanvases, setDraftCanvases] = useState<Draft[]>([]);
-  const [currentDraft, setCurrentDraft] = useState<Draft>();
+  const [draftsLoading, setDraftsLoading] = useState<boolean>(false);
 
   const createXmtpClient = async () => {
+    setDraftsLoading(true);
     try {
       const xmtp = await Client.create(signer as Signer | null);
       dispatch(setXmtpClient(xmtp));
@@ -41,6 +42,7 @@ const useDrafts = (): UseDraftsResult => {
     } catch (err: any) {
       console.error(err.message);
     }
+    setDraftsLoading(false);
   };
 
   const saveCanvasNetwork = async (file: File, elements: string[]) => {
@@ -123,7 +125,6 @@ const useDrafts = (): UseDraftsResult => {
   };
 
   const handleShowDraft = (draft: Draft) => {
-    setCurrentDraft(draft);
     dispatch(setDraftTitle(draft.title));
     const allElementsParsed = JSON.parse(draft.elements);
     let parsedElems = [];
@@ -145,7 +146,13 @@ const useDrafts = (): UseDraftsResult => {
     }
   }, [saveLoading]);
 
-  return { saveCanvasNetwork, draftCanvases, handleShowDraft };
+  return {
+    saveCanvasNetwork,
+    draftCanvases,
+    handleShowDraft,
+    createXmtpClient,
+    draftsLoading
+  };
 };
 
 export default useDrafts;
