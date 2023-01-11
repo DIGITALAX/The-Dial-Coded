@@ -17,6 +17,9 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   const isConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
   );
+  const client = useSelector(
+    (state: RootState) => state.app.xmtpClientReducer.value
+  );
   const dispatch = useDispatch();
   const { openConnectModal } = useConnectModal();
   const {
@@ -70,7 +73,8 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handleKeyEnter,
     fillImages,
   } = useBase();
-  const { draftCanvases, handleShowDraft } = useDrafts();
+  const { draftCanvases, handleShowDraft, createXmtpClient, draftsLoading } =
+    useDrafts();
   let actionValue: string = "canvas";
   const decideStringAction = () => {
     if (!profile || !isConnected) {
@@ -152,6 +156,9 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           draftCanvases={draftCanvases}
           handleShowDraft={handleShowDraft}
           addImageToCanvas={addImageToCanvas}
+          createXmtpClient={createXmtpClient}
+          draftsLoading={draftsLoading}
+          client={client}
         />
       );
   }

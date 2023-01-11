@@ -57,7 +57,10 @@ const Draw: FunctionComponent<DrawProps> = ({
   setZoom,
   draftCanvases,
   handleShowDraft,
-  addImageToCanvas
+  addImageToCanvas,
+  createXmtpClient,
+  client,
+  draftsLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -158,9 +161,12 @@ const Draw: FunctionComponent<DrawProps> = ({
         <Drafts
           draftCanvases={draftCanvases}
           handleShowDraft={handleShowDraft}
+          createXmtpClient={createXmtpClient}
+          client={client}
+          draftsLoading={draftsLoading}
         />
         <Base
-        addImageToCanvas={addImageToCanvas}
+          addImageToCanvas={addImageToCanvas}
           searchTarget={searchTarget}
           handleChangeSearch={handleChangeSearch}
           handleKeyEnter={handleKeyEnter}
