@@ -40,7 +40,7 @@ const useMixtape = (): UseMixtapeResults => {
         limit: 30,
         metadata: {
           tags: {
-            all: ["mixtape"],
+            all: ["dialMixtape"],
           },
         },
       });
@@ -52,8 +52,8 @@ const useMixtape = (): UseMixtapeResults => {
       let mBg: string[] = [];
       let mT: string[] = [];
       sortedArr.forEach((item) => {
-        mBg.push(item?.metadata?.media[0]?.original?.url.split("//")[1]);
-        mT.push(item?.metadata?.name);
+        mBg.push(item?.metadata.content.split("\n\n")[3].split(",")[0]);
+        mT.push(item?.metadata.name);
       });
       setMixtapeBackgrounds(mBg);
       setMixtapeTitles(mT);
@@ -75,7 +75,7 @@ const useMixtape = (): UseMixtapeResults => {
         cursor: paginatedResults?.next,
         metadata: {
           tags: {
-            all: ["mixtape"],
+            all: ["dialMixtape"],
           },
         },
       });
@@ -87,8 +87,8 @@ const useMixtape = (): UseMixtapeResults => {
       let mBg: string[] = [];
       let mT: string[] = [];
       sortedArr.forEach((item) => {
-        mBg.push(item?.metadata?.media[0]?.original?.url.split("//")[1]);
-        mT.push(item?.metadata?.name);
+        mBg.push(item?.metadata.content.split("\n\n")[3].split(",")[0]);
+        mT.push(item?.metadata.name);
       });
       setMixtapeBackgrounds([...mixtapeBackgrounds, ...mBg]);
       setMixtapeTitles([...mixtapeTitles, ...mT]);
@@ -159,12 +159,16 @@ const useMixtape = (): UseMixtapeResults => {
       dispatch(setMixtapeCheck(mixtape?.metadata?.content?.split("\n\n")[1]));
       let images: string[] = [];
       let tracks: string[] = [];
-      mixtape?.metadata?.media?.forEach((image: any, index: number) => {
-        images.push(image?.original?.url?.split("//")[1]);
-        tracks.push(
-          mixtape?.metadata?.content?.split("\n\n")[2]?.split(",")[index]
-        );
-      });
+      mixtape?.metadata?.content
+        ?.split("\n\n")[3]
+        .split(",")
+        .forEach((image: any, index: number) => {
+          images.push(image);
+          tracks.push(
+            mixtape?.metadata?.content?.split("\n\n")[2]?.split(",")[index]
+          );
+        });
+
       dispatch(
         setAddTrack({
           actionImageURI: images,

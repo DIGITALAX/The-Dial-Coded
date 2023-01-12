@@ -10,7 +10,6 @@ const useBase = () => {
   const handleKeyEnter = async (e: any): Promise<void> => {
     setSearchLoading(true);
     if (e.key === "Enter") {
-      console.log("now", e.target);
       if (e.target?.value !== "" || !e.target?.value) {
         const getLexicaImages = await fetch("/api/lexica", {
           method: "POST",

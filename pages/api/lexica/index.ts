@@ -8,7 +8,6 @@ handler.post(async (req: any, res: NextApiResponse<any>) => {
     const results = await fetch(
       `https://lexica.art/api/v1/search?q=${req.body.trim()}`
     );
-    console.log(results);
     const json = await results.json();
     return res.status(200).json({ json });
   } catch (err: any) {

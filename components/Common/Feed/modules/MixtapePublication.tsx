@@ -46,7 +46,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
           router.push(
             `/profile/${
               (publication as any)?.__typename !== "Mirror"
-                ? (publication as any)?.profile?.handle.split(".lens")[0]
+                ? (publication as any)?.profile?.handle.split(".test")[0]
                 : (publication as any)?.mirrorOf?.profile?.handle.split(
                     ".lens"
                   )[0]
@@ -118,58 +118,53 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
         }`}
       >
         {((publication as any)?.__typename === "Mirror"
-          ? (publication as any)?.mirrorOf?.metadata?.media
-          : (publication as any)?.metadata?.media
-        )?.map((image: MediaSet, index: number) => {
-          let formattedImageURL: string;
-          if (image.original.url.includes("ipfs://")) {
-            formattedImageURL = `${INFURA_GATEWAY}/ipfs/${
-              image.original.url.split("://")[1]
-            }`;
-          } else {
-            formattedImageURL = image.original.url;
-          }
-          return (
-            <div
-              key={index}
-              className={`relative w-96 h-[35vw] border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
-                index + 1
-              } cursor-pointer hover:opacity-70 active:scale-95`}
-              onClick={() =>
-                dispatch(
-                  setImageViewer({
-                    actionOpen: true,
-                    actionImage: formattedImageURL,
-                  })
-                )
-              }
-            >
-              <div className="relative w-full h-full col-start-1 flex">
-                <Image
-                  src={formattedImageURL}
-                  layout="fill"
-                  objectFit="cover"
-                  objectPosition={"center"}
-                  className="rounded-md"
-                />
-                <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto">
-                  <div
-                    id="record2"
-                    className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-2 py-1 text-base"
-                  >
-                    <div className="relative w-fit h-fit place-self-center col-start-1">
-                      {
-                        ((publication as any)?.metadata?.content)
-                          .split("\n\n")[2]
-                          .split(",")[index]
-                      }
+          ? (publication as any)?.mirrorOf?.metadata?.content
+          : (publication as any)?.metadata?.content
+        )
+          ?.split("\n\n")[3]
+          ?.split(",")
+          ?.map((image: MediaSet, index: number) => {
+            return (
+              <div
+                key={index}
+                className={`relative w-96 h-[35vw] border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
+                  index + 1
+                } cursor-pointer hover:opacity-70 active:scale-95`}
+                onClick={() =>
+                  dispatch(
+                    setImageViewer({
+                      actionOpen: true,
+                      actionImage: `${INFURA_GATEWAY}/ipfs/${image}`,
+                    })
+                  )
+                }
+              >
+                <div className="relative w-full h-full col-start-1 flex">
+                  <Image
+                    src={`${INFURA_GATEWAY}/ipfs/${image}`}
+                    layout="fill"
+                    objectFit="cover"
+                    objectPosition={"center"}
+                    className="rounded-md"
+                  />
+                  <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto">
+                    <div
+                      id="record2"
+                      className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-2 py-1 text-base"
+                    >
+                      <div className="relative w-fit h-fit place-self-center col-start-1">
+                        {
+                          ((publication as any)?.metadata?.content)
+                            .split("\n\n")[2]
+                            .split(",")[index]
+                        }
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
       <div
         className={`relative w-full h-fit grid grid-flow-col auto-cols-auto ${

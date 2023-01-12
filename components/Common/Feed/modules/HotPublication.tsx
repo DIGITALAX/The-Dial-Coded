@@ -54,8 +54,8 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
             router.push(
               `/profile/${
                 data?.__typename !== "Mirror"
-                  ? data?.profile?.handle?.split(".lens")[0]
-                  : data?.mirrorOf?.profile?.handle?.split(".lens")[0]
+                  ? data?.profile?.handle?.split(".test")[0]
+                  : data?.mirrorOf?.profile?.handle?.split(".test")[0]
               }`
             )}
         >

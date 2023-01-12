@@ -101,7 +101,7 @@ const Header: FunctionComponent = (): JSX.Element => {
                   className="relative text-black row-start-2 w-fit h-fit place-self-center text-xs hover:opacity-60 cursor-pointer"
                   onClick={() => {
                     router.push(
-                      `/profile/${lensProfile?.handle.split(".lens")[0]}`
+                      `/profile/${lensProfile?.handle.split(".test")[0]}`
                     );
                     dispatch(setHamburger(false));
                   }}
