@@ -62,7 +62,7 @@ export type DrawProps = {
   draftCanvases: Draft[];
   handleShowDraft: (draft: Draft) => void;
   addImageToCanvas: (image: string) => Promise<void>;
-  createXmtpClient: () => Promise<void>;
+  createAuthProvider: () => Promise<void>;
   client: any;
   draftsLoading: boolean;
 };
@@ -205,7 +205,7 @@ export interface Draft {
 export type DraftsProps = {
   draftCanvases: Draft[];
   handleShowDraft: (draft: Draft) => void;
-  createXmtpClient: () => Promise<void>;
+  createAuthProvider: () => Promise<void>;
   client: any;
   draftsLoading: boolean;
 };
@@ -214,6 +214,7 @@ export type UseDraftsResult = {
   saveCanvasNetwork: (file: File, elements: string[]) => Promise<void>;
   draftCanvases: Draft[];
   handleShowDraft: (draft: Draft) => void;
-  createXmtpClient: () => Promise<void>;
   draftsLoading: boolean;
+  createAuthProvider: () => Promise<void>;
+  client: any;
 };

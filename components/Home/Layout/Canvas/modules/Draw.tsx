@@ -58,7 +58,7 @@ const Draw: FunctionComponent<DrawProps> = ({
   draftCanvases,
   handleShowDraft,
   addImageToCanvas,
-  createXmtpClient,
+  createAuthProvider,
   client,
   draftsLoading,
 }): JSX.Element => {
@@ -161,7 +161,7 @@ const Draw: FunctionComponent<DrawProps> = ({
         <Drafts
           draftCanvases={draftCanvases}
           handleShowDraft={handleShowDraft}
-          createXmtpClient={createXmtpClient}
+          createAuthProvider={createAuthProvider}
           client={client}
           draftsLoading={draftsLoading}
         />
