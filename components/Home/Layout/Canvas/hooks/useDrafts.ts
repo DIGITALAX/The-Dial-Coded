@@ -4,19 +4,27 @@ import { RootState } from "../../../../../redux/store";
 import { setXmtpClient } from "../../../../../redux/reducers/xmtpClientSlice";
 import { Client } from "@xmtp/xmtp-js";
 import { Signer } from "ethers";
-import { useSigner } from "wagmi";
+import { useSigner, useAccount } from "wagmi";
+import { CeramicClient } from "@ceramicnetwork/http-client";
 import buildConversationId from "../../../../../lib/xmtp/helpers/buildConversationId";
 import { Draft, UseDraftsResult } from "./../types/canvas.types";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import { setDraftTitle } from "../../../../../redux/reducers/draftTitleSlice";
 import { setDraftElements } from "../../../../../redux/reducers/draftElementsSlice";
+import { DIDSession } from "did-session";
+import type { AuthMethod } from "@didtools/cacao";
+import {
+  getCeramicSession,
+  setCeramicSession,
+} from "../../../../../lib/lens/utils";
+import { TileDocument } from "@ceramicnetwork/stream-tile";
+import { EthereumWebAuth, getAccountId } from "@didtools/pkh-ethereum";
+import { DataModel } from "@glazed/datamodel";
+import { DIDDataStore } from "@glazed/did-datastore";
 
 const useDrafts = (): UseDraftsResult => {
   const dispatch = useDispatch();
-  const { data: signer } = useSigner();
-  const client = useSelector(
-    (state: RootState) => state.app.xmtpClientReducer.value
-  );
+  const { address } = useAccount();
   const modal = useSelector(
     (state: RootState) => state.app.insufficientFundsReducer
   );
@@ -29,56 +37,78 @@ const useDrafts = (): UseDraftsResult => {
   const elements = useSelector(
     (state: RootState) => state.app.draftElementsReducer.value
   );
+  const [client, setClient] = useState<any>();
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const [draftCanvases, setDraftCanvases] = useState<Draft[]>([]);
   const [draftsLoading, setDraftsLoading] = useState<boolean>(false);
 
-  const createXmtpClient = async () => {
+  console.log(draftCanvases, "draft canvases");
+
+  const createAuthProvider = async () => {
     setDraftsLoading(true);
     try {
-      const xmtp = await Client.create(signer as Signer | null);
-      dispatch(setXmtpClient(xmtp));
-      await getDrafts(xmtp);
+      const accountId = await getAccountId(window.ethereum, address as string);
+      const authMethod = await EthereumWebAuth.getAuthMethod(
+        window.ethereum,
+        accountId
+      );
+
+      const session = await loadSession(authMethod);
+      const ceramic = new CeramicClient("https://ceramic-clay.3boxlabs.com");
+      ceramic.did = session.did;
+      setClient(ceramic);
+      await getCanvases(ceramic);
     } catch (err: any) {
       console.error(err.message);
     }
     setDraftsLoading(false);
   };
 
-  const saveCanvasNetwork = async (file: File, elements: string[]) => {
-    try {
-      if (!client) await createXmtpClient();
-      await saveDraft(file, elements);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+  console.log("client", client)
+
+  const getCanvases = async (clientInput?: any) => {
+    const publishedModel = {
+      schemas: {
+        draftCanvas:
+          "ceramic://k3y52l7qbv1fryf5ka6rpi4sk3ty7gdzey2nky5t0xq2miaufudgbqkcbkr74cp34",
+      },
+      definitions: {
+        DraftCanvas:
+          "kjzl6cwe1jw14856m0jxqhw9m2v1j9n586xrxyrje3sb5ck27y3m8er1i8qfisw",
+      },
+      tiles: {},
+    };
+    const dataStore = new DIDDataStore({
+      ceramic: clientInput ? clientInput : client,
+      model: publishedModel,
+    });
+    const get = await dataStore.get("DraftCanvas");
+    setDraftCanvases([get]);
   };
 
-  const getDrafts = async (clientInput?: any) => {
+  const loadSession = async (authProv: AuthMethod): Promise<DIDSession> => {
+    const sessionStr = getCeramicSession();
+    let session: any;
+
+    if (sessionStr) {
+      session = await DIDSession.fromSession(sessionStr);
+    }
+
+    if (!session || (session.hasSession && session.isExpired)) {
+      session = await DIDSession.authorize(authProv, {
+        resources: [`ceramic://*`],
+      });
+      setCeramicSession(session);
+    }
+
+    return session;
+  };
+
+  const saveCanvasNetwork = async (file: File, elements: string[]) => {
     try {
-      const conversationList = await (clientInput
-        ? clientInput
-        : client
-      ).conversations.list();
-      const personalConversations = conversationList.filter(
-        (conversation: any) => {
-          if (
-            conversation.context?.conversationId.startsWith("lens.dev/dm/") &&
-            conversation.peerAddress === lensProfile?.ownedBy
-          ) {
-            return true;
-          }
-        }
-      );
-      let previousDrafts: Draft[] = [];
-      // change this back to 0
-      const allPersonal = await personalConversations[1].messages();
-      for (const drafts of allPersonal) {
-        if (drafts.content.includes("*/dialDraftsCanvas/*")) {
-          previousDrafts.push(JSON.parse(drafts.content));
-        }
-      }
-      setDraftCanvases(previousDrafts.reverse());
+      if (!client) await createAuthProvider();
+
+      await saveDraft(file, elements);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -88,22 +118,37 @@ const useDrafts = (): UseDraftsResult => {
     setSaveLoading(true);
     try {
       const coverImage = await handleUploadImage(file);
-      const conversation = await client.conversations.newConversation(
-        lensProfile?.ownedBy,
-        {
-          conversationId: buildConversationId(lensProfile?.id, lensProfile?.id),
-          metadata: {},
-        }
-      );
-      await conversation.send(
-        JSON.stringify({
-          title: title,
-          elements: JSON.stringify(elements),
-          image: coverImage,
-          tags: ["*/dialDraftsCanvas/*"],
-          date: Date.now(),
-        })
-      );
+
+      const draft = {
+        title: title,
+        elements: JSON.stringify(elements),
+        image: coverImage,
+        tags: "*/dialDraftsCanvas/*",
+        date: Date.now().toString(),
+      };
+      const publishedModel = {
+        schemas: {
+          draftCanvas:
+            "ceramic://k3y52l7qbv1fryf5ka6rpi4sk3ty7gdzey2nky5t0xq2miaufudgbqkcbkr74cp34",
+        },
+        definitions: {
+          DraftCanvas:
+            "kjzl6cwe1jw14856m0jxqhw9m2v1j9n586xrxyrje3sb5ck27y3m8er1i8qfisw",
+        },
+        tiles: {},
+      };
+      let session = getCeramicSession() as any;
+      session = await DIDSession.fromSession(session);
+      const cer = client;
+      cer.did = session.did;
+      const dataStore = new DIDDataStore({
+        ceramic: cer,
+        model: publishedModel,
+      });
+
+      const res = await dataStore.set("DraftCanvas", draft);
+
+      console.log(res, "res");
     } catch (err: any) {
       console.error(err.message);
     }
@@ -136,13 +181,13 @@ const useDrafts = (): UseDraftsResult => {
 
   useEffect(() => {
     if (modal.value === "saved" || modal.value === "unsaved") {
-      getDrafts();
+      getCanvases();
     }
   }, [modal.value]);
 
   useEffect(() => {
     if (client) {
-      getDrafts();
+      getCanvases();
     }
   }, [saveLoading]);
 
@@ -150,8 +195,9 @@ const useDrafts = (): UseDraftsResult => {
     saveCanvasNetwork,
     draftCanvases,
     handleShowDraft,
-    createXmtpClient,
-    draftsLoading
+    draftsLoading,
+    createAuthProvider,
+    client
   };
 };
 

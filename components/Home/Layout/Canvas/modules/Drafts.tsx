@@ -7,16 +7,17 @@ import { Draft, DraftsProps } from "./../types/canvas.types";
 const Drafts: FunctionComponent<DraftsProps> = ({
   draftCanvases,
   handleShowDraft,
-  createXmtpClient,
+  createAuthProvider,
   client,
   draftsLoading,
 }): JSX.Element => {
+  console.log(draftCanvases);
   return (
     <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto pt-3 overflow-x-scroll">
       {!client ? (
         <div
           className="relative w-24 h-10 grid grid-flow-col auto-cols-auto text-black font-dosis text-base bg-white rounded-md px-2 py-1 cursor-pointer active:scale-95"
-          onClick={() => createXmtpClient()}
+          onClick={() => createAuthProvider()}
         >
           {!draftsLoading ? (
             <div className="relative w-fit h-fit col-start-1 place-self-center">
@@ -30,26 +31,28 @@ const Drafts: FunctionComponent<DraftsProps> = ({
         </div>
       ) : (
         <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2 col-start-1">
-          {draftCanvases.map((draft: Draft, index: number) => {
-            return (
-              <div
-                key={index}
-                className="relative w-10 h-10 border border-white rounded-md bg-spots grid grid-flow-col auto-cols-auto cursor-pointer active:scale-95"
-                onClick={() => handleShowDraft(draft)}
-              >
-                <div className="relative w-full h-full col-start-1 flex">
-                  <Image
-                    src={`${INFURA_GATEWAY}/ipfs/${
-                      String(draft?.image)?.split("://")[1]
-                    }`}
-                    className="flex rounded-md"
-                    layout="fill"
-                    objectFit="cover"
-                  />
+          {draftCanvases?.map(
+            (draft: Draft, index: number) => {
+              return (
+                <div
+                  key={index}
+                  className="relative w-10 h-10 border border-white rounded-md bg-spots grid grid-flow-col auto-cols-auto cursor-pointer active:scale-95"
+                  onClick={() => handleShowDraft(draft)}
+                >
+                  <div className="relative w-full h-full col-start-1 flex">
+                    <Image
+                      src={`${INFURA_GATEWAY}/ipfs/${
+                        String(draft?.image)?.split("://")[1]
+                      }`}
+                      className="flex rounded-md"
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            }
+          )}
         </div>
       )}
     </div>
