@@ -63,7 +63,7 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                   next={getMorePostCollects}
                   loader={""}
                   height={"10rem"}
-                  className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4"
+                  className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4 gap-2"
                 >
                   {collectors?.map((collector: any, index: number) => {
                     let profileImage: string;
@@ -105,14 +105,19 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                         className="relative w-full h-fit p-2 drop-shadow-lg grid grid-flow-col bg-gray-50 auto-cols-auto rounded-lg border border-gray-50"
                       >
                         <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-1 gap-6">
-                          <div className="relative w-8 h-8 rounded-full bg-offBlue col-start-1">
-                            <Image
-                              src={profileImage}
-                              objectFit="cover"
-                              layout="fill"
-                              alt="pfp"
-                              className="relative w-fit h-fit rounded-full self-center"
-                            />
+                          <div
+                            className="relative w-8 h-8 rounded-full bg-offBlue col-start-1"
+                            id="crt"
+                          >
+                            {profileImage && (
+                              <Image
+                                src={profileImage}
+                                objectFit="cover"
+                                layout="fill"
+                                alt="pfp"
+                                className="relative w-fit h-fit rounded-full self-center"
+                              />
+                            )}
                           </div>
                           <div
                             id="handle"

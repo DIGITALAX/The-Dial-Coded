@@ -302,7 +302,7 @@ export const explorePublications = (request: any) => {
     variables: {
       request: request,
     },
-    fetchPolicy: "no-cache",
+    fetchPolicy: "network-only",
   });
 };
 
@@ -312,6 +312,6 @@ export const explorePublicationsAuth = (request: any) => {
     variables: {
       request: request,
     },
-    fetchPolicy: "no-cache",
+    fetchPolicy: "network-only",
   });
 };

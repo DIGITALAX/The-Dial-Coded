@@ -27,7 +27,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   mixtapeMirror,
   handleHidePost,
   followerOnly,
-  height
+  height,
 }): JSX.Element => {
   const profileImage = createProfilePicture(publication, true);
   const router = useRouter();
@@ -56,7 +56,9 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   }
   return (
     <div
-      className={`relative ${height ? "h-full" : "h-fit"} w-full rounded-md grid grid-flow-row auto-rows-auto p-6 gap-6 border-2 border-black z-0 ${
+      className={`relative ${
+        height ? "h-full" : "h-fit"
+      } w-full rounded-md grid grid-flow-row auto-rows-auto p-6 gap-6 border-2 border-black z-0 ${
         mixtapeMirror
           ? "bg-white"
           : "bg-gradient-to-r from-offBlack via-gray-600 to-black"
@@ -336,7 +338,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
             <div className="relative w-fit h-fit col-start-1 text-sm">
               {type === "Post" && !mixtapeMirror
                 ? "View Post"
-                : !mixtapeMirror
+                : !mixtapeMirror && type !== "Post"
                 ? "View Comment"
                 : "View Mixtape"}
             </div>

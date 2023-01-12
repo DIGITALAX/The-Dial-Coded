@@ -29,7 +29,6 @@ const Main: FunctionComponent<MainProps> = ({
           scrollableTarget={"targetDiv"}
           height={isOpen ? undefined : "100rem"}
           loader={""}
-          
           hasMore={true}
           next={fetchMore}
           dataLength={publicationsFeed?.length}

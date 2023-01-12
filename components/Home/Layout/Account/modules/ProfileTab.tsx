@@ -21,7 +21,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`relative w-full h-full grid grid-flow-row auto-rows-auto ${
+      className={`relative w-full h-fit grid grid-flow-row auto-rows-auto ${
         height !== undefined && "gap-6"
       }`}
     >

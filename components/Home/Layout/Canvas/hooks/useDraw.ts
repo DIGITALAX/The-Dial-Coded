@@ -118,7 +118,7 @@ const useDraw = () => {
     roughCanvas: any,
     ctx: CanvasRenderingContext2D | null
   ) => {
-    ctx?.setLineDash(element.lineDash ? element.lineDash : [0]);
+    ctx?.setLineDash(element?.lineDash ? element?.lineDash : [0]);
     (ctx as CanvasRenderingContext2D).imageSmoothingEnabled = false;
     const bounds = canvas.getBoundingClientRect();
     switch (element?.type) {
@@ -174,9 +174,6 @@ const useDraw = () => {
         );
         ctx?.closePath();
         break;
-
-      default:
-        throw new Error("type not supported");
     }
   };
 
@@ -563,8 +560,6 @@ const useDraw = () => {
       //   bottomMarqueeRight ||
       //   insideMarquee
       // );
-      default:
-        throw new Error(`Type not recognised: ${type}`);
     }
   };
 
@@ -1220,11 +1215,12 @@ const useDraw = () => {
     loadFont();
   }, []);
 
-  useEffect(() => {
-    if (parsedElems.length > 0) {
-      setElements(parsedElems);
-    }
-  }, [parsedElems]);
+  // useEffect(() => {
+  //   if (parsedElems.length > 0) {
+  //     console.log("running")
+  //     setElements(parsedElems);
+  //   }
+  // }, [parsedElems]);
 
   useEffect(() => {
     if (action !== "none") {

@@ -7,6 +7,7 @@ const useBase = () => {
   const [searchTarget, setSearchTarget] = useState<string>("");
   const [quickSearchResults, setQuickSearchResults] = useState<any[]>([]);
   const dispatch = useDispatch();
+
   const handleKeyEnter = async (e: any): Promise<void> => {
     setSearchLoading(true);
     if (e.key === "Enter") {
@@ -15,7 +16,6 @@ const useBase = () => {
           method: "POST",
           body: JSON.stringify(searchTarget),
         });
-
         if (getLexicaImages.status === 200) {
           const { json } = await getLexicaImages.json();
           setQuickSearchResults(json?.images);

@@ -397,7 +397,7 @@ export type GridProps = {
   results: any[];
   handleSetGif: (result: string) => void;
   width?: string;
-  background?: string
+  background?: string;
 };
 
 export type CollectButtonProps = {
@@ -446,6 +446,7 @@ export type UseCollectionModalResults = {
   timeLimitDropDown: boolean;
   setTimeLimitDropDown: (e: boolean) => void;
   handleSetCollectValues: () => void;
+  handleReverseSetCollectValues: (module: any) => void;
 };
 
 export type CollectOptionsModalProps = {

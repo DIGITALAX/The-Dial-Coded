@@ -35,7 +35,7 @@ const Profile: NextPage = (): JSX.Element => {
     mixtapes,
     mixtapeMirror,
     handleSendDM,
-    followerOnly
+    followerOnly,
   } = useProfilePage();
   const { isConnected } = useAccount();
   useEffect(() => {
@@ -49,7 +49,7 @@ const Profile: NextPage = (): JSX.Element => {
   }
 
   return (
-    <div className="relative h-full w-full bg-black/70 grid grid-flow-col auto-col-auto overflow-hidden">
+    <div className="relative h-fit w-full bg-black/70 grid grid-flow-col auto-col-auto overflow-hidden">
       {(profileDataLoading || profileDataLoading === undefined) &&
       !profileData &&
       reactionsFeed?.length === 0 ? (
@@ -91,12 +91,12 @@ const Profile: NextPage = (): JSX.Element => {
               handleHidePost={handleHidePost}
               handleSendDM={handleSendDM}
             />
-            <div className="relative w-full h-full col-start-2 grid grid-flow-col auto-cols-auto px-10 py-4 bg-offWhite/90">
+            <div className="relative w-full h-fit col-start-2 grid grid-flow-col auto-cols-auto px-10 py-4 bg-offWhite/90 overflow-y-scroll">
               <ProfileTab
                 getMoreUserProfileFeed={getMoreUserProfileFeed}
                 userFeed={userFeed}
                 dispatch={dispatch}
-                height={undefined}
+                height={"500rem"}
                 hasMirrored={hasMirrored}
                 hasCommented={hasCommented}
                 hasReacted={hasReacted}

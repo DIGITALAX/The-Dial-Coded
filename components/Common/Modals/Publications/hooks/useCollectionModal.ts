@@ -55,6 +55,53 @@ const useCollectionModal = (): UseCollectionModalResults => {
     }
   }, [publicationModuleOpen, reactionState, mixtapePage]);
 
+  const handleReverseSetCollectValues = (module: any): void => {
+    if (!module) {
+      setCollectible("yes");
+      setAudienceType("everyone");
+      setLimitedEdition("no");
+      setTimeLimit("no");
+      setChargeCollect("no");
+      setReferral(0);
+      setLimit(1);
+      setValue(0);
+      setEnabledCurrency(undefined);
+      return;
+    }
+
+    if (module?.type === "revertCollectModule") {
+      setCollectible("no");
+      return;
+    } else {
+      if (module?.followerOnly) {
+        setAudienceType("only followers");
+      } else {
+        setAudienceType("everyone");
+      }
+      setCollectible("yes");
+      if (module?.type !== "FreeCollectModule") {
+        setChargeCollect("yes");
+        const setCurrency: Erc20[] = lodash.filter(
+          enabledCurrencies,
+          (currency) => currency.address === module?.currency
+        );
+        setEnabledCurrency(setCurrency[0].symbol);
+        setValue(module?.value);
+        setReferral(module?.referralFee);
+        if (module?.type === "LimitedFeeCollectModule") {
+          setLimitedEdition("yes");
+          setLimit(module?.collectLimit);
+        } else if (module?.type === "LimitedTimedFeeCollectModule") {
+          setTimeLimit("yes");
+          setLimitedEdition("yes");
+          setLimit(module?.collectLimit);
+        } else if (module?.type === "TimedFeeCollectModule") {
+          setTimeLimit("yes");
+        }
+      }
+    }
+  };
+
   const handleSetCollectValues = (): void => {
     if (value <= 0 && chargeCollect === "yes") {
       dispatch(
@@ -180,6 +227,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
     timeLimitDropDown,
     setTimeLimitDropDown,
     handleSetCollectValues,
+    handleReverseSetCollectValues,
   };
 };
 

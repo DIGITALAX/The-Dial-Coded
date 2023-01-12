@@ -37,6 +37,7 @@ const useImageUpload = (): ImageUploadResults => {
       setImageUploading(false);
     } else {
       if (fileLimitAlert((e as any).target.files[0])) {
+        setImageUploading(false);
         return;
       }
       Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(

@@ -30,12 +30,14 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
           {lensProfile && isConnected && (
             <div className="relative w-fit h-fit place-self-center col-start-1 col-span-1 grid grid-flow-row auto-rows-auto">
               <div className="relative w-12 h-12 row-start-1 place-self-center rounded-full">
-                <Image
-                  src={profileImage}
-                  layout="fill"
-                  objectFit="cover"
-                  className="relative w-full h-full rounded-full"
-                />
+                {profileImage && (
+                  <Image
+                    src={profileImage}
+                    layout="fill"
+                    objectFit="cover"
+                    className="relative w-full h-full rounded-full"
+                  />
+                )}
               </div>
               <div className="relative w-fit h-fit row-start-2 font-dosis text-white text-sm place-self-center">
                 @{lensProfile?.handle}

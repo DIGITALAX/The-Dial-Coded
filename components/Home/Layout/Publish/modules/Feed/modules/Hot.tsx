@@ -15,7 +15,6 @@ const Hot: FunctionComponent<HotProps> = ({
   dispatch,
   handleHidePost,
 }): JSX.Element => {
-  console.log(hotFeed[0], "here");
   return (
     <div
       className={`relative w-full ${

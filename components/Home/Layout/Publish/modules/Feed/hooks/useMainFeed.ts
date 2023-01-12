@@ -218,7 +218,7 @@ const useMainFeed = () => {
         sources: "thedial",
         profileId: lensProfile,
         limit: 50,
-        metadata: feedType,
+        // metadata: feedType,
       });
       const arr: any[] = [...data.feed.items];
       const sortedArr: any[] = arr.sort(
@@ -239,11 +239,12 @@ const useMainFeed = () => {
         const authPub = await explorePublicationsAuth({
           sources: "thedial",
           publicationTypes: feedOrder,
-          limit: 20,
+          limit: 50,
           sortCriteria: "LATEST",
           noRandomize: true,
           metadata: feedType,
         });
+        console.log(authPub)
         const auth_arr: any[] = [...authPub?.data.explorePublications.items];
         const auth_sortedArr: any[] = auth_arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)

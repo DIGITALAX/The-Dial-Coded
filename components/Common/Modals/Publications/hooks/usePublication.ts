@@ -98,7 +98,7 @@ const usePublication = () => {
       const contentURI = await uploadContent();
       const result: any = await CreateCommentTypedData({
         profileId: defaultProfile,
-        publicationId: pubId,
+        publicationId: pubId ? pubId : id,
         contentURI: "ipfs://" + contentURI,
         collectModule: collectModuleType,
         referenceModule: {
