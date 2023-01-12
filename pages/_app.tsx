@@ -79,12 +79,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
-            <div className="min-h-fit h-auto min-w-screen w-screen relative selection:bg-offBlue selection:text-midWhite">
-              <Header />
-              <Component {...pageProps} newLink={newLink} />
-              <Modals />
-              <Footer />
-            </div>
+          <div className="min-h-fit h-auto min-w-screen w-screen relative selection:bg-offBlue selection:text-midWhite">
+            <Header />
+            <Component {...pageProps} newLink={newLink} />
+            <Modals />
+            <Footer />
+          </div>
         </RainbowKitProvider>
       </WagmiConfig>
     </Provider>

@@ -6,7 +6,10 @@ const handler = nextConnect();
 handler.post(async (req: any, res: NextApiResponse<any>) => {
   try {
     const results = await fetch(
-      `https://lexica.art/api/v1/search?q=${req.body.trim()}`
+      `https://lexica.art/api/v1/search?q=${req.body.trim()}`,
+      {
+        credentials: "include",
+      }
     );
     const json = await results.json();
     return res.status(200).json({ json });

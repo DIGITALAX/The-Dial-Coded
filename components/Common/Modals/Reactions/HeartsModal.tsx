@@ -65,7 +65,7 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
                       next={getMorePostReactions}
                       loader={""}
                       height={"10rem"}
-                      className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4"
+                      className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4 gap-2"
                     >
                       {reacters?.map((reacter: any, index: number) => {
                         const profileImage = createProfilePicture(
@@ -86,13 +86,15 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
                           >
                             <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto col-start-1 gap-6">
                               <div className="relative w-8 h-8 rounded-full bg-offBlue col-start-1">
-                                <Image
-                                  src={profileImage}
-                                  objectFit="cover"
-                                  layout="fill"
-                                  alt="pfp"
-                                  className="relative w-fit h-fit rounded-full self-center"
-                                />
+                                {profileImage && (
+                                  <Image
+                                    src={profileImage}
+                                    objectFit="cover"
+                                    layout="fill"
+                                    alt="pfp"
+                                    className="relative w-fit h-fit rounded-full self-center"
+                                  />
+                                )}
                               </div>
                               <div
                                 id="handle"

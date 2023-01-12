@@ -11,9 +11,11 @@ import { setMixtapeTitle } from "../../../../../redux/reducers/mixtapeTitleSlice
 import { setMixtapeSource } from "../../../../../redux/reducers/mixtapeSourceSlice";
 import { profilePublicationsAuth } from "../../../../../graphql/queries/profilePublication";
 import lodash from "lodash";
+import useCollectionModal from "../../../../Common/Modals/Publications/hooks/useCollectionModal";
 
 const useMixtape = (): UseMixtapeResults => {
   const dispatch = useDispatch();
+  const { handleReverseSetCollectValues } = useCollectionModal();
   const mixtapePage = useSelector(
     (state: RootState) => state.app.mixtapePageReducer.value
   );
@@ -134,7 +136,7 @@ const useMixtape = (): UseMixtapeResults => {
   }, []);
 
   useEffect(() => {
-    if (mixtapePage === "Add New Mixtape") {
+    if (mixtapePage === "Add New Mixtape" || !mixtapePage) {
       dispatch(
         setCollectValueType({
           freeCollectModule: {
@@ -151,11 +153,13 @@ const useMixtape = (): UseMixtapeResults => {
       dispatch(setMixtapeCheck(undefined));
       dispatch(setMixtapeTitle(""));
       dispatch(setMixtapeSource(""));
-    } else {
+      handleReverseSetCollectValues(undefined);
+    }  else {
       const mixtape = lodash.find(
         mixtapes,
         (mix) => mix?.metadata?.name === mixtapePage
       );
+      handleReverseSetCollectValues(mixtape?.collectModule);
       dispatch(setMixtapeCheck(mixtape?.metadata?.content?.split("\n\n")[1]));
       let images: string[] = [];
       let tracks: string[] = [];

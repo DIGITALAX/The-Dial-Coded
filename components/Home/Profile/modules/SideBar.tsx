@@ -51,7 +51,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   );
   const { openConnectModal } = useConnectModal();
   return (
-    <div className="col-start-1 relative w-full h-full grid grid-flow-row auto-rows-auto bg-offWhite/95 row-start-1 px-14 pt-40 pb-10 pr-4">
+    <div className="col-start-1 relative w-full h-full grid grid-flow-row auto-rows-auto bg-offWhite/95 row-start-1 px-14 pt-40 pb-10 pr-4 overflow-y-scroll">
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto row-start-1 self-start gap-10">
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto row-start-1">
           <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-1 pb-6">
@@ -208,7 +208,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
         </div>
         <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto">
           <InfiniteScroll
-            height={undefined}
+            height={"300em"}
             loader={""}
             hasMore={true}
             next={getMoreUserMixtapes}
