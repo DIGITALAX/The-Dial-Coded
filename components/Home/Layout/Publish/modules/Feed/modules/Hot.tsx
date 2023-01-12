@@ -15,6 +15,7 @@ const Hot: FunctionComponent<HotProps> = ({
   dispatch,
   handleHidePost,
 }): JSX.Element => {
+  console.log(hotFeed[0], "here");
   return (
     <div
       className={`relative w-full ${
@@ -22,13 +23,15 @@ const Hot: FunctionComponent<HotProps> = ({
       } col-start-2 grid grid-flow-row auto-rows-auto gap-10`}
     >
       <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto overflow-x-scroll gap-4">
-        {(hotFeed[0]?.metadata as any)?.media?.map(
-          (image: any, index: number) => {
+        {(hotFeed[0]?.metadata as any)?.content
+          ?.split("\n\n")[3]
+          ?.split(",")
+          ?.map((image: any, index: number) => {
             return (
               <HotPublication
                 height={"80"}
                 data={hotFeed[0]}
-                image={image?.original?.url?.split("//")[1]}
+                image={image}
                 index={index}
                 key={index}
                 dispatch={dispatch}
@@ -39,18 +42,19 @@ const Hot: FunctionComponent<HotProps> = ({
                 handleHidePost={handleHidePost}
               />
             );
-          }
-        )}
+          })}
       </div>
       <div className="relative w-full h-fit row-start-2 grid grid-flow-col auto-cols-auto gap-10 overflow-x-scroll">
-        {(hotFeed[1]?.metadata as any)?.media?.map(
-          (image: any, index: number) => {
+        {(hotFeed[1]?.metadata as any)?.content
+          ?.split("\n\n")[3]
+          ?.split(",")
+          ?.map((image: any, index: number) => {
             return (
               <HotPublication
                 height={"60"}
                 width={"96"}
                 data={hotFeed[1]}
-                image={image?.original?.url?.split("//")[1]}
+                image={image}
                 index={index}
                 key={index}
                 dispatch={dispatch}
@@ -61,8 +65,7 @@ const Hot: FunctionComponent<HotProps> = ({
                 handleHidePost={handleHidePost}
               />
             );
-          }
-        )}
+          })}
       </div>
       <div className="relative w-full h-full row-start-3 grid grid-flow-row auto-rows-auto overflow-x-scroll">
         <InfiniteScroll
@@ -82,15 +85,17 @@ const Hot: FunctionComponent<HotProps> = ({
                   "relative w-full h-full gap-2 grid grid-flow-row auto-rows-auto"
                 }
               >
-                {mixtape?.metadata?.media?.map(
-                  (image: any, indexTwo: number) => {
+                {mixtape?.metadata?.content
+                  ?.split("\n\n")[3]
+                  ?.split(",")
+                  ?.map((image: any, indexTwo: number) => {
                     return (
                       <HotPublication
                         height="72"
                         key={indexTwo}
                         index={indexTwo}
                         data={mixtape}
-                        image={image?.original?.url?.split("//")[1]}
+                        image={image}
                         dispatch={dispatch}
                         reactionsFeed={hotReactionsFeed[indexOne + 2]}
                         hasReacted={hasHotReacted[indexOne + 2]}
@@ -99,8 +104,7 @@ const Hot: FunctionComponent<HotProps> = ({
                         handleHidePost={handleHidePost}
                       />
                     );
-                  }
-                )}
+                  })}
               </div>
             );
           })}

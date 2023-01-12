@@ -108,15 +108,6 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
       (image) => image !== ""
     );
 
-    let newImages: PostImage[] = [];
-    imageFiltered?.forEach((image) => {
-      newImages.push({
-        item: "ipfs://" + image,
-        type: "image/png",
-        altTag: image,
-      });
-    });
-
     const data = {
       version: "2.0.0",
       metadata_id: uuidv4(),
@@ -127,12 +118,14 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
         check +
         "\n\n" +
         titleFiltered +
+        "\n\n" +
+        imageFiltered +
         "\n\n*Dial Mixtape*",
       external_url: "https://www.thedial.xyz/",
-      image: "ipfs://" + (imageFiltered as string[])[0],
+      image: null,
       imageMimeType: "image/png",
       name: mixTapeTitle?.slice(0, 20),
-      mainContentFocus: "IMAGE",
+      mainContentFocus: "TEXT_ONLY",
       contentWarning: null,
       attributes: [
         {
@@ -141,7 +134,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
           date: Date.now(),
         },
       ],
-      media: newImages,
+      media: [],
       locale: "en",
       tags: ["dialMixtape"],
       createdOn: new Date(),

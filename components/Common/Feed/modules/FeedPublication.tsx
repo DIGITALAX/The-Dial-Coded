@@ -91,9 +91,9 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
             router.push(
               `/profile/${
                 (publication as any)?.__typename !== "Mirror"
-                  ? (publication as any)?.profile?.handle?.split(".lens")[0]
+                  ? (publication as any)?.profile?.handle?.split(".test")[0]
                   : (publication as any)?.mirrorOf?.profile?.handle?.split(
-                      ".lens"
+                      ".test"
                     )[0]
               }`
             )

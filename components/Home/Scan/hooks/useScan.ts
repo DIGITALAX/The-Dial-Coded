@@ -168,7 +168,7 @@ const useScan = (): UseScanResult => {
     setSearchLoading(true);
     try {
       if (type === "profile") {
-        router.push(`/profile/${user?.handle.split(".lens")[0]}`);
+        router.push(`/profile/${user?.handle.split(".test")[0]}`);
       } else {
         router.push(`/#Slider`);
         dispatch(setLayout("Slider"));

@@ -46,7 +46,7 @@ const useHot = (): UseHotResults => {
           sortCriteria: "LATEST",
           metadata: {
             tags: {
-              all: ["mixtape"],
+              all: ["dialMixtape"],
             },
           },
           noRandomize: true,
@@ -64,7 +64,7 @@ const useHot = (): UseHotResults => {
           sortCriteria: "LATEST",
           metadata: {
             tags: {
-              all: ["mixtape"],
+              all: ["dialMixtape"],
             },
           },
           noRandomize: true,
@@ -107,7 +107,7 @@ const useHot = (): UseHotResults => {
           sortCriteria: "LATEST",
           metadata: {
             tags: {
-              all: ["mixtape"],
+              all: ["dialMixtape"],
             },
           },
           noRandomize: true,
@@ -130,7 +130,7 @@ const useHot = (): UseHotResults => {
           sortCriteria: "LATEST",
           metadata: {
             tags: {
-              all: ["mixtape"],
+              all: ["dialMixtape"],
             },
           },
           noRandomize: true,
