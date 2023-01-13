@@ -9,6 +9,9 @@ handler.post(async (req: any, res: NextApiResponse<any>) => {
       `https://lexica.art/api/v1/search?q=${req.body.trim()}`,
       {
         credentials: "include",
+        headers: {
+          Cookie: `secret=${process.env.LEXICA_API_COOKIE}`,
+        },
       }
     );
     const json = await results.json();
