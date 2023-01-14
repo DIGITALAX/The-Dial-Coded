@@ -120,7 +120,6 @@ const useDraw = () => {
   ) => {
     ctx?.setLineDash(element?.lineDash ? element?.lineDash : [0]);
     (ctx as CanvasRenderingContext2D).imageSmoothingEnabled = false;
-    const bounds = canvas.getBoundingClientRect();
     switch (element?.type) {
       case "line":
       case "ell":
@@ -332,6 +331,8 @@ const useDraw = () => {
       const roughCanvas = rough?.canvas(canvas);
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
+      canvas.style.width = String(canvas.width / window.devicePixelRatio);
+      canvas.style.height = String(canvas.height / window.devicePixelRatio);
       elements?.forEach((element: any) => {
         if (action === "writing" && selectedElement.id === element.id) return;
         drawElement(element, roughCanvas, ctx);
@@ -358,7 +359,9 @@ const useDraw = () => {
     y1: number,
     name: string
   ) => {
-    return Math.abs(x - x1) < 5 && Math.abs(y - y1) < 5 ? name : null;
+    return Math.abs(x - x1) < 5  && Math.abs(y - y1) < 5 
+      ? name
+      : null;
   };
 
   const distance = (a: Point2, b: Point2) => {
@@ -376,7 +379,7 @@ const useDraw = () => {
   ) => {
     const a: Point2 = { x: x1, y: y1 };
     const b: Point2 = { x: x2, y: y2 };
-    const c: Point2 = { x, y };
+    const c: Point2 = { x: x / zoom, y: y / zoom };
     const offset = distance(a, b) - (distance(a, c) + distance(b, c));
     return Math.abs(offset) < maxDistance ? "inside" : null;
   };
@@ -441,6 +444,7 @@ const useDraw = () => {
         );
         const start = nearPoint(x, y, x1 as number, y1 as number, "start");
         const end = nearPoint(x, y, x2 as number, y2 as number, "end");
+        console.log(start || end || on);
         return start || end || on;
       case "erase":
         break;
@@ -455,13 +459,13 @@ const useDraw = () => {
           if (!nextPoint) return false;
           return (
             onLine(
-              point.x / zoom,
-              point.y / zoom,
-              nextPoint.x / zoom,
-              nextPoint.y / zoom,
-              x / zoom - bounds.left / zoom,
-              y / zoom - bounds.top / zoom,
-              (element.strokeWidth as number) / zoom
+              point.x,
+              point.y,
+              nextPoint.x,
+              nextPoint.y,
+              x - bounds.left,
+              y - bounds.top,
+              element.strokeWidth as number
             ) != null
           );
         });
@@ -820,19 +824,30 @@ const useDraw = () => {
   const handleMouseDown = (e: MouseEvent): void => {
     if (tool === "selection" || tool === "resize") {
       const element = getElementPosition(e.clientX, e.clientY);
+
       if (element?.length > 0) {
-        if (element[0].type === "pencil") {
-          const offsetXs = element[0].points?.map(
+        if (element[element?.length - 1].type === "pencil") {
+          const offsetXs = element[element?.length - 1].points?.map(
             (point) => e.clientX - point.x
           );
-          const offsetYs = element[0].points?.map(
+          const offsetYs = element[element?.length - 1].points?.map(
             (point) => e.clientY - point.y
           );
-          setSelectedElement({ ...element[0], offsetXs, offsetYs });
+          setSelectedElement({
+            ...element[element?.length - 1],
+            offsetXs,
+            offsetYs,
+          });
         } else {
-          const offsetX = e.clientX - (element[0]?.x1 as number);
-          const offsetY = e.clientY - (element[0]?.y1 as number);
-          setSelectedElement({ ...element[0], offsetX, offsetY });
+          const offsetX =
+            e.clientX - (element[element?.length - 1]?.x1 as number);
+          const offsetY =
+            e.clientY - (element[element?.length - 1]?.y1 as number);
+          setSelectedElement({
+            ...element[element?.length - 1],
+            offsetX,
+            offsetY,
+          });
         }
         setElements((prevState: any) => prevState);
         if (tool === "resize") {
@@ -890,15 +905,15 @@ const useDraw = () => {
       if (eraseElement?.length > 0) {
         const elementsCopy = [...elements];
         const index = lodash.findIndex(elementsCopy, (elem) => {
-          if (elem.id === eraseElement[0].id) {
+          if (elem.id === eraseElement[eraseElement?.length - 1].id) {
             return true;
           }
         });
-        if (eraseElement[0].type !== "marquee") {
+        if (eraseElement[eraseElement?.length - 1].type !== "marquee") {
           if (
-            eraseElement[0].type === "pencil" ||
-            eraseElement[0].type === "text" ||
-            eraseElement[0].type === "image"
+            eraseElement[eraseElement?.length - 1].type === "pencil" ||
+            eraseElement[eraseElement?.length - 1].type === "text" ||
+            eraseElement[eraseElement?.length - 1].type === "image"
           ) {
             elementsCopy[index] = {
               ...elementsCopy[index],
@@ -952,8 +967,8 @@ const useDraw = () => {
       } else if (selectedElement.type === "image") {
         const { x2, x1, y2, y1, id, type, offsetX, offsetY, image } =
           selectedElement;
-        const width = x2 - x1;
-        const height = y2 - y1;
+        const width = x2 / zoom - x1 / zoom;
+        const height = y2 / zoom - y1 / zoom;
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
@@ -987,6 +1002,7 @@ const useDraw = () => {
         } = selectedElement;
         const width = x2 - x1;
         const height = y2 - y1;
+        console.log(width, height);
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
@@ -1282,7 +1298,7 @@ const useDraw = () => {
     zoom,
     setZoom,
     setElements,
-    addImageToCanvas
+    addImageToCanvas,
   };
 };
 

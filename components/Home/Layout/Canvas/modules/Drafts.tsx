@@ -11,7 +11,6 @@ const Drafts: FunctionComponent<DraftsProps> = ({
   client,
   draftsLoading,
 }): JSX.Element => {
-  console.log(draftCanvases);
   return (
     <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto pt-3 overflow-x-scroll">
       {!client ? (
