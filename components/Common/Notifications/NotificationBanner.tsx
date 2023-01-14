@@ -6,6 +6,7 @@ import Image from "next/legacy/image";
 import { BsFillCollectionFill, BsSuitHeartFill } from "react-icons/bs";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useRouter } from "next/router";
+import { FaCommentDots } from "react-icons/fa";
 
 const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
   notification,
@@ -19,6 +20,9 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
   } else if (notification?.__typename === "NewFollowerNotification") {
     prefix = notification?.wallet?.defaultProfile;
     type = "follow";
+  } else if (notification?.__typename === "NewCommentNotification") {
+    prefix = notification?.profile;
+    type = "comment";
   } else {
     prefix = notification?.profile;
     type = "react";
@@ -76,6 +80,8 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
             <BsFillCollectionFill color={"#81A8F8"} size={15} />
           ) : type === "follow" ? (
             <AiOutlineUsergroupAdd color={"#81A8F8"} size={20} />
+          ) : type === "comment" ? (
+            <FaCommentDots color={"#FBEED1"} size={15} />
           ) : (
             type === "react" &&
             (notification?.reaction === "UPVOTE" ? (
@@ -90,6 +96,8 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
             ? "collected your post"
             : type === "follow"
             ? "followed you"
+            : type === "comment"
+            ? "commented on your post"
             : type === "react" &&
               (notification?.reaction === "UPVOTE" ? "liked your post" : <></>)}
         </div>

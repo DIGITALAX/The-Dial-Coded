@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import { setXmtpClient } from "../../../../../redux/reducers/xmtpClientSlice";
-import { Client } from "@xmtp/xmtp-js";
-import { Signer } from "ethers";
-import { useSigner, useAccount } from "wagmi";
+import { useAccount } from "wagmi";
 import { CeramicClient } from "@ceramicnetwork/http-client";
-import buildConversationId from "../../../../../lib/xmtp/helpers/buildConversationId";
 import { Draft, UseDraftsResult } from "./../types/canvas.types";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import { setDraftTitle } from "../../../../../redux/reducers/draftTitleSlice";
@@ -64,7 +60,7 @@ const useDrafts = (): UseDraftsResult => {
     setDraftsLoading(false);
   };
 
-  console.log("client", client)
+  console.log("client", client);
 
   const getCanvases = async (clientInput?: any) => {
     const publishedModel = {
@@ -197,7 +193,7 @@ const useDrafts = (): UseDraftsResult => {
     handleShowDraft,
     draftsLoading,
     createAuthProvider,
-    client
+    client,
   };
 };
 
