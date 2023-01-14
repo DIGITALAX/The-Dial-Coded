@@ -9,7 +9,6 @@ const Notifications: FunctionComponent<NotificationsProps> = ({
   notificationsList,
   notificationsLoading,
 }): JSX.Element => {
-  console.log(notificationsList)
   return (
     <div className={`relative w-full h-full grid grid-flow-row auto-rows-auto`}>
       {notificationsLoading ? (

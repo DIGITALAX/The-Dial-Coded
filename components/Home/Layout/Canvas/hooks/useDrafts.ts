@@ -13,9 +13,7 @@ import {
   getCeramicSession,
   setCeramicSession,
 } from "../../../../../lib/lens/utils";
-import { TileDocument } from "@ceramicnetwork/stream-tile";
 import { EthereumWebAuth, getAccountId } from "@didtools/pkh-ethereum";
-import { DataModel } from "@glazed/datamodel";
 import { DIDDataStore } from "@glazed/did-datastore";
 
 const useDrafts = (): UseDraftsResult => {

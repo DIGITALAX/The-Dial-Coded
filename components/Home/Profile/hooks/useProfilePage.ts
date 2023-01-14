@@ -295,7 +295,6 @@ const useProfilePage = (): UseProfilePageResults => {
           limit: 30,
           cursor: paginatedResults?.next,
         });
-        console.log(data, "more DATA DATA")
         const arr: any[] = [...data?.publications?.items];
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
