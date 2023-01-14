@@ -38,7 +38,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
         <div
           className="relative w-fit h-fit"
-          onClick={() => setZoom(zoom < 20 ? zoom + 0.2 : 20)}
+          onClick={() => setZoom(zoom < 2 ? zoom + 0.1 : 2)}
         >
           <CanvasOption
             image="QmbzpjweonLJNdKqJ2Ybs6c5DwNGewYf77q3ySMbGJzfJN"
@@ -49,7 +49,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
         </div>
         <div
           className="relative w-fit h-fit"
-          onClick={() => setZoom(zoom > 1 ? zoom - 0.2 : 1)}
+          onClick={() => setZoom(zoom > 0.2 ? zoom - 0.1 : 0.1)}
         >
           <CanvasOption
             bgColor="black"

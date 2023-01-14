@@ -9,12 +9,17 @@ import { setDraftTitle } from "../../../../../redux/reducers/draftTitleSlice";
 import { setDraftElements } from "../../../../../redux/reducers/draftElementsSlice";
 import { DIDSession } from "did-session";
 import type { AuthMethod } from "@didtools/cacao";
+import type { CeramicApi } from "@ceramicnetwork/common";
+import { ModelManager } from "@glazed/devtools";
 import {
   getCeramicSession,
   setCeramicSession,
 } from "../../../../../lib/lens/utils";
 import { EthereumWebAuth, getAccountId } from "@didtools/pkh-ethereum";
 import { DIDDataStore } from "@glazed/did-datastore";
+import { TileLoader } from "@glazed/tile-loader";
+import { TileDocument } from "@ceramicnetwork/stream-tile";
+import { draftCanvasModel } from "../../../../../lib/ceramic/models";
 
 const useDrafts = (): UseDraftsResult => {
   const dispatch = useDispatch();
@@ -36,8 +41,6 @@ const useDrafts = (): UseDraftsResult => {
   const [draftCanvases, setDraftCanvases] = useState<Draft[]>([]);
   const [draftsLoading, setDraftsLoading] = useState<boolean>(false);
 
-  console.log(draftCanvases, "draft canvases");
-
   const createAuthProvider = async () => {
     setDraftsLoading(true);
     try {
@@ -58,25 +61,20 @@ const useDrafts = (): UseDraftsResult => {
     setDraftsLoading(false);
   };
 
-  console.log("client", client);
-
-  const getCanvases = async (clientInput?: any) => {
-    const publishedModel = {
-      schemas: {
-        draftCanvas:
-          "ceramic://k3y52l7qbv1fryf5ka6rpi4sk3ty7gdzey2nky5t0xq2miaufudgbqkcbkr74cp34",
-      },
-      definitions: {
-        DraftCanvas:
-          "kjzl6cwe1jw14856m0jxqhw9m2v1j9n586xrxyrje3sb5ck27y3m8er1i8qfisw",
-      },
-      tiles: {},
-    };
+  const getCanvases = async (clientInput?: CeramicApi) => {
+    console.log(client.did._parentId);
+    const loader = new TileLoader({
+      ceramic: clientInput ? clientInput : client,
+    });
     const dataStore = new DIDDataStore({
       ceramic: clientInput ? clientInput : client,
-      model: publishedModel,
+      loader,
+      model: draftCanvasModel,
     });
-    const get = await dataStore.get("DraftCanvas");
+    const get = await dataStore.get("DraftCanvas", client.did._parentId);
+    const manager = new ModelManager({ ceramic: client });
+    const schema = await manager.getDefinitionID("DraftCanvas");
+    console.log(schema, "SCHEMA");
     setDraftCanvases([get]);
   };
 
@@ -100,6 +98,7 @@ const useDrafts = (): UseDraftsResult => {
 
   const saveCanvasNetwork = async (file: File, elements: string[]) => {
     try {
+      console.log("is there a client?", client);
       if (!client) await createAuthProvider();
 
       await saveDraft(file, elements);
@@ -120,29 +119,20 @@ const useDrafts = (): UseDraftsResult => {
         tags: "*/dialDraftsCanvas/*",
         date: Date.now().toString(),
       };
-      const publishedModel = {
-        schemas: {
-          draftCanvas:
-            "ceramic://k3y52l7qbv1fryf5ka6rpi4sk3ty7gdzey2nky5t0xq2miaufudgbqkcbkr74cp34",
-        },
-        definitions: {
-          DraftCanvas:
-            "kjzl6cwe1jw14856m0jxqhw9m2v1j9n586xrxyrje3sb5ck27y3m8er1i8qfisw",
-        },
-        tiles: {},
-      };
-      let session = getCeramicSession() as any;
-      session = await DIDSession.fromSession(session);
-      const cer = client;
-      cer.did = session.did;
       const dataStore = new DIDDataStore({
-        ceramic: cer,
-        model: publishedModel,
+        ceramic: client,
+        model: draftCanvasModel,
       });
-
-      const res = await dataStore.set("DraftCanvas", draft);
-
-      console.log(res, "res");
+      const loader = new TileLoader({
+        ceramic: client,
+      });
+      const sent = await loader.create(draft);
+      console.log(sent, "SENT");
+      // const res = await dataStore.setRecord(
+      //   draftCanvasModel.definitions.DraftCanvas,
+      //   draft
+      // );
+      // console.log(res, "RES HERE");
     } catch (err: any) {
       console.error(err.message);
     }

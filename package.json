@@ -13,6 +13,7 @@
     "@ceramicnetwork/3id-did-resolver": "^2.9.0",
     "@ceramicnetwork/http-client": "^2.13.0",
     "@didtools/pkh-ethereum": "^0.0.3",
+    "@glazed/devtools": "^0.2.0",
     "@glazed/did-datastore": "^0.3.2",
     "@material-ui/core": "^4.12.4",
     "@rainbow-me/rainbowkit": "^0.8.0",
