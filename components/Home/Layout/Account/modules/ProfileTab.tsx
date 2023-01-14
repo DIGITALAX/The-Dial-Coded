@@ -47,7 +47,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
                     dispatch={dispatch}
                     publication={publication}
                     key={index}
-                    type={"Post"}
+                    type={publication.__typename}
                     hasMirrored={hasMirrored?.length > 0 && hasMirrored[index]}
                     hasCommented={
                       hasCommented?.length > 0 && hasCommented[index]
