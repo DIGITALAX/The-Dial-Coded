@@ -15,7 +15,8 @@ const SideMenu: FunctionComponent<SideMenuProps> = ({
   setTool,
   handleClear,
   zoom,
-  setZoom
+  setZoom,
+  setNewCanvas
 }): JSX.Element => {
   return (
     <div className="absolute w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto justify-self-end self-start p-3 gap-2 z-10">
@@ -39,6 +40,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = ({
           handleClear={handleClear}
           zoom={zoom}
           setZoom={setZoom}
+          setNewCanvas={setNewCanvas}
         />
       )}
     </div>

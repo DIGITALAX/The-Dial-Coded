@@ -60,6 +60,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     saveLoading,
     zoom,
     setZoom,
+    setNewCanvas,
     addImageToCanvas,
   } = useDraw();
   const {
@@ -70,8 +71,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handleKeyEnter,
     fillImages,
   } = useBase();
-  const { draftCanvases, handleShowDraft, createAuthProvider, draftsLoading, client } =
-    useDrafts();
+  const { draftsLoading, loadDraft } = useDrafts();
   let actionValue: string = "canvas";
   const decideStringAction = () => {
     if (!profile || !isConnected) {
@@ -150,12 +150,10 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           saveLoading={saveLoading}
           zoom={zoom}
           setZoom={setZoom}
-          draftCanvases={draftCanvases}
-          handleShowDraft={handleShowDraft}
           addImageToCanvas={addImageToCanvas}
-          createAuthProvider={createAuthProvider}
           draftsLoading={draftsLoading}
-          client={client}
+          loadDraft={loadDraft}
+          setNewCanvas={setNewCanvas}
         />
       );
   }

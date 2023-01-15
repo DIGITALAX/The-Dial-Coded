@@ -59,12 +59,10 @@ export type DrawProps = {
   saveLoading: boolean;
   zoom: number;
   setZoom: (e: number) => void;
-  draftCanvases: Draft[];
-  handleShowDraft: (draft: Draft) => void;
   addImageToCanvas: (image: string) => Promise<void>;
-  createAuthProvider: () => Promise<void>;
-  client: any;
   draftsLoading: boolean;
+  loadDraft: (e: FormEvent) => void
+  setNewCanvas: () => void
 };
 
 export type ColorPickerProps = {
@@ -85,6 +83,7 @@ export type SideMenuProps = {
   handleClear: () => void;
   zoom: number;
   setZoom: (e: number) => void;
+  setNewCanvas: () => void
 };
 
 export type BottomMenuProps = {
@@ -123,6 +122,7 @@ export type SideOptionsProps = {
   handleClear: () => void;
   zoom: number;
   setZoom: (e: number) => void;
+  setNewCanvas: () => void
 };
 
 export type BottomOptionsProps = {
@@ -203,18 +203,12 @@ export interface Draft {
 }
 
 export type DraftsProps = {
-  draftCanvases: Draft[];
-  handleShowDraft: (draft: Draft) => void;
-  createAuthProvider: () => Promise<void>;
-  client: any;
   draftsLoading: boolean;
+  loadDraft: (e: FormEvent) => void
 };
 
 export type UseDraftsResult = {
   saveCanvasNetwork: (file: File, elements: string[]) => Promise<void>;
-  draftCanvases: Draft[];
-  handleShowDraft: (draft: Draft) => void;
   draftsLoading: boolean;
-  createAuthProvider: () => Promise<void>;
-  client: any;
+  loadDraft: (e: FormEvent) => void
 };

@@ -26,7 +26,7 @@ import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 import { setXmtpClient } from "../../../../../redux/reducers/xmtpClientSlice";
 import removeElements, {
   elementRegex,
-} from "../../../../../lib/xmtp/helpers/removeElements";
+} from "../../../../../lib/misc/helpers/removeElements";
 
 const useConversations = (): UseConversationResults => {
   const { data: signer } = useSigner();

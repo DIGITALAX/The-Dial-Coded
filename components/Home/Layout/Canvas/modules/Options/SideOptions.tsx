@@ -15,6 +15,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   handleClear,
   zoom,
   setZoom,
+  setNewCanvas,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-4">
@@ -66,15 +67,16 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
             height={28}
           />
         </div>
-
-        <CanvasOption
-          image="QmTi6aLhjZrFaahoqzki9TgC3idP1tXrRZQxfnXbpG5iZ9"
-          bgColor="black"
-          width={37}
-          height={37}
-          string_option={"pan"}
-          setShowString={setTool}
-        />
+        <div className="relative w-fit h-fit" onClick={() => setNewCanvas()}>
+          <CanvasOption
+            image="QmP6o3oXjY3xdw7SBtVr95p7rzW7fsTy6x8C38zzirRd9Y"
+            bgColor="black"
+            width={39}
+            height={39}
+            // string_option={"pan"}
+            // setShowString={setTool}
+          />
+        </div>
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
         <label>
