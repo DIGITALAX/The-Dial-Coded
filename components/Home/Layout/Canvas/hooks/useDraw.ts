@@ -17,10 +17,10 @@ import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImageUpload";
 import useDrafts from "./useDrafts";
-import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 import { RootState } from "../../../../../redux/store";
 import { setDraftTitle } from "../../../../../redux/reducers/draftTitleSlice";
 import { setDraftElements } from "../../../../../redux/reducers/draftElementsSlice";
+import handleUploadImage from "../../../../../lib/misc/helpers/handleUploadImage";
 
 const useDraw = () => {
   const { uploadImage } = useImageUpload();
@@ -213,7 +213,7 @@ const useDraw = () => {
     const img = getCanvas();
     let xhr = new XMLHttpRequest();
     xhr.responseType = "blob";
-    xhr.onload = function () {
+    xhr.onload = () => {
       let a = document.createElement("a");
       a.href = window.URL.createObjectURL(xhr.response);
       a.download = "thedial_drafts.png";
@@ -260,39 +260,52 @@ const useDraw = () => {
         type: "image/png",
       });
       let stringElements = [];
+      const copyElements = [...elements];
       for (const elem in elements) {
-        stringElements.push(JSON.stringify(elements[elem]));
+        if (elements[elem].type === "image") {
+          const blob = new Blob([elements[elem].image]);
+          const postImage = new File([blob], "thedial_drafts", {
+            type: "image/png",
+          });
+          const cid = await handleUploadImage(postImage, false);
+          const newImage = {
+            ...copyElements[elem as any],
+            cid: cid?.split("ipfs://")[1],
+          };
+          stringElements.push(JSON.stringify(newImage));
+        } else {
+          stringElements.push(JSON.stringify(elements[elem]));
+        }
       }
-      dispatch(setDraftElements(stringElements));
       await saveCanvasNetwork(postImage, stringElements);
-      dispatch(setInsufficientFunds("saved"));
+      // dispatch(setInsufficientFunds("saved"));
     } catch (err: any) {
-      dispatch(setInsufficientFunds("unsaved"));
+      // dispatch(setInsufficientFunds("unsaved"));
       console.error(err.message);
     }
     setSaveLoading(false);
   };
 
-  const handleImageAdd = async (e: any, lexica?: boolean): Promise<void> => {
-    if (!lexica) {
+  const handleImageAdd = async (e: any, url?: boolean): Promise<void> => {
+    if (!url) {
       if (fileLimitAlert((e as any).target.files[0])) {
         return;
       }
     }
     let image: File;
-    if (lexica) {
+    if (url) {
       image = e;
     } else {
       image = (e.target as HTMLFormElement).files[0];
     }
     const compressedImage = await compressImageFiles(image);
     const reader = new FileReader();
-    reader.readAsDataURL(compressedImage as File);
+    reader?.readAsDataURL(compressedImage as File);
 
     reader.onloadend = (e) => {
       const imageObject = new Image();
       imageObject.src = e.target?.result as string;
-      imageObject.onload = function (ev) {
+      imageObject.onload = () => {
         const newElement = createElement(
           50,
           50,
@@ -359,9 +372,7 @@ const useDraw = () => {
     y1: number,
     name: string
   ) => {
-    return Math.abs(x - x1) < 5  && Math.abs(y - y1) < 5 
-      ? name
-      : null;
+    return Math.abs(x - x1) < 5 && Math.abs(y - y1) < 5 ? name : null;
   };
 
   const distance = (a: Point2, b: Point2) => {
@@ -382,6 +393,18 @@ const useDraw = () => {
     const c: Point2 = { x: x / zoom, y: y / zoom };
     const offset = distance(a, b) - (distance(a, c) + distance(b, c));
     return Math.abs(offset) < maxDistance ? "inside" : null;
+  };
+
+  const onOnePoint = (
+    x: number,
+    y: number,
+    x1: number,
+    y1: number,
+    maxDistance: number
+  ) => {
+    const a: Point2 = { x: x1, y: y1 };
+    const c: Point2 = { x: x / zoom, y: y / zoom };
+    return Math.abs(distance(a, c)) < maxDistance ? "inside" : null;
   };
 
   const insideEllipse = (
@@ -444,32 +467,43 @@ const useDraw = () => {
         );
         const start = nearPoint(x, y, x1 as number, y1 as number, "start");
         const end = nearPoint(x, y, x2 as number, y2 as number, "end");
-        console.log(start || end || on);
         return start || end || on;
       case "erase":
         break;
       case "pencil":
-        const betweenAnyPoint = element.points?.some((point, index) => {
-          const nextPoint: any = (
-            element.points as {
-              x: number;
-              y: number;
-            }[]
-          )[index + 1];
-          if (!nextPoint) return false;
-          return (
-            onLine(
-              point.x,
-              point.y,
-              nextPoint.x,
-              nextPoint.y,
-              x - bounds.left,
-              y - bounds.top,
-              element.strokeWidth as number
-            ) != null
+        if ((element.points as any).length > 1) {
+          const betweenAnyPoint = element.points?.some((point, index) => {
+            const nextPoint: any = (
+              element.points as {
+                x: number;
+                y: number;
+              }[]
+            )[index + 1];
+            if (!nextPoint) return false;
+            return (
+              onLine(
+                point.x,
+                point.y,
+                nextPoint.x,
+                nextPoint.y,
+                x - bounds.left,
+                y - bounds.top,
+                element.strokeWidth as number
+              ) != null
+            );
+          });
+          return betweenAnyPoint ? "inside" : null;
+        } else {
+          const onPoint = onOnePoint(
+            x - bounds.left,
+            y - bounds.top,
+            element.points?.[0]?.x as number,
+            element.points?.[0]?.y as number,
+            element.strokeWidth as number
           );
-        });
-        return betweenAnyPoint ? "inside" : null;
+          return onPoint ? "inside" : null;
+        }
+
       case "text":
         return x - bounds.left >= (x1 as number) &&
           x <= (x2 as number) &&
@@ -967,8 +1001,8 @@ const useDraw = () => {
       } else if (selectedElement.type === "image") {
         const { x2, x1, y2, y1, id, type, offsetX, offsetY, image } =
           selectedElement;
-        const width = x2 / zoom - x1 / zoom;
-        const height = y2 / zoom - y1 / zoom;
+        const width = x2 - x1;
+        const height = y2 - y1;
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
@@ -1002,7 +1036,6 @@ const useDraw = () => {
         } = selectedElement;
         const width = x2 - x1;
         const height = y2 - y1;
-        console.log(width, height);
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
@@ -1231,12 +1264,11 @@ const useDraw = () => {
     loadFont();
   }, []);
 
-  // useEffect(() => {
-  //   if (parsedElems.length > 0) {
-  //     console.log("running")
-  //     setElements(parsedElems);
-  //   }
-  // }, [parsedElems]);
+  useEffect(() => {
+    if (parsedElems.length > 0) {
+      setElements(parsedElems);
+    }
+  }, [parsedElems]);
 
   useEffect(() => {
     if (action !== "none") {
@@ -1250,6 +1282,12 @@ const useDraw = () => {
     const bounds = canvas.getBoundingClientRect();
     const originalPoint = new DOMPoint(x - bounds.left, y - bounds.top);
     return ctx?.getTransform().invertSelf().transformPoint(originalPoint);
+  };
+
+  const setNewCanvas = () => {
+    dispatch(setDraftElements([]));
+    setClear(true);
+    dispatch(setDraftTitle("untitled draft"));
   };
 
   return {
@@ -1299,6 +1337,7 @@ const useDraw = () => {
     setZoom,
     setElements,
     addImageToCanvas,
+    setNewCanvas,
   };
 };
 

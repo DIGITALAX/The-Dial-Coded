@@ -55,12 +55,10 @@ const Draw: FunctionComponent<DrawProps> = ({
   saveLoading,
   zoom,
   setZoom,
-  draftCanvases,
-  handleShowDraft,
   addImageToCanvas,
-  createAuthProvider,
-  client,
   draftsLoading,
+  loadDraft,
+  setNewCanvas
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -117,6 +115,7 @@ const Draw: FunctionComponent<DrawProps> = ({
           setTool={setTool}
           handleClear={handleClear}
           zoom={zoom}
+          setNewCanvas={setNewCanvas}
           setZoom={setZoom}
         />
         <BottomMenu
@@ -158,13 +157,7 @@ const Draw: FunctionComponent<DrawProps> = ({
         />
       </div>
       <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-3">
-        <Drafts
-          draftCanvases={draftCanvases}
-          handleShowDraft={handleShowDraft}
-          createAuthProvider={createAuthProvider}
-          client={client}
-          draftsLoading={draftsLoading}
-        />
+        <Drafts draftsLoading={draftsLoading} loadDraft={loadDraft} />
         <Base
           addImageToCanvas={addImageToCanvas}
           searchTarget={searchTarget}
