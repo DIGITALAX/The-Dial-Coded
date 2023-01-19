@@ -138,7 +138,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
       <div
         className={`relative w-fit h-fit row-start-2 col-start-1 justify-self-end self-center  ${
           dispatcherLoading ? "animate-spin" : "cursor-pointer active:scale-95"
-        }`}
+        } ${!dispatcher && "animate-bounce"}`}
         id="toggle-dispatcher"
         onClick={
           !connected
