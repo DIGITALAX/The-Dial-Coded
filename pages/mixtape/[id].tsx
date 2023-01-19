@@ -14,6 +14,7 @@ import MainPost from "../../components/Home/Mixtape/MainPost";
 import handleHidePost from "../../lib/lens/helpers/handleHidePost";
 import getPostComments from "../../lib/lens/helpers/getPostComments";
 import syncScroll from "../../lib/lens/helpers/syncScroll";
+import checkDispatcher from "../../lib/lens/helpers/checkDispatcher";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -107,6 +108,10 @@ const Post: NextPage = (): JSX.Element => {
   useEffect(() => {
     dispatch(setWalletConnected(isConnected));
   }, [isConnected]);
+
+  useEffect(() => {
+    checkDispatcher(dispatch, lensProfile);
+  }, [lensProfile]);
 
   return (
     <div className="relative h-auto min-h-screen w-full grid grid-flow-col auto-col-auto overflow-hidden pt-32 bg-offWhite/60">

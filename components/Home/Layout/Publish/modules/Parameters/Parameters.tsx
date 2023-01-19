@@ -1,4 +1,6 @@
 import { FunctionComponent } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../../redux/store";
 import useParameters from "./hooks/useParameters";
 import Options from "./modules/Options";
 import Viewer from "./modules/Viewer";
@@ -20,9 +22,13 @@ const Parameters: FunctionComponent = (): JSX.Element => {
     searchLoading,
     handleChosenProfile,
     getMoreProfiles,
-    searchTarget
+    searchTarget,
+    setDispatcherEnabled,
+    dispatcherLoading,
   } = useParameters();
-
+  const dispatcher = useSelector(
+    (state: RootState) => state.app.dispatcherReducer.value
+  );
   return (
     <div className="relative w-full h-28 row-start-2 grid grid-flow-col auto-cols-auto z-20">
       <Options
@@ -44,6 +50,9 @@ const Parameters: FunctionComponent = (): JSX.Element => {
         handleChosenProfile={handleChosenProfile}
         getMoreProfiles={getMoreProfiles}
         searchTarget={searchTarget}
+        dispatcher={dispatcher}
+        setDispatcherEnabled={setDispatcherEnabled}
+        dispatcherLoading={dispatcherLoading}
       />
     </div>
   );

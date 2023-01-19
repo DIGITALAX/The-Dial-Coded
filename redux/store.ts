@@ -53,6 +53,7 @@ import followerOnlyReducer from "./reducers/followerOnlySlice";
 import xmtpClientReducer from "./reducers/xmtpClientSlice";
 import draftTitleReducer from "./reducers/draftTitleSlice";
 import draftElementsReducer from "./reducers/draftElementsSlice";
+import dispatcherReducer from "./reducers/dispatcherSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -108,6 +109,7 @@ const reducer = combineReducers({
   xmtpClientReducer,
   draftElementsReducer,
   draftTitleReducer,
+  dispatcherReducer,
 });
 
 export const store = configureStore({

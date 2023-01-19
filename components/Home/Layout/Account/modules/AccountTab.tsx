@@ -17,6 +17,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
   setProfileData,
   profileLoading,
   profileImageSet,
+  dispatcher,
 }): JSX.Element => {
   const location = lodash.filter(
     profile?.attributes,
@@ -299,6 +300,23 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
                 />
               </div>
             )}
+          </div>
+        </div>
+      </div>
+      <div className="relative w-fit h-fit row-start-3 grid grid-flow-row auto-rows-auto gap-3">
+        <div className="relative w-fit h-fit row-start-1 grid grid-flow-row auto-rows-auto gap-2">
+          <div className="relative w-fit h-fit">
+            {dispatcher ? "Disable Dispatcher?" : "Enable Dispatcher?"}
+          </div>
+        </div>
+        <div className="relative w-fit h-fit row-start-2 grid grid-flow-row auto-rows-auto gap-2">
+          <div className="relative w-fit h-fit">
+            something about the enabler
+          </div>
+        </div>
+        <div className="relative w-32 h-10 col-start-1 px-3 py-2 row-start-3 grid grid-flow-row auto-rows-auto gap-2 rounded-md bg-offBlue cursor-pointer hover:opacity-70 active:scale-95">
+          <div className="relative w-fit h-fit text-white place-self-center">
+            {dispatcher ? "Disable" : "Enable"}
           </div>
         </div>
       </div>

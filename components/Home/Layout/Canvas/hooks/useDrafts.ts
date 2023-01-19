@@ -39,7 +39,6 @@ const useDrafts = (): UseDraftsResult => {
     reader.onload = (e) => {
       const imageObject = new Image();
       imageObject.src = e.target?.result as string;
-      console.log(imageObject)
       parsedElements.push( imageObject);
     };
   };
@@ -61,7 +60,6 @@ const useDrafts = (): UseDraftsResult => {
         for (const elem in elements) {
           if ((await JSON.parse(elements[elem]).type) === "image") {
             await convertImage(elements[elem], parsedElements);
-            console.log(parsedElements, "res");
           }
         }
 
