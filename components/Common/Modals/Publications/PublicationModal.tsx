@@ -206,7 +206,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   >
                     {mentionProfiles?.map((user: any, index: number) => {
                       const profileImage: string = createProfilePicture(
-                        user?.picture
+                        user
                       );
                       return (
                         <div
@@ -221,7 +221,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                               className={`relative rounded-full flex bg-white w-3 h-3 place-self-center col-start-1`}
                               id="crt"
                             >
-                              {profileImage !== "" && (
+                              {profileImage && (
                                 <Image
                                   src={profileImage}
                                   objectFit="cover"

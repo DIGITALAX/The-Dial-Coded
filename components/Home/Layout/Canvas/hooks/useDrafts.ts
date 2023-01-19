@@ -7,6 +7,7 @@ import { draftRegex } from "../../../../../lib/misc/helpers/removeElements";
 import * as yup from "yup";
 import { setDraftTitle } from "../../../../../redux/reducers/draftTitleSlice";
 import { setDraftElements } from "../../../../../redux/reducers/draftElementsSlice";
+import { INFURA_GATEWAY } from "../../../../../lib/lens/constants";
 
 const useDrafts = (): UseDraftsResult => {
   const dispatch = useDispatch();
@@ -25,6 +26,24 @@ const useDrafts = (): UseDraftsResult => {
     setDraftsLoading(false);
   };
 
+  const convertImage = async (elem: any, parsedElements: any[]) => {
+    const res: Response = await fetch(
+      `${INFURA_GATEWAY}/ipfs/${await JSON.parse(elem).cid}`
+    );
+    const blob: Blob = await res.blob();
+    const postImage = new File([blob], "thedial_drafts", {
+      type: "image/png",
+    });
+    const reader = new FileReader();
+    reader?.readAsDataURL(postImage as File);
+    reader.onload = (e) => {
+      const imageObject = new Image();
+      imageObject.src = e.target?.result as string;
+      console.log(imageObject)
+      parsedElements.push( imageObject);
+    };
+  };
+
   const loadDraft = async (e: any) => {
     try {
       const res = await new Response(e.target.files[0]).json();
@@ -38,24 +57,45 @@ const useDrafts = (): UseDraftsResult => {
       if (valid && draftRegex.test(JSON.stringify(res))) {
         dispatch(setDraftTitle(res.title));
         const elements = await new Response(res.elements).json();
-        let parsedElements = [];
-        console.log(JSON.parse(elements[0]))
-        for (let i = 0; i < elements.length - 1; i++) {
-          if (JSON.parse(elements)[i].type === "image") {
-            console.log("hi")
-          } else {
-            parsedElements.push(JSON.parse(elements[i]));
+        let parsedElements: any[] = [];
+        for (const elem in elements) {
+          if ((await JSON.parse(elements[elem]).type) === "image") {
+            await convertImage(elements[elem], parsedElements);
+            console.log(parsedElements, "res");
           }
-          
         }
 
-        console.log(parsedElements)
-        // const res: Response = await fetch(imgURL);
-        // const blob: Blob = await res.blob();
-        // const postImage = new File([blob], "thedial_drafts", {
-        //   type: "image/png",
+        // elements.forEach(async (elem: any) => {
+        //   if (JSON.parse(elem).type === "image") {
+        //     const res: Response = await fetch(
+        //       `${INFURA_GATEWAY}/ipfs/${JSON.parse(elem).cid}`
+        //     );
+        //     const blob: Blob = await res.blob();
+        //     const postImage = new File([blob], "thedial_drafts", {
+        //       type: "image/png",
+        //     });
+        //     const reader = new FileReader();
+        //     reader?.readAsDataURL(postImage as File);
+        //     reader.onloadend = (e) => {
+        //       const imageObject = new Image();
+        //       imageObject.src = e.target?.result as string;
+        //       const data = {
+        //         id: JSON.parse(elem).id,
+        //         type: JSON.parse(elem).type,
+        //         x1: JSON.parse(elem).x1,
+        //         y1: JSON.parse(elem).y1,
+        //         x2: JSON.parse(elem).x2,
+        //         y2: JSON.parse(elem).y2,
+        //         image: imageObject,
+        //       };
+
+        //     };
+        //     parsedElements.push(JSON.stringify("")) ;
+        //   } else {
+        //     parsedElements.push("");
+        //   }
         // });
-        // await handleImageAdd(postImage, true);
+        // console.log(parsedElements, "here parsed")
         // dispatch(setDraftElements(parsedElements));
       } else {
         alert("Not a valid Dial Canvas Draft.");

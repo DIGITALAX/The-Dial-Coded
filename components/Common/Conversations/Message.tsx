@@ -71,7 +71,10 @@ const Message: FunctionComponent<MessageProps> = ({
         {chosenProfile && (
           <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-3">
             <div className="relative w-fit h-fit col-start-1 justify-self-start self-center">
-              <div id="crt" className="relative w-7 h-7 rounded-full border-black border flex">
+              <div
+                id="crt"
+                className="relative w-7 h-7 rounded-full border-black border flex"
+              >
                 <Image
                   src={profileImage}
                   layout="fill"
@@ -228,7 +231,7 @@ const Message: FunctionComponent<MessageProps> = ({
             >
               {mentionProfiles?.map((user: any, index: number) => {
                 const profileImage: string = createProfilePicture(
-                  user?.picture
+                  user
                 );
                 return (
                   <div
