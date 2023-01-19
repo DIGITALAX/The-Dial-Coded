@@ -1,14 +1,17 @@
 import { NextPage } from "next";
 import Image from "next/legacy/image";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useAccount } from "wagmi";
 import NotFound from "../../components/Common/NotFound/NotFound";
 import Banner from "../../components/Common/Profile/modules/Banner";
 import useProfilePage from "../../components/Home/Profile/hooks/useProfilePage";
 import SideBar from "../../components/Home/Profile/modules/SideBar";
+import checkDispatcher from "../../lib/lens/helpers/checkDispatcher";
 import createProfilePicture from "../../lib/lens/helpers/createProfilePicture";
 import handleHidePost from "../../lib/lens/helpers/handleHidePost";
 import { setWalletConnected } from "../../redux/reducers/walletConnectedSlice";
+import { RootState } from "../../redux/store";
 import ProfileTab from "./../../components/Home/Layout/Account/modules/ProfileTab";
 
 const Profile: NextPage = (): JSX.Element => {
@@ -38,9 +41,15 @@ const Profile: NextPage = (): JSX.Element => {
     followerOnly,
   } = useProfilePage();
   const { isConnected } = useAccount();
+  const profileId = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
   useEffect(() => {
     dispatch(setWalletConnected(isConnected));
   }, [isConnected]);
+  useEffect(() => {
+    checkDispatcher(dispatch, profileId);
+  }, [profileId]);
 
   const profileImage = createProfilePicture(profileData);
 

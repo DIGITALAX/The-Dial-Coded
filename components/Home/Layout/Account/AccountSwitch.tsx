@@ -95,6 +95,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const isConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
   );
+  const dispatcher = useSelector(
+    (state: RootState) => state.app.dispatcherReducer.value
+  );
   const { openConnectModal } = useConnectModal();
   let action: string = "account";
   const decideStringAction = () => {
@@ -216,6 +219,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           setProfileData={setProfileData}
           profileImageSet={profileImageSet}
           profileLoading={profileLoading}
+          dispatcher={dispatcher}
         />
       );
   }

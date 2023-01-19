@@ -45,7 +45,7 @@ const Post: FunctionComponent = (): JSX.Element => {
         lensProfile={lensProfile}
         isConnected={connected}
       />
-      <Parameters />
+      <Parameters/>
       <Feed
         hotFeed={hotFeed}
         hasHotReacted={hasHotReacted}

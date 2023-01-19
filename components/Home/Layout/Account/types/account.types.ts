@@ -35,6 +35,7 @@ export type AccountTabProps = {
   setProfileData: (e: FormEvent) => Promise<void>;
   profileImageSet: () => Promise<void>;
   profileLoading: boolean;
+  dispatcher: boolean;
 };
 
 export type ProfileTabProps = {

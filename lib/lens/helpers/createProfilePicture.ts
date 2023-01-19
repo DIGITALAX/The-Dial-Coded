@@ -1,7 +1,6 @@
 import { INFURA_GATEWAY } from "../constants";
 
 const createProfilePicture = (publication: any, mirror?: boolean): string => {
-  console.log("pub", publication);
   let profileImage: string;
   let formattedPrefix: any;
   if (!mirror) {
@@ -28,8 +27,6 @@ const createProfilePicture = (publication: any, mirror?: boolean): string => {
   } else {
     profileImage = formattedPrefix?.uri;
   }
-
-  console.log(profileImage, "here");
   return profileImage;
 };
 

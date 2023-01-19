@@ -8,6 +8,10 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import createProfilePicture from "../../../../../../../lib/lens/helpers/createProfilePicture";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../../../../redux/store";
+import { setSignIn } from "../../../../../../../redux/reducers/signInSlice";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 const Viewer: FunctionComponent<ViewerProps> = ({
   userTypeOpen,
@@ -17,7 +21,18 @@ const Viewer: FunctionComponent<ViewerProps> = ({
   handleChosenProfile,
   getMoreProfiles,
   searchTarget,
+  dispatcher,
+  setDispatcherEnabled,
+  dispatcherLoading,
 }): JSX.Element => {
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
+  const connected = useSelector(
+    (state: RootState) => state.app.walletConnectedReducer.value
+  );
+  const dispatch = useDispatch();
+  const { openConnectModal } = useConnectModal();
   return (
     <div className="relative w-fit h-full grid grid-flow-row auto-rows-auto col-start-2 gap-6 justify-self-end self-start">
       <div className="relative w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto place-self-center">
@@ -37,7 +52,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
           </div>
         </div>
         <div
-          className={`absolute w-full h-fit grid grid-flow-row auto-rows-auto row-start-2 bg-white ${
+          className={`absolute w-full h-fit grid grid-flow-row auto-rows-auto row-start-2 bg-white z-2 ${
             userTypeOpen && "border-2 border-black"
           }`}
         >
@@ -62,7 +77,6 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                   className="relative w-full h-fit"
                 >
                   {profileSearch?.map((user: any, index: number) => {
-                    
                     const profileImage = createProfilePicture(user);
                     return (
                       <div
@@ -115,6 +129,40 @@ const Viewer: FunctionComponent<ViewerProps> = ({
         anchorId="venn-tool"
         place="left"
         content="🔥 Coming Soon 🔥"
+        style={{
+          fontSize: "9px",
+          backgroundColor: "#131313",
+          opacity: "0.7",
+        }}
+      />
+      <div
+        className={`relative w-fit h-fit row-start-2 col-start-1 justify-self-end self-center  ${
+          dispatcherLoading ? "animate-spin" : "cursor-pointer active:scale-95"
+        }`}
+        id="toggle-dispatcher"
+        onClick={
+          !connected
+            ? openConnectModal
+            : connected && !lensProfile
+            ? () => dispatch(setSignIn(true))
+            : () => setDispatcherEnabled()
+        }
+      >
+        {!dispatcherLoading ? (
+          <Image
+            src={`${INFURA_GATEWAY}/ipfs/QmYYX6WxNkLmETpnueyAcoGA1V9jypEXqtzXSKgQeN28ra`}
+            width={30}
+            height={30}
+            alt="dispatcher"
+          />
+        ) : (
+          <AiOutlineLoading size={20} color="black" />
+        )}
+      </div>
+      <ReactTooltip
+        anchorId="toggle-dispatcher"
+        place="left"
+        content={!dispatcher ? "Enable Dispatcher" : "Disable Dispatcher"}
         style={{
           fontSize: "9px",
           backgroundColor: "#131313",

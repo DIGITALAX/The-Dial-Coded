@@ -15,6 +15,7 @@ import handleHidePost from "../../lib/lens/helpers/handleHidePost";
 import getPostComments from "../../lib/lens/helpers/getPostComments";
 import NotFound from "../../components/Common/NotFound/NotFound";
 import syncScroll from "../../lib/lens/helpers/syncScroll";
+import checkDispatcher from "../../lib/lens/helpers/checkDispatcher";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -109,6 +110,10 @@ const Post: NextPage = (): JSX.Element => {
   useEffect(() => {
     dispatch(setWalletConnected(isConnected));
   }, [isConnected]);
+
+  useEffect(() => {
+    checkDispatcher(dispatch, lensProfile);
+  }, [lensProfile]);
 
   if (!publicationData && publicationDataLoading === false) {
     return <NotFound />;

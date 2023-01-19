@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import shuffle from "shuffle-array";
 import { useRouter } from "next/router";
 import RouterChange from "../components/Common/RouterChange/RouterChange";
+import { createContext } from "vm";
 
 const { chains, provider } = configureChains(
   [chain.polygonMumbai],
@@ -38,7 +39,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const [routerChangeLoading, setRouterChangeLoading] =
     useState<boolean>(false);
-
   const streamLinks: string[] = [
     "https://www.youtube.com/embed/__PtdR1xZYY?controls=0?rel=0&autoplay=1&mute=1",
     "https://www.youtube.com/embed/CqpU5vCQxGM?controls=0?rel=0&autoplay=1&mute=1",
@@ -46,6 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [newLink, setNewLink] = useState<string>(
     "https://www.youtube.com/embed/__PtdR1xZYY?controls=0?rel=0&autoplay=1&mute=1"
   );
+
   useEffect(() => {
     const shuffledLinks: number[] = shuffle([0, 1]);
     setNewLink(streamLinks[shuffledLinks[0]]);
@@ -79,12 +80,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
-          <div className="min-h-fit h-auto min-w-screen w-screen relative selection:bg-offBlue selection:text-midWhite">
-            <Header />
-            <Component {...pageProps} newLink={newLink} />
-            <Modals />
-            <Footer />
-          </div>
+            <div className="min-h-fit h-auto min-w-screen w-screen relative selection:bg-offBlue selection:text-midWhite">
+              <Header />
+              <Component {...pageProps} newLink={newLink} />
+              <Modals />
+              <Footer />
+            </div>
         </RainbowKitProvider>
       </WagmiConfig>
     </Provider>

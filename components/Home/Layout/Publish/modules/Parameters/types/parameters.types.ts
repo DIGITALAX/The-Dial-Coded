@@ -18,6 +18,8 @@ export type UseParametersResult = {
   handleChosenProfile: (user: Profile) => void;
   getMoreProfiles: () => Promise<void>;
   searchTarget: string | undefined;
+  setDispatcherEnabled: () => Promise<void>
+  dispatcherLoading:boolean
 };
 
 export type OptionsProps = {
@@ -40,4 +42,7 @@ export type ViewerProps = {
   handleChosenProfile: (user: Profile) => void;
   getMoreProfiles: () => Promise<void>;
   searchTarget: string | undefined;
+  dispatcher: boolean;
+  setDispatcherEnabled: () => Promise<void>
+  dispatcherLoading:boolean
 };

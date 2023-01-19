@@ -267,7 +267,7 @@ const useDraw = () => {
           const blob = await res.blob();
           const file = new File([blob], "draftDial", { type: "image/png" });
           const cid = await handleUploadImage(file, false);
-          console.log(cid);
+
           const newImage = {
             ...copyElements[elem as any],
             cid: cid?.split("ipfs://")[1],
