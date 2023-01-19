@@ -10,7 +10,7 @@ const handleDispatcher = async (profileId: string, enabled: boolean) => {
     if (enabled) {
       res = await createDispatcherRequest({
         profileId,
-        enabled,
+        enable: false,
       });
     } else {
       res = await createDispatcherRequest({

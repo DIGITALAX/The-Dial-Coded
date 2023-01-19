@@ -12,7 +12,7 @@ const checkDispatcher = async (
         profileId,
       });
       const value = res.data.profile.dispatcher;
-      dispatch(setDispatcher(!value ? false : true));
+      dispatch(setDispatcher(!value ? false : value));
     }
   } catch (err: any) {
     console.error(err.message);

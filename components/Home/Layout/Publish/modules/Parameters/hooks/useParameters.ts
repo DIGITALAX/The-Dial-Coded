@@ -50,8 +50,6 @@ const useParameters = (): UseParametersResult => {
     args: [args],
   });
 
-  console.log(config, "config")
-
   const { writeAsync, isSuccess: txComplete } = useContractWrite(config);
 
   const searchProfiles = async (e: FormEvent): Promise<void> => {
@@ -116,7 +114,6 @@ const useParameters = (): UseParametersResult => {
         profileId,
         enabled ? true : false
       );
-      console.log(typedData, "outside")
       const signature: any = await signTypedDataAsync({
         domain: omit(typedData?.domain, ["__typename"]),
         types: omit(typedData?.types, ["__typename"]) as any,
@@ -133,17 +130,6 @@ const useParameters = (): UseParametersResult => {
           deadline: typedData.value.deadline,
         },
       };
-      console.log("here2")
-      console.log({
-        profileId: typedData.value.profileId,
-        dispatcher: typedData.value.dispatcher,
-        sig: {
-          v,
-          r,
-          s,
-          deadline: typedData.value.deadline,
-        },
-      })
       setArgs(dispatcherArgs);
     } catch (err: any) {
       console.error(err.message);
@@ -156,10 +142,10 @@ const useParameters = (): UseParametersResult => {
     try {
       const tx = await writeAsync?.();
       await tx?.wait();
-      dispatch(setDispatcher(true));
+      dispatch(setDispatcher(enabled ? false : true));
     } catch (err: any) {
       dispatch(setDispatcher(false));
-      console.log(err.message);
+      console.error(err.message);
     }
     setDispatcherLoading(false);
   };
