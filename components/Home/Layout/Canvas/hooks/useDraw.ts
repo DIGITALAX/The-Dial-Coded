@@ -263,11 +263,11 @@ const useDraw = () => {
       const copyElements = [...elements];
       for (const elem in elements) {
         if (elements[elem].type === "image") {
-          const blob = new Blob([elements[elem].image]);
-          const postImage = new File([blob], "thedial_drafts", {
-            type: "image/png",
-          });
-          const cid = await handleUploadImage(postImage, false);
+          const res = await fetch(elements[elem].image.src);
+          const blob = await res.blob();
+          const file = new File([blob], "draftDial", { type: "image/png" });
+          const cid = await handleUploadImage(file, false);
+          console.log(cid);
           const newImage = {
             ...copyElements[elem as any],
             cid: cid?.split("ipfs://")[1],
@@ -319,6 +319,7 @@ const useDraw = () => {
           undefined,
           imageObject
         );
+
         setElements((prevState: any) => [...prevState, newElement]);
       };
     };
@@ -451,7 +452,6 @@ const useDraw = () => {
           x2 as number,
           y2 as number
         );
-
         return ellInside < 0.3 && ellInside > 0.6 * 0.3
           ? "edge"
           : ellInside < 0.3 && "inside";
@@ -858,7 +858,6 @@ const useDraw = () => {
   const handleMouseDown = (e: MouseEvent): void => {
     if (tool === "selection" || tool === "resize") {
       const element = getElementPosition(e.clientX, e.clientY);
-
       if (element?.length > 0) {
         if (element[element?.length - 1].type === "pencil") {
           const offsetXs = element[element?.length - 1].points?.map(
@@ -991,12 +990,14 @@ const useDraw = () => {
             x: e.clientX - selectedElement?.offsetXs[index],
             y: e.clientY - selectedElement?.offsetYs[index],
           })
-        );
+        );        
         const elementsCopy = [...elements];
+        console.log(elementsCopy, "copy");
         elementsCopy[selectedElement.id] = {
           ...elementsCopy[selectedElement.id],
           points: newPoints,
         };
+        console.log(elementsCopy, "after");
         setElements(elementsCopy, true);
       } else if (selectedElement.type === "image") {
         const { x2, x1, y2, y1, id, type, offsetX, offsetY, image } =
@@ -1264,9 +1265,14 @@ const useDraw = () => {
     loadFont();
   }, []);
 
+  console.log(selectedElement, "selection");
+  console.log(elements, "elements");
+  console.log(parsedElems, "parsed");
+
   useEffect(() => {
-    if (parsedElems.length > 0) {
+    if (parsedElems?.length > 0) {
       setElements(parsedElems);
+      dispatch(setDraftElements([]));
     }
   }, [parsedElems]);
 

@@ -227,7 +227,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                   >
                     {mentionProfiles?.map((user: any, index: number) => {
                       const profileImage: string = createProfilePicture(
-                        user?.picture
+                        user
                       );
                       return (
                         <div

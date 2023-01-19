@@ -1,6 +1,7 @@
 import { INFURA_GATEWAY } from "../constants";
 
 const createProfilePicture = (publication: any, mirror?: boolean): string => {
+  console.log("pub", publication);
   let profileImage: string;
   let formattedPrefix: any;
   if (!mirror) {
@@ -8,7 +9,10 @@ const createProfilePicture = (publication: any, mirror?: boolean): string => {
   } else {
     if (publication?.__typename === "Mirror") {
       formattedPrefix = publication?.mirrorOf?.profile?.picture;
-    } else {
+    } else if (
+      publication?.__typename === "Post" ||
+      publication?.__typename === "Comment"
+    ) {
       formattedPrefix = publication?.profile?.picture;
     }
   }
@@ -18,13 +22,14 @@ const createProfilePicture = (publication: any, mirror?: boolean): string => {
     if (formattedPrefix?.original?.url.includes("http")) {
       profileImage = formattedPrefix?.original.url;
     } else {
-      const cut = formattedPrefix?.original?.url.split("/");
-      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[2]}`;
+      const cut = formattedPrefix?.original?.url.split("://");
+      profileImage = `${INFURA_GATEWAY}/ipfs/${cut[1]}`;
     }
   } else {
     profileImage = formattedPrefix?.uri;
   }
 
+  console.log(profileImage, "here");
   return profileImage;
 };
 
