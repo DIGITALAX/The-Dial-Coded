@@ -10,7 +10,10 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { setAddTrack } from "../../../../../redux/reducers/addTrackSlice";
-import createPostTypedData from "../../../../../graphql/mutations/createPost";
+import {
+  createPostTypedData,
+  createDispatcherPostData,
+} from "../../../../../graphql/mutations/createPost";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 import checkIndexed from "../../../../../graphql/queries/checkIndexed";

@@ -144,7 +144,7 @@ const useParameters = (): UseParametersResult => {
       await tx?.wait();
       dispatch(setDispatcher(enabled ? false : true));
     } catch (err: any) {
-      dispatch(setDispatcher(false));
+      dispatch(setDispatcher(enabled));
       console.error(err.message);
     }
     setDispatcherLoading(false);
