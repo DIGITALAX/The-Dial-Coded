@@ -1,6 +1,10 @@
 import { FormEvent, FunctionComponent } from "react";
 import { IoMdImages } from "react-icons/io";
-import { AiOutlineGif } from "react-icons/ai";
+import {
+  AiOutlineGif,
+  AiOutlineVideoCamera,
+  AiOutlineLoading,
+} from "react-icons/ai";
 import {
   BsFillEmojiLaughingFill,
   BsToggleOff,
@@ -22,21 +26,35 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
   uploadImage,
   imageUploading,
   postLoading,
+  videoUploading,
+  uploadVideo,
 }): JSX.Element => {
   const followerOnly = useSelector(
     (state: RootState) => state.app.followerOnlyReducer.value
+  );
+  const postImages = useSelector(
+    (state: RootState) => state.app.postImageReducer.value
   );
   return (
     <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2">
       <label
         className={`relative w-fit h-fit col-start-1 place-self-center ${
-          !postLoading && "cursor-pointer active:scale-95"
+          !postLoading &&
+          !imageUploading &&
+          (!postImages || (postImages as any)?.length < 4) &&
+          "cursor-pointer active:scale-95"
+        } ${imageUploading && "animate-spin"} ${
+          postImages?.length === 4 && "opacity-20"
         }`}
         onChange={(e: FormEvent) => {
           !postLoading ? uploadImage(e) : {};
         }}
       >
-        <IoMdImages color="white" size={20} />
+        {!imageUploading ? (
+          <IoMdImages color="white" size={20} />
+        ) : (
+          <AiOutlineLoading color="white" size={15} />
+        )}
         <input
           type="file"
           accept="image/png"
@@ -46,11 +64,49 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
           multiple={true}
           name="images"
           className="caret-transparent"
-          disabled={imageUploading || postLoading ? true : false}
+          disabled={
+            imageUploading || postLoading || postImages?.length === 4
+              ? true
+              : false
+          }
+        />
+      </label>
+      <label
+        className={`relative w-fit h-fit col-start-2 place-self-center ${
+          !postLoading &&
+          !videoUploading &&
+          (!postImages || (postImages as any)?.length < 4) &&
+          "cursor-pointer active:scale-95"
+        } ${videoUploading && "animate-spin"} ${
+          postImages?.length === 4 && "opacity-20"
+        }`}
+        onChange={(e: FormEvent) => {
+          !postLoading ? uploadVideo(e) : {};
+        }}
+      >
+        {!videoUploading ? (
+          <AiOutlineVideoCamera color="white" size={20} />
+        ) : (
+          <AiOutlineLoading color="white" size={15} />
+        )}
+        <input
+          type="file"
+          accept="video/mp4"
+          hidden
+          required
+          id="files"
+          multiple={false}
+          name="video"
+          className="caret-transparent"
+          disabled={
+            videoUploading || postLoading || postImages?.length === 4
+              ? true
+              : false
+          }
         />
       </label>
       <div
-        className={`relative w-fit h-fit col-start-2 place-self-center ${
+        className={`relative w-fit h-fit col-start-3 place-self-center ${
           !postLoading && "cursor-pointer active:scale-95"
         }`}
       >
@@ -67,7 +123,7 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
         />
       </div>
       <div
-        className={`relative w-fit h-fit col-start-3 place-self-center ${
+        className={`relative w-fit h-fit col-start-4 place-self-center ${
           !postLoading && "cursor-pointer active:scale-95"
         }`}
         onClick={() => {
@@ -81,7 +137,7 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
         <BsFillEmojiLaughingFill color="white" size={17} />
       </div>
       <div
-        className={`relative w-fit h-fit col-start-4 place-self-center ${
+        className={`relative w-fit h-fit col-start-5 place-self-center ${
           !postLoading && "cursor-pointer active:scale-95"
         }`}
         onClick={() => {
@@ -91,7 +147,7 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
         <RiGalleryUploadLine color="white" size={20} />
       </div>
       <div
-        className={`relative w-fit h-fit col-start-5 place-self-center grid grid-flow-col auto-cols-auto ${
+        className={`relative w-fit h-fit col-start-6 place-self-center grid grid-flow-col auto-cols-auto ${
           !postLoading && "cursor-pointer active:scale-95"
         }`}
         onClick={() => {

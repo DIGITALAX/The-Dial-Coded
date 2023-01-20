@@ -99,6 +99,8 @@ const Comments: FunctionComponent<CommentsProps> = ({
     imageUploading,
     mappedFeaturedFiles,
     handleRemoveImage,
+    uploadVideo,
+    videoUploading,
   } = useImageUpload();
   return (
     <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto pt-4 gap-4">
@@ -226,9 +228,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                     }}
                   >
                     {mentionProfiles?.map((user: any, index: number) => {
-                      const profileImage: string = createProfilePicture(
-                        user
-                      );
+                      const profileImage: string = createProfilePicture(user);
                       return (
                         <div
                           key={index}
@@ -282,6 +282,8 @@ const Comments: FunctionComponent<CommentsProps> = ({
                   uploadImage={uploadImage}
                   imageUploading={imageUploading}
                   postLoading={commentLoading}
+                  videoUploading={videoUploading}
+                  uploadVideo={uploadVideo}
                 />
               </div>
               {gifs && (
