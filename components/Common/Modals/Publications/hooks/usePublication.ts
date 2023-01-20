@@ -17,12 +17,13 @@ import {
   createDispatcherPostData,
 } from "../../../../../graphql/mutations/createPost";
 import { searchProfile } from "../../../../../graphql/queries/search";
-import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
-import { setSignIn } from "../../../../../redux/reducers/signInSlice";
 import lodash from "lodash";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
-import CreateCommentTypedData from "../../../../../graphql/mutations/comment";
+import {
+  createCommentTypedData,
+  createDispatcherCommentData,
+} from "../../../../../graphql/mutations/comment";
 import { useRouter } from "next/router";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 import omit from "../../../../../lib/lens/helpers/omit";
@@ -31,6 +32,7 @@ import { setFollowerOnly } from "../../../../../redux/reducers/followerOnlySlice
 import { Profile } from "../../../types/lens.types";
 import getPostHTML from "../../../../../lib/lens/helpers/postHTML";
 import getCaretPos from "../../../../../lib/lens/helpers/getCaretPos";
+import handleIndexCheck from "../../../../../lib/lens/helpers/handleIndexCheck";
 
 const usePublication = () => {
   const {
@@ -100,46 +102,67 @@ const usePublication = () => {
 
   const commentPost = async (e: FormEvent): Promise<void> => {
     setCommentLoading(true);
+    let result: any;
     try {
       const contentURI = await uploadContent();
-      const result: any = await CreateCommentTypedData({
-        profileId: defaultProfile,
-        publicationId: pubId ? pubId : id,
-        contentURI: "ipfs://" + contentURI,
-        collectModule: collectModuleType,
-        referenceModule: {
-          followerOnlyReferenceModule: followersOnly ? followersOnly : false,
-        },
-      });
+      if (dispatcher) {
+        result = await createDispatcherCommentData({
+          profileId: defaultProfile,
+          publicationId: pubId ? pubId : id,
+          contentURI: "ipfs://" + contentURI,
+          collectModule: collectModuleType,
+          referenceModule: {
+            followerOnlyReferenceModule: followersOnly ? followersOnly : false,
+          },
+        });
+        clearComment();
+        console.log(result);
+        setTimeout(async () => {
+          await handleIndexCheck(
+            result?.data?.createCommentViaDispatcher?.txHash,
+            dispatch
+          );
+        }, 7000);
+      } else {
+        await createCommentTypedData({
+          profileId: defaultProfile,
+          publicationId: pubId ? pubId : id,
+          contentURI: "ipfs://" + contentURI,
+          collectModule: collectModuleType,
+          referenceModule: {
+            followerOnlyReferenceModule: followersOnly ? followersOnly : false,
+          },
+        });
 
-      const typedData: any = result.data.createCommentTypedData.typedData;
+        const typedData: any = result.data.createCommentTypedData.typedData;
 
-      const signature: any = await signTypedDataAsync({
-        domain: omit(typedData?.domain, ["__typename"]),
-        types: omit(typedData?.types, ["__typename"]) as any,
-        value: omit(typedData?.value, ["__typename"]) as any,
-      });
+        const signature: any = await signTypedDataAsync({
+          domain: omit(typedData?.domain, ["__typename"]),
+          types: omit(typedData?.types, ["__typename"]) as any,
+          value: omit(typedData?.value, ["__typename"]) as any,
+        });
 
-      const { v, r, s } = splitSignature(signature);
+        const { v, r, s } = splitSignature(signature);
 
-      const commentArgs = {
-        profileId: typedData.value.profileId,
-        contentURI: typedData.value.contentURI,
-        profileIdPointed: typedData.value.profileIdPointed,
-        pubIdPointed: typedData.value.pubIdPointed,
-        referenceModuleData: typedData.value.referenceModuleData,
-        referenceModule: typedData.value.referenceModule,
-        referenceModuleInitData: typedData.value.referenceModuleInitData,
-        collectModule: typedData.value.collectModule,
-        collectModuleInitData: typedData.value.collectModuleInitData,
-        sig: {
-          v,
-          r,
-          s,
-          deadline: typedData.value.deadline,
-        },
-      };
-      setCommentArgs(commentArgs);
+        const commentArgs = {
+          profileId: typedData.value.profileId,
+          contentURI: typedData.value.contentURI,
+          profileIdPointed: typedData.value.profileIdPointed,
+          pubIdPointed: typedData.value.pubIdPointed,
+          referenceModuleData: typedData.value.referenceModuleData,
+          referenceModule: typedData.value.referenceModule,
+          referenceModuleInitData: typedData.value.referenceModuleInitData,
+          collectModule: typedData.value.collectModule,
+          collectModuleInitData: typedData.value.collectModuleInitData,
+          sig: {
+            v,
+            r,
+            s,
+            deadline: typedData.value.deadline,
+          },
+        };
+        setCommentArgs(commentArgs);
+      }
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));
@@ -277,7 +300,10 @@ const usePublication = () => {
         });
         clearPost();
         setTimeout(async () => {
-          await handleIndexCheck(result?.data?.createPostViaDispatcher?.txHash);
+          await handleIndexCheck(
+            result?.data?.createPostViaDispatcher?.txHash,
+            dispatch
+          );
         }, 7000);
       } else {
         result = await createPostTypedData({
@@ -321,39 +347,21 @@ const usePublication = () => {
     setPostLoading(false);
   };
 
-  const handleIndexCheck = async (tx: any) => {
-    try {
-      const indexedStatus = await checkIndexed(tx);
-
-      if (
-        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS"
-      ) {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-      } else {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Post Unsuccessful, Please Try Again",
-          })
-        );
-      }
-      setTimeout(() => {
-        dispatch(
-          setIndexModal({
-            actionValue: false,
-            actionMessage: undefined,
-          })
-        );
-      }, 3000);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+  const clearComment = () => {
+    setCommentLoading(false);
+    setPostDescription("");
+    setPostHTML("");
+    setGifs([]);
+    setTags([]);
+    (document as any).getElementById("tagSearch").value = "";
+    (document as any).querySelector("#highlighted-content").innerHTML = "";
+    dispatch(setFollowerOnly(false));
+    dispatch(
+      setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      })
+    );
   };
 
   const clearPost = () => {
@@ -385,7 +393,7 @@ const usePublication = () => {
       const tx = await writeAsync?.();
       clearPost();
       const res = await tx?.wait();
-      await handleIndexCheck(res?.transactionHash);
+      await handleIndexCheck(res?.transactionHash, dispatch);
     } catch (err) {
       console.error(err);
       setPostLoading(false);
@@ -397,22 +405,9 @@ const usePublication = () => {
     setCommentLoading(true);
     try {
       const tx = await commentWriteAsync?.();
-      setCommentLoading(false);
-      setPostDescription("");
-      setPostHTML("");
-      setGifs([]);
-      setTags([]);
-      (document as any).getElementById("tagSearch").value = "";
-      (document as any).querySelector("#highlighted-content").innerHTML = "";
-      dispatch(setFollowerOnly(false));
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
+      clearComment();
       const res = await tx?.wait();
-      await handleIndexCheck(res);
+      await handleIndexCheck(res, dispatch);
     } catch (err) {
       console.error(err);
       setCommentLoading(false);
