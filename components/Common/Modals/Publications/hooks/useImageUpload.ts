@@ -98,7 +98,7 @@ const useImageUpload = (): ImageUploadResults => {
       });
       let cid = await response.json();
       let newArr = [
-        ...mappedFeaturedFiles,
+        ...imagesUploaded as any,
         { cid: String(cid?.cid), type: MediaType.Video },
       ];
       setMappedFeaturedFiles(newArr);

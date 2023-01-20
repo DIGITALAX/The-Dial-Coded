@@ -11,7 +11,12 @@ import LensHubProxy from "../../../../../abis/LensHubProxy.json";
 import { v4 as uuidv4 } from "uuid";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import { PostArgsType, PostImage } from "../../../types/common.types";
+import {
+  MediaType,
+  PostArgsType,
+  PostImage,
+  UploadedMedia,
+} from "../../../types/common.types";
 import {
   createPostTypedData,
   createDispatcherPostData,
@@ -33,6 +38,7 @@ import { Profile } from "../../../types/lens.types";
 import getPostHTML from "../../../../../lib/lens/helpers/postHTML";
 import getCaretPos from "../../../../../lib/lens/helpers/getCaretPos";
 import handleIndexCheck from "../../../../../lib/lens/helpers/handleIndexCheck";
+import { setPostImages } from "../../../../../redux/reducers/postImagesSlice";
 
 const usePublication = () => {
   const {
@@ -78,7 +84,7 @@ const usePublication = () => {
   const collectModuleType = useSelector(
     (state: RootState) => state?.app?.collectValueTypeReducer?.type
   );
-  const [gifs, setGifs] = useState<string[]>([]);
+  const [gifs, setGifs] = useState<UploadedMedia[]>([]);
   const { config, isSuccess: postSuccess } = usePrepareContractWrite({
     address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
     abi: LensHubProxy,
@@ -191,12 +197,15 @@ const usePublication = () => {
   };
 
   const handleSetGif = (result: any): void => {
-    setGifs([...gifs, result]);
-  };
-
-  const handleRemoveGif = (result: any): void => {
-    const filtered: string[] = lodash.filter(gifs, (gif) => gif !== result);
-    setGifs(filtered);
+    if ((postImages as any)?.length <= 4) {
+      setGifs([
+        ...(postImages as any),
+        {
+          cid: result,
+          type: MediaType.Gif,
+        },
+      ]);
+    }
   };
 
   const uploadContent = async (): Promise<string | undefined> => {
@@ -204,21 +213,16 @@ const usePublication = () => {
     let formattedTags: string[] = [];
     postImages?.forEach((image) => {
       newImages.push({
-        item: "ipfs://" + image.cid,
-        type: image.type === 1 ? "image/png" : "video/mp4",
+        item: image.type !== 2 ? "ipfs://" + image.cid : image.cid,
+        type:
+          image.type === 1
+            ? "image/png"
+            : image.type === 2
+            ? "image/gif"
+            : "video/mp4",
         altTag: image.cid,
       });
     });
-
-    if (gifs.length > 0) {
-      for (let i = 0; i < gifs.length; i++) {
-        newImages.push({
-          item: gifs[i],
-          type: "image/gif",
-          altTag: gifs[i],
-        });
-      }
-    }
 
     if (tags?.length > 0) {
       lodash.filter(tags, (tag) => {
@@ -240,7 +244,7 @@ const usePublication = () => {
     }
 
     const coverImage = lodash.filter(newImages, (image: PostImage) => {
-      if (image.type === "image/png") return true;
+      if (image.type === "image/png" || image.type === "image/gif") return true;
     });
     const videos = lodash.filter(newImages, (image: PostImage) => {
       if (image.type === "video/mp4") return true;
@@ -493,6 +497,10 @@ const usePublication = () => {
     }
   }, [postSuccess, commentSuccess]);
 
+  useEffect(() => {
+    dispatch(setPostImages(gifs));
+  }, [gifs]);
+
   return {
     handlePost,
     postDescription,
@@ -505,8 +513,6 @@ const usePublication = () => {
     handleGif,
     handleGifSubmit,
     handleSetGif,
-    gifs,
-    handleRemoveGif,
     commentLoading,
     commentSuccess,
     commentPost,

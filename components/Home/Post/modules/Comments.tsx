@@ -36,11 +36,8 @@ const Comments: FunctionComponent<CommentsProps> = ({
   hasMirrored,
   hasReacted,
   hasCommented,
-  commentSuccess,
   reactionsFeed,
-  gifs,
   handleHidePost,
-  handleRemoveGif,
   tags,
   handleTags,
   handleRemoveTag,
@@ -286,25 +283,8 @@ const Comments: FunctionComponent<CommentsProps> = ({
                   uploadVideo={uploadVideo}
                 />
               </div>
-              {gifs && (
-                <div className="relative w-28 h-full justify-self-end col-start-2 grid grid-flow-col auto-cols overflow-x-scroll gap-2">
-                  {gifs?.map((gif: any, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className={`col-start-${index} relative w-6 h-full cursor-pointer scale:active-95`}
-                        onClick={() => handleRemoveGif(gif)}
-                      >
-                        <Image src={gif} objectFit="cover" layout="fill" />
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
               <div
-                className={`relative w-32 h-10 px-3 py-1 justify-self-end self-center grid grid-flow-col auto-cols-auto bg-white/95 rounded-md ${
-                  gifs ? "col-start-3" : "col-start-2"
-                } ${
+                className={`relative w-32 h-10 px-3 py-1 justify-self-end self-center grid grid-flow-col auto-cols-auto bg-white/95 rounded-md col-start-2 ${
                   !followerOnly &&
                   "cursor-pointer hover:opacity-70 active:scale-95"
                 }`}

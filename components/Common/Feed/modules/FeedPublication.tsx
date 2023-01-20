@@ -230,9 +230,13 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               }
             >
               <div className="relative w-full h-full col-start-1 flex">
-                {image.original.mimeType === "image/png" ? (
+                {image.original.mimeType !== "video/mp4" ? (
                   <Image
-                    src={formattedImageURL}
+                    src={
+                      image.original.mimeType === "image/png"
+                        ? formattedImageURL
+                        : image.original.url
+                    }
                     layout="fill"
                     objectFit="cover"
                     objectPosition={"center"}
