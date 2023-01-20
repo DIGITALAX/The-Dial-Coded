@@ -1,10 +1,6 @@
 import createDispatcherRequest from "../../../graphql/mutations/dispatcher";
 
 const handleDispatcher = async (profileId: string, enabled: boolean) => {
-  console.log({
-    profileId,
-    enabled,
-  })
   try {
     let res: any;
     if (enabled) {

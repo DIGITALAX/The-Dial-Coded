@@ -12,7 +12,10 @@ import { v4 as uuidv4 } from "uuid";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { PostArgsType, PostImage } from "../../../types/common.types";
-import createPostTypedData from "../../../../../graphql/mutations/createPost";
+import {
+  createPostTypedData,
+  createDispatcherPostData,
+} from "../../../../../graphql/mutations/createPost";
 import { searchProfile } from "../../../../../graphql/queries/search";
 import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
@@ -41,6 +44,9 @@ const usePublication = () => {
   });
   const isCanvas = useSelector(
     (state: RootState) => state.app.publicationReducer.canvas
+  );
+  const dispatcher = useSelector(
+    (state: RootState) => state.app.dispatcherReducer.value
   );
   const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
   const [postLoading, setPostLoading] = useState<boolean>(false);
@@ -256,75 +262,69 @@ const usePublication = () => {
 
   const handlePost = async (): Promise<void> => {
     setPostLoading(true);
+    let result: any;
     try {
       const contentURI = await uploadContent();
-      const result: any = await createPostTypedData({
-        profileId: defaultProfile,
-        contentURI: "ipfs://" + contentURI,
-        collectModule: collectModuleType,
-        referenceModule: {
-          followerOnlyReferenceModule: followersOnly ? followersOnly : false,
-        },
-      });
 
-      const typedData: any = result.data.createPostTypedData.typedData;
+      if (dispatcher) {
+        result = await createDispatcherPostData({
+          profileId: defaultProfile,
+          contentURI: "ipfs://" + contentURI,
+          collectModule: collectModuleType,
+          referenceModule: {
+            followerOnlyReferenceModule: followersOnly ? followersOnly : false,
+          },
+        });
+        clearPost();
+        setTimeout(async () => {
+          await handleIndexCheck(result?.data?.createPostViaDispatcher?.txHash);
+        }, 7000);
+      } else {
+        result = await createPostTypedData({
+          profileId: defaultProfile,
+          contentURI: "ipfs://" + contentURI,
+          collectModule: collectModuleType,
+          referenceModule: {
+            followerOnlyReferenceModule: followersOnly ? followersOnly : false,
+          },
+        });
 
-      const signature: any = await signTypedDataAsync({
-        domain: omit(typedData?.domain, ["__typename"]),
-        types: omit(typedData?.types, ["__typename"]) as any,
-        value: omit(typedData?.value, ["__typename"]) as any,
-      });
+        const typedData: any = result.data.createPostTypedData.typedData;
 
-      const { v, r, s } = splitSignature(signature);
+        const signature: any = await signTypedDataAsync({
+          domain: omit(typedData?.domain, ["__typename"]),
+          types: omit(typedData?.types, ["__typename"]) as any,
+          value: omit(typedData?.value, ["__typename"]) as any,
+        });
 
-      const postArgs: PostArgsType = {
-        profileId: typedData.value.profileId,
-        contentURI: typedData.value.contentURI,
-        collectModule: typedData.value.collectModule,
-        collectModuleInitData: typedData.value.collectModuleInitData,
-        referenceModule: typedData.value.referenceModule,
-        referenceModuleInitData: typedData.value.referenceModuleInitData,
-        sig: {
-          v,
-          r,
-          s,
-          deadline: typedData.value.deadline,
-        },
-      };
-      setArgs(postArgs);
+        const { v, r, s } = splitSignature(signature);
+
+        const postArgs: PostArgsType = {
+          profileId: typedData.value.profileId,
+          contentURI: typedData.value.contentURI,
+          collectModule: typedData.value.collectModule,
+          collectModuleInitData: typedData.value.collectModuleInitData,
+          referenceModule: typedData.value.referenceModule,
+          referenceModuleInitData: typedData.value.referenceModuleInitData,
+          sig: {
+            v,
+            r,
+            s,
+            deadline: typedData.value.deadline,
+          },
+        };
+        setArgs(postArgs);
+      }
     } catch (err: any) {
       console.error(err.message);
-      dispatch(setSignIn(true));
     }
     setPostLoading(false);
   };
 
-  const handlePostWrite = async (): Promise<void> => {
-    setPostLoading(true);
+  const handleIndexCheck = async (tx: any) => {
     try {
-      const tx = await writeAsync?.();
-      dispatch(
-        setPublication({
-          actionOpen: false,
-          actionCanvas: false,
-        })
-      );
-      dispatch(setFollowerOnly(false));
-      setPostLoading(false);
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
-      setPostDescription("");
-      setPostHTML("");
-      setGifs([]);
-      setTags([]);
-      (document as any).getElementById("tagSearch").value = "";
-      (document as any).querySelector("#highlighted-content").innerHTML = "";
-      const res = await tx?.wait();
-      const indexedStatus = await checkIndexed(res?.transactionHash);
+      const indexedStatus = await checkIndexed(tx);
+
       if (
         indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
         "SUCCESS"
@@ -351,6 +351,41 @@ const usePublication = () => {
           })
         );
       }, 3000);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const clearPost = () => {
+    dispatch(
+      setPublication({
+        actionOpen: false,
+        actionCanvas: false,
+      })
+    );
+    dispatch(setFollowerOnly(false));
+    setPostLoading(false);
+    dispatch(
+      setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      })
+    );
+    setPostDescription("");
+    setPostHTML("");
+    setGifs([]);
+    setTags([]);
+    (document as any).getElementById("tagSearch").value = "";
+    (document as any).querySelector("#highlighted-content").innerHTML = "";
+  };
+
+  const handlePostWrite = async (): Promise<void> => {
+    setPostLoading(true);
+    try {
+      const tx = await writeAsync?.();
+      clearPost();
+      const res = await tx?.wait();
+      await handleIndexCheck(res?.transactionHash);
     } catch (err) {
       console.error(err);
       setPostLoading(false);
@@ -377,33 +412,7 @@ const usePublication = () => {
         })
       );
       const res = await tx?.wait();
-      const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (
-        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS"
-      ) {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-      } else {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Comment Unsuccessful, Please Try Again",
-          })
-        );
-      }
-      setTimeout(() => {
-        dispatch(
-          setIndexModal({
-            actionValue: false,
-            actionMessage: undefined,
-          })
-        );
-      }, 3000);
+      await handleIndexCheck(res);
     } catch (err) {
       console.error(err);
       setCommentLoading(false);
