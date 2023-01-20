@@ -4,19 +4,16 @@ import { setMixtapeCheck } from "../../../../../redux/reducers/mixtapeCheckSlice
 import { RootState } from "../../../../../redux/store";
 import {
   PostArgsType,
-  PostImage,
   UseCreateMixtapeResults,
 } from "../../../../Common/types/common.types";
 import { v4 as uuidv4 } from "uuid";
-import moment from "moment";
 import { setAddTrack } from "../../../../../redux/reducers/addTrackSlice";
 import {
-  createPostTypedData,
   createDispatcherPostData,
+  createPostTypedData,
 } from "../../../../../graphql/mutations/createPost";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
-import checkIndexed from "../../../../../graphql/queries/checkIndexed";
 import {
   useContractWrite,
   usePrepareContractWrite,
@@ -32,11 +29,15 @@ import { setMixtapeSource } from "../../../../../redux/reducers/mixtapeSourceSli
 import { setMixtapeTitle } from "../../../../../redux/reducers/mixtapeTitleSlice";
 import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
 import omit from "../../../../../lib/lens/helpers/omit";
+import handleIndexCheck from "../../../../../lib/lens/helpers/handleIndexCheck";
 
 const useCreateMixtape = (): UseCreateMixtapeResults => {
   const [valueClicked, setValueClicked] = useState<boolean>(false);
   const defaultProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
+  const dispatcher = useSelector(
+    (state: RootState) => state.app.dispatcherReducer.value
   );
   const { handleSetCollectValues } = useCollectionModal();
   const [mixtapeLoading, setMixtapeLoading] = useState<boolean>(false);
@@ -164,6 +165,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
   const generateMixtape = async (): Promise<void> => {
     let titlearr: number[] = [];
     let imgarr: number[] = [];
+    let result: any;
     lodash.filter(arrays?.title, (title, index: number) => {
       if (title !== ("" || "TRACK NAME | SOURCE (shortened)")) {
         titlearr.push(index);
@@ -188,40 +190,58 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     setMixtapeLoading(true);
     try {
       const contentURI = await uploadContent();
-      const result: any = await createPostTypedData({
-        profileId: defaultProfile,
-        contentURI: "ipfs://" + contentURI,
-        collectModule: collectModuleType,
-        referenceModule: {
-          followerOnlyReferenceModule: false,
-        },
-      });
+      if (dispatcher) {
+        result = await createDispatcherPostData({
+          profileId: defaultProfile,
+          contentURI: "ipfs://" + contentURI,
+          collectModule: collectModuleType,
+          referenceModule: {
+            followerOnlyReferenceModule: false,
+          },
+        });
+        clearMixtape();
+        setTimeout(async () => {
+          await handleIndexCheck(
+            result?.data?.createPostViaDispatcher?.txHash,
+            dispatch
+          );
+        }, 7000);
+      } else {
+        result = await createPostTypedData({
+          profileId: defaultProfile,
+          contentURI: "ipfs://" + contentURI,
+          collectModule: collectModuleType,
+          referenceModule: {
+            followerOnlyReferenceModule: false,
+          },
+        });
 
-      const typedData: any = result.data.createPostTypedData.typedData;
+        const typedData: any = result.data.createPostTypedData.typedData;
 
-      const signature: any = await signTypedDataAsync({
-        domain: omit(typedData?.domain, ["__typename"]),
-        types: omit(typedData?.types, ["__typename"]) as any,
-        value: omit(typedData?.value, ["__typename"]) as any,
-      });
+        const signature: any = await signTypedDataAsync({
+          domain: omit(typedData?.domain, ["__typename"]),
+          types: omit(typedData?.types, ["__typename"]) as any,
+          value: omit(typedData?.value, ["__typename"]) as any,
+        });
 
-      const { v, r, s } = splitSignature(signature);
+        const { v, r, s } = splitSignature(signature);
 
-      const postArgs: PostArgsType = {
-        profileId: typedData.value.profileId,
-        contentURI: typedData.value.contentURI,
-        collectModule: typedData.value.collectModule,
-        collectModuleInitData: typedData.value.collectModuleInitData,
-        referenceModule: typedData.value.referenceModule,
-        referenceModuleInitData: typedData.value.referenceModuleInitData,
-        sig: {
-          v,
-          r,
-          s,
-          deadline: typedData.value.deadline,
-        },
-      };
-      setArgs(postArgs);
+        const postArgs: PostArgsType = {
+          profileId: typedData.value.profileId,
+          contentURI: typedData.value.contentURI,
+          collectModule: typedData.value.collectModule,
+          collectModuleInitData: typedData.value.collectModuleInitData,
+          referenceModule: typedData.value.referenceModule,
+          referenceModuleInitData: typedData.value.referenceModuleInitData,
+          sig: {
+            v,
+            r,
+            s,
+            deadline: typedData.value.deadline,
+          },
+        };
+        setArgs(postArgs);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -235,54 +255,30 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     );
   };
 
+  const clearMixtape = () => {
+    dispatch(
+      setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      })
+    );
+    dispatch(setMixtapeSource(""));
+    dispatch(setMixtapeTitle(""));
+    dispatch(
+      setAddTrack({
+        actionImageURI: Array(10).fill(""),
+        actionTitle: Array(10).fill("TRACK NAME | SOURCE (shortened)"),
+      })
+    );
+  };
+
   const handleMixtapeWrite = async (): Promise<void> => {
     setMixtapeLoading(true);
     try {
       const tx = await writeAsync?.();
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
-      dispatch(setMixtapeSource(""));
-      dispatch(setMixtapeTitle(""));
-      dispatch(
-        setAddTrack({
-          actionImageURI: Array(10).fill(""),
-          actionTitle: Array(10).fill("TRACK NAME | SOURCE (shortened)"),
-        })
-      );
+      clearMixtape();
       const res = await tx?.wait();
-      const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (
-        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS"
-      ) {
-        setMixtapeLoading(false);
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-      } else {
-        setMixtapeLoading(false);
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Mixtape Creation Unsuccessful, Please Try Again",
-          })
-        );
-      }
-      setTimeout(() => {
-        dispatch(
-          setIndexModal({
-            actionValue: false,
-            actionMessage: undefined,
-          })
-        );
-      }, 3000);
+      await handleIndexCheck(res?.transactionHash, dispatch);
     } catch (err) {
       console.error(err);
       setMixtapeLoading(false);

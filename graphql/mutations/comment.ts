@@ -35,7 +35,19 @@ export const COMMENT_POST = `mutation CreateCommentTypedData($request: CreatePub
   }
 }`;
 
-const CreateCommentTypedData = (CreateCommentTypedData: any) => {
+export const DISPATCHER_COMMENT = `mutation CreateCommentViaDispatcher($request: CreatePublicCommentRequest!) {
+  createCommentViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      txHash
+      txId
+    }
+    ... on RelayError {
+      reason
+    }
+  }
+}`;
+
+export const createCommentTypedData = (CreateCommentTypedData: any) => {
   return apolloClient.mutate({
     mutation: gql(COMMENT_POST),
     variables: {
@@ -44,4 +56,13 @@ const CreateCommentTypedData = (CreateCommentTypedData: any) => {
   });
 };
 
-export default CreateCommentTypedData;
+export const createDispatcherCommentData = (
+  CreatePublicCommentRequest: any
+) => {
+  return apolloClient.mutate({
+    mutation: gql(DISPATCHER_COMMENT),
+    variables: {
+      request: CreatePublicCommentRequest,
+    },
+  });
+};
