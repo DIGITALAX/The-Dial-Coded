@@ -203,7 +203,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
         setTimeout(async () => {
           await handleIndexCheck(
             result?.data?.createPostViaDispatcher?.txHash,
-            dispatch
+            dispatch, true
           );
         }, 7000);
       } else {
@@ -278,7 +278,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
       const tx = await writeAsync?.();
       clearMixtape();
       const res = await tx?.wait();
-      await handleIndexCheck(res?.transactionHash, dispatch);
+      await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err) {
       console.error(err);
       setMixtapeLoading(false);

@@ -17,7 +17,6 @@ import {
   useSignTypedData as useProfileSignTypedData,
   usePrepareContractWrite as useProfilePrepareContractWrite,
   useContractWrite as useProfileContractWrite,
-  useAccount as useAccountWagmi,
 } from "wagmi";
 import {
   LENS_HUB_PROXY_ADDRESS_MUMBAI,
@@ -25,10 +24,10 @@ import {
 } from "../../../../../lib/lens/constants";
 import LensHubProxy from "./../../../../../abis/LensHubProxy.json";
 import LensHubPeriphery from "./../../../../../abis/LensPeriphery.json";
-import profileImageUpload from "../../../../../graphql/mutations/profileImage";
-import getDefaultProfile from "../../../../../graphql/queries/getDefaultProfile";
-import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
-import checkIndexed from "../../../../../graphql/queries/checkIndexed";
+import {
+  profileImageUpload,
+  dispatchProfileImage,
+} from "../../../../../graphql/mutations/profileImage";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 import { setNotifications } from "../../../../../redux/reducers/notificationsSlice";
@@ -36,6 +35,7 @@ import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
 import omit from "../../../../../lib/lens/helpers/omit";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
+import handleIndexCheck from "../../../../../lib/lens/helpers/handleIndexCheck";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = [
@@ -46,7 +46,6 @@ const useAccount = (): UseAccountResult => {
     "conversations",
   ];
   const dispatch = useDispatch();
-  const { address } = useAccountWagmi();
   const [accountLoading, setAccountLoading] = useState<boolean>(false);
   const [profileImageUploading, setProfileImageUploading] =
     useState<boolean>(false);
@@ -63,6 +62,9 @@ const useAccount = (): UseAccountResult => {
   );
   const coverProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.coverPicture
+  );
+  const dispatcher = useSelector(
+    (state: RootState) => state.app.dispatcherReducer.value
   );
   const handleTapeSet = (title: string): void => {
     dispatch(setAccountPage(title));
@@ -255,41 +257,66 @@ const useAccount = (): UseAccountResult => {
 
   const profileImageSet = async (): Promise<void> => {
     setProfileLoading(true);
+    let profileImageData: any;
     try {
-      const profileImageData: any = await profileImageUpload({
-        profileId: profileId,
-        url: "ipfs://" + profileImage,
-      });
-      const imageTypedData: any =
-        profileImageData.data.createSetProfileImageURITypedData.typedData;
-      const profileImageSignature: any = await signProfileTypedDataAsync({
-        domain: omit(imageTypedData?.domain, ["__typename"]),
-        types: omit(imageTypedData?.types, ["__typename"]) as any,
-        value: omit(imageTypedData?.value, ["__typename"]) as any,
-      });
+      if (dispatcher) {
+        profileImageData = await dispatchProfileImage({
+          profileId: profileId,
+          url: "ipfs://" + profileImage,
+        });
+        clearAccount();
+        setTimeout(async () => {
+          await handleIndexCheck(
+            profileImageData?.data?.createProfileImageURIViaDispatcher?.txHash,
+            dispatch,
+            true
+          );
+        }, 7000);
+      } else {
+        profileImageData = await profileImageUpload({
+          profileId: profileId,
+          url: "ipfs://" + profileImage,
+        });
+        const imageTypedData: any =
+          profileImageData.data.createSetProfileImageURITypedData.typedData;
+        const profileImageSignature: any = await signProfileTypedDataAsync({
+          domain: omit(imageTypedData?.domain, ["__typename"]),
+          types: omit(imageTypedData?.types, ["__typename"]) as any,
+          value: omit(imageTypedData?.value, ["__typename"]) as any,
+        });
 
-      const {
-        v: imageV,
-        r: imageR,
-        s: imageS,
-      } = splitSignature(profileImageSignature);
-
-      const profileImageArgsValues: ImageArgsType = {
-        profileId: imageTypedData.value.profileId,
-        imageURI: imageTypedData.value.imageURI,
-        sig: {
+        const {
           v: imageV,
           r: imageR,
           s: imageS,
-          deadline: imageTypedData.value.deadline,
-        },
-      };
+        } = splitSignature(profileImageSignature);
 
-      setProfileImageArgs(profileImageArgsValues);
+        const profileImageArgsValues: ImageArgsType = {
+          profileId: imageTypedData.value.profileId,
+          imageURI: imageTypedData.value.imageURI,
+          sig: {
+            v: imageV,
+            r: imageR,
+            s: imageS,
+            deadline: imageTypedData.value.deadline,
+          },
+        };
+
+        setProfileImageArgs(profileImageArgsValues);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
     setProfileLoading(false);
+  };
+
+  const clearAccount = () => {
+    dispatch(
+      setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      })
+    );
   };
 
   const handleAccountWrite = async (): Promise<void> => {
@@ -301,45 +328,9 @@ const useAccount = (): UseAccountResult => {
         setAccountLoading(false);
         return;
       }
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
+      clearAccount();
       const res = await tx?.wait();
-      const result = await checkIndexed(res?.transactionHash);
-      if (
-        result?.data?.hasTxHashBeenIndexed?.metadataStatus?.status === "SUCCESS"
-      ) {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-        setTimeout(async () => {
-          const profile = await getDefaultProfile(address);
-          dispatch(setLensProfile(profile.data.defaultProfile));
-          setAccountLoading(false);
-        }, 5000);
-      } else {
-        setAccountLoading(false);
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Update Unsuccessful, Please Try Again",
-          })
-        );
-      }
-      setTimeout(() => {
-        dispatch(
-          setIndexModal({
-            actionValue: false,
-            actionMessage: undefined,
-          })
-        );
-      }, 3000);
+      await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err) {
       console.error(err);
       setAccountLoading(false);
@@ -356,46 +347,9 @@ const useAccount = (): UseAccountResult => {
         setProfileLoading(false);
         return;
       }
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
-
+      clearAccount();
       const res = await tx?.wait();
-      const result = await checkIndexed(res?.transactionHash);
-      if (
-        result?.data?.hasTxHashBeenIndexed?.metadataStatus?.status === "SUCCESS"
-      ) {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-        setTimeout(async () => {
-          const profile = await getDefaultProfile(address);
-          dispatch(setLensProfile(profile.data.defaultProfile));
-          setProfileLoading(false);
-        }, 5000);
-      } else {
-        setProfileLoading(false);
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Update Unsuccessful, Please Try Again",
-          })
-        );
-      }
-      setTimeout(() => {
-        dispatch(
-          setIndexModal({
-            actionValue: false,
-            actionMessage: undefined,
-          })
-        );
-      }, 3000);
+      await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err) {
       console.error(err);
       setProfileLoading(false);

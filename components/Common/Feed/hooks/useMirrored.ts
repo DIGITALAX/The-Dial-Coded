@@ -6,10 +6,10 @@ import {
   usePrepareContractWrite,
   useSignTypedData,
 } from "wagmi";
-import mirror from "../../../../graphql/mutations/mirror";
-import checkIndexed from "../../../../graphql/queries/checkIndexed";
+import { mirror, mirrorDispatcher } from "../../../../graphql/mutations/mirror";
 import { whoMirroredPublications } from "../../../../graphql/queries/whoMirroredPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
+import handleIndexCheck from "../../../../lib/lens/helpers/handleIndexCheck";
 import omit from "../../../../lib/lens/helpers/omit";
 import splitSignature from "../../../../lib/lens/helpers/splitSignature";
 import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
@@ -34,6 +34,9 @@ const useMirrored = () => {
   );
   const profileId: any = useSelector(
     (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
+  );
+  const dispatcher = useSelector(
+    (state: RootState) => state.app.dispatcherReducer.value
   );
   const { signTypedDataAsync } = useSignTypedData();
   const dispatch = useDispatch();
@@ -94,39 +97,58 @@ const useMirrored = () => {
 
   const mirrorPost = async (): Promise<void> => {
     setMirrorLoading(true);
+    let mirrorPost: any;
     try {
-      const mirrorPost = await mirror({
-        profileId: profileId,
-        publicationId: pubId,
-        referenceModule: {
-          followerOnlyReferenceModule: false,
-        },
-      });
+      if (dispatcher) {
+        mirrorPost = await mirrorDispatcher({
+          profileId: profileId,
+          publicationId: pubId,
+          referenceModule: {
+            followerOnlyReferenceModule: false,
+          },
+        });
+        clearMirror();
+        setTimeout(async () => {
+          await handleIndexCheck(
+            mirrorPost?.data?.createMirrorViaDispatcher?.txHash,
+            dispatch,
+            true
+          );
+        }, 7000);
+      } else {
+        mirrorPost = await mirror({
+          profileId: profileId,
+          publicationId: pubId,
+          referenceModule: {
+            followerOnlyReferenceModule: false,
+          },
+        });
 
-      const typedData: any = mirrorPost.data.createMirrorTypedData.typedData;
+        const typedData: any = mirrorPost.data.createMirrorTypedData.typedData;
 
-      const signature: any = await signTypedDataAsync({
-        domain: omit(typedData?.domain, ["__typename"]),
-        types: omit(typedData?.types, ["__typename"]) as any,
-        value: omit(typedData?.value, ["__typename"]) as any,
-      });
+        const signature: any = await signTypedDataAsync({
+          domain: omit(typedData?.domain, ["__typename"]),
+          types: omit(typedData?.types, ["__typename"]) as any,
+          value: omit(typedData?.value, ["__typename"]) as any,
+        });
 
-      const { v, r, s } = splitSignature(signature);
-      const mirrorArgs = {
-        profileId: typedData.value.profileId,
-        profileIdPointed: typedData.value.profileIdPointed,
-        pubIdPointed: typedData.value.pubIdPointed,
-        referenceModuleData: typedData.value.referenceModuleData,
-        referenceModule: typedData.value.referenceModule,
-        referenceModuleInitData: typedData.value.referenceModuleInitData,
-        sig: {
-          v,
-          r,
-          s,
-          deadline: typedData.value.deadline,
-        },
-      };
-      setMirrorArgs(mirrorArgs);
+        const { v, r, s } = splitSignature(signature);
+        const mirrorArgs = {
+          profileId: typedData.value.profileId,
+          profileIdPointed: typedData.value.profileIdPointed,
+          pubIdPointed: typedData.value.pubIdPointed,
+          referenceModuleData: typedData.value.referenceModuleData,
+          referenceModule: typedData.value.referenceModule,
+          referenceModuleInitData: typedData.value.referenceModuleInitData,
+          sig: {
+            v,
+            r,
+            s,
+            deadline: typedData.value.deadline,
+          },
+        };
+        setMirrorArgs(mirrorArgs);
+      }
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));
@@ -134,52 +156,30 @@ const useMirrored = () => {
     setMirrorLoading(false);
   };
 
+  const clearMirror = () => {
+    setMirrorLoading(false);
+    dispatch(
+      setReactionState({
+        actionOpen: false,
+        actionType: "mirror",
+        actionValue: pubId,
+      })
+    );
+    dispatch(
+      setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      })
+    );
+  };
+
   const mirrorWrite = async (): Promise<void> => {
     setMirrorLoading(true);
     try {
       const tx = await writeAsync?.();
-      setMirrorLoading(false);
-      dispatch(
-        setReactionState({
-          actionOpen: false,
-          actionType: "mirror",
-          actionValue: pubId,
-        })
-      );
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
+      clearMirror();
       const res = await tx?.wait();
-      const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (
-        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS"
-      ) {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-      } else {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Mirror Unsuccessful, Please Try Again",
-          })
-        );
-      }
-      setTimeout(() => {
-        dispatch(
-          setIndexModal({
-            actionValue: false,
-            actionMessage: undefined,
-          })
-        );
-      }, 3000);
+      await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err: any) {
       dispatch(setInsufficientFunds("failed"));
       setMirrorLoading(false);
@@ -192,7 +192,6 @@ const useMirrored = () => {
       getPostMirrors();
     }
   }, [reactions.type, reactions.open, id, pubId, mirrorComplete]);
-
 
   useEffect(() => {
     if (isSuccess) {
