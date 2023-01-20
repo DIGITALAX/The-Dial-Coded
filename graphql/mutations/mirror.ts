@@ -32,7 +32,19 @@ export const MIRROR_POST = `mutation CreateMirrorTypedData($request: CreateMirro
     }
   }`;
 
-const mirror = (CreateMirrorTypedData: any) => {
+export const DISPATCH_MIRROR = `mutation CreateMirrorViaDispatcher($request: CreateMirrorRequest!) {
+  createMirrorViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      txHash
+      txId
+    }
+    ... on RelayError {
+      reason
+    }
+  }
+}`;
+
+export const mirror = (CreateMirrorTypedData: any) => {
   return apolloClient.mutate({
     mutation: gql(MIRROR_POST),
     variables: {
@@ -41,4 +53,11 @@ const mirror = (CreateMirrorTypedData: any) => {
   });
 };
 
-export default mirror;
+export const mirrorDispatcher = (CreateMirrorTypedData: any) => {
+  return apolloClient.mutate({
+    mutation: gql(DISPATCH_MIRROR),
+    variables: {
+      request: CreateMirrorTypedData,
+    },
+  });
+};

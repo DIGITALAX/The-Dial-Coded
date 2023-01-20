@@ -116,11 +116,10 @@ const usePublication = () => {
           },
         });
         clearComment();
-        console.log(result);
         setTimeout(async () => {
           await handleIndexCheck(
             result?.data?.createCommentViaDispatcher?.txHash,
-            dispatch
+            dispatch, true
           );
         }, 7000);
       } else {
@@ -302,7 +301,7 @@ const usePublication = () => {
         setTimeout(async () => {
           await handleIndexCheck(
             result?.data?.createPostViaDispatcher?.txHash,
-            dispatch
+            dispatch, true
           );
         }, 7000);
       } else {
@@ -393,7 +392,7 @@ const usePublication = () => {
       const tx = await writeAsync?.();
       clearPost();
       const res = await tx?.wait();
-      await handleIndexCheck(res?.transactionHash, dispatch);
+      await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err) {
       console.error(err);
       setPostLoading(false);
@@ -407,7 +406,7 @@ const usePublication = () => {
       const tx = await commentWriteAsync?.();
       clearComment();
       const res = await tx?.wait();
-      await handleIndexCheck(res, dispatch);
+      await handleIndexCheck(res, dispatch, true);
     } catch (err) {
       console.error(err);
       setCommentLoading(false);

@@ -2,13 +2,18 @@ import { AnyAction, Dispatch } from "redux";
 import checkIndexed from "../../../graphql/queries/checkIndexed";
 import { setIndexModal } from "../../../redux/reducers/indexModalSlice";
 
-const handleIndexCheck = async (tx: any, dispatch: Dispatch<AnyAction>) => {
+const handleIndexCheck = async (
+  tx: any,
+  dispatch: Dispatch<AnyAction>,
+  success: boolean
+) => {
   try {
     const indexedStatus = await checkIndexed(tx);
-
     if (
-      indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-      "SUCCESS"
+      (indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS" &&
+        success) ||
+      (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed && !success)
     ) {
       dispatch(
         setIndexModal({

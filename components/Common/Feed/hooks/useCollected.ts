@@ -34,6 +34,7 @@ import checkIndexed from "../../../../graphql/queries/checkIndexed";
 import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
 import omit from "../../../../lib/lens/helpers/omit";
 import splitSignature from "../../../../lib/lens/helpers/splitSignature";
+import handleIndexCheck from "../../../../lib/lens/helpers/handleIndexCheck";
 
 const useCollected = () => {
   const {
@@ -327,30 +328,7 @@ const useCollected = () => {
         })
       );
       const res = await tx?.wait();
-      const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed) {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-      } else {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Collect Unsuccessful, Please Try Again",
-          })
-        );
-      }
-      setTimeout(() => {
-        dispatch(
-          setIndexModal({
-            actionValue: false,
-            actionMessage: undefined,
-          })
-        );
-      }, 3000);
+      await handleIndexCheck(res?.transactionHash, dispatch, false);
     } catch (err: any) {
       console.error(err.message);
       setCollectLoading(false);

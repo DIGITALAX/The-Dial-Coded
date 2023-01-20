@@ -32,7 +32,6 @@ import {
 import following from "../../../../graphql/queries/following";
 import followers from "../../../../graphql/queries/followers";
 import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
-import checkIndexed from "../../../../graphql/queries/checkIndexed";
 import { setChosenDMProfile } from "../../../../redux/reducers/chosenDMProfileSlice";
 import { setLayout } from "../../../../redux/reducers/layoutSlice";
 import omit from "../../../../lib/lens/helpers/omit";
@@ -44,6 +43,7 @@ import checkIfMixtapeMirror from "../../../../lib/lens/helpers/checkIfMixtapeMir
 import getFollowing from "../../../../lib/lens/helpers/getFollowing";
 import getFollowers from "../../../../lib/lens/helpers/getFollowers";
 import checkIfFollowerOnly from "../../../../lib/lens/helpers/checkIfFollowerOnly";
+import handleIndexCheck from "../../../../lib/lens/helpers/handleIndexCheck";
 
 const useProfilePage = (): UseProfilePageResults => {
   const router = useRouter();
@@ -457,33 +457,7 @@ const useProfilePage = (): UseProfilePageResults => {
         })
       );
       const res = await tx?.wait();
-      const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (
-        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS"
-      ) {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-      } else {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Follow Unsuccessful, Please Try Again",
-          })
-        );
-      }
-      setTimeout(() => {
-        dispatch(
-          setIndexModal({
-            actionValue: false,
-            actionMessage: undefined,
-          })
-        );
-      }, 3000);
+      await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));
@@ -502,33 +476,7 @@ const useProfilePage = (): UseProfilePageResults => {
         })
       );
       const res = await tx?.wait();
-      const indexedStatus = await checkIndexed(res?.transactionHash);
-      if (
-        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS"
-      ) {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-      } else {
-        dispatch(
-          setIndexModal({
-            actionValue: true,
-            actionMessage: "Unfollow Unsuccessful, Please Try Again",
-          })
-        );
-      }
-      setTimeout(() => {
-        dispatch(
-          setIndexModal({
-            actionValue: false,
-            actionMessage: undefined,
-          })
-        );
-      }, 3000);
+      await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));
