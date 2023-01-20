@@ -35,8 +35,6 @@ export type CommentsProps = {
   hasMirrored: boolean[];
   hasReacted: boolean[];
   hasCommented: boolean[];
-  handleRemoveGif: (result: any) => void;
-  gifs: string[];
   reactionsFeed: any[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   tags: string[];

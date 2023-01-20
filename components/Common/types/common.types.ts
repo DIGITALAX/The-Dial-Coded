@@ -756,6 +756,7 @@ export type CanvasOptionProps = {
 export enum MediaType {
   Video,
   Image,
+  Gif,
 }
 
 export interface UploadedMedia {

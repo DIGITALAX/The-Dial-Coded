@@ -68,7 +68,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     mappedFeaturedFiles,
     handleRemoveImage,
     videoUploading,
-    uploadVideo
+    uploadVideo,
   } = useImageUpload();
   const {
     handlePostDescription,
@@ -82,8 +82,6 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     results,
     searchGif,
     handleSetGif,
-    handleRemoveGif,
-    gifs,
     handleTags,
     tags,
     handleRemoveTag,
@@ -161,10 +159,14 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
               <ImCross
                 color="white"
                 size={15}
-                onClick={() => dispatch(setPublication({
-                  actionOpen: false,
-                  actionCanvas: false
-                }))}
+                onClick={() =>
+                  dispatch(
+                    setPublication({
+                      actionOpen: false,
+                      actionCanvas: false,
+                    })
+                  )
+                }
               />
             </div>
             <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto gap-6 row-start-2 z-2">
@@ -207,9 +209,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                     }}
                   >
                     {mentionProfiles?.map((user: any, index: number) => {
-                      const profileImage: string = createProfilePicture(
-                        user
-                      );
+                      const profileImage: string = createProfilePicture(user);
                       return (
                         <div
                           key={index}
@@ -263,25 +263,8 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   uploadVideo={uploadVideo}
                 />
               </div>
-              {gifs && (
-                <div className="relative w-28 h-full justify-self-end col-start-2 grid grid-flow-col auto-cols overflow-x-scroll gap-2">
-                  {gifs?.map((gif: any, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className={`col-start-${index} relative w-6 h-full cursor-pointer scale:active-95`}
-                        onClick={() => handleRemoveGif(gif)}
-                      >
-                        <Image src={gif} objectFit="cover" layout="fill" />
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
               <div
-                className={`${
-                  gifs ? "col-start-3" : "col-start-2"
-                } relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis justify-self-end self-center ${
+                className={`col-start-2 relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis justify-self-end self-center ${
                   postDescription !== "" || !imageUploading || !postLoading
                     ? "active:scale-95 cursor-pointer"
                     : "opacity-60"

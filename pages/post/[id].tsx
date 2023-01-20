@@ -48,11 +48,9 @@ const Post: NextPage = (): JSX.Element => {
     commentSuccess,
     postDescription,
     handlePostDescription,
-    gifs,
     handleEmoji,
     handleGif,
     handleGifSubmit,
-    handleRemoveGif,
     handleSetGif,
     results,
     searchGif,
@@ -182,11 +180,9 @@ const Post: NextPage = (): JSX.Element => {
                 handleEmoji={handleEmoji}
                 handleGif={handleGif}
                 handleGifSubmit={handleGifSubmit}
-                handleRemoveGif={handleRemoveGif}
                 handleSetGif={handleSetGif}
                 results={results}
                 searchGif={searchGif}
-                gifs={gifs}
                 commentSuccess={commentSuccess}
                 hasMirrored={hasMirrored}
                 hasReacted={hasReacted}

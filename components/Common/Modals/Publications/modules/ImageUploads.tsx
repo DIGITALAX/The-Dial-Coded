@@ -13,10 +13,7 @@ const ImageUploads: FunctionComponent<ImageUploadProps> = ({
   return (
     <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto overflow-x-scroll">
       <div className="relative w-fit h-fit overflow-x-scroll grid grid-flow-col auto-cols-auto gap-2">
-        {(mappedFeaturedFiles?.length === 0
-          ? postImagesDispatched
-          : mappedFeaturedFiles
-        )?.map((image: UploadedMedia, index: number) => {
+        {postImagesDispatched?.map((image: UploadedMedia, index: number) => {
           return (
             <div
               key={index}
@@ -25,16 +22,25 @@ const ImageUploads: FunctionComponent<ImageUploadProps> = ({
               }`}
             >
               <div className="relative w-full h-full flex col-start-1 grid grid-flow-col auto-cols-auto">
-                {image.type === 1 ? (
+                {image.type !== 0 ? (
                   <Image
-                    src={`${INFURA_GATEWAY}/ipfs/${image.cid}`}
+                    src={
+                      image.type === 1
+                        ? `${INFURA_GATEWAY}/ipfs/${image.cid}`
+                        : `${image.cid}`
+                    }
                     layout="fill"
                     objectFit="cover"
                     objectPosition={"center"}
                     className="rounded-md absolute"
                   />
                 ) : (
-                  <video muted autoPlay controls className="rounded-md absolute w-full h-full object-cover">
+                  <video
+                    muted
+                    autoPlay
+                    controls
+                    className="rounded-md absolute w-full h-full object-cover"
+                  >
                     <source
                       src={`${INFURA_GATEWAY}/ipfs/${image.cid}`}
                       type="video/mp4"
