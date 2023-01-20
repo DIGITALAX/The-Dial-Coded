@@ -27,6 +27,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                 onClick={() =>
                   dispatch(
                     setImageViewer({
+                      actionType: "image/png",
                       actionOpen: true,
                       actionImage: `${result?.src}`,
                     })

@@ -119,7 +119,8 @@ const usePublication = () => {
         setTimeout(async () => {
           await handleIndexCheck(
             result?.data?.createCommentViaDispatcher?.txHash,
-            dispatch, true
+            dispatch,
+            true
           );
         }, 7000);
       } else {
@@ -203,9 +204,9 @@ const usePublication = () => {
     let formattedTags: string[] = [];
     postImages?.forEach((image) => {
       newImages.push({
-        item: "ipfs://" + image,
-        type: "image/png",
-        altTag: image,
+        item: "ipfs://" + image.cid,
+        type: image.type === 1 ? "image/png" : "video/mp4",
+        altTag: image.cid,
       });
     });
 
@@ -238,18 +239,28 @@ const usePublication = () => {
       }
     }
 
+    const coverImage = lodash.filter(newImages, (image: PostImage) => {
+      if (image.type === "image/png") return true;
+    });
+    const videos = lodash.filter(newImages, (image: PostImage) => {
+      if (image.type === "video/mp4") return true;
+    });
+
     const data = {
       version: "2.0.0",
       metadata_id: uuidv4(),
       description: postDescription ? postDescription : "",
       content: postDescription ? postDescription : "",
       external_url: "https://www.thedial.xyz/",
-      image:
-        postImages && postImages?.length > 0 ? "ipfs://" + postImages[0] : null,
+      image: coverImage.length > 0 ? (coverImage[0] as any).item : null,
       imageMimeType: "image/png",
       name: postDescription ? postDescription?.slice(0, 20) : "The Dial",
       mainContentFocus:
-        newImages.length > 0 || gifs.length > 0 ? "IMAGE" : "TEXT_ONLY",
+        videos.length > 0
+          ? "VIDEO"
+          : newImages.length > 0
+          ? "IMAGE"
+          : "TEXT_ONLY",
       contentWarning: null,
       attributes: [
         {
@@ -301,7 +312,8 @@ const usePublication = () => {
         setTimeout(async () => {
           await handleIndexCheck(
             result?.data?.createPostViaDispatcher?.txHash,
-            dispatch, true
+            dispatch,
+            true
           );
         }, 7000);
       } else {

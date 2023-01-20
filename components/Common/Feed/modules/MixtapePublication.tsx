@@ -133,6 +133,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                 onClick={() =>
                   dispatch(
                     setImageViewer({
+                      actionType: "image/png",
                       actionOpen: true,
                       actionImage: `${INFURA_GATEWAY}/ipfs/${image}`,
                     })

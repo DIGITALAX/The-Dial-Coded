@@ -131,6 +131,7 @@ const Message: FunctionComponent<MessageProps> = ({
                         onClick={() =>
                           dispatch(
                             setImageViewer({
+                              actionType: "image/png",
                               actionOpen: true,
                               actionImage: src,
                             })
@@ -230,9 +231,7 @@ const Message: FunctionComponent<MessageProps> = ({
               }}
             >
               {mentionProfiles?.map((user: any, index: number) => {
-                const profileImage: string = createProfilePicture(
-                  user
-                );
+                const profileImage: string = createProfilePicture(user);
                 return (
                   <div
                     key={index}

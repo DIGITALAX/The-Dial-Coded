@@ -364,20 +364,24 @@ export type PostOptionsProps = {
   uploadImage: (e: FormEvent | File, canvas?: boolean) => Promise<void>;
   imageUploading: boolean;
   postLoading: boolean;
+  videoUploading: boolean;
+  uploadVideo: (e: FormEvent) => Promise<void>;
 };
 
 export type ImageUploadProps = {
-  mappedFeaturedFiles: string[] | undefined;
-  handleRemoveImage: (e: string) => void;
+  mappedFeaturedFiles: UploadedMedia[] | undefined;
+  handleRemoveImage: (e: UploadedMedia) => void;
   postLoading: boolean;
-  postImagesDispatched?: string[];
+  postImagesDispatched?: UploadedMedia[];
 };
 
 export type ImageUploadResults = {
   uploadImage: (e: FormEvent | File, canvas?: boolean) => Promise<void>;
   imageUploading: boolean;
-  mappedFeaturedFiles: string[] | undefined;
-  handleRemoveImage: (e: string) => void;
+  mappedFeaturedFiles: UploadedMedia[] | undefined;
+  handleRemoveImage: (e: UploadedMedia) => void;
+  videoUploading: boolean;
+  uploadVideo: (e: FormEvent) => Promise<void>;
 };
 
 export type ImagePickerProps = {
@@ -748,3 +752,13 @@ export type CanvasOptionProps = {
   height: number;
   color?: boolean;
 };
+
+export enum MediaType {
+  Video,
+  Image,
+}
+
+export interface UploadedMedia {
+  cid: string;
+  type: MediaType;
+}

@@ -3,13 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPostImages } from "../../../../../redux/reducers/postImagesSlice";
 import { RootState } from "../../../../../redux/store";
 import lodash from "lodash";
-import { ImageUploadResults } from "../../../types/common.types";
+import {
+  ImageUploadResults,
+  MediaType,
+  UploadedMedia,
+} from "../../../types/common.types";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
+import videoLimitAlert from "../../../../../lib/misc/helpers/videoLimitAlert";
 
 const useImageUpload = (): ImageUploadResults => {
   const [imageUploading, setImageUploading] = useState<boolean>(false);
-  const [mappedFeaturedFiles, setMappedFeaturedFiles] = useState<string[]>([]);
+  const [videoUploading, setVideoUploading] = useState<boolean>(false);
+  const [mappedFeaturedFiles, setMappedFeaturedFiles] = useState<
+    UploadedMedia[]
+  >([]);
   const dispatch = useDispatch();
   const imagesUploaded = useSelector(
     (state: RootState) => state.app.postImageReducer.value
@@ -19,7 +27,7 @@ const useImageUpload = (): ImageUploadResults => {
     e: FormEvent | File,
     canvas?: boolean
   ): Promise<void> => {
-    let finalImages: string[] = [];
+    let finalImages: UploadedMedia[] = [];
     setImageUploading(true);
     if (canvas) {
       try {
@@ -29,7 +37,10 @@ const useImageUpload = (): ImageUploadResults => {
           body: compressedImage as any,
         });
         let cid = await response.json();
-        finalImages.push(String(cid?.cid));
+        finalImages.push({
+          cid: String(cid?.cid),
+          type: MediaType.Image,
+        });
         setMappedFeaturedFiles([...finalImages]);
       } catch (err: any) {
         console.error(err.message);
@@ -54,12 +65,16 @@ const useImageUpload = (): ImageUploadResults => {
               setImageUploading(false);
             } else {
               let cid = await response.json();
-              finalImages.push(String(cid?.cid));
-              setMappedFeaturedFiles([...finalImages]);
+              finalImages.push({
+                cid: String(cid?.cid),
+                type: MediaType.Image,
+              });
               if (
                 finalImages?.length ===
                 ((e as FormEvent).target as HTMLFormElement).files?.length
               ) {
+                let newArr = [...(imagesUploaded as any), ...finalImages];
+                setMappedFeaturedFiles(newArr);
                 setImageUploading(false);
               }
             }
@@ -71,10 +86,32 @@ const useImageUpload = (): ImageUploadResults => {
     }
   };
 
-  const handleRemoveImage = (image: string): void => {
+  const uploadVideo = async (e: FormEvent) => {
+    try {
+      if (videoLimitAlert((e as any).target.files[0])) {
+        return;
+      }
+      setVideoUploading(true);
+      const response = await fetch("/api/ipfs", {
+        method: "POST",
+        body: (e.target as HTMLFormElement).files[0],
+      });
+      let cid = await response.json();
+      let newArr = [
+        ...mappedFeaturedFiles,
+        { cid: String(cid?.cid), type: MediaType.Video },
+      ];
+      setMappedFeaturedFiles(newArr);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setVideoUploading(false);
+  };
+
+  const handleRemoveImage = (image: UploadedMedia): void => {
     const cleanedArray = lodash.filter(
       imagesUploaded,
-      (uploaded) => uploaded !== image
+      (uploaded) => uploaded.cid !== image.cid
     );
     setMappedFeaturedFiles(cleanedArray);
   };
@@ -88,6 +125,8 @@ const useImageUpload = (): ImageUploadResults => {
     imageUploading,
     mappedFeaturedFiles,
     handleRemoveImage,
+    videoUploading,
+    uploadVideo,
   };
 };
 

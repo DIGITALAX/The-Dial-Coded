@@ -222,6 +222,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               onClick={() =>
                 dispatch(
                   setImageViewer({
+                    actionType: image.original.mimeType,
                     actionOpen: true,
                     actionImage: formattedImageURL,
                   })
@@ -229,13 +230,23 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               }
             >
               <div className="relative w-full h-full col-start-1 flex">
-                <Image
-                  src={formattedImageURL}
-                  layout="fill"
-                  objectFit="cover"
-                  objectPosition={"center"}
-                  className="rounded-md"
-                />
+                {image.original.mimeType === "image/png" ? (
+                  <Image
+                    src={formattedImageURL}
+                    layout="fill"
+                    objectFit="cover"
+                    objectPosition={"center"}
+                    className="rounded-md"
+                  />
+                ) : (
+                  <video
+                    muted
+                    controls
+                    className="rounded-md absolute w-full h-full object-cover"
+                  >
+                    <source src={formattedImageURL} type="video/mp4" />
+                  </video>
+                )}
                 {mixtapeMirror && (
                   <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto">
                     <div

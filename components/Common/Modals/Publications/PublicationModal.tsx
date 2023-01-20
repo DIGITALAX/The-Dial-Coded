@@ -67,6 +67,8 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     imageUploading,
     mappedFeaturedFiles,
     handleRemoveImage,
+    videoUploading,
+    uploadVideo
   } = useImageUpload();
   const {
     handlePostDescription,
@@ -139,7 +141,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
             mappedFeaturedFiles={mappedFeaturedFiles}
             handleRemoveImage={handleRemoveImage}
             postLoading={postLoading}
-            postImagesDispatched={postImagesDispatched as string[]}
+            postImagesDispatched={postImagesDispatched}
           />
         )}
         {imagePickerModal !== "" && (
@@ -257,6 +259,8 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   uploadImage={uploadImage}
                   imageUploading={imageUploading}
                   postLoading={postLoading}
+                  videoUploading={videoUploading}
+                  uploadVideo={uploadVideo}
                 />
               </div>
               {gifs && (
