@@ -13,6 +13,7 @@ import useNotifications from "./hooks/useNotifications";
 import Conversations from "./modules/Conversations";
 import useConversations from "./hooks/useConversations";
 import handleHidePost from "../../../../lib/lens/helpers/handleHidePost";
+import useParameters from "../Publish/modules/Parameters/hooks/useParameters";
 
 const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const accountType: string | undefined = useSelector(
@@ -34,6 +35,17 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     setProfileData,
     profileImageSet,
     profileLoading,
+    followLoading,
+    handleFollowModule,
+    followFee,
+    setFollowFee,
+    value,
+    setValue,
+    enabledCurrencies,
+    setEnabledCurrency,
+    currencyDropDown,
+    setCurrencyDropDown,
+    enabledCurrency,
   } = useAccount();
   const dispatch = useDispatch();
   const {
@@ -89,6 +101,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
+  const { dispatcherLoading, setDispatcherEnabled } = useParameters();
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
@@ -220,6 +233,19 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           profileImageSet={profileImageSet}
           profileLoading={profileLoading}
           dispatcher={dispatcher}
+          dispatcherLoading={dispatcherLoading}
+          setDispatcherEnabled={setDispatcherEnabled}
+          handleFollowModule={handleFollowModule}
+          followLoading={followLoading}
+          followFee={followFee}
+          setFollowFee={setFollowFee}
+          value={value}
+          setValue={setValue}
+          enabledCurrencies={enabledCurrencies}
+          setEnabledCurrency={setEnabledCurrency}
+          currencyDropDown={currencyDropDown}
+          setCurrencyDropDown={setCurrencyDropDown}
+          enabledCurrency={enabledCurrency}
         />
       );
   }

@@ -5,6 +5,9 @@ import { SiAddthis } from "react-icons/si";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/lens/constants";
 import { AiOutlineLoading } from "react-icons/ai";
+import AccountFollowCheck from "../../../../Common/Miscellaneous/Account/AccountFollowCheck";
+import CollectInput from "../../../../Common/Modals/Publications/modules/CollectInput";
+import CollectButton from "../../../../Common/Miscellaneous/CollectButton/CollectButton";
 
 const AccountTab: FunctionComponent<AccountTabProps> = ({
   profile,
@@ -18,6 +21,19 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
   profileLoading,
   profileImageSet,
   dispatcher,
+  setDispatcherEnabled,
+  dispatcherLoading,
+  handleFollowModule,
+  followLoading,
+  followFee,
+  setFollowFee,
+  value,
+  setValue,
+  enabledCurrencies,
+  setEnabledCurrency,
+  currencyDropDown,
+  setCurrencyDropDown,
+  enabledCurrency
 }): JSX.Element => {
   const location = lodash.filter(
     profile?.attributes,
@@ -85,7 +101,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               Name:
             </div>
             <input
-              className="relative w-40 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent"
+              className="relative w-40 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent border border-lB"
               name="accountName"
               type={"text"}
               defaultValue={profile?.name ? profile?.name : ""}
@@ -98,7 +114,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               Location:
             </div>
             <input
-              className="relative w-32 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent"
+              className="relative w-32 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent border border-lB"
               name="location"
               type={"text"}
               defaultValue={location[0].value ? (location[0].value as any) : ""}
@@ -109,7 +125,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               Website:
             </div>
             <input
-              className="relative w-48 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent"
+              className="relative w-48 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent border border-lB"
               name="website"
               type={"text"}
               defaultValue={website[0].value ? (website[0].value as any) : ""}
@@ -125,7 +141,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               defaultValue={profile?.bio ? profile?.bio : ""}
               style={{ resize: "none" }}
               name="bio"
-              className={`relative w-full h-32 overflow-y-scroll row-start-2 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-base p-2 justify-self-start self-center caret-transparent`}
+              className={`relative w-full h-32 overflow-y-scroll row-start-2 bg-white/80 border border-lB rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-base p-2 justify-self-start self-center caret-transparent`}
             ></textarea>
           </div>
           <div className="relative w-full h-fit col-start-2 grid grid-flow-row auto-rows-auto gap-1">
@@ -303,20 +319,116 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
           </div>
         </div>
       </div>
-      <div className="relative w-fit h-fit row-start-3 grid grid-flow-row auto-rows-auto gap-3">
-        <div className="relative w-fit h-fit row-start-1 grid grid-flow-row auto-rows-auto gap-2">
-          <div className="relative w-fit h-fit">
-            {dispatcher ? "Disable Dispatcher?" : "Enable Dispatcher?"}
+      <div className="relative w-full h-fit row-start-3 grid grid-flow-col auto-cols-auto gap-20">
+        <div className="relative col-start-1 grid grid-flow-row auto-rows-auto gap-3">
+          <div className="relative w-fit h-fit row-start-1 grid grid-flow-row auto-rows-auto gap-2">
+            <div className="relative w-fit h-fit">Set Follow Module</div>
+          </div>
+          <div className="relative w-fit h-fit row-start-2 grid grid-flow-col auto-cols-auto gap-6 pb-5">
+            <div className="relative w-fit h-fit col-start-1 row-start-1">
+              <AccountFollowCheck
+                valueClicked="free"
+                label={"Follow for Free?"}
+                col={"1"}
+                row={"1"}
+                currentValue={followFee}
+                handleClicked={setFollowFee}
+              />
+            </div>
+            <div className="relative w-fit h-fit col-start-2 row-start-1">
+              <AccountFollowCheck
+                valueClicked="revert"
+                label={"No Followers?"}
+                col={"2"}
+                row={"1"}
+                currentValue={followFee}
+                handleClicked={setFollowFee}
+              />
+            </div>
+            <div className="relative w-fit h-fit col-start-3 row-start-1">
+              <AccountFollowCheck
+                valueClicked="fee"
+                label={"Follow for a Fee?"}
+                col={"3"}
+                row={"1"}
+                currentValue={followFee}
+                handleClicked={setFollowFee}
+              />
+            </div>
+            <div className="relative w-fit h-fit row-start-2 grid grid-flow-col auto-cols-auto col-span-3 gap-2">
+              {followFee === "fee" && (
+                <>
+                  <CollectInput
+                    min="0"
+                    defaultValue={value.toString()}
+                    placeholder={value.toString()}
+                    id="valueAmount"
+                    label="Set Fee"
+                    name="valueAmount"
+                    col="1"
+                    row="1"
+                    step="0.00001"
+                    valueChange={value}
+                    handleValueChange={setValue}
+                    mixtape={true}
+                  />
+                  <CollectButton
+                    col={"2"}
+                    row={"1"}
+                    values={enabledCurrencies}
+                    selectFunction={setEnabledCurrency}
+                    openDropdown={currencyDropDown}
+                    handleOpenDropdown={setCurrencyDropDown}
+                    selectValue={enabledCurrency}
+                    label={"Set Currency"}
+                    mixtape={true}
+                  />
+                </>
+              )}
+            </div>
+          </div>
+          <div
+            className="relative w-32 h-10 col-start-1 px-3 py-2 row-start-3 grid grid-flow-row auto-rows-auto gap-2 rounded-md bg-offBlue cursor-pointer hover:opacity-70 active:scale-95 self-end"
+            onClick={() => handleFollowModule()}
+          >
+            {followLoading ? (
+              <div className="relative w-fit h-fit text-white place-self-center animate-spin">
+                <AiOutlineLoading size={15} color="white" />
+              </div>
+            ) : (
+              <div className="relative w-fit h-fit text-white place-self-center">
+                Save Follow Info
+              </div>
+            )}
           </div>
         </div>
-        <div className="relative w-fit h-fit row-start-2 grid grid-flow-row auto-rows-auto gap-2">
-          <div className="relative w-fit h-fit">
-            something about the enabler
+        <div className="relative w-fit h-full col-start-2 grid grid-flow-row auto-rows-auto gap-3">
+          <div className="relative w-fit h-fit row-start-1 grid grid-flow-row auto-rows-auto gap-2">
+            <div className="relative w-fit h-fit">
+              {dispatcher ? "Disable Dispatcher?" : "Enable Dispatcher?"}
+            </div>
           </div>
-        </div>
-        <div className="relative w-32 h-10 col-start-1 px-3 py-2 row-start-3 grid grid-flow-row auto-rows-auto gap-2 rounded-md bg-offBlue cursor-pointer hover:opacity-70 active:scale-95">
-          <div className="relative w-fit h-fit text-white place-self-center">
-            {dispatcher ? "Disable" : "Enable"}
+          <div className="relative w-fit h-fit row-start-2 grid grid-flow-row auto-rows-auto gap-2">
+            <div className="relative w-5/6 h-fit text-base">
+              A low latency shortcut which makes it easier to publish, react and
+              push updates to your account without needing to sign transactions
+              every single time. You can enable and disable the dispatcher at
+              any time.
+            </div>
+          </div>
+          <div
+            className="relative w-32 h-10 col-start-1 px-3 py-2 row-start-3 grid grid-flow-row auto-rows-auto gap-2 rounded-md bg-offBlue cursor-pointer hover:opacity-70 active:scale-95 self-end"
+            onClick={() => setDispatcherEnabled()}
+          >
+            {dispatcherLoading ? (
+              <div className="relative w-fit h-fit text-white place-self-center animate-spin">
+                <AiOutlineLoading size={15} color="white" />
+              </div>
+            ) : (
+              <div className="relative w-fit h-fit text-white place-self-center">
+                {dispatcher ? "Disable" : "Enable"}
+              </div>
+            )}
           </div>
         </div>
       </div>

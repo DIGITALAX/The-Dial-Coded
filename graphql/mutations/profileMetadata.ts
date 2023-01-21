@@ -30,7 +30,19 @@ mutation CreateSetProfileMetadataTypedData($request: CreatePublicSetProfileMetad
   }
 `;
 
-const profileMetadata = (request: any) => {
+const DISPATCH_ACCOUNT = `mutation CreateSetProfileMetadataViaDispatcher($request: CreatePublicSetProfileMetadataURIRequest!) {
+  createSetProfileMetadataViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      txHash
+      txId
+    }
+    ... on RelayError {
+      reason
+    }
+  }
+}`;
+
+export const profileMetadata = (request: any) => {
   return apolloClient.mutate({
     mutation: gql(PROFILE_METADATA),
     variables: {
@@ -39,4 +51,11 @@ const profileMetadata = (request: any) => {
   });
 };
 
-export default profileMetadata;
+export const dispatchProfileMetadata = (request: any) => {
+  return apolloClient.mutate({
+    mutation: gql(DISPATCH_ACCOUNT),
+    variables: {
+      request: request,
+    },
+  });
+};

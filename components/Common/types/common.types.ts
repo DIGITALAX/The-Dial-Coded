@@ -763,3 +763,12 @@ export interface UploadedMedia {
   cid: string;
   type: MediaType;
 }
+
+export type AccountFollowCheckProps = {
+  handleClicked: (valueClicked: string) => void;
+  valueClicked: string;
+  row: string;
+  col: string;
+  label: string;
+  currentValue: string;
+};

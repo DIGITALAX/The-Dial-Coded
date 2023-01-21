@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAccountPage } from "../../../../../redux/reducers/accountPageSlice";
 import {
@@ -8,15 +8,15 @@ import {
   UseAccountResult,
 } from "../types/account.types";
 import { v4 as uuidv4 } from "uuid";
-import profileMetadata from "../../../../../graphql/mutations/profileMetadata";
+import {
+  profileMetadata,
+  dispatchProfileMetadata,
+} from "../../../../../graphql/mutations/profileMetadata";
 import { RootState } from "../../../../../redux/store";
 import {
   useContractWrite,
   usePrepareContractWrite,
   useSignTypedData,
-  useSignTypedData as useProfileSignTypedData,
-  usePrepareContractWrite as useProfilePrepareContractWrite,
-  useContractWrite as useProfileContractWrite,
 } from "wagmi";
 import {
   LENS_HUB_PROXY_ADDRESS_MUMBAI,
@@ -36,6 +36,13 @@ import omit from "../../../../../lib/lens/helpers/omit";
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 import handleIndexCheck from "../../../../../lib/lens/helpers/handleIndexCheck";
+import createSetFollowTypedData from "../../../../../graphql/mutations/followType";
+import { useAccount as useAccountWagmi } from "wagmi";
+import { Erc20 } from "../../../../Common/types/lens.types";
+import getEnabledCurrencies from "../../../../../graphql/queries/getEnabledCurrencies";
+import lodash from "lodash";
+import getDefaultProfile from "../../../../../graphql/queries/getDefaultProfile";
+import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = [
@@ -45,7 +52,13 @@ const useAccount = (): UseAccountResult => {
     "notifications",
     "conversations",
   ];
+  const { address } = useAccountWagmi();
   const dispatch = useDispatch();
+  const [value, setValue] = useState<number>(0);
+  const [enabledCurrencies, setEnabledCurrencies] = useState<Erc20[]>([]);
+  const [followFinished, setFollowFinished] = useState<boolean>(false);
+  const [currencyDropDown, setCurrencyDropDown] = useState<boolean>(false);
+  const [enabledCurrency, setEnabledCurrency] = useState<string>();
   const [accountLoading, setAccountLoading] = useState<boolean>(false);
   const [profileImageUploading, setProfileImageUploading] =
     useState<boolean>(false);
@@ -54,14 +67,20 @@ const useAccount = (): UseAccountResult => {
     useState<boolean>(false);
   const [contentURI, setContentURI] = useState<string | undefined>();
   const [profileImage, setProfileImage] = useState<string | undefined>();
+  const [followArgs, setFollowArgs] = useState<any>();
+  const [followFee, setFollowFee] = useState<string>("free");
+  const [followLoading, setFollowLoading] = useState<boolean>(false);
   const [coverImage, setCoverImage] = useState<string | undefined>();
   const [accountArgs, setAccountArgs] = useState<ProfileArgsType>();
   const [profileImageArgs, setProfileImageArgs] = useState<ImageArgsType>();
-  const profileId = useSelector(
-    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  const profile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile
   );
   const coverProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.coverPicture
+  );
+  const followValues = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.followModule
   );
   const dispatcher = useSelector(
     (state: RootState) => state.app.dispatcherReducer.value
@@ -75,9 +94,6 @@ const useAccount = (): UseAccountResult => {
 
   const { signTypedDataAsync } = useSignTypedData();
 
-  const { signTypedDataAsync: signProfileTypedDataAsync } =
-    useProfileSignTypedData();
-
   const { config, isSuccess } = usePrepareContractWrite({
     address: LENS_PERIPHERY_CONTRACT_MUMBAI,
     abi: LensHubPeriphery,
@@ -89,7 +105,7 @@ const useAccount = (): UseAccountResult => {
   const { writeAsync, error } = useContractWrite(config);
 
   const { config: profileConfig, isSuccess: profileConfigSuccess } =
-    useProfilePrepareContractWrite({
+    usePrepareContractWrite({
       address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
       abi: LensHubProxy,
       functionName: "setProfileImageURIWithSig",
@@ -98,7 +114,29 @@ const useAccount = (): UseAccountResult => {
     });
 
   const { writeAsync: profilewriteAsync, error: writeErrorImage } =
-    useProfileContractWrite(profileConfig);
+    useContractWrite(profileConfig);
+
+  const { config: followConfig, isSuccess: followConfigSuccess } =
+    usePrepareContractWrite({
+      address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
+      abi: LensHubProxy,
+      functionName: "setFollowModuleWithSig",
+      enabled: Boolean(followArgs),
+      args: [followArgs],
+    });
+
+  const { writeAsync: followWriteAsync, error: writeErrorFollow } =
+    useContractWrite(followConfig);
+
+  const availableCurrencies = async (): Promise<void> => {
+    const response = await getEnabledCurrencies();
+    setEnabledCurrencies(response.data.enabledModuleCurrencies);
+    setEnabledCurrency(
+      (followValues as any)?.amount?.asset?.symbol
+        ? (followValues as any)?.amount?.asset?.symbol
+        : response.data.enabledModuleCurrencies[0]?.symbol
+    );
+  };
 
   const notificationImages: string[] = [
     "QmZS3Af6ypfwrPYg8w46kjpUR8REGuGb8bj98PukM7yu87",
@@ -215,40 +253,56 @@ const useAccount = (): UseAccountResult => {
   const setProfileData = async (e: any): Promise<void> => {
     e.preventDefault();
     setAccountLoading(true);
+    let result: any;
     try {
       const contentURI = await uploadContent(e);
-      const result: any = await profileMetadata({
-        profileId: profileId,
-        metadata: "https://thedial.infura-ipfs.io/ipfs/" + contentURI,
-      });
+      if (dispatcher) {
+        result = await dispatchProfileMetadata({
+          profileId: profile?.id,
+          metadata: "ipfs://" + contentURI,
+        });
+        clearAccount();
+        setTimeout(async () => {
+          await handleIndexCheck(
+            result?.data?.createSetProfileMetadataViaDispatcher?.txHash,
+            dispatch,
+            false
+          );
+        }, 7000);
+      } else {
+        result = await profileMetadata({
+          profileId: profile?.id,
+          metadata: "ipfs://" + contentURI,
+        });
 
-      const typedData: any =
-        result.data.createSetProfileMetadataTypedData.typedData;
+        const typedData: any =
+          result.data.createSetProfileMetadataTypedData.typedData;
 
-      const accountSignature: any = await signTypedDataAsync({
-        domain: omit(typedData?.domain, ["__typename"]),
-        types: omit(typedData?.types, ["__typename"]) as any,
-        value: omit(typedData?.value, ["__typename"]) as any,
-      });
+        const accountSignature: any = await signTypedDataAsync({
+          domain: omit(typedData?.domain, ["__typename"]),
+          types: omit(typedData?.types, ["__typename"]) as any,
+          value: omit(typedData?.value, ["__typename"]) as any,
+        });
 
-      const {
-        v: accountV,
-        r: accountR,
-        s: accountS,
-      } = splitSignature(accountSignature);
-
-      const accountArgs: ProfileArgsType = {
-        profileId: typedData.value.profileId,
-        metadata: typedData.value.metadata,
-        sig: {
+        const {
           v: accountV,
           r: accountR,
           s: accountS,
-          deadline: typedData.value.deadline,
-        },
-      };
+        } = splitSignature(accountSignature);
 
-      setAccountArgs(accountArgs);
+        const accountArgs: ProfileArgsType = {
+          profileId: typedData.value.profileId,
+          metadata: typedData.value.metadata,
+          sig: {
+            v: accountV,
+            r: accountR,
+            s: accountS,
+            deadline: typedData.value.deadline,
+          },
+        };
+
+        setAccountArgs(accountArgs);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -261,25 +315,26 @@ const useAccount = (): UseAccountResult => {
     try {
       if (dispatcher) {
         profileImageData = await dispatchProfileImage({
-          profileId: profileId,
+          profileId: profile?.id,
           url: "ipfs://" + profileImage,
         });
         clearAccount();
         setTimeout(async () => {
           await handleIndexCheck(
-            profileImageData?.data?.createProfileImageURIViaDispatcher?.txHash,
+            profileImageData?.data?.createSetProfileImageURIViaDispatcher
+              ?.txHash,
             dispatch,
-            true
+            false
           );
         }, 7000);
       } else {
         profileImageData = await profileImageUpload({
-          profileId: profileId,
+          profileId: profile?.id,
           url: "ipfs://" + profileImage,
         });
         const imageTypedData: any =
           profileImageData.data.createSetProfileImageURITypedData.typedData;
-        const profileImageSignature: any = await signProfileTypedDataAsync({
+        const profileImageSignature: any = await signTypedDataAsync({
           domain: omit(imageTypedData?.domain, ["__typename"]),
           types: omit(imageTypedData?.types, ["__typename"]) as any,
           value: omit(imageTypedData?.value, ["__typename"]) as any,
@@ -336,6 +391,7 @@ const useAccount = (): UseAccountResult => {
       setAccountLoading(false);
       dispatch(setInsufficientFunds("failed"));
     }
+    setAccountLoading(false);
   };
 
   const handleProfileImageWrite = async (): Promise<void> => {
@@ -355,7 +411,103 @@ const useAccount = (): UseAccountResult => {
       setProfileLoading(false);
       dispatch(setInsufficientFunds("failed"));
     }
+    setProfileLoading(false);
   };
+
+  const handleFollowModule = async () => {
+    setFollowLoading(true);
+    let followModule: any;
+    if (followFee === "free") {
+      followModule = {
+        freeFollowModule: true,
+      };
+    } else if (followFee === "revert") {
+      followModule = {
+        revertFollowModule: true,
+      };
+    } else {
+      if (!value || Number(Number(value).toFixed(2)) <= 0) {
+        setFollowLoading(false);
+        alert("Follow Fee Must be greater than 0");
+        return;
+      }
+      const setCurrency: Erc20[] = lodash.filter(
+        enabledCurrencies,
+        (currency) => currency.symbol === enabledCurrency
+      );
+      followModule = {
+        feeFollowModule: {
+          amount: {
+            currency: setCurrency[0].address,
+            value: String(Number(value).toFixed(2)),
+          },
+          recipient: address,
+        },
+      };
+    }
+    try {
+      const res = await createSetFollowTypedData({
+        profileId: profile?.id,
+        followModule,
+      });
+      const typedData: any =
+        res?.data?.createSetFollowModuleTypedData.typedData;
+      const followSignature: any = await signTypedDataAsync({
+        domain: omit(typedData?.domain, ["__typename"]),
+        types: omit(typedData?.types, ["__typename"]) as any,
+        value: omit(typedData?.value, ["__typename"]) as any,
+      });
+
+      const {
+        v: followV,
+        r: followR,
+        s: followS,
+      } = splitSignature(followSignature);
+
+      const profileImageArgsValues = {
+        followModule: typedData.value.followModule,
+        followModuleInitData: typedData.value.followModuleInitData,
+        profileId: typedData.value.profileId,
+        sig: {
+          v: followV,
+          r: followR,
+          s: followS,
+          deadline: typedData.value.deadline,
+        },
+      };
+      setFollowArgs(profileImageArgsValues);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setFollowLoading(false);
+  };
+
+  const handleFollowWrite = async () => {
+    setFollowLoading(true);
+    try {
+      const tx = await followWriteAsync?.();
+      if (error) {
+        dispatch(setInsufficientFunds("failed"));
+        setFollowLoading(false);
+        return;
+      }
+      clearAccount();
+      const res = await tx?.wait();
+      await handleIndexCheck(res?.transactionHash, dispatch, false);
+    } catch (err) {
+      console.error(err);
+      setFollowLoading(false);
+      dispatch(setInsufficientFunds("failed"));
+    }
+    setFollowLoading(false);
+    setFollowFinished(true);
+  };
+
+  useEffect(() => {
+    if (followConfigSuccess) {
+      handleFollowWrite();
+    }
+  }, [followConfigSuccess]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -368,6 +520,31 @@ const useAccount = (): UseAccountResult => {
       handleProfileImageWrite();
     }
   }, [profileConfigSuccess]);
+
+  useMemo(() => {
+    if (followFee === "fee") {
+      availableCurrencies();
+    }
+  }, [followFee]);
+
+  const resetProfile = async () => {
+    setFollowFinished(false);
+    const profile = await getDefaultProfile(address);
+    dispatch(setLensProfile(profile.data.defaultProfile));
+    if (profile.data.defaultProfile.followModule?.type === "FeeFollowModule") {
+      setFollowFee("fee");
+      setEnabledCurrency(
+        profile.data.defaultProfile.followModule?.amount?.asset?.symbol.toLowerCase()
+      );
+      setValue(profile.data.defaultProfile.followModule?.amount?.value);
+    } else if (profile.data.defaultProfile.followModule?.type === "RevertFollowModule") {
+      setFollowFee("revert");
+    }
+  };
+
+  useEffect(() => {
+    resetProfile();
+  }, [followValues, profile, followFinished]);
 
   return {
     accountTitles,
@@ -382,6 +559,17 @@ const useAccount = (): UseAccountResult => {
     setProfileData,
     profileImageSet,
     profileLoading,
+    handleFollowModule,
+    followLoading,
+    setFollowFee,
+    followFee,
+    value,
+    setValue,
+    enabledCurrencies,
+    setEnabledCurrency,
+    currencyDropDown,
+    setCurrencyDropDown,
+    enabledCurrency,
   };
 };
 

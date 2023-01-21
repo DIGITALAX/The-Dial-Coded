@@ -5,6 +5,7 @@ import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import Image from "next/legacy/image";
 import { BsFillCollectionFill, BsSuitHeartFill } from "react-icons/bs";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { FiAtSign } from "react-icons/fi";
 import { useRouter } from "next/router";
 import { FaCommentDots } from "react-icons/fa";
 
@@ -23,6 +24,8 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
   } else if (notification?.__typename === "NewCommentNotification") {
     prefix = notification?.profile;
     type = "comment";
+  } else if (notification?.__typename === "NewMentionNotification") {
+    type = "mention";
   } else {
     prefix = notification?.profile;
     type = "react";
@@ -50,6 +53,10 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
             ? `/post/${notification?.publication?.id}`
             : type === "collect"
             ? `/post/${notification?.collectedPublication?.id}`
+            : type === "comment"
+            ? `/post/${notification?.comment?.id}`
+            : type === "mention"
+            ? `/post/${notification?.mentionPublication?.post?.id}`
             : `/profile/${prefix?.id}`
         )
       }
@@ -82,6 +89,8 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
             <AiOutlineUsergroupAdd color={"#81A8F8"} size={20} />
           ) : type === "comment" ? (
             <FaCommentDots color={"#FBEED1"} size={15} />
+          ) : type === "mention" ? (
+            <FiAtSign color={"#81A8F8"} size={15} />
           ) : (
             type === "react" &&
             (notification?.reaction === "UPVOTE" ? (
@@ -98,6 +107,8 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
             ? "followed you"
             : type === "comment"
             ? "commented on your post"
+            : type === "mention"
+            ? "mentioned you"
             : type === "react" &&
               (notification?.reaction === "UPVOTE" ? "liked your post" : <></>)}
         </div>

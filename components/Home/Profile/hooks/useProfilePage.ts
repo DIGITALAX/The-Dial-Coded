@@ -5,8 +5,6 @@ import {
   useAccount,
   useContractWrite,
   usePrepareContractWrite,
-  useContractWrite as useUnfollowContractWrite,
-  usePrepareContractWrite as useUnfollowPrepareContractWrite,
   useSignTypedData,
 } from "wagmi";
 import createFollowTypedData from "../../../../graphql/mutations/follow";
@@ -102,7 +100,7 @@ const useProfilePage = (): UseProfilePageResults => {
     args: [followArgs],
   });
   const { config: unfollowConfig, isSuccess: unfollowSuccess } =
-    useUnfollowPrepareContractWrite({
+    usePrepareContractWrite({
       address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
       abi: LensHubProxy,
       functionName: "burnWithSig",
@@ -112,7 +110,7 @@ const useProfilePage = (): UseProfilePageResults => {
 
   const { writeAsync, isSuccess: followComplete } = useContractWrite(config);
   const { writeAsync: unfollowWriteAsync, isSuccess: unfollowComplete } =
-    useUnfollowContractWrite(unfollowConfig);
+    useContractWrite(unfollowConfig);
 
   const followProfile = async (): Promise<void> => {
     setFollowLoading(true);
