@@ -404,7 +404,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
         </div>
         <div className="relative w-fit h-full col-start-2 grid grid-flow-row auto-rows-auto gap-3">
           <div className="relative w-fit h-fit row-start-1 grid grid-flow-row auto-rows-auto gap-2">
-            <div className="relative w-fit h-fit">
+            <div className="relative w-fit  h-fit">
               {dispatcher ? "Disable Dispatcher?" : "Enable Dispatcher?"}
             </div>
           </div>
