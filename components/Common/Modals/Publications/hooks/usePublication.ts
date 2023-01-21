@@ -2,8 +2,6 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   useContractWrite,
   usePrepareContractWrite,
-  useContractWrite as useCommentWrite,
-  usePrepareContractWrite as usePrepareCommentWrite,
   useSignTypedData,
 } from "wagmi";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../../lib/lens/constants";
@@ -96,7 +94,7 @@ const usePublication = () => {
   const { writeAsync } = useContractWrite(config);
 
   const { config: commentConfig, isSuccess: commentSuccess } =
-    usePrepareCommentWrite({
+    usePrepareContractWrite({
       address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
       abi: LensHubProxy,
       functionName: "commentWithSig",
@@ -104,7 +102,7 @@ const usePublication = () => {
       args: [commentArgs],
     });
 
-  const { writeAsync: commentWriteAsync } = useCommentWrite(commentConfig);
+  const { writeAsync: commentWriteAsync } = useContractWrite(commentConfig);
 
   const commentPost = async (e: FormEvent): Promise<void> => {
     setCommentLoading(true);

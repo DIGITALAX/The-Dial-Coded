@@ -85,7 +85,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
             <div
               className={`relative col-start-11 w-80 h-full grid grid-flow-row auto-rows-auto border-y-4 border-l-4 border-black justify-self-end bg-offBlack`}
             >
-              <div className="relative w-full max-h-[54rem] h-full grid grid-flow-row auto-rows-auto row-start-1 overflow-y-scroll overflow-x-clip bg-comp">
+              <div className="relative w-full max-h-[65rem] h-full grid grid-flow-row auto-rows-auto row-start-1 overflow-y-scroll overflow-x-clip bg-comp">
                 {mixtape && (
                   <Tape
                     title="Add New Mixtape"
@@ -120,13 +120,13 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                     );
                   })}
                 </InfiniteScroll>
-                {tapeTitles.length < 9 && (
+                {tapeTitles.length < 11 && (
                   <div
                     className={`relative w-full h-full row-start-${
                       tapeTitles.length + 2
                     }`}
                   >
-                    {Array.from(Array(9 - tapeTitles.length).keys()).map(
+                    {Array.from(Array(11 - tapeTitles.length).keys()).map(
                       (index: number) => {
                         return (
                           <Tape

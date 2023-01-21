@@ -3,6 +3,7 @@ import { FormEvent, Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Attribute,
+  Erc20,
   PaginatedFollowersResult,
   PaginatedFollowingResult,
   Profile,
@@ -22,6 +23,17 @@ export type UseAccountResult = {
   setProfileData: (e: FormEvent) => Promise<void>;
   profileImageSet: () => Promise<void>;
   profileLoading: boolean;
+  handleFollowModule: () => Promise<void>;
+  followLoading: boolean;
+  setFollowFee: (e: string) => void;
+  followFee: string;
+  value: number;
+  setValue: (e: number) => void;
+  enabledCurrencies: Erc20[];
+  setEnabledCurrency: (e: string) => void;
+  currencyDropDown: boolean;
+  setCurrencyDropDown: (e: boolean) => void;
+  enabledCurrency: string | undefined;
 };
 
 export type AccountTabProps = {
@@ -36,6 +48,19 @@ export type AccountTabProps = {
   profileImageSet: () => Promise<void>;
   profileLoading: boolean;
   dispatcher: boolean;
+  setDispatcherEnabled: () => Promise<void>;
+  dispatcherLoading: boolean;
+  handleFollowModule: () => Promise<void>;
+  followLoading: boolean;
+  setFollowFee: (e: string) => void;
+  followFee: string;
+  value: number;
+  setValue: (e: number) => void;
+  enabledCurrencies: Erc20[];
+  setEnabledCurrency: (e: string) => void;
+  currencyDropDown: boolean;
+  setCurrencyDropDown: (e: boolean) => void;
+  enabledCurrency: string | undefined;
 };
 
 export type ProfileTabProps = {

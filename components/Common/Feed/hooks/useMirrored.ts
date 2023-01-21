@@ -36,7 +36,8 @@ const useMirrored = () => {
     (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
   );
   const dispatcher = useSelector(
-    (state: RootState) => state.app.dispatcherReducer.value
+    (state: RootState) =>
+    state.app.dispatcherReducer.value
   );
   const { signTypedDataAsync } = useSignTypedData();
   const dispatch = useDispatch();

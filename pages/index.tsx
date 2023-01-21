@@ -16,8 +16,8 @@ export interface HomeProps {
 const Home: NextPage<HomeProps> = ({ newLink }): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const profileId = useSelector(
-    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  const profile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile
   );
   useEffect(() => {
     if (router?.asPath?.includes("#")) {
@@ -32,8 +32,8 @@ const Home: NextPage<HomeProps> = ({ newLink }): JSX.Element => {
   }, [router?.asPath]);
 
   useEffect(() => {
-    checkDispatcher(dispatch, profileId);
-  }, [profileId]);
+    checkDispatcher(dispatch, profile?.id, profile?.dispatcher?.canUseRelay);
+  }, [profile?.id, profile?.dispatcher?.canUseRelay]);
   return (
     <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
       <Head>
