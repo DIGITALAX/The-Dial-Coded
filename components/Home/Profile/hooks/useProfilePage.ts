@@ -99,7 +99,7 @@ const useProfilePage = (): UseProfilePageResults => {
     enabled: Boolean(followArgs),
     args: [followArgs],
   });
-  const { config: unfollowConfig, isSuccess: unfollowSuccess } =
+  const { config: unfollowConfig, isSuccess: unfollowSuccess, error } =
     usePrepareContractWrite({
       address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
       abi: LensHubProxy,
