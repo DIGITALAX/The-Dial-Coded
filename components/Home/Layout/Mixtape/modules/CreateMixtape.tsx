@@ -47,7 +47,6 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
   setLimitedEdition,
   setTimeLimit,
   timeLimit,
-  handleSetCollectValues,
   titleValue,
   sourceValue,
 }): JSX.Element => {
@@ -105,7 +104,6 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
         </div>
         <div className="relative w-fit h-fit row-start-2">
           <CollectOptions
-            handleSetCollectValues={handleSetCollectValues}
             chargeCollect={chargeCollect}
             setChargeCollect={setChargeCollect}
             enabledCurrencies={enabledCurrencies}
@@ -148,7 +146,7 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
           })}
         </div>
       </div>
-      <div className="relative w-full h-fit max-h-44 overflow-y-scroll grid grid-flow-row auto-rows-auto row-start-5 gap-6">
+      <div className="relative w-full h-fit max-h-80 overflow-y-scroll grid grid-flow-row auto-rows-auto row-start-5 gap-6">
         {titleArray &&
           titleArray?.length > 0 &&
           Array.from(Array(titleArray?.length).keys()).map((index: number) => {

@@ -89,7 +89,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
     timeLimit,
     timeLimitDropDown,
     setTimeLimitDropDown,
-    handleSetCollectValues,
+    handleCollectValues,
   } = useCollectionModal();
   const {
     uploadImage,
@@ -103,7 +103,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
     <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto pt-4 gap-4">
       {collectOptionsModal && (
         <CollectOptionsModal
-          handleSetCollectValues={handleSetCollectValues}
+        handleCollectValues={handleCollectValues}
           chargeCollect={chargeCollect}
           setChargeCollect={setChargeCollect}
           enabledCurrencies={enabledCurrencies}

@@ -269,6 +269,28 @@ export type UseCreateMixtapeResults = {
   handleSource: (e: FormEvent) => void;
   handleRemoveTrack: (index: number) => void;
   generateMixtape: () => Promise<void>;
+  enabledCurrencies: Erc20[];
+  setAudienceType: (e: string) => void;
+  audienceType: string;
+  setEnabledCurrency: (e: string) => void;
+  enabledCurrency: string | undefined;
+  setCurrencyDropDown: (e: boolean) => void;
+  currencyDropDown: boolean;
+  referral: number;
+  setReferral: (e: number) => void;
+  limit: number;
+  setLimit: (e: number) => void;
+  value: number;
+  setValue: (e: number) => void;
+  collectible: string;
+  setCollectible: (e: string) => void;
+  chargeCollect: string;
+  setChargeCollect: (e: string) => void;
+  limitedEdition: string;
+  setLimitedEdition: (e: string) => void;
+  setTimeLimit: (e: string) => void;
+  timeLimit: string;
+  handleReverseSetCollectValues: (module: any) => void;
 };
 
 export type CreateMixtapeProps = {
@@ -309,7 +331,6 @@ export type CreateMixtapeProps = {
   setLimitedEdition: (e: string) => void;
   setTimeLimit: (e: string) => void;
   timeLimit: string;
-  handleSetCollectValues: () => void;
   titleValue: string;
   sourceValue: string;
 };
@@ -449,8 +470,7 @@ export type UseCollectionModalResults = {
   timeLimit: string;
   timeLimitDropDown: boolean;
   setTimeLimitDropDown: (e: boolean) => void;
-  handleSetCollectValues: () => void;
-  handleReverseSetCollectValues: (module: any) => void;
+  handleCollectValues: () => void;
 };
 
 export type CollectOptionsModalProps = {
@@ -487,7 +507,7 @@ export type CollectOptionsModalProps = {
   timeLimit: string;
   timeLimitDropDown: boolean;
   setTimeLimitDropDown: (e: boolean) => void;
-  handleSetCollectValues: () => void;
+  handleCollectValues: () => void;
 };
 
 export type CollectInputProps = {
@@ -684,7 +704,6 @@ export type CollectOptionsMixtapeProps = {
   setLimitedEdition: (e: string) => void;
   setTimeLimit: (e: string) => void;
   timeLimit: string;
-  handleSetCollectValues: () => void;
 };
 
 export type MixCheckCollectProps = {

@@ -1,16 +1,12 @@
 import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount } from "wagmi";
-import getEnabledCurrencies from "../../../../../graphql/queries/getEnabledCurrencies";
 import { setCollectOptionsModal } from "../../../../../redux/reducers/collectOptionsModalSlice";
-import { setCollectValueType } from "../../../../../redux/reducers/collectValueTypeSlice";
 import { RootState } from "../../../../../redux/store";
-import {
-  CollectValueType,
-  UseCollectionModalResults,
-} from "../../../types/common.types";
+import { UseCollectionModalResults } from "../../../types/common.types";
 import { Erc20 } from "../../../types/lens.types";
-import lodash from "lodash";
+import handleSetCollectValues from "../../../../../lib/lens/helpers/handleCollectValues";
+import availableCurrencies from "../../../../../lib/lens/helpers/availableCurrencies";
 import { setCollectNotification } from "../../../../../redux/reducers/collectNotificationSlice";
 
 const useCollectionModal = (): UseCollectionModalResults => {
@@ -33,163 +29,43 @@ const useCollectionModal = (): UseCollectionModalResults => {
   const [limit, setLimit] = useState<number>(1);
   const [value, setValue] = useState<number>(0);
   const [referral, setReferral] = useState<number>(0);
-  const availableCurrencies = async (): Promise<void> => {
-    const response = await getEnabledCurrencies();
-    setEnabledCurrencies(response.data.enabledModuleCurrencies);
-    setEnabledCurrency(response.data.enabledModuleCurrencies[0]?.symbol);
-  };
   const { address } = useAccount();
   const audienceTypes: string[] = ["only followers", "everyone"];
   const publicationModuleOpen = useSelector(
     (state: RootState) => state.app.publicationReducer.open
   );
-  const mixtapePage = useSelector(
-    (state: RootState) => state.app.mixtapePageReducer.value
-  );
   const reactionState = useSelector(
     (state: RootState) => state.app.collectOptionsReducer.value
   );
   useMemo(() => {
-    if (publicationModuleOpen || reactionState || mixtapePage) {
-      availableCurrencies();
+    if (publicationModuleOpen || reactionState) {
+      availableCurrencies(setEnabledCurrencies, setEnabledCurrency);
     }
-  }, [publicationModuleOpen, reactionState, mixtapePage]);
+  }, [publicationModuleOpen, reactionState]);
 
-  const handleReverseSetCollectValues = (module: any): void => {
-    if (!module) {
-      setCollectible("yes");
-      setAudienceType("everyone");
-      setLimitedEdition("no");
-      setTimeLimit("no");
-      setChargeCollect("no");
-      setReferral(0);
-      setLimit(1);
-      setValue(0);
-      setEnabledCurrency(undefined);
-      return;
-    }
-
-    if (module?.type === "revertCollectModule") {
-      setCollectible("no");
-      return;
-    } else {
-      if (module?.followerOnly) {
-        setAudienceType("only followers");
-      } else {
-        setAudienceType("everyone");
-      }
-      setCollectible("yes");
-      if (module?.type !== "FreeCollectModule") {
-        setChargeCollect("yes");
-        const setCurrency: Erc20[] = lodash.filter(
-          enabledCurrencies,
-          (currency) => currency.address === module?.currency
-        );
-        setEnabledCurrency(setCurrency[0].symbol);
-        setValue(module?.value);
-        setReferral(module?.referralFee);
-        if (module?.type === "LimitedFeeCollectModule") {
-          setLimitedEdition("yes");
-          setLimit(module?.collectLimit);
-        } else if (module?.type === "LimitedTimedFeeCollectModule") {
-          setTimeLimit("yes");
-          setLimitedEdition("yes");
-          setLimit(module?.collectLimit);
-        } else if (module?.type === "TimedFeeCollectModule") {
-          setTimeLimit("yes");
-        }
-      }
-    }
-  };
-
-  const handleSetCollectValues = (): void => {
+  const handleCollectValues = (): void => {
     if (value <= 0 && chargeCollect === "yes") {
-      dispatch(
-        setCollectNotification({ actionOpen: true, actionType: "value" })
-      );
+      dispatch(setCollectNotification({ actionOpen: true, actionType: "value" }));
       return;
     }
     if (limit < 1 && chargeCollect === "yes") {
-      dispatch(
-        setCollectNotification({ actionOpen: true, actionType: "limit" })
-      );
+      dispatch(setCollectNotification({ actionOpen: true, actionType: "limit" }));
       return;
     }
-    const setCurrency: Erc20[] = lodash.filter(
+    handleSetCollectValues(
+      value,
+      chargeCollect,
+      dispatch,
+      limit,
+      enabledCurrency,
       enabledCurrencies,
-      (currency) => currency.symbol === enabledCurrency
+      collectible,
+      audienceType,
+      timeLimit,
+      limitedEdition,
+      referral,
+      address as string
     );
-    let collectModuleType: CollectValueType = {
-      freeCollectModule: {
-        followerOnly: false,
-      },
-    };
-    if (collectible === "no") {
-      collectModuleType = {
-        revertCollectModule: true,
-      };
-    } else if (collectible === "yes") {
-      if (chargeCollect === "no") {
-        collectModuleType = {
-          freeCollectModule: {
-            followerOnly: audienceType === "everyone" ? false : true,
-          },
-        };
-      } else {
-        if (timeLimit === "no" && limitedEdition === "no") {
-          collectModuleType = {
-            feeCollectModule: {
-              amount: {
-                currency: setCurrency[0]?.address,
-                value: String(value),
-              },
-              recipient: address as string,
-              referralFee: Number(Number(referral).toFixed(2)),
-              followerOnly: audienceType === "everyone" ? false : true,
-            },
-          };
-        } else if (timeLimit === "yes" && limitedEdition === "no") {
-          collectModuleType = {
-            timedFeeCollectModule: {
-              amount: {
-                currency: setCurrency[0]?.address,
-                value: String(value),
-              },
-              recipient: address as string,
-              referralFee: Number(Number(referral).toFixed(2)),
-              followerOnly: audienceType === "everyone" ? false : true,
-            },
-          };
-        } else if (timeLimit === "no" && limitedEdition === "yes") {
-          collectModuleType = {
-            limitedFeeCollectModule: {
-              collectLimit: String(limit),
-              amount: {
-                currency: setCurrency[0]?.address,
-                value: String(value),
-              },
-              recipient: address as string,
-              referralFee: Number(Number(referral).toFixed(2)),
-              followerOnly: audienceType === "everyone" ? false : true,
-            },
-          };
-        } else if (timeLimit === "yes" && limitedEdition === "yes") {
-          collectModuleType = {
-            limitedTimedFeeCollectModule: {
-              collectLimit: String(limit),
-              amount: {
-                currency: setCurrency[0]?.address,
-                value: String(value),
-              },
-              recipient: address as string,
-              referralFee: Number(Number(referral).toFixed(2)),
-              followerOnly: audienceType === "everyone" ? false : true,
-            },
-          };
-        }
-      }
-    }
-    dispatch(setCollectValueType(collectModuleType));
     dispatch(setCollectOptionsModal(false));
   };
 
@@ -226,8 +102,7 @@ const useCollectionModal = (): UseCollectionModalResults => {
     timeLimit,
     timeLimitDropDown,
     setTimeLimitDropDown,
-    handleSetCollectValues,
-    handleReverseSetCollectValues,
+    handleCollectValues,
   };
 };
 

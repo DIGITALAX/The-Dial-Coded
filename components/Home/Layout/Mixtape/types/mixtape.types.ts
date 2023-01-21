@@ -8,6 +8,5 @@ export type UseMixtapeResults = {
   message: Message;
   getMoreMixtapes: () => Promise<void>;
   getMixLoading: boolean;
-  mixtapes: any;
   updateMix: any;
 };

@@ -6,7 +6,7 @@ import CollectInput from "./CollectInput";
 const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
   enabledCurrencies,
   audienceTypes,
-  handleSetCollectValues,
+  handleCollectValues,
   setAudienceType,
   audienceType,
   setEnabledCurrency,
@@ -215,7 +215,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
               </div>
               <div
                 className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-3 cursor-pointer active:scale-95 bg-offBlue/80 font-dosis text-white rounded-md place-self-end"
-                onClick={() => handleSetCollectValues()}
+                onClick={() => handleCollectValues()}
               >
                 <div className="relative w-fit h-fit place-self-center col-start-1 text-sm p-2 text-center">
                   Set Collect Values

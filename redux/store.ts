@@ -54,6 +54,7 @@ import xmtpClientReducer from "./reducers/xmtpClientSlice";
 import draftTitleReducer from "./reducers/draftTitleSlice";
 import draftElementsReducer from "./reducers/draftElementsSlice";
 import dispatcherReducer from "./reducers/dispatcherSlice";
+import mixtapesReducer from "./reducers/mixtapesSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -110,6 +111,7 @@ const reducer = combineReducers({
   draftElementsReducer,
   draftTitleReducer,
   dispatcherReducer,
+  mixtapesReducer
 });
 
 export const store = configureStore({

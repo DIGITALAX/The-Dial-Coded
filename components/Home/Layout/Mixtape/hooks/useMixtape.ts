@@ -11,11 +11,12 @@ import { setMixtapeTitle } from "../../../../../redux/reducers/mixtapeTitleSlice
 import { setMixtapeSource } from "../../../../../redux/reducers/mixtapeSourceSlice";
 import { profilePublicationsAuth } from "../../../../../graphql/queries/profilePublication";
 import lodash from "lodash";
-import useCollectionModal from "../../../../Common/Modals/Publications/hooks/useCollectionModal";
+import useCreateMixtape from "./useCreateMixtape";
+import { setMixtape } from "../../../../../redux/reducers/mixtapesSlice";
 
 const useMixtape = (): UseMixtapeResults => {
   const dispatch = useDispatch();
-  const { handleReverseSetCollectValues } = useCollectionModal();
+  const { handleReverseSetCollectValues } = useCreateMixtape();
   const mixtapePage = useSelector(
     (state: RootState) => state.app.mixtapePageReducer.value
   );
@@ -25,8 +26,10 @@ const useMixtape = (): UseMixtapeResults => {
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
+  const mixtapes = useSelector(
+    (state: RootState) => state.app.mixtapesReducer.value
+  );
   const [getMixLoading, setGetMixLoading] = useState<boolean>(false);
-  const [mixtapes, setMixtapes] = useState<any[]>([]);
   const [mixtapeTitles, setMixtapeTitles] = useState<string[]>([]);
   const [mixtapeBackgrounds, setMixtapeBackgrounds] = useState<string[]>([]);
   const [paginatedResults, setPaginatedResults] = useState<any>();
@@ -34,8 +37,9 @@ const useMixtape = (): UseMixtapeResults => {
 
   const getMixtapes = async (): Promise<void> => {
     setGetMixLoading(true);
+
     try {
-      const { data } = await profilePublicationsAuth({
+      const res = await profilePublicationsAuth({
         sources: "thedial",
         profileId: lensProfile,
         publicationTypes: ["POST"],
@@ -47,7 +51,7 @@ const useMixtape = (): UseMixtapeResults => {
         },
       });
 
-      const arr: any[] = [...data?.publications?.items];
+      const arr: any[] = [...res?.data?.publications?.items];
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(a.createdAt) - Date.parse(b.createdAt)
       );
@@ -59,8 +63,8 @@ const useMixtape = (): UseMixtapeResults => {
       });
       setMixtapeBackgrounds(mBg);
       setMixtapeTitles(mT);
-      setPaginatedResults(data?.publications?.pageInfo);
-      setMixtapes(sortedArr);
+      setPaginatedResults(res?.data?.publications?.pageInfo);
+      dispatch(setMixtape(sortedArr));
     } catch (err: any) {
       console.error(err.message);
     }
@@ -95,7 +99,7 @@ const useMixtape = (): UseMixtapeResults => {
       setMixtapeBackgrounds([...mixtapeBackgrounds, ...mBg]);
       setMixtapeTitles([...mixtapeTitles, ...mT]);
       setPaginatedResults(data?.publications?.pageInfo);
-      setMixtapes([...mixtapes, ...sortedArr]);
+      dispatch(setMixtape([...mixtapes as any[], ...sortedArr]));
     } catch (err: any) {
       console.error(err.message);
     }
@@ -138,13 +142,6 @@ const useMixtape = (): UseMixtapeResults => {
   useEffect(() => {
     if (mixtapePage === "Add New Mixtape" || !mixtapePage) {
       dispatch(
-        setCollectValueType({
-          freeCollectModule: {
-            followerOnly: false,
-          },
-        })
-      );
-      dispatch(
         setAddTrack({
           actionImageURI: Array(10).fill(""),
           actionTitle: Array(10).fill("TRACK NAME | SOURCE (shortened)"),
@@ -154,12 +151,11 @@ const useMixtape = (): UseMixtapeResults => {
       dispatch(setMixtapeTitle(""));
       dispatch(setMixtapeSource(""));
       handleReverseSetCollectValues(undefined);
-    }  else {
+    } else {
       const mixtape = lodash.find(
         mixtapes,
         (mix) => mix?.metadata?.name === mixtapePage
       );
-      handleReverseSetCollectValues(mixtape?.collectModule);
       dispatch(setMixtapeCheck(mixtape?.metadata?.content?.split("\n\n")[1]));
       let images: string[] = [];
       let tracks: string[] = [];
@@ -186,8 +182,10 @@ const useMixtape = (): UseMixtapeResults => {
   }, [mixtapePage]);
 
   useEffect(() => {
-    getMixtapes();
-  }, [indexerStatus]);
+    if (lensProfile) {
+      getMixtapes();
+    }
+  }, [indexerStatus, lensProfile]);
 
   return {
     handleTapeSet,
@@ -197,7 +195,6 @@ const useMixtape = (): UseMixtapeResults => {
     mixtapeBackgrounds,
     getMoreMixtapes,
     getMixLoading,
-    mixtapes,
     updateMix,
   };
 };
