@@ -60,7 +60,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     timeLimit,
     timeLimitDropDown,
     setTimeLimitDropDown,
-    handleSetCollectValues,
+    handleCollectValues,
   } = useCollectionModal();
   const {
     uploadImage,
@@ -97,7 +97,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
       <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
         {collectOptionsModal && (
           <CollectOptionsModal
-            handleSetCollectValues={handleSetCollectValues}
+          handleCollectValues={handleCollectValues}
             chargeCollect={chargeCollect}
             setChargeCollect={setChargeCollect}
             enabledCurrencies={enabledCurrencies}

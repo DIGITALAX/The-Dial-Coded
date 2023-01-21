@@ -2,9 +2,7 @@ import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAddTrack } from "../../../../redux/reducers/addTrackSlice";
 import { RootState } from "../../../../redux/store";
-import useCollectionModal from "../../../Common/Modals/Publications/hooks/useCollectionModal";
 import useCreateMixtape from "./hooks/useCreateMixtape";
-import useMixtape from "./hooks/useMixtape";
 import useMixtapeImages from "./hooks/useMixtapeImages";
 import CreateMixtape from "./modules/CreateMixtape";
 
@@ -29,16 +27,6 @@ const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
     handleTitle,
     handleRemoveTrack,
     generateMixtape,
-  } = useCreateMixtape();
-  const arrays = useSelector((state: RootState) => state.app.addTrackReducer);
-  const { handleRemoveImage, uploadImage, imageLoading } = useMixtapeImages();
-  let action: string = "Add New Mixtape";
-  const decideStringAction = () => {
-    action = mixtapeType as string;
-    return action;
-  };
-
-  const {
     enabledCurrencies,
     setAudienceType,
     audienceType,
@@ -60,8 +48,14 @@ const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
     setLimitedEdition,
     setTimeLimit,
     timeLimit,
-    handleSetCollectValues,
-  } = useCollectionModal();
+  } = useCreateMixtape();
+  const arrays = useSelector((state: RootState) => state.app.addTrackReducer);
+  const { handleRemoveImage, uploadImage, imageLoading } = useMixtapeImages();
+  let action: string = "Add New Mixtape";
+  const decideStringAction = () => {
+    action = mixtapeType as string;
+    return action;
+  };
 
   switch (decideStringAction()) {
     default:
@@ -83,7 +77,6 @@ const MixtapeSwitch: FunctionComponent = (): JSX.Element => {
           handleSource={handleSource}
           handleTitle={handleTitle}
           handleRemoveTrack={handleRemoveTrack}
-          handleSetCollectValues={handleSetCollectValues}
           chargeCollect={chargeCollect}
           setChargeCollect={setChargeCollect}
           enabledCurrencies={enabledCurrencies}

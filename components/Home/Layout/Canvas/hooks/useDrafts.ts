@@ -61,6 +61,7 @@ const useDrafts = (): UseDraftsResult => {
           if ((await JSON.parse(elements[elem]).type) === "image") {
             await convertImage(elements[elem], parsedElements);
           }
+          parsedElements.push(JSON.parse(elements[elem]))
         }
 
         // elements.forEach(async (elem: any) => {
@@ -94,7 +95,7 @@ const useDrafts = (): UseDraftsResult => {
         //   }
         // });
         // console.log(parsedElements, "here parsed")
-        // dispatch(setDraftElements(parsedElements));
+        dispatch(setDraftElements(parsedElements));
       } else {
         alert("Not a valid Dial Canvas Draft.");
         return;

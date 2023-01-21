@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMixtapeCheck } from "../../../../../redux/reducers/mixtapeCheckSlice";
 import { RootState } from "../../../../../redux/store";
@@ -15,6 +15,7 @@ import {
 import { setIndexModal } from "../../../../../redux/reducers/indexModalSlice";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 import {
+  useAccount,
   useContractWrite,
   usePrepareContractWrite,
   useSignTypedData,
@@ -22,7 +23,6 @@ import {
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../../lib/lens/constants";
 import LensHubProxy from "../../../../../abis/LensHubProxy.json";
 import { setCollectValueType } from "../../../../../redux/reducers/collectValueTypeSlice";
-import useCollectionModal from "../../../../Common/Modals/Publications/hooks/useCollectionModal";
 import lodash from "lodash";
 import { setCompleteTrack } from "../../../../../redux/reducers/completeTrackSlice";
 import { setMixtapeSource } from "../../../../../redux/reducers/mixtapeSourceSlice";
@@ -30,16 +30,37 @@ import { setMixtapeTitle } from "../../../../../redux/reducers/mixtapeTitleSlice
 import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
 import omit from "../../../../../lib/lens/helpers/omit";
 import handleIndexCheck from "../../../../../lib/lens/helpers/handleIndexCheck";
+import handleSetCollectValues from "../../../../../lib/lens/helpers/handleCollectValues";
+import { Erc20 } from "../../../../Common/types/lens.types";
+import availableCurrencies from "../../../../../lib/lens/helpers/availableCurrencies";
+import { setCollectNotification } from "../../../../../redux/reducers/collectNotificationSlice";
 
 const useCreateMixtape = (): UseCreateMixtapeResults => {
+  const { address } = useAccount();
+  const [enabledCurrencies, setEnabledCurrencies] = useState<Erc20[]>([]);
+  const [audienceType, setAudienceType] = useState<string>("everyone");
+  const [enabledCurrency, setEnabledCurrency] = useState<string>();
+  const [limitedEdition, setLimitedEdition] = useState<string>("no");
+  const [timeLimit, setTimeLimit] = useState<string>("no");
+  const [chargeCollect, setChargeCollect] = useState<string>("no");
+  const [collectible, setCollectible] = useState<string>("yes");
+  const [limit, setLimit] = useState<number>(1);
+  const [value, setValue] = useState<number>(0);
+  const [referral, setReferral] = useState<number>(0);
   const [valueClicked, setValueClicked] = useState<boolean>(false);
+  const [currencyDropDown, setCurrencyDropDown] = useState<boolean>(false);
   const defaultProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
   const dispatcher = useSelector(
     (state: RootState) => state.app.dispatcherReducer.value
   );
-  const { handleSetCollectValues } = useCollectionModal();
+  const mixtapePage = useSelector(
+    (state: RootState) => state.app.mixtapePageReducer.value
+  );
+  const mixtapes = useSelector(
+    (state: RootState) => state.app.mixtapesReducer.value
+  );
   const [mixtapeLoading, setMixtapeLoading] = useState<boolean>(false);
   const [args, setArgs] = useState<any>();
   const arrays = useSelector((state: RootState) => state.app.addTrackReducer);
@@ -163,6 +184,20 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
   };
 
   const generateMixtape = async (): Promise<void> => {
+    handleSetCollectValues(
+      value,
+      chargeCollect,
+      dispatch,
+      limit,
+      enabledCurrency,
+      enabledCurrencies,
+      collectible,
+      audienceType,
+      timeLimit,
+      limitedEdition,
+      referral,
+      address as string
+    );
     let titlearr: number[] = [];
     let imgarr: number[] = [];
     let result: any;
@@ -186,7 +221,18 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
       return;
     }
 
-    handleSetCollectValues();
+    if (value <= 0 && chargeCollect === "yes") {
+      dispatch(
+        setCollectNotification({ actionOpen: true, actionType: "value" })
+      );
+      return;
+    }
+    if (limit < 1 && chargeCollect === "yes") {
+      dispatch(
+        setCollectNotification({ actionOpen: true, actionType: "limit" })
+      );
+      return;
+    }
     setMixtapeLoading(true);
     try {
       const contentURI = await uploadContent();
@@ -203,7 +249,8 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
         setTimeout(async () => {
           await handleIndexCheck(
             result?.data?.createPostViaDispatcher?.txHash,
-            dispatch, true
+            dispatch,
+            true
           );
         }, 7000);
       } else {
@@ -264,6 +311,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     );
     dispatch(setMixtapeSource(""));
     dispatch(setMixtapeTitle(""));
+    handleReverseSetCollectValues(undefined);
     dispatch(
       setAddTrack({
         actionImageURI: Array(10).fill(""),
@@ -299,11 +347,74 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     );
   };
 
+  const handleReverseSetCollectValues = (module: any): void => {
+    console.log(module, "MODULE");
+    if (!module) {
+      setCollectible("yes");
+      setAudienceType("everyone");
+      setLimitedEdition("no");
+      setTimeLimit("no");
+      setChargeCollect("no");
+      setReferral(0);
+      setLimit(1);
+      setValue(0);
+      setEnabledCurrency(undefined);
+      return;
+    }
+
+    if (module?.type === "RevertCollectModule") {
+      setCollectible("no");
+      return;
+    } else {
+      if (module?.followerOnly) {
+        setAudienceType("only followers");
+      } else {
+        setAudienceType("everyone");
+      }
+      setCollectible("yes");
+      setChargeCollect("no");
+      if (module?.type !== "FreeCollectModule") {
+        setChargeCollect("yes");
+        const setCurrency: Erc20[] = lodash.filter(
+          enabledCurrencies,
+          (currency) => currency.address === module?.amount?.asset?.address
+        );
+        setEnabledCurrency(setCurrency[0]?.symbol);
+        setValue(module?.amount?.value);
+        setReferral(module?.referralFee);
+
+        if (module?.type === "LimitedFeeCollectModule") {
+          setLimitedEdition("yes");
+          setLimit(module?.collectLimit);
+        } else if (module?.type === "LimitedTimedFeeCollectModule") {
+          setTimeLimit("yes");
+          setLimitedEdition("yes");
+          setLimit(module?.collectLimit);
+        } else if (module?.type === "TimedFeeCollectModule") {
+          setTimeLimit("yes");
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (postSuccess) {
       handleMixtapeWrite();
     }
   }, [postSuccess]);
+
+  useMemo(() => {
+    if (mixtapePage) {
+      availableCurrencies(setEnabledCurrencies, setEnabledCurrency);
+      if (mixtapePage !== "Add New Mixtape") {
+        const mixtape = lodash.find(
+          mixtapes,
+          (mix) => mix?.metadata?.name === mixtapePage
+        );
+        handleReverseSetCollectValues(mixtape?.collectModule);
+      }
+    }
+  }, [mixtapePage]);
 
   return {
     checkValues,
@@ -315,6 +426,28 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     handleSource,
     handleRemoveTrack,
     generateMixtape,
+    enabledCurrencies,
+    setAudienceType,
+    audienceType,
+    setEnabledCurrency,
+    enabledCurrency,
+    setCurrencyDropDown,
+    currencyDropDown,
+    referral,
+    setReferral,
+    limit,
+    setLimit,
+    value,
+    setValue,
+    collectible,
+    setCollectible,
+    chargeCollect,
+    setChargeCollect,
+    limitedEdition,
+    setLimitedEdition,
+    setTimeLimit,
+    timeLimit,
+    handleReverseSetCollectValues,
   };
 };
 

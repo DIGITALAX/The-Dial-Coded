@@ -43,6 +43,7 @@ import getEnabledCurrencies from "../../../../../graphql/queries/getEnabledCurre
 import lodash from "lodash";
 import getDefaultProfile from "../../../../../graphql/queries/getDefaultProfile";
 import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
+import availableCurrencies from "../../../../../lib/lens/helpers/availableCurrencies";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = [
@@ -127,16 +128,6 @@ const useAccount = (): UseAccountResult => {
 
   const { writeAsync: followWriteAsync, error: writeErrorFollow } =
     useContractWrite(followConfig);
-
-  const availableCurrencies = async (): Promise<void> => {
-    const response = await getEnabledCurrencies();
-    setEnabledCurrencies(response.data.enabledModuleCurrencies);
-    setEnabledCurrency(
-      (followValues as any)?.amount?.asset?.symbol
-        ? (followValues as any)?.amount?.asset?.symbol
-        : response.data.enabledModuleCurrencies[0]?.symbol
-    );
-  };
 
   const notificationImages: string[] = [
     "QmZS3Af6ypfwrPYg8w46kjpUR8REGuGb8bj98PukM7yu87",
@@ -523,7 +514,11 @@ const useAccount = (): UseAccountResult => {
 
   useMemo(() => {
     if (followFee === "fee") {
-      availableCurrencies();
+      availableCurrencies(
+        setEnabledCurrencies,
+        setEnabledCurrency,
+        (followValues as any)?.amount?.asset?.symbol
+      );
     }
   }, [followFee]);
 
@@ -537,7 +532,9 @@ const useAccount = (): UseAccountResult => {
         profile.data.defaultProfile.followModule?.amount?.asset?.symbol.toLowerCase()
       );
       setValue(profile.data.defaultProfile.followModule?.amount?.value);
-    } else if (profile.data.defaultProfile.followModule?.type === "RevertFollowModule") {
+    } else if (
+      profile.data.defaultProfile.followModule?.type === "RevertFollowModule"
+    ) {
       setFollowFee("revert");
     }
   };

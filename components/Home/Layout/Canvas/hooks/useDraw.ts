@@ -348,7 +348,9 @@ const useDraw = () => {
       canvas.style.width = String(canvas.width / window.devicePixelRatio);
       canvas.style.height = String(canvas.height / window.devicePixelRatio);
       elements?.forEach((element: any) => {
-        if (action === "writing" && selectedElement.id === element.id) return;
+        if (action === "writing" && selectedElement.id === element.id) {
+          return;
+        }
         drawElement(element, roughCanvas, ctx);
       });
       ctx.save();
@@ -990,14 +992,12 @@ const useDraw = () => {
             x: e.clientX - selectedElement?.offsetXs[index],
             y: e.clientY - selectedElement?.offsetYs[index],
           })
-        );        
+        );
         const elementsCopy = [...elements];
-        console.log(elementsCopy, "copy");
         elementsCopy[selectedElement.id] = {
           ...elementsCopy[selectedElement.id],
           points: newPoints,
         };
-        console.log(elementsCopy, "after");
         setElements(elementsCopy, true);
       } else if (selectedElement.type === "image") {
         const { x2, x1, y2, y1, id, type, offsetX, offsetY, image } =
@@ -1264,10 +1264,6 @@ const useDraw = () => {
   useEffect(() => {
     loadFont();
   }, []);
-
-  console.log(selectedElement, "selection");
-  console.log(elements, "elements");
-  console.log(parsedElems, "parsed");
 
   useEffect(() => {
     if (parsedElems?.length > 0) {
