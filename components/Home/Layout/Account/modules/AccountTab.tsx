@@ -33,7 +33,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
   setEnabledCurrency,
   currencyDropDown,
   setCurrencyDropDown,
-  enabledCurrency
+  enabledCurrency,
 }): JSX.Element => {
   const location = lodash.filter(
     profile?.attributes,
