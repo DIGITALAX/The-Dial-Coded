@@ -64,7 +64,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       setPublicationsSearchNotDispatch(sortedPublicationArr);
-      await callLexicaPrompts(searchTarget, setPrompts);
+      await callLexicaPrompts(searchTargetString, setPrompts);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -112,6 +112,9 @@ const useSliderSearch = (): UseSliderSearchResults => {
   const handleChosenSearch = async (prompt?: string): Promise<void> => {
     setSearchLoading(true);
     setDropDown(false);
+    if (prompt) {
+      dispatch(setSearchTarget(prompt as string));
+    }
     try {
       const {
         mixtapeMirrors,
@@ -139,9 +142,6 @@ const useSliderSearch = (): UseSliderSearchResults => {
           actionFollower: followerOnly,
         })
       );
-      if (prompt) {
-        dispatch(setSearchTarget(prompt as string));
-      }
       await callLexicaSearch(prompt ? prompt : searchTarget, dispatch, setImagesLoading);
     } catch (err: any) {
       console.error(err.message);
