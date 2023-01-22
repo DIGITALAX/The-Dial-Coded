@@ -4,6 +4,7 @@ import { useAccount, useSignMessage } from "wagmi";
 import authenticate from "../../../../graphql/mutations/authenticate";
 import generateChallenge from "../../../../graphql/queries/generateChallenge";
 import getDefaultProfile from "../../../../graphql/queries/getDefaultProfile";
+import getProfilePage from "../../../../graphql/queries/getProfilePage";
 import {
   setAuthenticationToken,
   removeAuthenticationToken,
@@ -52,6 +53,10 @@ const useLensSignIn = (): useLensSignInResults => {
       if (accessTokens) {
         setAuthenticationToken({ token: accessTokens.data.authenticate });
         const profile = await getDefaultProfile(address);
+        const single = await getProfilePage({
+          handle: "acc4test.test",
+        });
+        console.log(single)
         if (profile?.data) {
           dispatch(setLensProfile(profile?.data?.defaultProfile));
           dispatch(setAuthStatus(true));

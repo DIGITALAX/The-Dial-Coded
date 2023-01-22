@@ -29,15 +29,15 @@ const Hot: FunctionComponent<HotProps> = ({
             return (
               <HotPublication
                 height={"80"}
-                data={hotFeed[0]}
+                data={hotFeed?.[0]}
                 image={image}
                 index={index}
                 key={index}
                 dispatch={dispatch}
-                reactionsFeed={hotReactionsFeed[0]}
-                hasReacted={hasHotReacted[0]}
-                hasMirrored={hasHotMirrored[0]}
-                hasCommented={hasHotCommented[0]}
+                reactionsFeed={hotReactionsFeed?.[0]}
+                hasReacted={hasHotReacted?.[0]}
+                hasMirrored={hasHotMirrored?.[0]}
+                hasCommented={hasHotCommented?.[0]}
                 handleHidePost={handleHidePost}
               />
             );

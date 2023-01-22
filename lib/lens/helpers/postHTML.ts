@@ -14,7 +14,6 @@ const getPostHTML = (e: any, resultElement: Element): string => {
     .replace(new RegExp("&", "g"), "&")
     .replace(new RegExp("<", "g"), "<");
   (resultElement as any).innerHTML = finalHTML;
-
   return finalHTML;
 };
 
