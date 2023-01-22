@@ -348,10 +348,10 @@ const useConversations = (): UseConversationResults => {
     let resultElement = document.querySelector("#highlighted-message");
     const newHTMLPost =
       messageHTML.substring(0, messageHTML.lastIndexOf("@")) +
-      `@${user?.handle.split(".test")[0]}</span>`;
+      `@${user?.handle}</span>`;
     const newElementPost =
       message.substring(0, message.lastIndexOf("@")) +
-      `@${user?.handle.split(".test")[0]}`;
+      `@${user?.handle}`;
     setMessage(newElementPost);
     (resultElement as any).innerHTML = newHTMLPost;
     setMessageHTML(newHTMLPost);

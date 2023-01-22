@@ -25,6 +25,7 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
     prefix = notification?.profile;
     type = "comment";
   } else if (notification?.__typename === "NewMentionNotification") {
+    prefix = notification?.mentionPublication?.profile;
     type = "mention";
   } else {
     prefix = notification?.profile;
@@ -56,7 +57,7 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
             : type === "comment"
             ? `/post/${notification?.comment?.id}`
             : type === "mention"
-            ? `/post/${notification?.mentionPublication?.post?.id}`
+            ? `/post/${notification?.mentionPublication?.id}`
             : `/profile/${prefix?.id}`
         )
       }
