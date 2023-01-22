@@ -37,6 +37,7 @@ import getPostHTML from "../../../../../lib/lens/helpers/postHTML";
 import getCaretPos from "../../../../../lib/lens/helpers/getCaretPos";
 import handleIndexCheck from "../../../../../lib/lens/helpers/handleIndexCheck";
 import { setPostImages } from "../../../../../redux/reducers/postImagesSlice";
+import broadcast from "../../../../../graphql/mutations/broadcast";
 
 const usePublication = () => {
   const {
@@ -128,7 +129,7 @@ const usePublication = () => {
           );
         }, 7000);
       } else {
-        await createCommentTypedData({
+        result = await createCommentTypedData({
           profileId: defaultProfile,
           publicationId: pubId ? pubId : id,
           contentURI: "ipfs://" + contentURI,
@@ -146,26 +147,42 @@ const usePublication = () => {
           value: omit(typedData?.value, ["__typename"]) as any,
         });
 
-        const { v, r, s } = splitSignature(signature);
+        const broadcastResult: any = await broadcast({
+          id: result?.data?.createCommentTypedData?.id,
+          signature,
+        });
 
-        const commentArgs = {
-          profileId: typedData.value.profileId,
-          contentURI: typedData.value.contentURI,
-          profileIdPointed: typedData.value.profileIdPointed,
-          pubIdPointed: typedData.value.pubIdPointed,
-          referenceModuleData: typedData.value.referenceModuleData,
-          referenceModule: typedData.value.referenceModule,
-          referenceModuleInitData: typedData.value.referenceModuleInitData,
-          collectModule: typedData.value.collectModule,
-          collectModuleInitData: typedData.value.collectModuleInitData,
-          sig: {
-            v,
-            r,
-            s,
-            deadline: typedData.value.deadline,
-          },
-        };
-        setCommentArgs(commentArgs);
+        if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+          const { v, r, s } = splitSignature(signature);
+
+          const commentArgs = {
+            profileId: typedData.value.profileId,
+            contentURI: typedData.value.contentURI,
+            profileIdPointed: typedData.value.profileIdPointed,
+            pubIdPointed: typedData.value.pubIdPointed,
+            referenceModuleData: typedData.value.referenceModuleData,
+            referenceModule: typedData.value.referenceModule,
+            referenceModuleInitData: typedData.value.referenceModuleInitData,
+            collectModule: typedData.value.collectModule,
+            collectModuleInitData: typedData.value.collectModuleInitData,
+            sig: {
+              v,
+              r,
+              s,
+              deadline: typedData.value.deadline,
+            },
+          };
+          setCommentArgs(commentArgs);
+        } else {
+          clearComment();
+          setTimeout(async () => {
+            await handleIndexCheck(
+              broadcastResult?.data?.broadcast?.txHash,
+              dispatch,
+              true
+            );
+          }, 7000);
+        }
       }
     } catch (err: any) {
       console.error(err.message);
@@ -336,23 +353,39 @@ const usePublication = () => {
           value: omit(typedData?.value, ["__typename"]) as any,
         });
 
-        const { v, r, s } = splitSignature(signature);
+        const broadcastResult: any = await broadcast({
+          id: result?.data?.createPostTypedData?.id,
+          signature,
+        });
 
-        const postArgs: PostArgsType = {
-          profileId: typedData.value.profileId,
-          contentURI: typedData.value.contentURI,
-          collectModule: typedData.value.collectModule,
-          collectModuleInitData: typedData.value.collectModuleInitData,
-          referenceModule: typedData.value.referenceModule,
-          referenceModuleInitData: typedData.value.referenceModuleInitData,
-          sig: {
-            v,
-            r,
-            s,
-            deadline: typedData.value.deadline,
-          },
-        };
-        setArgs(postArgs);
+        if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+          const { v, r, s } = splitSignature(signature);
+
+          const postArgs: PostArgsType = {
+            profileId: typedData.value.profileId,
+            contentURI: typedData.value.contentURI,
+            collectModule: typedData.value.collectModule,
+            collectModuleInitData: typedData.value.collectModuleInitData,
+            referenceModule: typedData.value.referenceModule,
+            referenceModuleInitData: typedData.value.referenceModuleInitData,
+            sig: {
+              v,
+              r,
+              s,
+              deadline: typedData.value.deadline,
+            },
+          };
+          setArgs(postArgs);
+        } else {
+          clearPost();
+          setTimeout(async () => {
+            await handleIndexCheck(
+              broadcastResult?.data?.broadcast?.txHash,
+              dispatch,
+              true
+            );
+          }, 7000);
+        }
       }
     } catch (err: any) {
       console.error(err.message);

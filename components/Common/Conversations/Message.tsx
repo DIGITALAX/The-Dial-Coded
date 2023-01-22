@@ -97,7 +97,7 @@ const Message: FunctionComponent<MessageProps> = ({
           <InfiniteScroll
             className={`relative w-full h-full self-end col-start-1 text-right gap-2 grid grid-flow-row auto-rows-auto`}
             hasMore={true}
-            height={"42rem"}
+            height={"53rem"}
             loader={""}
             style={{ display: "flex", flexDirection: "column-reverse" }}
             inverse={true}
@@ -116,7 +116,7 @@ const Message: FunctionComponent<MessageProps> = ({
                   >
                     {type === "html" ? (
                       <div
-                        className={`relative h-fit w-fit max-w-full whitespace-prewrap col-start-1 py-1 px-3 rounded-full text-base select-text selection:text-fuchsia-900 ${
+                        className={`relative h-fit w-fit max-w-full whitespace-prewrap col-start-1 py-1 px-5 rounded-full text-base select-text selection:text-fuchsia-900 ${
                           convo?.senderAddress === lensProfileAddress
                             ? "justify-self-end bg-offBlue text-white"
                             : "justify-self-start bg-white text-black"

@@ -214,13 +214,13 @@ const useMainFeed = () => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     const feedType = checkFeedTypes(feedTypeState as string);
     try {
-      const { data } = await feedTimeline({
+      const res = await feedTimeline({
         sources: "thedial",
         profileId: lensProfile,
         limit: 50,
         // metadata: feedType,
       });
-      const arr: any[] = [...data.feed.items];
+      const arr: any[] = [...res?.data.feed.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
@@ -294,7 +294,7 @@ const useMainFeed = () => {
         setFollowerOnly(isOnlyFollowers as boolean[]);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror(mixtapeMirrors);
-        setPaginatedResults(data.feed.pageInfo);
+        setPaginatedResults(res?.data.feed.pageInfo);
         const response = await checkPostReactions(orderedArr, lensProfile);
         setHasReacted(response?.hasReactedArr);
         setReactionsFeed(response?.reactionsFeedArr);

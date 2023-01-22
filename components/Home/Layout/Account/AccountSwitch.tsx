@@ -105,6 +105,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
+  const authStatus = useSelector(
+    (state: RootState) => state.app.authStatusReducer.value
+  );
   const isConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
   );
@@ -114,7 +117,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const { openConnectModal } = useConnectModal();
   let action: string = "account";
   const decideStringAction = () => {
-    if (profile && isConnected) {
+    if (authStatus && isConnected) {
       action = accountType as string;
     } else {
       action = "no profile";

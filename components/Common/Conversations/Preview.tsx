@@ -13,6 +13,8 @@ const Preview: FunctionComponent<PreviewProps> = ({
 }): JSX.Element => {
   let ipfsRegex = /ipfs:\/\//;
   let gifRegex = /https:\/\/media\.tenor\.com/;
+
+  // console.log(previewMessages, "inside")
   return (
     <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll">
       {previewMessages &&

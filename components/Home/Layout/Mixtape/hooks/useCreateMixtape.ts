@@ -34,6 +34,7 @@ import handleSetCollectValues from "../../../../../lib/lens/helpers/handleCollec
 import { Erc20 } from "../../../../Common/types/lens.types";
 import availableCurrencies from "../../../../../lib/lens/helpers/availableCurrencies";
 import { setCollectNotification } from "../../../../../redux/reducers/collectNotificationSlice";
+import broadcast from "../../../../../graphql/mutations/broadcast";
 
 const useCreateMixtape = (): UseCreateMixtapeResults => {
   const { address } = useAccount();
@@ -271,23 +272,39 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
           value: omit(typedData?.value, ["__typename"]) as any,
         });
 
-        const { v, r, s } = splitSignature(signature);
+        const broadcastResult: any = await broadcast({
+          id: result?.data?.createPostTypedData?.id,
+          signature,
+        });
 
-        const postArgs: PostArgsType = {
-          profileId: typedData.value.profileId,
-          contentURI: typedData.value.contentURI,
-          collectModule: typedData.value.collectModule,
-          collectModuleInitData: typedData.value.collectModuleInitData,
-          referenceModule: typedData.value.referenceModule,
-          referenceModuleInitData: typedData.value.referenceModuleInitData,
-          sig: {
-            v,
-            r,
-            s,
-            deadline: typedData.value.deadline,
-          },
-        };
-        setArgs(postArgs);
+        if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+          const { v, r, s } = splitSignature(signature);
+
+          const postArgs: PostArgsType = {
+            profileId: typedData.value.profileId,
+            contentURI: typedData.value.contentURI,
+            collectModule: typedData.value.collectModule,
+            collectModuleInitData: typedData.value.collectModuleInitData,
+            referenceModule: typedData.value.referenceModule,
+            referenceModuleInitData: typedData.value.referenceModuleInitData,
+            sig: {
+              v,
+              r,
+              s,
+              deadline: typedData.value.deadline,
+            },
+          };
+          setArgs(postArgs);
+        } else {
+          clearMixtape();
+          setTimeout(async () => {
+            await handleIndexCheck(
+              broadcastResult?.data?.broadcast?.txHash,
+              dispatch,
+              true
+            );
+          }, 7000);
+        }
       }
     } catch (err: any) {
       console.error(err.message);
