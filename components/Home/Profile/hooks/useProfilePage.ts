@@ -5,6 +5,9 @@ import {
   useAccount,
   useContractWrite,
   usePrepareContractWrite,
+  usePrepareSendTransaction,
+  useSendTransaction,
+  useSigner,
   useSignTypedData,
 } from "wagmi";
 import createFollowTypedData from "../../../../graphql/mutations/follow";
@@ -15,6 +18,7 @@ import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
 import { setInsufficientFunds } from "../../../../redux/reducers/insufficientFunds";
 import { RootState } from "../../../../redux/store";
 import {
+  ApprovedAllowanceAmount,
   PaginatedFollowersResult,
   PaginatedFollowingResult,
   Profile,
@@ -42,19 +46,28 @@ import getFollowing from "../../../../lib/lens/helpers/getFollowing";
 import getFollowers from "../../../../lib/lens/helpers/getFollowers";
 import checkIfFollowerOnly from "../../../../lib/lens/helpers/checkIfFollowerOnly";
 import handleIndexCheck from "../../../../lib/lens/helpers/handleIndexCheck";
+import handleCoinUSDConversion from "../../../../lib/lens/helpers/handleCoinUSDConversion";
+import checkApproved from "../../../../lib/lens/helpers/checkApproved";
+import { setFollowTypeValues } from "../../../../redux/reducers/followTypeValuesSlice";
+import checkIndexed from "../../../../graphql/queries/checkIndexed";
+import createFollowModule from "../../../../lib/lens/helpers/createFollowModule";
+import { Contract, Signer } from "ethers";
+import FollowNFT from "./../../../../abis/FollowNFT.json";
 
 const useProfilePage = (): UseProfilePageResults => {
   const router = useRouter();
+  const { data: signer } = useSigner();
   const [profileDataLoading, setProfileDataLoading] = useState<any>();
   const [profileData, setProfileData] = useState<any>();
   const [followLoading, setFollowLoading] = useState<boolean>(false);
   const [followArgs, setFollowArgs] = useState<FollowArgs>();
-  const [unfollowArgs, setUnfollowArgs] = useState<any[]>();
   const [userFeed, setUserFeed] = useState<PublicationSearchResult[]>([]);
+  const [followInfoLoading, setFollowInfoLoading] = useState<boolean>(false);
   const [paginatedResults, setPaginatedResults] = useState<any>();
   const { address } = useAccount();
   const { signTypedDataAsync } = useSignTypedData();
   const dispatch = useDispatch();
+  const [approvalLoading, setApprovalLoading] = useState<boolean>(false);
   const [isFollowedByMe, setIsFollowedByMe] = useState<boolean>(false);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [hasMirrored, setHasMirrored] = useState<boolean[]>([]);
@@ -72,6 +85,9 @@ const useProfilePage = (): UseProfilePageResults => {
   const indexerModal = useSelector(
     (state: RootState) => state.app.indexModalReducer
   );
+  const approvalArgs = useSelector(
+    (state: RootState) => state.app.approvalArgsReducer.args
+  );
   const [followersLoading, setFollowersLoading] = useState<boolean>(false);
   const [followingLoading, setFollowingLoading] = useState<boolean>(false);
   const [userFollowing, setUserFollowing] = useState<
@@ -83,13 +99,16 @@ const useProfilePage = (): UseProfilePageResults => {
   const [paginatedFollowers, setPaginatedFollowers] = useState<any>();
   const [paginatedFollowing, setPaginatedFollowing] = useState<any>();
   const lensProfile = useSelector(
-    (state: RootState) => state.app.lensProfileReducer.profile?.id
+    (state: RootState) => state.app.lensProfileReducer.profile
   );
   const isConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
   );
   const hearted = useSelector(
     (state: RootState) => state.app.heartedReducer?.direction
+  );
+  const followTypes = useSelector(
+    (state: RootState) => state.app.followTypeValuesReducer
   );
 
   const { config, isSuccess } = usePrepareContractWrite({
@@ -99,27 +118,133 @@ const useProfilePage = (): UseProfilePageResults => {
     enabled: Boolean(followArgs),
     args: [followArgs],
   });
-  const { config: unfollowConfig, isSuccess: unfollowSuccess, error } =
-    usePrepareContractWrite({
-      address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
-      abi: LensHubProxy,
-      functionName: "burnWithSig",
-      enabled: Boolean(unfollowArgs),
-      args: unfollowArgs,
-    });
 
-  const { writeAsync, isSuccess: followComplete } = useContractWrite(config);
-  const { writeAsync: unfollowWriteAsync, isSuccess: unfollowComplete } =
-    useContractWrite(unfollowConfig);
+  const { writeAsync } = useContractWrite(config);
 
-  const followProfile = async (): Promise<void> => {
+  const { config: approvalConfig } = usePrepareSendTransaction({
+    request: {
+      to: approvalArgs?.to as string,
+      from: approvalArgs?.from as string,
+      data: approvalArgs?.data as string,
+    },
+    // enabled: Boolean(approvalSendEnabled),
+  });
+
+  const { sendTransactionAsync } = useSendTransaction(approvalConfig);
+
+  const callApprovalSign = async (): Promise<void> => {
+    try {
+      const tx = await sendTransactionAsync?.();
+      await tx?.wait();
+      const indexedStatus = await checkIndexed(tx?.hash);
+      if (
+        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+        "SUCCESS"
+      ) {
+        // re-get collect info
+        getFollowInfo();
+      }
+    } catch (err: any) {
+      console.error(err.message);
+      dispatch(setInsufficientFunds("failed"));
+    }
+  };
+
+  const approveCurrency = async (): Promise<void> => {
+    setApprovalLoading(true);
+    // setApprovalSendEnabled(true);
+    try {
+      await callApprovalSign();
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setApprovalLoading(false);
+  };
+
+  const getFollowInfo = async (): Promise<void> => {
+    try {
+      if (!profileData?.followModule) {
+        dispatch(
+          setFollowTypeValues({
+            actionType: profileData?.followModule?.type,
+            actionCurrency: undefined,
+            actionAddress: undefined,
+            actionValue: undefined,
+            actionUSD: undefined,
+            actionApproved: undefined,
+            actionModal: false,
+          })
+        );
+        await followTypedData();
+      } else {
+        setFollowInfoLoading(true);
+        if (profileData?.followModule?.type === "RevertCollectModule") {
+          dispatch(
+            setFollowTypeValues({
+              actionType: profileData?.followModule?.type,
+              actionCurrency: undefined,
+              actionAddress: undefined,
+              actionValue: undefined,
+              actionUSD: undefined,
+              actionApproved: undefined,
+              actionModal: true,
+            })
+          );
+        } else {
+          const convertedValue = await handleCoinUSDConversion(
+            profileData?.followModule?.amount?.asset?.symbol,
+            profileData?.followModule?.amount?.value
+          );
+          const approvalData: ApprovedAllowanceAmount | void =
+            await checkApproved(
+              profileData?.followModule?.amount?.asset?.address,
+              null,
+              profileData?.followModule?.type,
+              null,
+              profileData?.followModule?.amount?.value,
+              dispatch,
+              isConnected,
+              lensProfile?.id
+            );
+          const isApproved = parseInt(approvalData?.allowance as string, 16);
+          dispatch(
+            setFollowTypeValues({
+              actionType: profileData?.followModule?.type,
+              actionCurrency: profileData?.followModule?.amount?.asset?.symbol,
+              actionAddress: profileData?.followModule?.amount?.asset?.address,
+              actionValue: profileData?.followModule?.amount?.value,
+              actionUSD: convertedValue,
+              actionApproved:
+                isApproved > profileData?.followModule?.amount?.value
+                  ? true
+                  : false,
+              actionModal: true,
+            })
+          );
+        }
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setFollowInfoLoading(false);
+  };
+
+  const followTypedData = async (): Promise<void> => {
     setFollowLoading(true);
+    const followModule = createFollowModule(
+      followTypes?.type,
+      Number(followTypes?.value),
+      setFollowLoading,
+      followTypes?.address,
+      profileData?.ownedBy,
+      true
+    );
     try {
       const response = await createFollowTypedData({
         follow: [
           {
             profile: profileData?.id,
-            followModule: null,
+            followModule,
           },
         ],
       });
@@ -145,6 +270,19 @@ const useProfilePage = (): UseProfilePageResults => {
         },
       };
       setFollowArgs(followArgs);
+    } catch (err: any) {
+      setFollowLoading(false);
+      if (err.message.includes("You do not have enough")) {
+        dispatch(setInsufficientFunds("insufficient"));
+      }
+      console.error(err.message);
+    }
+  };
+
+  const followProfile = async (): Promise<void> => {
+    setFollowLoading(true);
+    try {
+      await getFollowInfo();
     } catch (err: any) {
       console.error(err.message);
     }
@@ -172,7 +310,24 @@ const useProfilePage = (): UseProfilePageResults => {
         s,
         deadline: typedData.value.deadline,
       };
-      setUnfollowArgs([typedData.value.tokenId, sig]);
+
+      const unfollowNFTContract = new Contract(
+        typedData.domain.verifyingContract,
+        FollowNFT,
+        signer as Signer
+      );
+      const tx = await unfollowNFTContract.burnWithSig(
+        typedData.value.tokenId,
+        sig
+      );
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Indexing Interaction",
+        })
+      );
+      const res = await tx?.wait();
+      await handleIndexCheck(res?.transactionHash, dispatch, false);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -206,7 +361,7 @@ const useProfilePage = (): UseProfilePageResults => {
     let sortedArr: any[];
     let pageData: any;
     try {
-      if (!lensProfile) {
+      if (!lensProfile?.id) {
         const { data } = await profilePublications({
           sources: "thedial",
           profileId: profileData?.id,
@@ -245,20 +400,23 @@ const useProfilePage = (): UseProfilePageResults => {
       setUserFeed(filteredArr);
       const isOnlyFollowers = await checkIfFollowerOnly(
         filteredArr,
-        lensProfile
+        lensProfile?.id
       );
       setFollowerOnly(isOnlyFollowers as boolean[]);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror(mixtapeMirrors);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(filteredArr, lensProfile);
+      const response = await checkPostReactions(filteredArr, lensProfile?.id);
       setHasReacted(response?.hasReactedArr);
-      if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(filteredArr, lensProfile);
+      if (lensProfile?.id) {
+        const hasMirroredArr = await checkIfMirrored(
+          filteredArr,
+          lensProfile?.id
+        );
         setHasMirrored(hasMirroredArr);
         const hasCommentedArr = await checkIfCommented(
           filteredArr,
-          lensProfile
+          lensProfile?.id
         );
         setHasCommented(hasCommentedArr);
       }
@@ -272,7 +430,7 @@ const useProfilePage = (): UseProfilePageResults => {
     let sortedArr: any[];
     let pageData: any;
     try {
-      if (!lensProfile) {
+      if (!lensProfile?.id) {
         const { data } = await profilePublications({
           sources: "thedial",
           profileId: profileData?.id,
@@ -314,14 +472,17 @@ const useProfilePage = (): UseProfilePageResults => {
       setPaginatedResults(pageData);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
-      const response = await checkPostReactions(filteredArr, lensProfile);
+      const response = await checkPostReactions(filteredArr, lensProfile?.id);
       setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
-      if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(filteredArr, lensProfile);
+      if (lensProfile?.id) {
+        const hasMirroredArr = await checkIfMirrored(
+          filteredArr,
+          lensProfile?.id
+        );
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
         const hasCommentedArr = await checkIfCommented(
           filteredArr,
-          lensProfile
+          lensProfile?.id
         );
         setHasCommented([...hasCommented, ...hasCommentedArr]);
         setHasReacted([...hasReacted, ...response?.hasReactedArr]);
@@ -335,7 +496,7 @@ const useProfilePage = (): UseProfilePageResults => {
     let sortedArr: any[];
     let pageData: any;
     try {
-      if (!lensProfile) {
+      if (!lensProfile?.id) {
         const { data } = await profilePublications({
           sources: "thedial",
           profileId: profileData?.id,
@@ -373,12 +534,18 @@ const useProfilePage = (): UseProfilePageResults => {
       }
       setMixtapes(sortedArr);
       setMixtapePaginated(pageData);
-      const response = await checkPostReactions(sortedArr, lensProfile);
+      const response = await checkPostReactions(sortedArr, lensProfile?.id);
       setHotReactionsFeed(response?.reactionsFeedArr);
-      if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
+      if (lensProfile?.id) {
+        const hasMirroredArr = await checkIfMirrored(
+          sortedArr,
+          lensProfile?.id
+        );
         setHasHotMirrored(hasMirroredArr);
-        const hasCommentedArr = await checkIfCommented(sortedArr, lensProfile);
+        const hasCommentedArr = await checkIfCommented(
+          sortedArr,
+          lensProfile?.id
+        );
         setHasHotCommented(hasCommentedArr);
         setHasHotReacted(response?.hasReactedArr);
       }
@@ -391,7 +558,7 @@ const useProfilePage = (): UseProfilePageResults => {
     let sortedArr: any[];
     let pageData: any;
     try {
-      if (!lensProfile) {
+      if (!lensProfile?.id) {
         const { data } = await profilePublications({
           sources: "thedial",
           profileId: profileData?.id,
@@ -430,12 +597,18 @@ const useProfilePage = (): UseProfilePageResults => {
       }
       setMixtapes([...mixtapes, ...sortedArr]);
       setMixtapePaginated(pageData);
-      const response = await checkPostReactions(sortedArr, lensProfile);
+      const response = await checkPostReactions(sortedArr, lensProfile?.id);
       setHotReactionsFeed([...hotReactionsFeed, ...response?.reactionsFeedArr]);
-      if (lensProfile) {
-        const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
+      if (lensProfile?.id) {
+        const hasMirroredArr = await checkIfMirrored(
+          sortedArr,
+          lensProfile?.id
+        );
         setHasHotMirrored([...hasHotMirrored, ...hasMirroredArr]);
-        const hasCommentedArr = await checkIfCommented(sortedArr, lensProfile);
+        const hasCommentedArr = await checkIfCommented(
+          sortedArr,
+          lensProfile?.id
+        );
         setHasHotCommented([...hasHotCommented, ...hasCommentedArr]);
         setHasHotReacted([...hasHotReacted, ...response?.hasReactedArr]);
       }
@@ -446,6 +619,17 @@ const useProfilePage = (): UseProfilePageResults => {
 
   const followWrite = async (): Promise<void> => {
     setFollowLoading(true);
+    dispatch(
+      setFollowTypeValues({
+        actionType: undefined,
+        actionCurrency: undefined,
+        actionAddress: undefined,
+        actionValue: undefined,
+        actionUSD: undefined,
+        actionApproved: undefined,
+        actionModal: false,
+      })
+    );
     try {
       const tx = await writeAsync?.();
       dispatch(
@@ -455,26 +639,7 @@ const useProfilePage = (): UseProfilePageResults => {
         })
       );
       const res = await tx?.wait();
-      await handleIndexCheck(res?.transactionHash, dispatch, true);
-    } catch (err: any) {
-      console.error(err.message);
-      dispatch(setInsufficientFunds("failed"));
-    }
-    setFollowLoading(false);
-  };
-
-  const unfollowWrite = async (): Promise<void> => {
-    setFollowLoading(true);
-    try {
-      const tx = await unfollowWriteAsync?.();
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
-      const res = await tx?.wait();
-      await handleIndexCheck(res?.transactionHash, dispatch, true);
+      await handleIndexCheck(res?.transactionHash, dispatch, false);
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));
@@ -558,10 +723,7 @@ const useProfilePage = (): UseProfilePageResults => {
     if (isSuccess) {
       followWrite();
     }
-    if (unfollowSuccess) {
-      unfollowWrite();
-    }
-  }, [isSuccess, unfollowSuccess]);
+  }, [isSuccess]);
 
   return {
     profileDataLoading,
@@ -595,6 +757,10 @@ const useProfilePage = (): UseProfilePageResults => {
     mixtapeMirror,
     handleSendDM,
     followerOnly,
+    followInfoLoading,
+    followTypedData,
+    approvalLoading,
+    approveCurrency,
   };
 };
 

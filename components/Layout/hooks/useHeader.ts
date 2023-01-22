@@ -25,7 +25,7 @@ const useHeader = (): UseHeaderResult => {
   const backgroundNumber: number = useSelector(
     (state: RootState) => state.app.backgroundReducer.value
   );
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const handleImageData = (): void => {
     if (backgroundNumber < 66 && backgroundNumber > 4) {
       dispatch(setBackground(backgroundNumber + 1));
@@ -35,13 +35,6 @@ const useHeader = (): UseHeaderResult => {
   };
 
   const handleAccount = (): void => {
-    if (
-      router.asPath.includes("post") ||
-      router.asPath.includes("profile") ||
-      router.asPath.includes("mixtape")
-    ) {
-      router.push("/");
-    }
     router.push(`/#Account`)
     dispatch(setLayout("Account"));
     dispatch(setHamburger(false));

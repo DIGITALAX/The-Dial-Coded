@@ -19,6 +19,7 @@ import useProfilePage from "../Profile/hooks/useProfilePage";
 import IndexingModal from "../../Common/Modals/Indexing/IndexingModal";
 import CompleteTrack from "../../Common/Modals/CompleteTrack/CompleteTrackModal";
 import handleHidePost from "../../../lib/lens/helpers/handleHidePost";
+import FollowTypeModal from "../../Common/Modals/FollowType/FollowTypeModal";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -54,6 +55,9 @@ const Modals = () => {
   );
   const completeTrackModal = useSelector(
     (state: RootState) => state.app.completeTrackReducer.value
+  );
+  const followTypes = useSelector(
+    (state: RootState) => state.app.followTypeValuesReducer
   );
   const {
     mirrorInfoLoading,
@@ -99,6 +103,11 @@ const Modals = () => {
     userFollowing,
     followingLoading,
     followersLoading,
+    followTypedData,
+    followInfoLoading,
+    approvalLoading: followApprovalLoading,
+    approveCurrency: followApproveCurrency,
+    followLoading,
   } = useProfilePage();
 
   return (
@@ -161,6 +170,15 @@ const Modals = () => {
           userFollowing={userFollowing}
           userFollowers={userFollowers}
           type={follow?.type}
+        />
+      )}
+      {followTypes.modal && (
+        <FollowTypeModal
+          followInfoLoading={followInfoLoading}
+          followTypedData={followTypedData}
+          approvalLoading={followApprovalLoading}
+          approveCurrency={followApproveCurrency}
+          followLoading={followLoading}
         />
       )}
       {completeTrackModal && (

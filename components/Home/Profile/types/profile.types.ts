@@ -67,5 +67,10 @@ export type UseProfilePageResults = {
   mixtapes: any[];
   mixtapeMirror: boolean[];
   handleSendDM: (profile: Profile) => void;
-  followerOnly: boolean[]
+  followerOnly: boolean[];
+  followInfoLoading: boolean;
+  followTypedData: () => Promise<void>;
+  approvalLoading: boolean;
+  approveCurrency: () => Promise<void>
 };
+

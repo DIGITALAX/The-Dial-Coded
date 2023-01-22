@@ -170,7 +170,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
             </div>
           </div>
           <div className="relative w-fit h-fit row-start-7 pt-4 grid grid-flow-row auto-rows-auto gap-3 text-offBlack">
-            {website[0]?.value && (
+            {website?.[0]?.value && (
               <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-3 justify-self-start self-center">
                 <div className="relative w-fit h-fit col-start-1 place-self-center">
                   <FaWpexplorer size={15} color={"#81A8F8"} />
@@ -178,29 +178,29 @@ const SideBar: FunctionComponent<SideBarProps> = ({
                 <Link
                   legacyBehavior
                   href={
-                    website[0]?.value.includes("https")
-                      ? website[0]?.value
-                      : "https://" + website[0]?.value
+                    website?.[0]?.value.includes("https")
+                      ? website?.[0]?.value
+                      : "https://" + website?.[0]?.value
                   }
                   className="relative w-fit h-fit col-start-2 place-self-center cursor-pointer hover:opacity-80 active:scale-95"
                 >
                   <a target={"_blank"} rel="noreferrer">
-                    {website[0]?.value}
+                    {website?.[0]?.value}
                   </a>
                 </Link>
               </div>
             )}
-            {location[0]?.value && (
+            {location?.[0]?.value && (
               <div
                 className={`relative w-fit h-fit ${
-                  website[0]?.value ? "row-start-2" : "row-start-1"
+                  website?.[0]?.value ? "row-start-2" : "row-start-1"
                 } grid grid-flow-col auto-cols-auto gap-3 justify-self-start self-center`}
               >
                 <div className="relative w-fit h-fit col-start-1 place-self-center">
                   <SlLocationPin size={15} color={"#81A8F8"} />
                 </div>
                 <div className="relative w-fit h-fit col-start-2 place-self-center">
-                  {location[0]?.value}
+                  {location?.[0]?.value}
                 </div>
               </div>
             )}

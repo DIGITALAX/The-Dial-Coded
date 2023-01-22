@@ -34,18 +34,18 @@ export const authClient = new ApolloClient({
 
 // main client
 const authLink = new ApolloLink((operation, forward) => {
-  const { accessToken, exp } = getAuthenticationToken() as {
+  const res = getAuthenticationToken() as {
     accessToken: string;
     refreshToken: string;
     exp: number;
   };
-  if (!accessToken) {
+  if (!res?.accessToken) {
     return null;
   }
 
-  let authToken: string = accessToken;
+  let authToken: string = res?.accessToken;
 
-  if (isAuthExpired(exp)) {
+  if (isAuthExpired(res?.exp)) {
     const refreshedAccessToken = refreshAuth();
     if (!refreshedAccessToken) {
       return null;

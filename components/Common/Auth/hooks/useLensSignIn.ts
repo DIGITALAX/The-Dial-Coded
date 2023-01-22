@@ -52,8 +52,8 @@ const useLensSignIn = (): useLensSignInResults => {
       if (accessTokens) {
         setAuthenticationToken({ token: accessTokens.data.authenticate });
         const profile = await getDefaultProfile(address);
-        if (profile.data.defaultProfile !== null) {
-          dispatch(setLensProfile(profile.data.defaultProfile));
+        if (profile?.data?.defaultProfile !== null) {
+          dispatch(setLensProfile(profile?.data?.defaultProfile));
           dispatch(setAuthStatus(true));
           dispatch(setSignIn(false));
           dispatch(setWalletConnected(true));
@@ -78,8 +78,8 @@ const useLensSignIn = (): useLensSignInResults => {
   const handleRefreshProfile = async (): Promise<void> => {
     try {
       const profile = await getDefaultProfile(address);
-      if (profile.data.defaultProfile !== null) {
-        dispatch(setLensProfile(profile.data.defaultProfile));
+      if (profile?.data?.defaultProfile !== null) {
+        dispatch(setLensProfile(profile?.data?.defaultProfile));
         dispatch(setAuthStatus(true));
         dispatch(setSignIn(false));
         dispatch(setWalletConnected(true));

@@ -10,15 +10,12 @@ import {
   useSignTypedData,
 } from "wagmi";
 import collect from "../../../../graphql/mutations/collect";
-import approvedData from "../../../../graphql/queries/approveData";
-import approvedModuleAllowance from "../../../../graphql/queries/approvedModuleAllowance";
 import {
   getPublication,
   getPublicationAuth,
 } from "../../../../graphql/queries/getPublication";
 import whoCollectedPublications from "../../../../graphql/queries/whoCollectPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
-import { setApprovalArgs } from "../../../../redux/reducers/approvalArgsSlice";
 import { setInsufficientFunds } from "../../../../redux/reducers/insufficientFunds";
 import { setPostCollectValues } from "../../../../redux/reducers/postCollectValuesSlice";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
@@ -29,12 +26,13 @@ import {
   WhoCollectedPublicationRequest,
 } from "../../types/lens.types";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
-import lodash from "lodash";
 import checkIndexed from "../../../../graphql/queries/checkIndexed";
 import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
 import omit from "../../../../lib/lens/helpers/omit";
 import splitSignature from "../../../../lib/lens/helpers/splitSignature";
 import handleIndexCheck from "../../../../lib/lens/helpers/handleIndexCheck";
+import handleCoinUSDConversion from "../../../../lib/lens/helpers/handleCoinUSDConversion";
+import checkApproved from "../../../../lib/lens/helpers/checkApproved";
 
 const useCollected = () => {
   const {
@@ -107,58 +105,6 @@ const useCollected = () => {
     }
   };
 
-  const checkApproved = async (
-    currencyAddress: string,
-    collectModule: string,
-    followModule: string | null,
-    referenceModule: string | null,
-    value: string
-  ): Promise<ApprovedAllowanceAmount | void> => {
-    if (!currencyAddress || !isConnected || !profileId) {
-      return;
-    }
-    try {
-      const response = await approvedModuleAllowance({
-        currencies: [currencyAddress],
-        collectModules: [collectModule],
-        followModules: followModule ? [followModule] : [],
-        referenceModules: referenceModule ? [referenceModule] : [],
-      });
-      const approvalArgs = await approvedData({
-        currency: currencyAddress,
-        value: value,
-        collectModule: collectModule,
-      });
-      dispatch(
-        setApprovalArgs(approvalArgs?.data?.generateModuleCurrencyApprovalData)
-      );
-      return response?.data?.approvedModuleAllowanceAmount[0];
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
-  const handleCoinUSDConversion = async (
-    currency: string,
-    amount: string
-  ): Promise<number | void> => {
-    if (!amount) {
-      return;
-    }
-    try {
-      const response = await fetch("/api/coin", {
-        method: "POST",
-        body: currency?.toLowerCase(),
-      });
-      const json = await response.json();
-      const usdValue = lodash.find(json.data, "usd");
-      const convertedValue = Number(amount) * usdValue.usd;
-      return convertedValue;
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
   const getCollectInfo = async (): Promise<void> => {
     setCollectInfoLoading(true);
     try {
@@ -184,7 +130,10 @@ const useCollected = () => {
         collectModule?.type,
         null,
         null,
-        collectModule?.amount?.value
+        collectModule?.amount?.value,
+        dispatch,
+        isConnected,
+        profileId
       );
       const isApproved = parseInt(approvalData?.allowance as string, 16);
       dispatch(

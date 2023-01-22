@@ -19,7 +19,6 @@ export interface PostCollectValuesState {
   usd?: number;
   canCollect?: boolean;
   isApproved?: boolean;
-  approvedAmount?: number;
   totalCollects?: number;
 }
 
@@ -46,7 +45,6 @@ export const postCollectValuesSlice = createSlice({
           actionUSD,
           actionCanCollect,
           actionApproved,
-          actionApprovedAmount,
           actionTotalCollects,
         },
       }
@@ -61,7 +59,6 @@ export const postCollectValuesSlice = createSlice({
       state.usd = actionUSD;
       state.canCollect = actionCanCollect;
       state.isApproved = actionApproved;
-      state.approvedAmount = actionApprovedAmount;
       state.totalCollects = actionTotalCollects;
     },
   },

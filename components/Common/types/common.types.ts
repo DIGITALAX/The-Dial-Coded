@@ -791,3 +791,24 @@ export type AccountFollowCheckProps = {
   label: string;
   currentValue: string;
 };
+
+export type FollowTypeModalProps = {
+  followInfoLoading: boolean;
+  followTypedData: () => Promise<void>;
+  approveCurrency?: () => Promise<void>;
+  approvalLoading: boolean;
+  followLoading: boolean;
+};
+
+export type FollowInfoProps = {
+  approvalLoading?: boolean;
+  type: string;
+  followLoading?: boolean;
+  usd?: number;
+  value?: string;
+  symbol?: string;
+  followTypedData?: () => Promise<void>;
+  approveCurrency?: () => Promise<void>;
+  isApproved?: boolean;
+  buttonText?: string;
+};

@@ -117,7 +117,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               className="relative w-32 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent border border-lB"
               name="location"
               type={"text"}
-              defaultValue={location[0].value ? (location[0].value as any) : ""}
+              defaultValue={location?.[0]?.value ? (location?.[0]?.value as any) : ""}
             />
           </div>
           <div className="relative w-fit h-fit col-start-2 grid-flow-col auto-cols-auto grid gap-2">
@@ -128,7 +128,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
               className="relative w-48 h-fit col-start-2 p-2 rounded-lg bg-gray-100 place-self-center caret-transparent border border-lB"
               name="website"
               type={"text"}
-              defaultValue={website[0].value ? (website[0].value as any) : ""}
+              defaultValue={website?.[0]?.value ? (website?.[0]?.value as any) : ""}
             />
           </div>
         </div>

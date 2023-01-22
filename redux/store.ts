@@ -55,6 +55,7 @@ import draftTitleReducer from "./reducers/draftTitleSlice";
 import draftElementsReducer from "./reducers/draftElementsSlice";
 import dispatcherReducer from "./reducers/dispatcherSlice";
 import mixtapesReducer from "./reducers/mixtapesSlice";
+import followTypeValuesReducer from "./reducers/followTypeValuesSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -111,7 +112,8 @@ const reducer = combineReducers({
   draftElementsReducer,
   draftTitleReducer,
   dispatcherReducer,
-  mixtapesReducer
+  mixtapesReducer,
+  followTypeValuesReducer,
 });
 
 export const store = configureStore({
