@@ -14,7 +14,6 @@ import SliderSwitch from "./SliderSwitch";
 import shuffle from "shuffle-array";
 import { useRouter } from "next/router";
 import useScan from "../../Scan/hooks/useScan";
-import createProfile from "../../../../graphql/mutations/createProfile";
 
 const Slider: FunctionComponent = (): JSX.Element => {
   const { handleBackward, handleForward, currentValue, promptString } =
@@ -95,15 +94,6 @@ const Slider: FunctionComponent = (): JSX.Element => {
             currentValue={currentValue}
           />
         </div>
-        {/* <button
-          className="relative w-fit h-fit"
-          onClick={async () => {
-            const res = await createProfile();
-            console.log(res);
-          }}
-        >
-          create profile
-        </button> */}
         <SliderSwitch
           imagesLoading={imagesLoading}
           imagesScanLoading={imagesScanLoading}

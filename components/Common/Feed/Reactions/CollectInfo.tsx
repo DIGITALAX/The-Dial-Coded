@@ -36,7 +36,7 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
   const { openConnectModal } = useConnectModal();
   useEffect(() => {
     //collect refresh
-  }, [approvalLoading])
+  }, [approvalLoading]);
   return (
     <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3">
       {showText && (
@@ -64,9 +64,11 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
                 <div className="relative w-fit h-fit text-offBlack font-digiB text-4xl place-self-center row-start-1">
                   {value} {symbol}
                 </div>
-               {usd && <div className="relative w-fit h-fit text-offBlack/70 font-dosis text-sm place-self-center row-start-2 pr-2">
-                  ${String(usd)?.slice(0, 6)}
-                </div>}
+                {!isNaN(Number(usd)) && (
+                  <div className="relative w-fit h-fit text-offBlack/70 font-dosis text-sm place-self-center row-start-2 pr-2">
+                    ${String(usd)?.slice(0, 6)}
+                  </div>
+                )}
               </div>
               {(limit || time) && (
                 <div className="relative w-fit h-fit place-self-center row-start-2 grid grid-flow-row auto-rows-auto gap-2">

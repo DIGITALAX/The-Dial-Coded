@@ -39,11 +39,10 @@ import handleIndexCheck from "../../../../../lib/lens/helpers/handleIndexCheck";
 import createSetFollowTypedData from "../../../../../graphql/mutations/followType";
 import { useAccount as useAccountWagmi } from "wagmi";
 import { Erc20 } from "../../../../Common/types/lens.types";
-import getEnabledCurrencies from "../../../../../graphql/queries/getEnabledCurrencies";
-import lodash from "lodash";
 import getDefaultProfile from "../../../../../graphql/queries/getDefaultProfile";
 import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
 import availableCurrencies from "../../../../../lib/lens/helpers/availableCurrencies";
+import createFollowModule from "../../../../../lib/lens/helpers/createFollowModule";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = [
@@ -57,7 +56,7 @@ const useAccount = (): UseAccountResult => {
   const dispatch = useDispatch();
   const [value, setValue] = useState<number>(0);
   const [enabledCurrencies, setEnabledCurrencies] = useState<Erc20[]>([]);
-  const [followFinished, setFollowFinished] = useState<boolean>(false);
+  const [finished, setFinished] = useState<boolean>(false);
   const [currencyDropDown, setCurrencyDropDown] = useState<boolean>(false);
   const [enabledCurrency, setEnabledCurrency] = useState<string>();
   const [accountLoading, setAccountLoading] = useState<boolean>(false);
@@ -383,6 +382,7 @@ const useAccount = (): UseAccountResult => {
       dispatch(setInsufficientFunds("failed"));
     }
     setAccountLoading(false);
+    setFinished(true);
   };
 
   const handleProfileImageWrite = async (): Promise<void> => {
@@ -396,46 +396,27 @@ const useAccount = (): UseAccountResult => {
       }
       clearAccount();
       const res = await tx?.wait();
-      await handleIndexCheck(res?.transactionHash, dispatch, true);
+      await handleIndexCheck(res?.transactionHash, dispatch, false);
     } catch (err) {
       console.error(err);
       setProfileLoading(false);
       dispatch(setInsufficientFunds("failed"));
     }
     setProfileLoading(false);
+    setFinished(true);
   };
 
   const handleFollowModule = async () => {
     setFollowLoading(true);
-    let followModule: any;
-    if (followFee === "free") {
-      followModule = {
-        freeFollowModule: true,
-      };
-    } else if (followFee === "revert") {
-      followModule = {
-        revertFollowModule: true,
-      };
-    } else {
-      if (!value || Number(Number(value).toFixed(2)) <= 0) {
-        setFollowLoading(false);
-        alert("Follow Fee Must be greater than 0");
-        return;
-      }
-      const setCurrency: Erc20[] = lodash.filter(
-        enabledCurrencies,
-        (currency) => currency.symbol === enabledCurrency
-      );
-      followModule = {
-        feeFollowModule: {
-          amount: {
-            currency: setCurrency[0].address,
-            value: String(Number(value).toFixed(2)),
-          },
-          recipient: address,
-        },
-      };
-    }
+    const followModule = createFollowModule(
+      followFee,
+      value,
+      setFollowLoading,
+      enabledCurrency,
+      address as string,
+      false,
+      enabledCurrencies
+    );
     try {
       const res = await createSetFollowTypedData({
         profileId: profile?.id,
@@ -491,7 +472,7 @@ const useAccount = (): UseAccountResult => {
       dispatch(setInsufficientFunds("failed"));
     }
     setFollowLoading(false);
-    setFollowFinished(true);
+    setFinished(true);
   };
 
   useEffect(() => {
@@ -523,17 +504,19 @@ const useAccount = (): UseAccountResult => {
   }, [followFee]);
 
   const resetProfile = async () => {
-    setFollowFinished(false);
+    setFinished(false);
     const profile = await getDefaultProfile(address);
-    dispatch(setLensProfile(profile.data.defaultProfile));
-    if (profile.data.defaultProfile.followModule?.type === "FeeFollowModule") {
+    dispatch(setLensProfile(profile?.data?.defaultProfile));
+    if (
+      profile?.data?.defaultProfile?.followModule?.type === "FeeFollowModule"
+    ) {
       setFollowFee("fee");
       setEnabledCurrency(
-        profile.data.defaultProfile.followModule?.amount?.asset?.symbol.toLowerCase()
+        profile?.data?.defaultProfile?.followModule?.amount?.asset?.symbol.toLowerCase()
       );
-      setValue(profile.data.defaultProfile.followModule?.amount?.value);
+      setValue(profile?.data?.defaultProfile?.followModule?.amount?.value);
     } else if (
-      profile.data.defaultProfile.followModule?.type === "RevertFollowModule"
+      profile?.data?.defaultProfile?.followModule?.type === "RevertFollowModule"
     ) {
       setFollowFee("revert");
     }
@@ -541,7 +524,7 @@ const useAccount = (): UseAccountResult => {
 
   useEffect(() => {
     resetProfile();
-  }, [followValues, profile, followFinished]);
+  }, [followValues, profile, finished]);
 
   return {
     accountTitles,

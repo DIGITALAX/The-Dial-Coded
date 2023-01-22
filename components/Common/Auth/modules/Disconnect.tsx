@@ -1,6 +1,9 @@
 import { FunctionComponent } from "react";
 import { useDisconnect } from "wagmi";
-import { removeAuthenticationToken } from "../../../../lib/lens/utils";
+import {
+  removeAuthenticationToken,
+  removeNotificationLength,
+} from "../../../../lib/lens/utils";
 import { setAuthStatus } from "../../../../redux/reducers/authStatusSlice";
 import { setHamburger } from "../../../../redux/reducers/hamburgerSlice";
 import { setLensProfile } from "../../../../redux/reducers/lensProfileSlice";
@@ -19,6 +22,7 @@ const Disconnect: FunctionComponent<DisconnectProps> = ({
         disconnect();
         dispatch(setAuthStatus(false));
         removeAuthenticationToken();
+        removeNotificationLength();
         dispatch(setLensProfile(undefined));
         dispatch(setWalletConnected(false));
         dispatch(setHamburger(false));

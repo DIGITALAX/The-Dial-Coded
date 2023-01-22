@@ -348,7 +348,6 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
   };
 
   const handleReverseSetCollectValues = (module: any): void => {
-    console.log(module, "MODULE");
     if (!module) {
       setCollectible("yes");
       setAudienceType("everyone");

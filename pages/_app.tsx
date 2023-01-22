@@ -13,7 +13,8 @@ import { useEffect, useState } from "react";
 import shuffle from "shuffle-array";
 import { useRouter } from "next/router";
 import RouterChange from "../components/Common/RouterChange/RouterChange";
-import { createContext } from "vm";
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+
 
 const { chains, provider } = configureChains(
   [chain.polygonMumbai],
@@ -28,6 +29,13 @@ const { connectors } = getDefaultWallets({
   appName: "The Dial",
   chains,
 });
+ 
+const connector = new MetaMaskConnector({
+  options: {
+    shimDisconnect: true,
+    UNSTABLE_shimOnConnectSelectAccount: true,
+  },
+})
 
 const wagmiClient = createClient({
   autoConnect: true,

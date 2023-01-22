@@ -36,6 +36,7 @@ const createFollowTypedData = (CreateFollowRequest: any) => {
     variables: {
       request: CreateFollowRequest,
     },
+    fetchPolicy: "no-cache"
   });
 };
 
