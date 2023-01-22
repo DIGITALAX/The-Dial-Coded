@@ -18,6 +18,7 @@ import omit from "../../../../../../../lib/lens/helpers/omit";
 import { splitSignature } from "ethers/lib/utils.js";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../../../../lib/lens/constants";
 import { setDispatcher } from "../../../../../../../redux/reducers/dispatcherSlice";
+import broadcast from "../../../../../../../graphql/mutations/broadcast";
 
 const useParameters = (): UseParametersResult => {
   const [orderDrop, setOrderDrop] = useState<boolean>(false);
@@ -119,6 +120,7 @@ const useParameters = (): UseParametersResult => {
         types: omit(typedData?.types, ["__typename"]) as any,
         value: omit(typedData?.value, ["__typename"]) as any,
       });
+
       const { v, r, s } = splitSignature(signature);
       const dispatcherArgs = {
         profileId: typedData.value.profileId,

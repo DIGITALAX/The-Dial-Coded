@@ -29,10 +29,10 @@ const useLensSignIn = (): useLensSignInResults => {
   const dispatch = useDispatch();
   const { address } = useAccount();
   const { signMessageAsync, isSuccess, isLoading, isError } = useSignMessage({
-    onSettled(data, error) {
+    onSettled() {
       dispatch(setSignInSettled(true));
     },
-    onError(error) {
+    onError() {
       dispatch(setGetProfileModal(true));
       dispatch(setAuthStatus(false));
       dispatch(setHamburger(false));
@@ -52,7 +52,7 @@ const useLensSignIn = (): useLensSignInResults => {
       if (accessTokens) {
         setAuthenticationToken({ token: accessTokens.data.authenticate });
         const profile = await getDefaultProfile(address);
-        if (profile?.data?.defaultProfile !== null) {
+        if (profile?.data) {
           dispatch(setLensProfile(profile?.data?.defaultProfile));
           dispatch(setAuthStatus(true));
           dispatch(setSignIn(false));
@@ -109,7 +109,7 @@ const useLensSignIn = (): useLensSignInResults => {
     isError,
     isSuccess,
     lensProfile,
-    handleRefreshProfile
+    handleRefreshProfile,
   };
 };
 

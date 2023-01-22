@@ -53,6 +53,7 @@ import checkIndexed from "../../../../graphql/queries/checkIndexed";
 import createFollowModule from "../../../../lib/lens/helpers/createFollowModule";
 import { Contract, Signer } from "ethers";
 import FollowNFT from "./../../../../abis/FollowNFT.json";
+import broadcast from "../../../../graphql/mutations/broadcast";
 
 const useProfilePage = (): UseProfilePageResults => {
   const router = useRouter();
@@ -257,19 +258,36 @@ const useProfilePage = (): UseProfilePageResults => {
         value: omit(typedData?.value, ["__typename"]) as any,
       });
 
-      const { v, r, s } = splitSignature(signature);
-      const followArgs: FollowArgs = {
-        follower: address as string,
-        profileIds: typedData.value.profileIds,
-        datas: typedData.value.datas,
-        sig: {
-          v,
-          r,
-          s,
-          deadline: typedData.value.deadline,
-        },
-      };
-      setFollowArgs(followArgs);
+      const broadcastResult: any = await broadcast({
+        id: response?.data?.createFollowTypedData?.id,
+        signature,
+      });
+
+      if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+        const { v, r, s } = splitSignature(signature);
+        const followArgs: FollowArgs = {
+          follower: address as string,
+          profileIds: typedData.value.profileIds,
+          datas: typedData.value.datas,
+          sig: {
+            v,
+            r,
+            s,
+            deadline: typedData.value.deadline,
+          },
+        };
+        setFollowArgs(followArgs);
+      } else {
+        clearFollow();
+        setFollowLoading(false);
+        setTimeout(async () => {
+          await handleIndexCheck(
+            broadcastResult?.data?.broadcast?.txHash,
+            dispatch,
+            false
+          );
+        }, 7000);
+      }
     } catch (err: any) {
       setFollowLoading(false);
       if (err.message.includes("You do not have enough")) {
@@ -297,37 +315,58 @@ const useProfilePage = (): UseProfilePageResults => {
       });
 
       const typedData: any = response?.data.createUnfollowTypedData.typedData;
+
       const signature: any = await signTypedDataAsync({
         domain: omit(typedData?.domain, ["__typename"]),
         types: omit(typedData?.types, ["__typename"]) as any,
         value: omit(typedData?.value, ["__typename"]) as any,
       });
 
-      const { v, r, s } = splitSignature(signature);
-      const sig = {
-        v,
-        r,
-        s,
-        deadline: typedData.value.deadline,
-      };
+      const broadcastResult: any = await broadcast({
+        id: response?.data?.createUnfollowTypedData?.id,
+        signature,
+      });
+      if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+        const { v, r, s } = splitSignature(signature);
+        const sig = {
+          v,
+          r,
+          s,
+          deadline: typedData.value.deadline,
+        };
 
-      const unfollowNFTContract = new Contract(
-        typedData.domain.verifyingContract,
-        FollowNFT,
-        signer as Signer
-      );
-      const tx = await unfollowNFTContract.burnWithSig(
-        typedData.value.tokenId,
-        sig
-      );
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
-      const res = await tx?.wait();
-      await handleIndexCheck(res?.transactionHash, dispatch, false);
+        const unfollowNFTContract = new Contract(
+          typedData.domain.verifyingContract,
+          FollowNFT,
+          signer as Signer
+        );
+        const tx = await unfollowNFTContract.burnWithSig(
+          typedData.value.tokenId,
+          sig
+        );
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Indexing Interaction",
+          })
+        );
+        const res = await tx?.wait();
+        await handleIndexCheck(res?.transactionHash, dispatch, false);
+      } else {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Indexing Interaction",
+          })
+        );
+        setTimeout(async () => {
+          await handleIndexCheck(
+            broadcastResult?.data?.broadcast?.txHash,
+            dispatch,
+            false
+          );
+        }, 7000);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -617,8 +656,13 @@ const useProfilePage = (): UseProfilePageResults => {
     }
   };
 
-  const followWrite = async (): Promise<void> => {
-    setFollowLoading(true);
+  const clearFollow = () => {
+    dispatch(
+      setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      })
+    );
     dispatch(
       setFollowTypeValues({
         actionType: undefined,
@@ -630,14 +674,13 @@ const useProfilePage = (): UseProfilePageResults => {
         actionModal: false,
       })
     );
+  };
+
+  const followWrite = async (): Promise<void> => {
+    setFollowLoading(true);
     try {
       const tx = await writeAsync?.();
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
+      clearFollow();
       const res = await tx?.wait();
       await handleIndexCheck(res?.transactionHash, dispatch, false);
     } catch (err: any) {

@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import callLexicaSearch from "../../../../lib/lens/helpers/callLexicaSearch";
 import handleHidePost from "../../../../lib/lens/helpers/handleHidePost";

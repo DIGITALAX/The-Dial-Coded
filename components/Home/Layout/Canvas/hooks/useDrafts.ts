@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { UseDraftsResult } from "./../types/canvas.types";
 import { saveAs } from "file-saver";
-import { draftRegex } from "../../../../../lib/misc/helpers/removeElements";
 import * as yup from "yup";
 import { setDraftTitle } from "../../../../../redux/reducers/draftTitleSlice";
 import { setDraftElements } from "../../../../../redux/reducers/draftElementsSlice";
@@ -53,7 +52,7 @@ const useDrafts = (): UseDraftsResult => {
         date: yup.string().required(),
       });
       const valid = await schema.isValid(res);
-      if (valid && draftRegex.test(JSON.stringify(res))) {
+      if (valid) {
         dispatch(setDraftTitle(res.title));
         const elements = await new Response(res.elements).json();
         let parsedElements: any[] = [];

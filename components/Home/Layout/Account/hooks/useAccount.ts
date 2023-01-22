@@ -43,6 +43,7 @@ import getDefaultProfile from "../../../../../graphql/queries/getDefaultProfile"
 import { setLensProfile } from "../../../../../redux/reducers/lensProfileSlice";
 import availableCurrencies from "../../../../../lib/lens/helpers/availableCurrencies";
 import createFollowModule from "../../../../../lib/lens/helpers/createFollowModule";
+import broadcast from "../../../../../graphql/mutations/broadcast";
 
 const useAccount = (): UseAccountResult => {
   const accountTitles: string[] = [
@@ -259,6 +260,7 @@ const useAccount = (): UseAccountResult => {
             false
           );
         }, 7000);
+        setFinished(true);
       } else {
         result = await profileMetadata({
           profileId: profile?.id,
@@ -274,24 +276,41 @@ const useAccount = (): UseAccountResult => {
           value: omit(typedData?.value, ["__typename"]) as any,
         });
 
-        const {
-          v: accountV,
-          r: accountR,
-          s: accountS,
-        } = splitSignature(accountSignature);
+        const broadcastResult: any = await broadcast({
+          id: result?.data?.createSetProfileMetadataTypedData?.id,
+          signature: accountSignature,
+        });
 
-        const accountArgs: ProfileArgsType = {
-          profileId: typedData.value.profileId,
-          metadata: typedData.value.metadata,
-          sig: {
+        if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+          const {
             v: accountV,
             r: accountR,
             s: accountS,
-            deadline: typedData.value.deadline,
-          },
-        };
+          } = splitSignature(accountSignature);
 
-        setAccountArgs(accountArgs);
+          const accountArgs: ProfileArgsType = {
+            profileId: typedData.value.profileId,
+            metadata: typedData.value.metadata,
+            sig: {
+              v: accountV,
+              r: accountR,
+              s: accountS,
+              deadline: typedData.value.deadline,
+            },
+          };
+
+          setAccountArgs(accountArgs);
+        } else {
+          clearAccount();
+          setTimeout(async () => {
+            await handleIndexCheck(
+              broadcastResult?.data?.broadcast?.txHash,
+              dispatch,
+              false
+            );
+          }, 7000);
+          setFinished(true);
+        }
       }
     } catch (err: any) {
       console.error(err.message);
@@ -317,6 +336,7 @@ const useAccount = (): UseAccountResult => {
             false
           );
         }, 7000);
+        setFinished(true);
       } else {
         profileImageData = await profileImageUpload({
           profileId: profile?.id,
@@ -330,24 +350,41 @@ const useAccount = (): UseAccountResult => {
           value: omit(imageTypedData?.value, ["__typename"]) as any,
         });
 
-        const {
-          v: imageV,
-          r: imageR,
-          s: imageS,
-        } = splitSignature(profileImageSignature);
+        const broadcastResult: any = await broadcast({
+          id: profileImageData?.data?.createSetProfileImageURITypedData?.id,
+          signature: profileImageSignature,
+        });
 
-        const profileImageArgsValues: ImageArgsType = {
-          profileId: imageTypedData.value.profileId,
-          imageURI: imageTypedData.value.imageURI,
-          sig: {
+        if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+          const {
             v: imageV,
             r: imageR,
             s: imageS,
-            deadline: imageTypedData.value.deadline,
-          },
-        };
+          } = splitSignature(profileImageSignature);
 
-        setProfileImageArgs(profileImageArgsValues);
+          const profileImageArgsValues: ImageArgsType = {
+            profileId: imageTypedData.value.profileId,
+            imageURI: imageTypedData.value.imageURI,
+            sig: {
+              v: imageV,
+              r: imageR,
+              s: imageS,
+              deadline: imageTypedData.value.deadline,
+            },
+          };
+
+          setProfileImageArgs(profileImageArgsValues);
+        } else {
+          clearAccount();
+          setTimeout(async () => {
+            await handleIndexCheck(
+              broadcastResult?.data?.broadcast?.txHash,
+              dispatch,
+              false
+            );
+          }, 7000);
+          setFinished(true);
+        }
       }
     } catch (err: any) {
       console.error(err.message);
@@ -430,24 +467,41 @@ const useAccount = (): UseAccountResult => {
         value: omit(typedData?.value, ["__typename"]) as any,
       });
 
-      const {
-        v: followV,
-        r: followR,
-        s: followS,
-      } = splitSignature(followSignature);
+      const broadcastResult: any = await broadcast({
+        id: res?.data?.createSetFollowModuleTypedData?.id,
+        signature: followSignature,
+      });
 
-      const profileImageArgsValues = {
-        followModule: typedData.value.followModule,
-        followModuleInitData: typedData.value.followModuleInitData,
-        profileId: typedData.value.profileId,
-        sig: {
+      if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+        const {
           v: followV,
           r: followR,
           s: followS,
-          deadline: typedData.value.deadline,
-        },
-      };
-      setFollowArgs(profileImageArgsValues);
+        } = splitSignature(followSignature);
+
+        const profileImageArgsValues = {
+          followModule: typedData.value.followModule,
+          followModuleInitData: typedData.value.followModuleInitData,
+          profileId: typedData.value.profileId,
+          sig: {
+            v: followV,
+            r: followR,
+            s: followS,
+            deadline: typedData.value.deadline,
+          },
+        };
+        setFollowArgs(profileImageArgsValues);
+      } else {
+        clearAccount();
+        setTimeout(async () => {
+          await handleIndexCheck(
+            broadcastResult?.data?.broadcast?.txHash,
+            dispatch,
+            false
+          );
+        }, 7000);
+        setFinished(true);
+      }
     } catch (err: any) {
       console.error(err.message);
     }

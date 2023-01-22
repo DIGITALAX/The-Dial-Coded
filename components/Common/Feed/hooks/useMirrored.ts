@@ -6,6 +6,7 @@ import {
   usePrepareContractWrite,
   useSignTypedData,
 } from "wagmi";
+import broadcast from "../../../../graphql/mutations/broadcast";
 import { mirror, mirrorDispatcher } from "../../../../graphql/mutations/mirror";
 import { whoMirroredPublications } from "../../../../graphql/queries/whoMirroredPublications";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
@@ -36,8 +37,7 @@ const useMirrored = () => {
     (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
   );
   const dispatcher = useSelector(
-    (state: RootState) =>
-    state.app.dispatcherReducer.value
+    (state: RootState) => state.app.dispatcherReducer.value
   );
   const { signTypedDataAsync } = useSignTypedData();
   const dispatch = useDispatch();
@@ -133,22 +133,38 @@ const useMirrored = () => {
           value: omit(typedData?.value, ["__typename"]) as any,
         });
 
-        const { v, r, s } = splitSignature(signature);
-        const mirrorArgs = {
-          profileId: typedData.value.profileId,
-          profileIdPointed: typedData.value.profileIdPointed,
-          pubIdPointed: typedData.value.pubIdPointed,
-          referenceModuleData: typedData.value.referenceModuleData,
-          referenceModule: typedData.value.referenceModule,
-          referenceModuleInitData: typedData.value.referenceModuleInitData,
-          sig: {
-            v,
-            r,
-            s,
-            deadline: typedData.value.deadline,
-          },
-        };
-        setMirrorArgs(mirrorArgs);
+        const broadcastResult: any = await broadcast({
+          id: mirrorPost?.data?.createMirrorTypedData?.id,
+          signature,
+        });
+
+        if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+          const { v, r, s } = splitSignature(signature);
+          const mirrorArgs = {
+            profileId: typedData.value.profileId,
+            profileIdPointed: typedData.value.profileIdPointed,
+            pubIdPointed: typedData.value.pubIdPointed,
+            referenceModuleData: typedData.value.referenceModuleData,
+            referenceModule: typedData.value.referenceModule,
+            referenceModuleInitData: typedData.value.referenceModuleInitData,
+            sig: {
+              v,
+              r,
+              s,
+              deadline: typedData.value.deadline,
+            },
+          };
+          setMirrorArgs(mirrorArgs);
+        } else {
+          clearMirror();
+          setTimeout(async () => {
+            await handleIndexCheck(
+              broadcastResult?.data?.broadcast?.txHash,
+              dispatch,
+              true
+            );
+          }, 7000);
+        }
       }
     } catch (err: any) {
       console.error(err.message);

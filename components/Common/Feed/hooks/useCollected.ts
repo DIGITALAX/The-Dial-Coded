@@ -33,6 +33,7 @@ import splitSignature from "../../../../lib/lens/helpers/splitSignature";
 import handleIndexCheck from "../../../../lib/lens/helpers/handleIndexCheck";
 import handleCoinUSDConversion from "../../../../lib/lens/helpers/handleCoinUSDConversion";
 import checkApproved from "../../../../lib/lens/helpers/checkApproved";
+import broadcast from "../../../../graphql/mutations/broadcast";
 
 const useCollected = () => {
   const {
@@ -204,7 +205,6 @@ const useCollected = () => {
 
   const approveCurrency = async (): Promise<void> => {
     setApprovalLoading(true);
-    // setApprovalSendEnabled(true);
     try {
       await callApprovalSign();
     } catch (err: any) {
@@ -235,20 +235,37 @@ const useCollected = () => {
         types: omit(typedData?.types, ["__typename"]) as any,
         value: omit(typedData?.value, ["__typename"]) as any,
       });
-      const { v, r, s } = splitSignature(signature);
-      const collectArgs = {
-        collector: address,
-        profileId: typedData.value.profileId,
-        pubId: typedData.value.pubId,
-        data: typedData.value.data,
-        sig: {
-          v,
-          r,
-          s,
-          deadline: typedData.value.deadline,
-        },
-      };
-      setCollectArgs(collectArgs);
+
+      const broadcastResult: any = await broadcast({
+        id: collectPost?.data?.createCollectTypedData?.id,
+        signature,
+      });
+
+      if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+        const { v, r, s } = splitSignature(signature);
+        const collectArgs = {
+          collector: address,
+          profileId: typedData.value.profileId,
+          pubId: typedData.value.pubId,
+          data: typedData.value.data,
+          sig: {
+            v,
+            r,
+            s,
+            deadline: typedData.value.deadline,
+          },
+        };
+        setCollectArgs(collectArgs);
+      } else {
+        clearCollect();
+        setTimeout(async () => {
+          await handleIndexCheck(
+            broadcastResult?.data?.broadcast?.txHash,
+            dispatch,
+            false
+          );
+        }, 7000);
+      }
     } catch (err: any) {
       console.error(err.message);
       if (err.message.includes("You do not have enough")) {
@@ -258,24 +275,28 @@ const useCollected = () => {
     setCollectLoading(false);
   };
 
+  const clearCollect = () => {
+    setCollectLoading(false);
+    dispatch(
+      setReactionState({
+        actionOpen: false,
+        actionType: "collect",
+        actionValue: pubId,
+      })
+    );
+    dispatch(
+      setIndexModal({
+        actionValue: true,
+        actionMessage: "Indexing Interaction",
+      })
+    );
+  };
+
   const collectWrite = async (): Promise<void> => {
     setCollectLoading(true);
     try {
       const tx = await writeAsync?.();
-      setCollectLoading(false);
-      dispatch(
-        setReactionState({
-          actionOpen: false,
-          actionType: "collect",
-          actionValue: pubId,
-        })
-      );
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
+      clearCollect();
       const res = await tx?.wait();
       await handleIndexCheck(res?.transactionHash, dispatch, false);
     } catch (err: any) {
