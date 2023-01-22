@@ -466,10 +466,10 @@ const usePublication = () => {
     let resultElement = document.querySelector("#highlighted-content");
     const newHTMLPost =
       postHTML.substring(0, postHTML.lastIndexOf("@")) +
-      `@${user?.handle.split(".test")[0]}</span>`;
+      `@${user?.handle}</span>`;
     const newElementPost =
       postDescription.substring(0, postDescription.lastIndexOf("@")) +
-      `@${user?.handle.split(".test")[0]}`;
+      `@${user?.handle}`;
     setPostDescription(newElementPost);
     (resultElement as any).innerHTML = newHTMLPost;
     setPostHTML(newHTMLPost);
