@@ -9,13 +9,13 @@ const descriptionRegex = (description: string, messages?: boolean) => {
     } else if (word[0] === "@") {
       if (messages) {
         return `
-        <a href="${`/profile/${word?.replace("@", "")}`}" rel="noreferrer">
+        <a href="${`/profile/${word?.replace("@", "")?.split(".test")[0]}`}" rel="noreferrer">
         <span style="color: #ffffff;">${word}</span>
         </a>
         `;
       } else {
         return `
-        <a href="${`/profile/${word?.replace("@", "")}`}" rel="noreferrer">
+        <a href="${`/profile/${word?.replace("@", "")?.split(".test")[0]}`}" rel="noreferrer">
         <span style="color: #81A8F8;">${word}</span>
         </a>
         `;
