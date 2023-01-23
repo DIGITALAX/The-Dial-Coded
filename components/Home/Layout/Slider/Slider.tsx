@@ -25,7 +25,7 @@ import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
 import {
   createProfile,
   defaultProfile,
-} from "../../../../graphql/mutations/temp";
+} from "./../../../../graphql/mutations/temp";
 import omit from "../../../../lib/lens/helpers/omit";
 import splitSignature from "../../../../lib/lens/helpers/splitSignature";
 
@@ -125,7 +125,7 @@ const Slider: FunctionComponent = (): JSX.Element => {
           imagesLoading={imagesLoading}
           imagesScanLoading={imagesScanLoading}
         />
-        <button
+           <button
           onClick={async () => {
             const res = await createProfile();
             console.log(res);

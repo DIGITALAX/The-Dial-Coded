@@ -75,12 +75,14 @@ const Message: FunctionComponent<MessageProps> = ({
                 id="crt"
                 className="relative w-7 h-7 rounded-full border-black border flex"
               >
-                <Image
-                  src={profileImage}
-                  layout="fill"
-                  alt="pfp"
-                  className="rounded-full"
-                />
+                {profileImage && (
+                  <Image
+                    src={profileImage}
+                    layout="fill"
+                    alt="pfp"
+                    className="rounded-full"
+                  />
+                )}
               </div>
             </div>
             <div className="relative col-start-2 place-self-center justify-self-start self-center text-base">

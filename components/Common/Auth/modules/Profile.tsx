@@ -35,7 +35,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
         className="relative w-10 h-10 rounded-full col-start-1 place-self-center"
         id={"crt"}
       >
-        {authStatus && (
+        {authStatus && profileImage && (
           <Image
             src={profileImage}
             layout="fill"

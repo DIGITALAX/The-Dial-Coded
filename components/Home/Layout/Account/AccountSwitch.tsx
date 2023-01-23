@@ -78,7 +78,6 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     searchTarget,
     dropdown,
     previewMessages,
-    messageProfiles,
     profileLensData,
     conversationMessages,
     message,
@@ -183,7 +182,6 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           dropdown={dropdown}
           chosenProfile={chosenProfile}
           previewMessages={previewMessages}
-          messageProfiles={messageProfiles}
           profileLensData={profileLensData}
           conversationMessages={conversationMessages}
           message={message}

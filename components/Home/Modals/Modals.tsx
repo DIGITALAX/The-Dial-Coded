@@ -200,6 +200,8 @@ const Modals = () => {
               ? "Could Not Save Draft, Try Again."
               : failed === "images"
               ? "Couldn't Fetch Images. Please Try Again."
+              : failed === "xmtp"
+              ? "This user isn't on the XMTP Network."
               : "Unsuccessful. Please Try Again."
           }
         />
