@@ -169,7 +169,6 @@ export type ConversationsProps = {
   dropdown: boolean;
   chosenProfile: Profile | undefined;
   previewMessages: Map<string, DecodedMessage> | undefined;
-  messageProfiles: Map<string, Profile> | undefined;
   profileLensData: Profile[];
   conversationMessages: any[];
   message: string;
@@ -193,9 +192,7 @@ export type ConversationsProps = {
 };
 
 export type PreviewProps = {
-  searchTarget: string | undefined;
   previewMessages: Map<string, DecodedMessage> | undefined;
-  messageProfiles: Map<string, Profile> | undefined;
   profileLensData: Profile[];
   handleChosenProfile: (user: Profile) => void;
 };
@@ -213,7 +210,6 @@ export type UseConversationResults = {
   searchTarget: string | undefined;
   dropdown: boolean;
   previewMessages: Map<string, DecodedMessage> | undefined;
-  messageProfiles: Map<string, Profile> | undefined;
   profileLensData: Profile[];
   conversationMessages: any[];
   message: string;

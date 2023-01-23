@@ -3,29 +3,31 @@ import { PreviewProps } from "../../Home/Layout/Account/types/account.types";
 import moment from "moment";
 import createProfilePicture from "../../../lib/lens/helpers/createProfilePicture";
 import Image from "next/legacy/image";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const Preview: FunctionComponent<PreviewProps> = ({
-  searchTarget,
   previewMessages,
-  messageProfiles,
   profileLensData,
   handleChosenProfile,
 }): JSX.Element => {
   let ipfsRegex = /ipfs:\/\//;
   let gifRegex = /https:\/\/media\.tenor\.com/;
-
-  // console.log(previewMessages, "inside")
   return (
     <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll">
-      {previewMessages &&
-        Array.from(previewMessages?.values() as any)?.map(
-          (message: any, index: number) => {
-            const profileImage = createProfilePicture(profileLensData[index]);
+      {(previewMessages as any)?.size > 0 ? (
+        Array?.from(previewMessages?.values() as any)
+          ?.sort(
+            (a: any, b: any) =>
+              b?.preview?.message?.sent - a?.preview?.message?.sent
+          )
+          ?.reverse()
+          ?.map((message: any, index: number) => {
+            const profileImage = createProfilePicture(profileLensData?.[index]);
             return (
               <div
                 key={index}
                 className="relative w-full h-full grid grid-flow-col auto-cols-auto text-black font-dosis text-sm cursor-pointer border-x border-b border-black/50 drop-shadow-md rounded-lg p-2 hover:opacity-70"
-                onClick={() => handleChosenProfile(profileLensData[index])}
+                onClick={() => handleChosenProfile(profileLensData?.[index])}
               >
                 <div className="relative col-start-1 w-fit h-fit justify-self-start self-center grid grid-flow-col auto-cols-auto left-4 gap-4">
                   <div
@@ -43,15 +45,19 @@ const Preview: FunctionComponent<PreviewProps> = ({
                     )}
                   </div>
                   <div className="relative col-start-2 grid grid-flow-row auto-rows-auto gap-1">
-                    <div className="relative w-fit h-fit row-start-1 text-base">
-                      @{profileLensData[index]?.handle}
+                    <div className="relative w-fit h-fit row-start-1 text-sm">
+                      @
+                      {profileLensData?.[index]?.handle?.length > 15
+                        ? profileLensData?.[index]?.handle?.substring(0, 15) +
+                          "..."
+                        : profileLensData?.[index]?.handle}
                     </div>
                     <div className="relative w-fit h-fit row-start-2 text-sm">
                       {ipfsRegex.test(message?.content)
                         ? "Sent Image"
                         : gifRegex.test(message?.content)
                         ? "Sent Gif"
-                        : message?.content.substring(0,30)}
+                        : message?.content.substring(0, 30)}
                     </div>
                   </div>
                 </div>
@@ -62,8 +68,14 @@ const Preview: FunctionComponent<PreviewProps> = ({
                 </div>
               </div>
             );
-          }
-        )}
+          })
+      ) : (
+        <div className="relative w-fit h-fit justify-self-center grid grid-flow-col auto-cols-auto self-start pt-10">
+          <div className="relative col-start-1 place-self-center animate-spin">
+            <AiOutlineLoading color="black" size={15} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

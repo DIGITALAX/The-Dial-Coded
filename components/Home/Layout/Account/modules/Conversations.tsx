@@ -20,7 +20,6 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
   dropdown,
   chosenProfile,
   previewMessages,
-  messageProfiles,
   profileLensData,
   conversationMessages,
   message,
@@ -77,9 +76,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
             dropdown={dropdown}
           />
           <Preview
-            searchTarget={searchTarget}
             previewMessages={previewMessages}
-            messageProfiles={messageProfiles}
             profileLensData={profileLensData}
             handleChosenProfile={handleChosenProfile}
           />
