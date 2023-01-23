@@ -14,20 +14,20 @@ import SliderSwitch from "./SliderSwitch";
 import shuffle from "shuffle-array";
 import { useRouter } from "next/router";
 import useScan from "../../Scan/hooks/useScan";
-import {
-  useContractWrite,
-  usePrepareContractWrite,
-  useSendTransaction,
-  useSignTypedData,
-} from "wagmi";
-import LensHubProxy from "./../../../../abis/LensHubProxy.json";
-import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
-import {
-  createProfile,
-  defaultProfile,
-} from "./../../../../graphql/mutations/temp";
-import omit from "../../../../lib/lens/helpers/omit";
-import splitSignature from "../../../../lib/lens/helpers/splitSignature";
+// import {
+//   useContractWrite,
+//   usePrepareContractWrite,
+//   useSendTransaction,
+//   useSignTypedData,
+// } from "wagmi";
+// import LensHubProxy from "./../../../../abis/LensHubProxy.json";
+// import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
+// import {
+//   createProfile,
+//   defaultProfile,
+// } from "./../../../../graphql/mutations/temp";
+// import omit from "../../../../lib/lens/helpers/omit";
+// import splitSignature from "../../../../lib/lens/helpers/splitSignature";
 
 const Slider: FunctionComponent = (): JSX.Element => {
   const { handleBackward, handleForward, currentValue, promptString } =
@@ -66,18 +66,18 @@ const Slider: FunctionComponent = (): JSX.Element => {
     }
   }, [router.asPath]);
 
-  const [args, setArgs] = useState<any>();
+  // const [args, setArgs] = useState<any>();
 
-  const { config, isSuccess } = usePrepareContractWrite({
-    address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
-    abi: LensHubProxy,
-    functionName: "setDefaultProfileWithSig",
-    enabled: Boolean(args),
-    args: [args],
-  });
+  // const { config, isSuccess } = usePrepareContractWrite({
+  //   address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
+  //   abi: LensHubProxy,
+  //   functionName: "setDefaultProfileWithSig",
+  //   enabled: Boolean(args),
+  //   args: [args],
+  // });
 
-  const { writeAsync } = useContractWrite(config);
-  const { signTypedDataAsync } = useSignTypedData();
+  // const { writeAsync } = useContractWrite(config);
+  // const { signTypedDataAsync } = useSignTypedData();
 
   return (
     <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-white py-10 pl-10 gap-10">
@@ -125,7 +125,7 @@ const Slider: FunctionComponent = (): JSX.Element => {
           imagesLoading={imagesLoading}
           imagesScanLoading={imagesScanLoading}
         />
-           <button
+        {/* <button
           onClick={async () => {
             const res = await createProfile();
             console.log(res);
@@ -168,7 +168,7 @@ const Slider: FunctionComponent = (): JSX.Element => {
           >
             set write
           </button>
-        )}
+        )} */}
       </div>
       <Presets />
     </div>
