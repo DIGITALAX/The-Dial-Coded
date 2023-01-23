@@ -23,7 +23,7 @@ const FollowInfo: FunctionComponent<FollowInfoProps> = ({
     <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3">
       {type === "revert" && (
         <div className="relative w-fit h-fit row-start-1 place-self-center p-3">
-          This user isn't taking followers right now.
+          This user isn&apos;t taking followers right now.
         </div>
       )}
       <div
