@@ -86,7 +86,9 @@ const useConversations = (): UseConversationResults => {
       const conversationList = await (clientInput
         ? clientInput
         : client
-      ).conversations.list();
+      ).conversations.list({
+        direction: SortDirection.SORT_DIRECTION_DESCENDING,
+      });
       if (conversationList?.length > 0) {
         const lensConversations = conversationList?.filter(
           (conversation: any) =>
@@ -307,6 +309,7 @@ const useConversations = (): UseConversationResults => {
         }
       );
       await conversation.send(media ? media : message);
+      getConversationMessages(false);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -348,10 +351,11 @@ const useConversations = (): UseConversationResults => {
         }
       );
       for await (const message of await conversation?.streamMessages()) {
-        getConversationMessages(false);
+        getAllConversations();
         if (message.senderAddress === client.address) {
           continue;
         }
+        getConversationMessages(false);
       }
     } catch (err: any) {
       console.error(err.message);
@@ -378,10 +382,10 @@ const useConversations = (): UseConversationResults => {
     setProfilesOpen(false);
     let resultElement = document.querySelector("#highlighted-message");
     const newHTMLPost =
-      messageHTML.substring(0, messageHTML.lastIndexOf("@")) +
+      messageHTML?.substring(0, messageHTML.lastIndexOf("@")) +
       `@${user?.handle}</span>`;
     const newElementPost =
-      message.substring(0, message.lastIndexOf("@")) + `@${user?.handle}`;
+      message?.substring(0, message.lastIndexOf("@")) + `@${user?.handle}`;
     setMessage(newElementPost);
     (resultElement as any).innerHTML = newHTMLPost;
     setMessageHTML(newHTMLPost);

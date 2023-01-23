@@ -242,7 +242,7 @@ const usePublication = () => {
     if (tags?.length > 0) {
       lodash.filter(tags, (tag) => {
         if (tag.length > 50) {
-          formattedTags.push(tag.substring(0, 49));
+          formattedTags.push(tag?.substring(0, 49));
         } else {
           formattedTags.push(tag);
         }
@@ -465,10 +465,10 @@ const usePublication = () => {
     setProfilesOpen(false);
     let resultElement = document.querySelector("#highlighted-content");
     const newHTMLPost =
-      postHTML.substring(0, postHTML.lastIndexOf("@")) +
+      postHTML?.substring(0, postHTML.lastIndexOf("@")) +
       `@${user?.handle}</span>`;
     const newElementPost =
-      postDescription.substring(0, postDescription.lastIndexOf("@")) +
+      postDescription?.substring(0, postDescription.lastIndexOf("@")) +
       `@${user?.handle}`;
     setPostDescription(newElementPost);
     (resultElement as any).innerHTML = newHTMLPost;
