@@ -15,10 +15,10 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
   const dispatch = useDispatch();
   const profileImage = createProfilePicture(lensProfile);
   return (
-    <div className="relative row-start-1 w-full h-full rounded-xl grid grid-flow-col auto-cols-auto">
+    <div className="relative row-start-1 w-full h-full rounded-xl flex flex-row">
       <div
         id="radialPinkBorder"
-        className="relative w-full h-40 col-start-1 rounded-xl"
+        className="relative w-full h-fit f1:h-40 col-start-1 rounded-xl"
       >
         <Image
           src={`${INFURA_GATEWAY}/ipfs/QmPTSfH2nh8S7H4yXWHn3wxBADoGfvj7aD8P4gkLmkKDpw`}
@@ -26,9 +26,9 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
           objectFit="cover"
           className="absolute w-full h-full p-2 rounded-xl"
         />
-        <div className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto p-4 gap-6">
+        <div className="relative w-full h-full col-start-1 f1:flex-row flex flex-col p-4 gap-6">
           {lensProfile && isConnected && (
-            <div className="relative w-fit h-fit place-self-center col-start-1 col-span-1 grid grid-flow-row auto-rows-auto">
+            <div className="relative w-fit h-fit place-self-center col-start-1 row-start-1 grid grid-flow-row auto-rows-auto">
               <div className="relative w-12 h-12 row-start-1 place-self-center rounded-full">
                 {profileImage && (
                   <Image
@@ -49,7 +49,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
           )}
           <div
             id="radialPinkBorder"
-            className="relative col-start-2 w-full h-full grid grid-flow-col auto-cols-auto p-1 rounded-xl col-span-10"
+            className="relative col-start-1 row-start-2 fo:row-start-1 fo:col-start-2 w-full h-36 f1:h-full grid grid-flow-col auto-cols-auto p-1 rounded-xl"
             onClick={
               isConnected
                 ? () => {

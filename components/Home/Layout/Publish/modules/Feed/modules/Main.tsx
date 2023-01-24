@@ -21,7 +21,7 @@ const Main: FunctionComponent<MainProps> = ({
   const dispatch = useDispatch();
   return (
     <div
-      className="relative w-[50vw] h-full col-start-1 grid grid-flow-row auto-rows-auto gap-5"
+      className="relative w-full md:w-[50vw] h-full row-start-2 md:row-start-1 col-start-1 grid grid-flow-row auto-rows-auto gap-5"
       id="targetDiv"
     >
       {!noUserData ? (

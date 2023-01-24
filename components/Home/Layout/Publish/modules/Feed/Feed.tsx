@@ -23,7 +23,7 @@ const Feed: FunctionComponent<FeedProps> = ({
   noUserData,
   mixtapeMirror,
   handleHidePost,
-  followerOnly
+  followerOnly,
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -34,7 +34,7 @@ const Feed: FunctionComponent<FeedProps> = ({
   );
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-3 gap-3">
-      <div className="relative row-start-1 w-full h-full grid grid-flow-col auto-cols-auto gap-6">
+      <div className="relative row-start-1 w-full h-full grid md:grid-flow-col md:auto-cols-auto grid-flow-row auto-rows-auto gap-6">
         <Main
           publicationsFeed={publicationsFeed}
           isOpen={isOpen}

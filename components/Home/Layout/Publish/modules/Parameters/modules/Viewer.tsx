@@ -34,10 +34,10 @@ const Viewer: FunctionComponent<ViewerProps> = ({
   const dispatch = useDispatch();
   const { openConnectModal } = useConnectModal();
   return (
-    <div className="relative w-fit h-full grid grid-flow-row auto-rows-auto col-start-2 gap-6 justify-self-end self-start">
+    <div className="relative w-fit h-full grid fo:grid-flow-row fo:auto-rows-auto grid-flow-col auto-cols-auto col-start-1 row-start-2 f1:row-start-1 f1:col-start-2 gap-6 justify-self-start fo:justify-self-end self-start">
       <div className="relative w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto place-self-center">
         <div
-          className={`relative w-60 h-10 pl-3 py-px rounded-lg row-start-1 grid grid-flow-col auto-cols-auto gap-2 border-2 border-black place-self-center bg-white`}
+          className={`relative w-full galaxy:w-60 h-10 pl-3 py-px rounded-lg row-start-1 grid grid-flow-col auto-cols-auto gap-2 border-2 border-black place-self-center bg-white`}
         >
           <div className="relative w-fit h-fit col-start-1 place-self-center">
             <BsFillEyeFill color="black" size={15} />
@@ -115,7 +115,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
         </div>
       </div>
       <div
-        className="relative w-fit h-fit col-start-2 row-start-1 cursor-pointer justify-self-end self-center"
+        className="relative w-fit h-fit col-start-1 row-start-2 fo:col-start-2 fo:row-start-1 cursor-pointer justify-self-start fo:justify-self-end self-center"
         id="venn-tool"
       >
         <Image
@@ -136,7 +136,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
         }}
       />
       <div
-        className={`relative w-fit h-fit row-start-2 col-start-1 justify-self-end self-center  ${
+        className={`relative w-fit h-fit row-start-3 fo:row-start-2 col-start-1 justify-self-start fo:justify-self-end self-center  ${
           dispatcherLoading ? "animate-spin" : "cursor-pointer active:scale-95"
         } ${!dispatcher && !dispatcherLoading && "animate-bounce"}`}
         id="toggle-dispatcher"
@@ -170,7 +170,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
         }}
       />
       <div
-        className="relative w-fit h-fit row-start-2 col-start-2 cursor-pointer justify-self-end self-center"
+        className="relative w-fit h-fit col-start-1 row-start-4 fo:row-start-2 fo:col-start-2 cursor-pointer justify-self-start fo:justify-self-end self-center"
         id="toggle-fire"
         // onClick={() =>
         //   dispatch(

@@ -57,7 +57,7 @@ const Badges: FunctionComponent = (): JSX.Element => {
                 className="opacity-60"
               />
             </div>
-            <div className="relative w-2/3 h-fit text-center text-sm galaxy:text-base md:text-[1.3rem] lg:text-[1.2vw] font-dosis text-white px-3 place-self-center">
+            <div className="relative w-2/3 h-fit text-center text-sm f2:text-base md:text-[1.3rem] lg:text-[1.2vw] font-dosis text-white px-3 place-self-center">
               Struck by the sheer number and size of the waves, we watched in
               fascination as one collector after another scanned the records.
               This machine transforming its contents into a dazzling display of
@@ -65,7 +65,7 @@ const Badges: FunctionComponent = (): JSX.Element => {
             </div>
           </div>
         </div>
-        <div className="lg:row-start-1 row-start-3 md:row-start-2 relative col-start-1 col-span-3 md:col-start-2 md:col-span-2 lg:col-span-1 lg:col-start-3 w-fit h-full grid grid-cols-2 galaxy:grid-cols-3 md:grid-cols-5 md:grid-flow-col-dense md:grid-rows-3 gap-3 justify-self-center lg:justify-self-end">
+        <div className="lg:row-start-1 row-start-3 md:row-start-2 relative col-start-1 col-span-3 md:col-start-2 md:col-span-2 lg:col-span-1 lg:col-start-3 w-fit h-full grid grid-cols-2 f2:grid-cols-3 md:grid-cols-5 md:grid-flow-col-dense md:grid-rows-3 gap-3 justify-self-center lg:justify-self-end">
           {(currentPage === 1 ? badgeInfo : records)?.map(
             (image: string | BadgeInfo, index: number) => {
               return currentPage === 1 ? (
