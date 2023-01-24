@@ -28,7 +28,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
   const { address } = useAccount();
   return (
     <div
-      className={`relative w-full h-fit rounded-md grid grid-flow-row auto-rows-auto p-6 bg-white gap-6 border-2 border-black z-0`}
+      className={`relative w-full h-fit rounded-md grid grid-flow-row auto-rows-auto p-3 galaxy:p-6 bg-white gap-6 border-2 border-black z-0`}
     >
       {(publication as any)?.__typename === "Mirror" && (
         <div className="relative w-fit h-fit row-start-1 justify-self-end self-center grid grid-flow-col auto-cols-auto gap-2">
@@ -101,7 +101,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
             {(publication as any)?.metadata?.name}
           </div>
           <div className="relative w-fit h-fit col-start-1 row-start-2 grid grid-flow-col auto-cols-auto">
-            <div className="relative w-fit h-fit rounded-md bg-black text-white text-base grid grid-flow-col auto-cols-auto px-2 py-1">
+            <div className="relative w-fit h-fit rounded-md bg-black text-white text-base grid grid-flow-col auto-cols-auto px-2 py-1 break-all">
               <div className="relative w-fit h-fit place-self-center">
                 Src: {(publication as any)?.metadata?.content?.split("\n\n")[0]}{" "}
                 —— {(publication as any)?.metadata?.content?.split("\n\n")[1]}
@@ -127,7 +127,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
             return (
               <div
                 key={index}
-                className={`relative w-96 h-[35vw] border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
+                className={`relative w-96 h-[120vw] galaxy:h-[100vw] fo:h-[90vw] sm:h-[80vw] md:h-[65vw] h-[45vw] xl:h-[35vw] border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
                   index + 1
                 } cursor-pointer hover:opacity-70 active:scale-95`}
                 onClick={() =>
@@ -153,7 +153,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                       id="record2"
                       className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-2 py-1 text-base"
                     >
-                      <div className="relative w-fit h-fit place-self-center col-start-1">
+                      <div className="relative w-fit h-fit place-self-center col-start-1 break-all">
                         {
                           ((publication as any)?.metadata?.content)
                             .split("\n\n")[2]
@@ -225,7 +225,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
             isMixtape={true}
           />
         </div>
-        <div className="relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto justify-self-end">
+        <div className="relative w-fit h-fit row-start-2 col-start-1 fo:row-start-1 fo:col-start-2 grid grid-flow-col auto-cols-auto justify-self-end fo:pt-0 pt-4">
           <div className="relative w-fit h-fit text-black font-dosis justify-self-end self-center col-start-2">
             {moment(`${(publication as any)?.createdAt}`).fromNow()}
           </div>

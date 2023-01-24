@@ -272,7 +272,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
               />
             </div>
             <div className="relative w-full h-full grid grid-flow-col auto-cols-auto row-start-3">
-              <div className="relative w-full h-fit col-start-1 pl-2 place-self-center">
+              <div className="relative w-full h-fit col-start-1 pl-2 place-self-center py-3 fo:py-0">
                 <PostOptions
                   dispatch={dispatch}
                   imagePicker={imagePickerModal}
@@ -284,7 +284,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                 />
               </div>
               <div
-                className={`relative w-32 h-10 px-3 py-1 justify-self-end self-center grid grid-flow-col auto-cols-auto bg-white/95 rounded-md col-start-2 ${
+                className={`relative w-32 h-10 px-3 py-1 justify-self-end self-center grid grid-flow-col auto-cols-auto bg-white/95 rounded-md col-start-1 row-start-2 fo:row-start-1 fo:col-start-2 ${
                   !followerOnly &&
                   "cursor-pointer hover:opacity-70 active:scale-95"
                 }`}
@@ -293,7 +293,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                 }
               >
                 <div
-                  className={`relative w-fit h-fit col-start-1 place-self-center ${
+                  className={`relative w-fit h-fit col-start-1 place-self-center text-sm fo:text-base ${
                     commentLoading && "animate-spin"
                   }`}
                 >

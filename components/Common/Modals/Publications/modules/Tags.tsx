@@ -20,7 +20,7 @@ const Tags: FunctionComponent<TagsProps> = ({
       >
         <input
           id="tagSearch"
-          className="relative w-32 h-8 text-black rounded-l-md bg-white/60 p-1"
+          className="relative w-20 fo:w-32 h-8 text-black rounded-l-md bg-white/60 p-1"
           name={"tag"}
           disabled={tags?.length >= 5 ? true : false}
         />
@@ -31,11 +31,11 @@ const Tags: FunctionComponent<TagsProps> = ({
           type="submit"
         >
           <div className="relative w-fit h-fit place-self-center">
-            Add Discover Tag
+            {tags?.length === 5 ? "Max Tags" : "Add Discover Tag"}
           </div>
         </button>
       </form>
-      <div className="relative w-full h-fit col-start-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center overflow-x-scroll">
+      <div className="relative w-full h-fit row-start-2 col-start-1 fo:row-start-1 fo:col-start-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center overflow-x-scroll">
         {tags?.map((tag: string, index: number) => {
           return (
             <div

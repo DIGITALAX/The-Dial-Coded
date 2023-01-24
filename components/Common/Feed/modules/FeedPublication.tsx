@@ -15,7 +15,6 @@ import moment from "moment";
 import { useAccount } from "wagmi";
 import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 import descriptionRegex from "../../../../lib/lens/helpers/descriptionRegex";
-import { useMediaQuery } from "@material-ui/core";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
@@ -37,7 +36,6 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   );
   const { address } = useAccount();
   const tags = document.querySelectorAll("em");
-  let queryWindowSize900 = useMediaQuery("(max-width:900px)");
   if (tags.length > 0) {
     for (let i = 0; i < tags.length; i++) {
       tags[i].addEventListener("click", (e) => {
