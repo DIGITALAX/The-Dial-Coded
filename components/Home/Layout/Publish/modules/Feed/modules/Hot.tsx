@@ -19,7 +19,7 @@ const Hot: FunctionComponent<HotProps> = ({
     <div
       className={`relative w-full ${
         isOpen ? "h-fit overflow-y-visible" : "h-[100rem] overflow-y-scroll"
-      } col-start-2 grid grid-flow-row auto-rows-auto gap-10`}
+      } row-start-1 col-start-1 md:col-start-2 grid grid-flow-row auto-rows-auto gap-10`}
     >
       <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto overflow-x-scroll gap-4">
         {(hotFeed[0]?.metadata as any)?.content

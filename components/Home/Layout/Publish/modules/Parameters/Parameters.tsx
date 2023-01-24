@@ -30,7 +30,7 @@ const Parameters: FunctionComponent = (): JSX.Element => {
     (state: RootState) => state.app.dispatcherReducer.value
   );
   return (
-    <div className="relative w-full h-28 row-start-2 grid grid-flow-col auto-cols-auto z-20">
+    <div className="relative w-full h-fit f1:h-28 row-start-2 grid f1:grid-flow-col f1:auto-cols-auto grid-flow-row auto-rows-auto z-20 gap-8 f1:gap-0">
       <Options
         feedOrder={feedOrder}
         feedType={feedType}

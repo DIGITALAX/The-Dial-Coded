@@ -29,7 +29,7 @@ const Options: FunctionComponent<OptionsProps> = ({
     (state: RootState) => state.app.feedPriorityReducer.value
   );
   return (
-    <div className="relative w-fit h-fit col-start-1 flex flex-row gap-5">
+    <div className="relative w-fit h-fit row-start-1 col-start-1 flex flex-col fo:flex-row gap-5">
       <OptionMenu
         col={"1"}
         image={"QmYFZQsGchyuRFmiiPKB7KH2aQhi63Naz31kBRfFb2weFZ"}
