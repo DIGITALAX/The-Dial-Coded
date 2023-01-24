@@ -72,7 +72,8 @@ module.exports = {
       },
       screens: {
         fo: "500px",
-        galaxy: "300px"
+        galaxy: "300px",
+        f1: "900px"
       },
     },
   },

@@ -13,6 +13,7 @@ import handleHidePost from "../../lib/lens/helpers/handleHidePost";
 import { setWalletConnected } from "../../redux/reducers/walletConnectedSlice";
 import { RootState } from "../../redux/store";
 import ProfileTab from "./../../components/Home/Layout/Account/modules/ProfileTab";
+import { useMediaQuery } from "@material-ui/core";
 
 const Profile: NextPage = (): JSX.Element => {
   const {
@@ -52,6 +53,7 @@ const Profile: NextPage = (): JSX.Element => {
   }, [profileId]);
 
   const profileImage = createProfilePicture(profileData);
+  let queryWindowSize900 = useMediaQuery("(max-width:900px)");
 
   if (!profileData && profileDataLoading === false) {
     return <NotFound />;
@@ -100,7 +102,13 @@ const Profile: NextPage = (): JSX.Element => {
               handleHidePost={handleHidePost}
               handleSendDM={handleSendDM}
             />
-            <div className="relative w-full h-fit col-start-2 grid grid-flow-col auto-cols-auto px-10 py-4 bg-offWhite/90 overflow-y-scroll">
+            <div
+              className={`relative w-full h-fit grid grid-flow-col auto-cols-auto px-3 fo:px-10 py-4 bg-offWhite/90 overflow-y-scroll ${
+                !queryWindowSize900
+                  ? "col-start-2 row-start-1"
+                  : "col-start-1 row-start-2"
+              }`}
+            >
               <ProfileTab
                 getMoreUserProfileFeed={getMoreUserProfileFeed}
                 userFeed={userFeed}

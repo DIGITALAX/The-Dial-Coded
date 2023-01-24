@@ -15,6 +15,7 @@ import moment from "moment";
 import { useAccount } from "wagmi";
 import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 import descriptionRegex from "../../../../lib/lens/helpers/descriptionRegex";
+import { useMediaQuery } from "@material-ui/core";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
@@ -36,6 +37,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   );
   const { address } = useAccount();
   const tags = document.querySelectorAll("em");
+  let queryWindowSize900 = useMediaQuery("(max-width:900px)");
   if (tags.length > 0) {
     for (let i = 0; i < tags.length; i++) {
       tags[i].addEventListener("click", (e) => {
@@ -58,7 +60,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
     <div
       className={`relative ${
         height ? "h-full" : "h-fit"
-      } w-full rounded-md grid grid-flow-row auto-rows-auto p-6 gap-6 border-2 border-black z-0 ${
+      } w-full rounded-md grid grid-flow-row auto-rows-auto p-3 galaxy:p-6 gap-6 border-2 border-black z-0 ${
         mixtapeMirror
           ? "bg-white"
           : "bg-gradient-to-r from-offBlack via-gray-600 to-black"
@@ -88,7 +90,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         } grid grid-flow-col auto-cols-auto`}
       >
         <div
-          className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer hover:opacity-70 active:scale-95"
+          className="relative w-fit h-fit row-start-2 fo:row-start-1 fo:col-span-1 col-span-2 col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer hover:opacity-70 active:scale-95"
           onClick={() =>
             router.push(
               `/profile/${
@@ -145,7 +147,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         <div
           className={`relative w-fit h-fit ${
             mixtapeMirror ? "text-offBlack" : "text-white"
-          } font-dosis justify-self-end self-center col-start-2`}
+          } font-dosis justify-self-end self-center col-start-2 fo:pb-0 pb-2`}
         >
           {moment(`${(publication as any)?.createdAt}`).fromNow()}
         </div>
@@ -328,7 +330,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         />
         {!router.asPath.includes((publication as any)?.id) && (
           <div
-            className={`relative w-fit h-fit col-start-2 justify-self-end self-center grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95 ${
+            className={`relative w-fit h-fit row-start-2 col-start-1 fo:row-start-1 fo:col-start-2 fo:pt-0 pt-3 justify-self-end self-center grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95 ${
               mixtapeMirror ? "text-offBlack" : "text-white"
             }`}
             onClick={
