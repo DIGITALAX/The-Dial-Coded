@@ -9,13 +9,13 @@ const SideText: FunctionComponent<SideTextProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative row-start-1 col-start-1 w-fit h-fit self-center justify-self-start grid grid-flow-row auto-rows-auto top-48 sm:top-28 md:top-0">
-      <div className="relative w-fit h-fit row-start-1 text-white font-dosis text-xl text-left capitalize">
+      <div className="relative w-fit h-fit row-start-1 text-white font-dosis text-xl text-left capitalize w-3/4 sm:w-auto">
         {imageArtist[currentSetting]}
       </div>
       <div className="relative w-fit h-fit row-start-2 text-white font-dosis text-5xl uppercase text-left pb-6 pt-2">
         {imageTitle[currentSetting]}
       </div>
-      <div className="relative w-fit h-fit row-start-3 text-white font-dosis text-base text-left w-96">
+      <div className="relative w-fit h-fit row-start-3 text-white font-dosis text-base text-left w-3/4 sm:w-96">
         {imageDescription[currentSetting]}
       </div>
     </div>

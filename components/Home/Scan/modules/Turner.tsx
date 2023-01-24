@@ -6,6 +6,7 @@ import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { TurnerProps } from "./../types/scan.types";
 import { TfiSearch } from "react-icons/tfi";
 import SearchBar from "../../../Common/Search/SearchBar";
+import { useMediaQuery } from "@material-ui/core";
 
 const Turner: FunctionComponent<TurnerProps> = ({
   currentSetting,
@@ -19,10 +20,11 @@ const Turner: FunctionComponent<TurnerProps> = ({
   dropDown,
   handleChosenSearch,
   handleKeyDownEnter,
-  searchTarget
+  searchTarget,
 }): JSX.Element => {
+  let queryWindowSize300: boolean = useMediaQuery("(max-width:300px)");
   return (
-    <div className="relative w-full h-fit col-start-1 row-start-2 md:row-start-1 md:col-start-2 grid grid-flow-row auto-rows-auto self-center sm:self-start md:self-center justify-center md:justify-end gap-10 pr-10 pt-8 sm:pt-16 top-24 lg:top-0 lg:pt-0">
+    <div className="relative w-full h-fit col-start-1 row-start-2 md:row-start-1 md:col-start-2 grid grid-flow-row auto-rows-auto self-center justify-start galaxy:justify-end gap-10 sm:pr-10 md:top-0 pt-0">
       <div
         className="relative w-fit h-fit row-start-1 hover:rotate-3 active:rotate-6"
         onClick={() => handleCount(currentSetting)}
@@ -143,13 +145,15 @@ const Turner: FunctionComponent<TurnerProps> = ({
             </div>
           }
         </div>
-        <div className="relative w-10 h-full col-start-2 row-start-1">
-          <Image
-            src={`${INFURA_GATEWAY}/ipfs/${canvasURIs[currentSetting]}`}
-            layout="fill"
-            alt="canvas"
-          />
-        </div>
+        {!queryWindowSize300 && (
+          <div className="relative w-10 h-full col-start-2 row-start-1">
+            <Image
+              src={`${INFURA_GATEWAY}/ipfs/${canvasURIs[currentSetting]}`}
+              layout="fill"
+              alt="canvas"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
