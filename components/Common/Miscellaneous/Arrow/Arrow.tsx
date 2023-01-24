@@ -14,8 +14,8 @@ const Arrow: FunctionComponent<ArrowProps> = ({
   return (
     <div
       className={`relative w-fit h-fit col-start-2 grid ${
-        !vertical && "hover:opacity-80 active:scale-95 cursor-pointer pl-6"
-      } place-self-center ${
+        !vertical && "hover:opacity-80 active:scale-95 cursor-pointer fo:pl-6"
+      } place-self-center z-2 ${
         vertical
           ? "grid-flow-row auto-rows-auto"
           : "grid-flow-col auto-cols-auto"
@@ -25,7 +25,7 @@ const Arrow: FunctionComponent<ArrowProps> = ({
       }}
     >
       <div
-        className={`relative w-fit h-fit ${
+        className={`relative w-fit place-self-center h-fit ${
           vertical ? "row-start-1" : "col-start-1"
         }`}
       >
@@ -49,7 +49,7 @@ const Arrow: FunctionComponent<ArrowProps> = ({
         />
       </div>
       <div
-        className={`relative w-fit h-fit ${
+        className={`relative w-fit h-fit place-self-center ${
           vertical ? "row-start-3" : "col-start-3"
         }`}
       >

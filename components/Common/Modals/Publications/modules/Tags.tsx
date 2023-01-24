@@ -9,7 +9,7 @@ const Tags: FunctionComponent<TagsProps> = ({
   return (
     <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto font-dosis text-white gap-4">
       <form
-        className="relative w-full h-full grid grid-flow-col auto-cols-auto col-start-1"
+        className="relative w-full h-full flex flex-row col-start-1"
         onSubmit={
           tags?.length >= 5
             ? (e: FormEvent) => {

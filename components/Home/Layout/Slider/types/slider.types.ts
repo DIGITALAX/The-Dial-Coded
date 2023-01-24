@@ -7,6 +7,8 @@ export type ViewerProps = {
   dispatch: Dispatch<AnyAction>;
   imagesLoading: boolean;
   imagesScanLoading: boolean;
+  col: string;
+  row: string;
 };
 
 export type UseSliderResults = {

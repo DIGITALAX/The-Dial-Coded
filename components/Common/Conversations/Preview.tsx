@@ -9,6 +9,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
   previewMessages,
   profileLensData,
   handleChosenProfile,
+  clientLoading
 }): JSX.Element => {
   let ipfsRegex = /ipfs:\/\//;
   let gifRegex = /https:\/\/media\.tenor\.com/;
@@ -99,7 +100,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
             </div>
           );
         })
-      ) : (
+      ) : clientLoading && (
         <div className="relative w-fit h-fit justify-self-center grid grid-flow-col auto-cols-auto self-start pt-10">
           <div className="relative col-start-1 place-self-center animate-spin">
             <AiOutlineLoading color="black" size={15} />

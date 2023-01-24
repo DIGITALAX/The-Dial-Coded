@@ -8,7 +8,7 @@ const Categories: FunctionComponent<CategoriesProps> = ({
   dispatch,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-full col-start-2 grid grid-flow-col auto-cols-auto overflow-x-scroll gap-3 pl-10">
+    <div className="relative w-full h-full row-start-2 fo:row-start-1 col-start-1 fo:col-start-2 grid grid-flow-col auto-cols-auto overflow-x-scroll gap-3 fo:pl-10">
       {categoriesList?.map((category: string, index: number) => {
         return (
           <span
@@ -17,7 +17,7 @@ const Categories: FunctionComponent<CategoriesProps> = ({
             onClick={() => handleAddtoSearch(category, dispatch, searchTarget)}
             className={`relative col-start-${
               index + 1
-            } w-fit h-fit px-5 font-dosis text-white rounded-2xl grid grid-flow-col py-1.5 auto-cols-auto text-lg whitespace-nowrap border-2 border-offYellow cursor-pointer`}
+            } w-fit h-fit px-5 font-dosis text-white rounded-2xl grid grid-flow-col py-1.5 auto-cols-auto text-sm fo:text-lg whitespace-nowrap border-2 border-offYellow cursor-pointer`}
           >
             <div className="relative w-fit h-fit col-start-1 text-center">
               {category}

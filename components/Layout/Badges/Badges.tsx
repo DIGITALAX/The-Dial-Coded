@@ -6,6 +6,7 @@ import Record from "../../Common/Badge/Record";
 import Rewind from "../../Common/Miscellaneous/Rewind/Rewind";
 import useBadges from "./hooks/useBadges";
 import { BadgeInfo } from "./types/badges.types";
+import { useMediaQuery } from "@material-ui/core";
 
 const Badges: FunctionComponent = (): JSX.Element => {
   const {
@@ -16,27 +17,32 @@ const Badges: FunctionComponent = (): JSX.Element => {
     handlePageDecrease,
     handlePageIncrease,
   } = useBadges();
+  let queryWindowSize768: boolean = useMediaQuery("(max-width:768px)");
   return (
     <div className="relative bg-white bottom-0 p-10 w-full h-full grid grid-flow-row auto-rows-auto gap-5 z-0 row-start-1">
       <div className="relative w-full h-full row-start-1 col-start-1 grid grid-flow-col auto-cols-auto py-32">
-        <div className="relative uppercase w-2/3 h-fit text-black font-digiB text-center text-3xl place-self-center leading-loose">
+        <div className="relative uppercase w-2/3 h-fit text-black font-digiB text-center text-base md:text-3xl place-self-center leading-loose">
           Shrink the distance between drafts, awards winning creation, and
           casual reactions to your infinite record collection.
         </div>
       </div>
       <div className="relative row-start-2 w-fit lg:w-full h-full grid grid-flow-row auto-rows-auto gap-5">
-        <div className="relative w-fit h-full col-start-1 grid grid-flow-row auto-rows-auto gap-8 md:col-span-1 lg:row-start-1 row-start-2 lg:justify-self-start md:justify-self-center justify-self-start ">
+        <div className="relative w-fit h-full col-span-3 col-start-1 grid grid-flow-row auto-rows-auto gap-8 md:col-span-1 lg:row-start-1 row-start-2 lg:justify-self-start justify-self-center justify-self-start">
           <Rewind
-            row={"1"}
-            handleValueChange={handlePageIncrease}
-            limitValue={totalPages}
+            row={queryWindowSize768 ? "2" : "1"}
+            scale={queryWindowSize768 ? "-1" : "1"}
+            handleValueChange={
+              queryWindowSize768 ? handlePageDecrease : handlePageIncrease
+            }
+            limitValue={queryWindowSize768 ? 1 : totalPages}
             currentValue={currentPage}
           />
           <Rewind
-            row="2"
-            scale="-1"
-            handleValueChange={handlePageDecrease}
-            limitValue={1}
+            row={"2"}
+            handleValueChange={
+              queryWindowSize768 ? handlePageIncrease : handlePageDecrease
+            }
+            limitValue={queryWindowSize768 ? totalPages : 1}
             currentValue={currentPage}
           />
         </div>
@@ -51,7 +57,7 @@ const Badges: FunctionComponent = (): JSX.Element => {
                 className="opacity-60"
               />
             </div>
-            <div className="relative w-2/3 h-fit text-center text-[1.3rem] lg:text-[1.2vw] font-dosis text-white px-3 place-self-center">
+            <div className="relative w-2/3 h-fit text-center text-sm galaxy:text-base md:text-[1.3rem] lg:text-[1.2vw] font-dosis text-white px-3 place-self-center">
               Struck by the sheer number and size of the waves, we watched in
               fascination as one collector after another scanned the records.
               This machine transforming its contents into a dazzling display of
@@ -59,7 +65,7 @@ const Badges: FunctionComponent = (): JSX.Element => {
             </div>
           </div>
         </div>
-        <div className="lg:row-start-1 row-start-2 relative col-start-2 col-span-2 lg:col-span-1 lg:col-start-3 w-full md:w-fit h-full grid grid-cols-5 grid-flow-col-dense grid-rows-3 gap-3 justify-self-start md:justify-self-center lg:justify-self-end">
+        <div className="lg:row-start-1 row-start-3 md:row-start-2 relative col-start-1 col-span-3 md:col-start-2 md:col-span-2 lg:col-span-1 lg:col-start-3 w-fit h-full grid grid-cols-2 galaxy:grid-cols-3 md:grid-cols-5 md:grid-flow-col-dense md:grid-rows-3 gap-3 justify-self-center lg:justify-self-end">
           {(currentPage === 1 ? badgeInfo : records)?.map(
             (image: string | BadgeInfo, index: number) => {
               return currentPage === 1 ? (

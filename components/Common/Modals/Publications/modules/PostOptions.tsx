@@ -36,7 +36,7 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({
     (state: RootState) => state.app.postImageReducer.value
   );
   return (
-    <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2">
+    <div className="relative w-fit h-fit flex flex-row gap-2">
       <label
         className={`relative w-fit h-fit col-start-1 place-self-center ${
           !postLoading &&
