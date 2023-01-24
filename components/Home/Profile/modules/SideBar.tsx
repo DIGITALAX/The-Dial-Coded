@@ -17,6 +17,7 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import InfiniteScroll from "react-infinite-scroll-component";
 import HotPublication from "../../../Common/Feed/modules/HotPublication";
 import { MdOutlineMailOutline } from "react-icons/md";
+import { useMediaQuery } from "@material-ui/core";
 
 const SideBar: FunctionComponent<SideBarProps> = ({
   profileData,
@@ -49,11 +50,18 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   const isConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
   );
+  let queryWindowSize900 = useMediaQuery("(max-width:900px)");
   const { openConnectModal } = useConnectModal();
   return (
-    <div className="col-start-1 relative w-full h-full grid grid-flow-row auto-rows-auto bg-offWhite/95 row-start-1 px-14 pt-40 pb-10 pr-4 overflow-y-scroll">
+    <div className="col-start-1 relative w-full h-full grid grid-flow-row auto-rows-auto bg-offWhite/95 row-start-1 pl-4 f1:pl-14 pt-40 pb-10 pr-4 overflow-y-scroll overflow-x-clip">
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto row-start-1 self-start gap-10">
-        <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto row-start-1">
+        <div
+          className={`relative w-fit h-fit row-start-1 ${
+            !queryWindowSize900
+              ? "grid grid-flow-row auto-rows-auto"
+              : "grid grid-flow-col auto-cols-auto"
+          }`}
+        >
           <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-1 pb-6">
             <div className="relative w-fit h-fit font-dosis text-offBlack row-start-1 text-4xl justify-self-start self-center">
               {profileData?.name}
@@ -62,7 +70,10 @@ const SideBar: FunctionComponent<SideBarProps> = ({
               id="profile"
               className="relative w-fit h-fit font-dosis text-xl justify-self-start self-center"
             >
-              @{profileData?.handle}
+              @
+              {profileData?.handle.length > 16
+                ? profileData?.handle?.substring(0, 16) + "..."
+                : profileData?.handle}
             </div>
           </div>
           {profileData?.id !== lensProfile && (
@@ -105,12 +116,14 @@ const SideBar: FunctionComponent<SideBarProps> = ({
               </div>
             </div>
           )}
-          <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-3 pt-6">
-            <div className="relative w-fit h-fit col-start-1 font-dosis text-offBlack justify-self-start text-left self-center">
+          <div
+            className={`relative w-full h-full grid grid-flow-row auto-rows-auto pt-6 fo:pt-3 f1:pt-6 f1:col-start-1 f1:row-start-3 fo:col-start-3 fo:row-start-1 col-start-1 galaxy:row-start-7 fo:col-span-1 galaxy:col-span-2 row-start-3 col-span-1`}
+          >
+            <div className="relative w-fit h-fit col-start-1 font-dosis text-offBlack justify-self-start text-left self-start f1:self-center break-all">
               {profileData?.bio}
             </div>
           </div>
-          <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-4 text-offBlack font-dosis text-lg gap-4 pt-4 pb-4">
+          <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-4 text-offBlack font-dosis text-lg gap-4 pt-4 pb-4 col-start-1">
             <div
               className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-2 cursor-pointer"
               onClick={() =>
@@ -144,7 +157,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
               <div className="relative w-fit h-fit col-start-2">Followers</div>
             </div>
           </div>
-          <div className="relative row-start-5 grid grid-flow-col auto-cols-auto">
+          <div className="relative row-start-5 grid grid-flow-col auto-cols-auto col-start-1">
             {isFollowing && (
               <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto drop-shadow-md bg-gray-100/50 font-dosis text-sm text-black justify-self-start self-center py-2 px-4 rounded-lg">
                 <div className="relative w-fit h-fit col-start-1 place-self-center">
@@ -163,13 +176,17 @@ const SideBar: FunctionComponent<SideBarProps> = ({
               <MdOutlineMailOutline size={25} />
             </div>
           </div>
-          <div className="relative pt-4 row-start-6 grid grid-flow-col auto-cols-auto text-sm text-offBlack gap-1 w-fit h-fit">
+          <div
+            className={`relative ${
+              profileData?.name ? "pt-4" : "pt-4 galaxy:pt-1.5 f1:pt-4"
+            } col-start-1 row-start-6 f1:col-start-1 galaxy:col-start-2 galaxy:row-start-1 f1:row-start-6 grid grid-flow-col auto-cols-auto text-sm text-offBlack gap-1 w-fit h-fit galaxy:pl-3 f1:pl-0`}
+          >
             <div className="relative w-fit h-fit col-start-1">Id:</div>
             <div className="relative w-fit h-fit col-start-2">
               #{profileData?.id}
             </div>
           </div>
-          <div className="relative w-fit h-fit row-start-7 pt-4 grid grid-flow-row auto-rows-auto gap-3 text-offBlack">
+          <div className="relative w-fit h-fit col-start-1 fo:col-start-2 row-start-7 galaxy:row-start-6 fo:row-start-2 f1:col-start-1 f1:row-start-7 pt-4 fo:pt-0 f1:pt-4 grid grid-flow-row auto-rows-auto gap-3 text-offBlack self-center">
             {website?.[0]?.value && (
               <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-3 justify-self-start self-center">
                 <div className="relative w-fit h-fit col-start-1 place-self-center">
@@ -193,7 +210,9 @@ const SideBar: FunctionComponent<SideBarProps> = ({
             {location?.[0]?.value && (
               <div
                 className={`relative w-fit h-fit ${
-                  website?.[0]?.value ? "row-start-2" : "row-start-1"
+                  website?.[0]?.value
+                    ? "f1:row-start-2 row-start-1 f1:col-start-1 col-start-2"
+                    : "row-start-1 col-start-1"
                 } grid grid-flow-col auto-cols-auto gap-3 justify-self-start self-center`}
               >
                 <div className="relative w-fit h-fit col-start-1 place-self-center">
@@ -206,14 +225,14 @@ const SideBar: FunctionComponent<SideBarProps> = ({
             )}
           </div>
         </div>
-        <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto">
+        <div className="relative w-full h-full row-start-2 grid f1:grid-flow-row f1:auto-rows-auto grid-flow-col auto-cols-auto overflow-x-scroll f1:overflow-x-clip">
           <InfiniteScroll
-            height={"300em"}
+            height={!queryWindowSize900 ? "300em" : undefined}
             loader={""}
             hasMore={true}
             next={getMoreUserMixtapes}
             dataLength={mixtapes?.length}
-            className={`relative w-full h-full grid grid-flow-row auto-rows-auto gap-16`}
+            className={`relative w-full h-full grid f1:grid-flow-row f1:auto-rows-auto auto-cols-auto grid-flow-col gap-16`}
             style={{ color: "#131313", fontFamily: "Digi Reg" }}
           >
             {mixtapes?.map((mixtape: any, indexOne: number) => {
@@ -221,7 +240,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
                 <div
                   key={indexOne}
                   className={
-                    "relative w-full h-full gap-2 grid grid-flow-row auto-rows-auto"
+                    "relative w-full h-full gap-2 grid f1:grid-flow-row f1:auto-rows-auto auto-cols-auto grid-flow-col"
                   }
                 >
                   {mixtape?.metadata?.content

@@ -73,7 +73,15 @@ const Header: FunctionComponent = (): JSX.Element => {
               />
             </div>
           )}
-        <div className="relative w-full h-full col-start-3 grid grid-flow-col auto-cols-auto">
+        <div
+          className={`relative w-full h-full grid grid-flow-col auto-cols-auto ${
+            !router.asPath.includes("post") &&
+            !router.asPath.includes("profile") &&
+            !router.asPath.includes("mixtape")
+              ? "col-start-3"
+              : "md:col-start-3 col-start-2"
+          }`}
+        >
           {!connected ? (
             <Connect />
           ) : (
