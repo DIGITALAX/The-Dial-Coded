@@ -13,8 +13,8 @@ const Presets: FunctionComponent = (): JSX.Element => {
     (state: RootState) => state.app.searchTargetReducer.value
   );
   return (
-    <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-5 gap-5 pt-10 pl-20">
-      <div className="relative row-start-1 w-fit h-fit justify-self-start text-black font-dosis text-left text-lg">
+    <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-5 gap-5 pt-10 md:pl-20">
+      <div className="relative row-start-1 w-fit h-fit justify-self-start text-black font-dosis text-left text-base galaxy:text-lg">
         Common, novel & highlighted presets:
       </div>
       <div className="relative w-11/12 h-full row-start-2 flex flex-wrap justify-center gap-2 place-self-center text-center min-h-96">

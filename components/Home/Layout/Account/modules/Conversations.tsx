@@ -40,6 +40,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
   handleGifSubmit,
   results,
 }): JSX.Element => {
+  console.log({client})
   if (!client) {
     return (
       <div className="relative w-full h-full grid grid-flow-col auto-cols-auto bg-white bg-opacity-30 backdrop-blur-sm rounded-md">
@@ -79,6 +80,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
             previewMessages={previewMessages}
             profileLensData={profileLensData}
             handleChosenProfile={handleChosenProfile}
+            clientLoading={clientLoading}
           />
         </div>
       </div>

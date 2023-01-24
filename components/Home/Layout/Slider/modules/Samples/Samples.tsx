@@ -18,7 +18,7 @@ const Samples: FunctionComponent = (): JSX.Element => {
     (state: RootState) => state.app.searchTargetReducer.value
   );
   return (
-    <div className="relative w-full h-full row-start-3 grid grid-flow-row auto-rows-auto pl-20 gap-6">
+    <div className="relative w-full h-full row-start-3 grid grid-flow-row auto-rows-auto pl-3 md:pl-20 gap-6">
       <div className="relative w-full h-fit row-start-1 grid grid-flow-col auto-cols-auto overflow-x-scroll gap-5">
         {topics?.map((topic: string, index: number) => {
           return (
@@ -33,7 +33,7 @@ const Samples: FunctionComponent = (): JSX.Element => {
           );
         })}
       </div>
-      <div className="relative w-full h-fit row-start-2 grid grid-flow-col auto-cols-auto gap-7 pl-10 overflow-x-scroll">
+      <div className="relative w-full h-fit row-start-2 grid grid-flow-col auto-cols-auto gap-7 md:pl-10 overflow-x-scroll pr-3 md:pr-0">
         {topicValues[
           selectedTopic
             ?.toLowerCase()

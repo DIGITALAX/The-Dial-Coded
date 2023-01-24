@@ -11,9 +11,13 @@ const Viewer: FunctionComponent<ViewerProps> = ({
   dispatch,
   imagesLoading,
   imagesScanLoading,
+  col,
+  row
 }): JSX.Element => {
   return (
-    <div className="relative w-fit h-full grid grid-flow-col auto-cols-auto col-start-2">
+    <div
+      className={`relative w-fit h-full grid grid-flow-col auto-cols-auto col-start-${col} row-start-${row}`}
+    >
       <div className="relative w-full h-full col-start-1 col-span-10 gap-3 overflow-x-scroll flex">
         {slider?.map((result: LexicaImages, index: number) => {
           return (

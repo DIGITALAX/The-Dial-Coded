@@ -40,7 +40,10 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
                 )}
               </div>
               <div className="relative w-fit h-fit row-start-2 font-dosis text-white text-sm place-self-center">
-                @{lensProfile?.handle}
+                @
+                {lensProfile?.handle?.length > 15
+                  ? lensProfile?.handle.substring(0, 15) + "..."
+                  : lensProfile?.handle}
               </div>
             </div>
           )}
@@ -63,7 +66,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
             }
           >
             <div className="relative w-full h-full col-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-pointer active:opacity-80">
-              <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-3 pl-4 pt-4">
+              <div className="relative w-fit h-fit col-start-1 flex flex-row gap-3 pl-4 pt-4">
                 <div className="relative col-start-1 w-fit h-fit">
                   <Image
                     src={`${INFURA_GATEWAY}/ipfs/QmPzrV58nvgNZW9zTkNpy5YBCZBEs6kTKhai4ZkEFeaWQj`}

@@ -14,20 +14,7 @@ import SliderSwitch from "./SliderSwitch";
 import shuffle from "shuffle-array";
 import { useRouter } from "next/router";
 import useScan from "../../Scan/hooks/useScan";
-// import {
-//   useContractWrite,
-//   usePrepareContractWrite,
-//   useSendTransaction,
-//   useSignTypedData,
-// } from "wagmi";
-// import LensHubProxy from "./../../../../abis/LensHubProxy.json";
-// import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../lib/lens/constants";
-// import {
-//   createProfile,
-//   defaultProfile,
-// } from "./../../../../graphql/mutations/temp";
-// import omit from "../../../../lib/lens/helpers/omit";
-// import splitSignature from "../../../../lib/lens/helpers/splitSignature";
+import { useMediaQuery } from "@material-ui/core";
 
 const Slider: FunctionComponent = (): JSX.Element => {
   const { handleBackward, handleForward, currentValue, promptString } =
@@ -66,21 +53,10 @@ const Slider: FunctionComponent = (): JSX.Element => {
     }
   }, [router.asPath]);
 
-  // const [args, setArgs] = useState<any>();
-
-  // const { config, isSuccess } = usePrepareContractWrite({
-  //   address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
-  //   abi: LensHubProxy,
-  //   functionName: "setDefaultProfileWithSig",
-  //   enabled: Boolean(args),
-  //   args: [args],
-  // });
-
-  // const { writeAsync } = useContractWrite(config);
-  // const { signTypedDataAsync } = useSignTypedData();
+  let queryWindowSize500: boolean = useMediaQuery("(max-width:500px)");
 
   return (
-    <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-white py-10 pl-10 gap-10">
+    <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-white py-3 pl-3 md:py-10 md:pl-10 gap-10">
       <SliderSearch
         handleChangeSearch={handleChangeSearch}
         handleKeyEnter={handleKeyEnter}
@@ -106,18 +82,22 @@ const Slider: FunctionComponent = (): JSX.Element => {
       )}
       <Samples />
       <div className="relative w-full h-full row-start-4 grid grid-flow-col auto-cols-auto gap-4">
-        <div className="relative w-fit h-full col-start-1 grid grid-flow-row auto-rows-auto gap-8 col-span-1">
+        <div className="relative w-fit h-full col-start-1 grid grid-flow-row auto-rows-auto gap-8 fo:col-span-1 fo:justify-self-start justify-self-center">
           <Rewind
-            row={"1"}
-            handleValueChange={handleForward}
-            limitValue={4}
+            row={queryWindowSize500 ? "2" : "1"}
+            scale={queryWindowSize500 ? "-1" : "1"}
+            handleValueChange={
+              queryWindowSize500 ? handleBackward : handleForward
+            }
+            limitValue={queryWindowSize500 ? 0 : 4}
             currentValue={currentValue}
           />
           <Rewind
             row={"2"}
-            scale={"-1"}
-            handleValueChange={handleBackward}
-            limitValue={0}
+            handleValueChange={
+              queryWindowSize500 ? handleForward : handleBackward
+            }
+            limitValue={queryWindowSize500 ? 4 : 0}
             currentValue={currentValue}
           />
         </div>
@@ -125,50 +105,6 @@ const Slider: FunctionComponent = (): JSX.Element => {
           imagesLoading={imagesLoading}
           imagesScanLoading={imagesScanLoading}
         />
-        {/* <button
-          onClick={async () => {
-            const res = await createProfile();
-            console.log(res);
-          }}
-        >
-          create profile
-        </button>
-        <button
-          onClick={async () => {
-            const res = await defaultProfile();
-            const typedData: any =
-              res.data.createSetDefaultProfileTypedData.typedData;
-            const signature: any = await signTypedDataAsync({
-              domain: omit(typedData?.domain, ["__typename"]),
-              types: omit(typedData?.types, ["__typename"]) as any,
-              value: omit(typedData?.value, ["__typename"]) as any,
-            });
-
-            const { v, r, s } = splitSignature(signature);
-            const mirrorArgs = {
-              profileId: typedData.value.profileId,
-              wallet: typedData.value.wallet,
-              sig: {
-                v,
-                r,
-                s,
-                deadline: typedData.value.deadline,
-              },
-            };
-            setArgs(mirrorArgs);
-          }}
-        >
-          create default
-        </button>
-        {isSuccess && (
-          <button
-            onClick={async () => {
-              await writeAsync?.();
-            }}
-          >
-            set write
-          </button>
-        )} */}
       </div>
       <Presets />
     </div>

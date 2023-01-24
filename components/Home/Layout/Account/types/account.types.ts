@@ -195,6 +195,7 @@ export type PreviewProps = {
   previewMessages: Map<string, DecodedMessage> | undefined;
   profileLensData: Profile[];
   handleChosenProfile: (user: Profile) => void;
+  clientLoading: boolean;
 };
 
 export type UseConversationResults = {

@@ -69,7 +69,7 @@ const Message: FunctionComponent<MessageProps> = ({
     <div className="relative w-full h-full flex flex-col rounded-x-md bg-white/50 text-black font-dosis">
       <div className="relative w-full h-12 p-2 col-start-1 self-start grid grid-flow-col auto-cols-auto bg-white/70">
         {chosenProfile && (
-          <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-3">
+          <div className="relative w-fit h-fit col-start-1 flex flex-row gap-3">
             <div className="relative w-fit h-fit col-start-1 justify-self-start self-center">
               <div
                 id="crt"
@@ -80,12 +80,13 @@ const Message: FunctionComponent<MessageProps> = ({
                     src={profileImage}
                     layout="fill"
                     alt="pfp"
+                    objectFit="cover"
                     className="rounded-full"
                   />
                 )}
               </div>
             </div>
-            <div className="relative col-start-2 place-self-center justify-self-start self-center text-base">
+            <div className="relative col-start-2 justify-self-start self-center text-base">
               @{chosenProfile?.handle}
             </div>
           </div>

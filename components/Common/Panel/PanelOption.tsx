@@ -15,7 +15,7 @@ const PanelOption: FunctionComponent<PanelOptionProps> = ({
   const router = useRouter();
   return (
     <div
-      className={`relative w-fit h-12 col-start-${
+      className={`relative w-16 md:w-fit h-12 col-start-${
         index + 1
       } grid grid-flow-col auto-cols-auto gap-2 cursor-pointer hover:opacity-80 active:scale-95`}
       key={index}

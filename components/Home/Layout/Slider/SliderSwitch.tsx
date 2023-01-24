@@ -4,6 +4,7 @@ import { RootState } from "../../../../redux/store";
 import Viewer from "./modules/Viewer";
 import lodash from "lodash";
 import { SliderSwitchProps } from "../../Scan/types/scan.types";
+import { useMediaQuery } from "@material-ui/core";
 
 const SliderSwitch: FunctionComponent<SliderSwitchProps> = ({
   imagesLoading,
@@ -15,6 +16,7 @@ const SliderSwitch: FunctionComponent<SliderSwitchProps> = ({
   const lexicaImages = useSelector(
     (state: RootState) => state.app.lexicaImagesReducer.images
   );
+  let queryWindowSize500: boolean = useMediaQuery("(max-width:500px)");
   const dispatch = useDispatch();
   let action: string = "Scanner";
   const decideStringAction = () => {
@@ -31,6 +33,8 @@ const SliderSwitch: FunctionComponent<SliderSwitchProps> = ({
           dispatch={dispatch}
           imagesLoading={imagesLoading}
           imagesScanLoading={imagesScanLoading}
+          col={queryWindowSize500 ? "1" : "2"}
+          row={queryWindowSize500 ? "2" : "1"}
         />
       );
 
@@ -42,6 +46,8 @@ const SliderSwitch: FunctionComponent<SliderSwitchProps> = ({
           dispatch={dispatch}
           imagesLoading={imagesLoading}
           imagesScanLoading={imagesScanLoading}
+          col={queryWindowSize500 ? "1" : "2"}
+          row={queryWindowSize500 ? "2" : "1"}
         />
       );
 
@@ -53,6 +59,8 @@ const SliderSwitch: FunctionComponent<SliderSwitchProps> = ({
           dispatch={dispatch}
           imagesLoading={imagesLoading}
           imagesScanLoading={imagesScanLoading}
+          col={queryWindowSize500 ? "1" : "2"}
+          row={queryWindowSize500 ? "2" : "1"}
         />
       );
 
@@ -64,6 +72,8 @@ const SliderSwitch: FunctionComponent<SliderSwitchProps> = ({
           dispatch={dispatch}
           imagesLoading={imagesLoading}
           imagesScanLoading={imagesScanLoading}
+          col={queryWindowSize500 ? "1" : "2"}
+          row={queryWindowSize500 ? "2" : "1"}
         />
       );
 
@@ -75,6 +85,8 @@ const SliderSwitch: FunctionComponent<SliderSwitchProps> = ({
           dispatch={dispatch}
           imagesLoading={imagesLoading}
           imagesScanLoading={imagesScanLoading}
+          col={queryWindowSize500 ? "1" : "2"}
+          row={queryWindowSize500 ? "2" : "1"}
         />
       );
   }

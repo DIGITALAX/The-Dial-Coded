@@ -70,6 +70,10 @@ module.exports = {
         60: "60",
         70: "70",
       },
+      screens: {
+        fo: "500px",
+        galaxy: "300px"
+      },
     },
   },
   plugins: [],
