@@ -112,7 +112,7 @@ const Post: NextPage = (): JSX.Element => {
   }, [lensProfile]);
 
   return (
-    <div className="relative h-auto min-h-screen w-full grid grid-flow-col auto-col-auto overflow-hidden pt-32 bg-offWhite/60">
+    <div className="relative h-auto min-h-screen w-full grid grid-flow-col auto-col-auto overflow-hidden pt-72 fo:pt-32 bg-offWhite/60">
       <div className="relative w-full h-full grid grid-flow-col auto-cols-auto col-start-1 rounded-t-md">
         {(publicationDataLoading || publicationDataLoading === undefined) &&
         !publicationData &&
