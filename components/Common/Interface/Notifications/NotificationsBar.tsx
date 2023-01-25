@@ -8,7 +8,7 @@ const NotificationsBar: FunctionComponent<NotificationBarProps> = ({
   message,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-60 bg-comp border-t-4 border-white grid grid-flow-col auto-cols-auto p-6">
+    <div className="relative w-full h-60 bg-comp border-t-4 border-white flex flex-row p-6 gap-4">
       {message && <NotificationMessage message={message} />}
       <NotificationSlider images={images} />
     </div>
