@@ -20,7 +20,7 @@ const CollectInput: FunctionComponent<CollectInputProps> = ({
     <div
       className={`relative w-fit h-fit grid grid-flow-row auto-rows-auto row-start-${row} col-start-${col} text-black font-dosis text-xs justify-self-start ${!mixtape ? "gap-3" : "gap-1"} self-start`}
     >
-      <div className="relative w-fit h-fit row-start-1 font-dosis text-black text-sm whitespace-nowrap justify-self-start self-center text-left">
+      <div className="relative w-fit h-fit row-start-1 font-dosis text-black text-sm whitespace-pre-wrap break-word sm:whitespace-nowrap justify-self-start self-center text-left">
         {label}
       </div>
       <input

@@ -27,7 +27,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
     <div
       className={`inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto`}
     >
-      <div className="relative w-[70vw] h-fit col-start-1 place-self-center bg-offBlue/70 rounded-lg p-2">
+      <div className="relative w-full md:w-[70vw] h-fit col-start-1 place-self-center bg-offBlue/70 rounded-lg p-2">
         <div className="relative bg-white w-full h-fit rounded-xl grid grid-flow-col auto-cols-auto">
           <div className="relative w-full h-full col-start-1 rounded-xl place-self-center grid grid-flow-row auto-rows-auto gap-10 pb-8">
             <div
@@ -56,7 +56,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
                       next={getMorePostComments}
                       loader={""}
                       height={"25rem"}
-                      className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4 gap-3"
+                      className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto f5:px-4 gap-3"
                     >
                       {commentors?.map((commentor: any, index: number) => {
                         return (
@@ -118,7 +118,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
                 </div>
               </>
             ) : (
-              <div className="relative w-full h-60 grid grid-flow-col auto-cols-auto ">
+              <div className="relative w-[70vw] md:w-full h-60 grid grid-flow-col auto-cols-auto ">
                 <div className="relative w-fit h-fit col-start-1 place-self-center animate-spin">
                   <AiOutlineLoading color="black" size={20} />
                 </div>

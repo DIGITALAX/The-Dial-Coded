@@ -34,7 +34,7 @@ const CollectButton: FunctionComponent<CollectButtonProps> = ({
         !mixtape ? "pb-3 pr-3 gap-3" : "gap-1 z-10"
       }`}
     >
-      <div className="relative w-fit h-fit row-start-1 font-dosis text-black text-sm whitespace-nowrap justify-self-start self-center text-left">
+      <div className="relative w-fit h-fit row-start-1 font-dosis text-black text-sm whitespace-pre-wrap break-word sm:whitespace-nowrap justify-self-start self-center text-left">
         {label}
       </div>
       <div

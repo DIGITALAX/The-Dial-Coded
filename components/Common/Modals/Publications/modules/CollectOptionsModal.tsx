@@ -1,7 +1,8 @@
-import React, { FunctionComponent} from "react";
+import React, { FunctionComponent } from "react";
 import CollectButton from "../../../Miscellaneous/CollectButton/CollectButton";
 import { CollectOptionsModalProps } from "../../../types/common.types";
 import CollectInput from "./CollectInput";
+import { useMediaQuery } from "@material-ui/core";
 
 const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
   enabledCurrencies,
@@ -39,6 +40,8 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
   timeLimitDropDown,
   setTimeLimitDropDown,
 }): JSX.Element | null => {
+  let queryWindowSize570: boolean = useMediaQuery("(max-width:570px)");
+  let queryWindowSize450: boolean = useMediaQuery("(max-width:450px)");
   return (
     <div className="inset-0 justify-center fixed z-40 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-fit h-fit col-start-1 place-self-center bg-white/95 rounded-lg p-3">
@@ -57,8 +60,8 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                 />
                 {collectible === "yes" && (
                   <CollectButton
-                    col={"2"}
-                    row={"1"}
+                    col={!queryWindowSize450 ? "2" : "1"}
+                    row={!queryWindowSize450 ? "1" : "2"}
                     values={audienceTypes}
                     selectFunction={setAudienceType}
                     openDropdown={audienceDropDown}
@@ -70,7 +73,7 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                 {collectible === "yes" && chargeCollect === "yes" && (
                   <CollectButton
                     col={"1"}
-                    row={"4"}
+                    row={!queryWindowSize450 ? "4" : "8"}
                     selectFunction={setTimeLimit}
                     openDropdown={timeLimitDropDown}
                     handleOpenDropdown={setTimeLimitDropDown}
@@ -80,8 +83,8 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                 )}
                 {collectible === "yes" && chargeCollect === "yes" && (
                   <CollectButton
-                    col={"2"}
-                    row={"4"}
+                    col={!queryWindowSize450 ? "2" : "1"}
+                    row={!queryWindowSize450 ? "4" : "7"}
                     selectFunction={setLimitedEdition}
                     openDropdown={limitedDropDown}
                     handleOpenDropdown={setLimitedDropDown}
@@ -89,25 +92,33 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     label={"Is this a limited edition post?"}
                   />
                 )}
-                {collectible === "yes" && limitedEdition === "yes" && chargeCollect === "yes" && (
-                  <CollectInput
-                    min="1"
-                    step="1"
-                    defaultValue={limit.toString()}
-                    placeholder={limit.toString()}
-                    id="collectLimit"
-                    label="Limited Edition"
-                    name="collectLimit"
-                    col="3"
-                    row="4"
-                    valueChange={limit}
-                    handleValueChange={setLimit}
-                  />
-                )}
+                {collectible === "yes" &&
+                  limitedEdition === "yes" &&
+                  chargeCollect === "yes" && (
+                    <CollectInput
+                      min="1"
+                      step="1"
+                      defaultValue={limit.toString()}
+                      placeholder={limit.toString()}
+                      id="collectLimit"
+                      label="Limited Edition"
+                      name="collectLimit"
+                      col={!queryWindowSize570 ? "3" : "1"}
+                      row={
+                        !queryWindowSize570
+                          ? "4"
+                          : !queryWindowSize450
+                          ? "5"
+                          : "9"
+                      }
+                      valueChange={limit}
+                      handleValueChange={setLimit}
+                    />
+                  )}
                 {collectible === "yes" && (
                   <CollectButton
                     col={"1"}
-                    row={"2"}
+                    row={!queryWindowSize450 ? "2" : "3"}
                     selectFunction={setChargeCollect}
                     openDropdown={chargeCollectDropDown}
                     handleOpenDropdown={setChargeCollectDropDown}
@@ -117,8 +128,8 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                 )}
                 {collectible === "yes" && chargeCollect === "yes" && (
                   <CollectButton
-                    col={"2"}
-                    row={"2"}
+                    col={!queryWindowSize450 ? "2" : "1"}
+                    row={!queryWindowSize450 ? "2" : "4"}
                     values={enabledCurrencies}
                     selectFunction={setEnabledCurrency}
                     openDropdown={currencyDropDown}
@@ -135,8 +146,14 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     id="valueAmount"
                     label="Award amount"
                     name="valueAmount"
-                    col="3"
-                    row="2"
+                    col={!queryWindowSize570 ? "3" : "1"}
+                    row={
+                      !queryWindowSize570
+                        ? "2"
+                        : !queryWindowSize450
+                        ? "3"
+                        : "5"
+                    }
                     step="0.00001"
                     valueChange={value}
                     handleValueChange={setValue}
@@ -151,15 +168,21 @@ const CollectOptionsModal: FunctionComponent<CollectOptionsModalProps> = ({
                     id="referral"
                     label="Pass along awards for mirrored posts (%)"
                     name="referral"
-                    col="1"
-                    row="3"
+                    col={
+                      !queryWindowSize570
+                        ? "1"
+                        : !queryWindowSize450
+                        ? "2"
+                        : "1"
+                    }
+                    row={!queryWindowSize450 ? "3" : "6"}
                     step="0.1"
                     valueChange={referral}
                     handleValueChange={setReferral}
                   />
                 )}
               </div>
-              <div className="relative w-fit text-base justify-self-center self-center text-center h-fit row-start-2 text-black font-dosis capitalize py-2 px-4">
+              <div className="relative w-fit text-base justify-self-center self-center text-center h-fit row-start-2 text-black font-dosis capitalize py-2 px-4 whitespace-pre-wrap break-all">
                 {collectible === "yes" ? (
                   <p>
                     <a className="underline decoration-offBlue">

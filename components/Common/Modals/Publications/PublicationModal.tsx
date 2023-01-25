@@ -94,7 +94,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
 
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-md overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-[60vw] max-h-screen overflow-y-scroll h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-4 py-3">
+      <div className="relative w-[100vw] fo:w-[80vw] f1:w-[60vw] max-h-screen overflow-y-scroll overflow-x-clip h-fit col-start-1 place-self-center bg-offBlue/70 rounded-md px-1 f5:px-4 py-3">
         {collectOptionsModal && (
           <CollectOptionsModal
             handleCollectValues={handleCollectValues}
@@ -252,7 +252,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
               />
             </div>
             <div className="relative w-full h-fit row-start-4 grid grid-flow-col auto-cols-auto">
-              <div className="relative w-full h-fit col-start-1 pl-2 self-center">
+              <div className="relative w-full h-fit col-start-1 pl-2 self-center fo:pb-0 pb-2">
                 <PostOptions
                   dispatch={dispatch}
                   imagePicker={imagePickerModal}
@@ -264,7 +264,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 />
               </div>
               <div
-                className={`col-start-2 relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis justify-self-end self-center ${
+                className={`row-start-2 fo:row-start-1 col-start-2 relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis justify-self-end self-center ${
                   postDescription !== "" || !imageUploading || !postLoading
                     ? "active:scale-95 cursor-pointer"
                     : "opacity-60"
