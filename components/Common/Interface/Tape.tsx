@@ -35,7 +35,7 @@ const Tape: FunctionComponent<TapeProps> = ({
       }}
     >
       {sideImage && (
-        <div className="relative w-16 h-full col-start-1 self-center justify-self-start mix-blend-hard-light">
+        <div className="relative w-16 h-full col-start-1 self-center justify-self-start mix-blend-hard-light hidden galaxy:grid">
           <Image
             src={`${INFURA_GATEWAY}/ipfs/${sideImage}`}
             layout="fill"

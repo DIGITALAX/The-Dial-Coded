@@ -39,6 +39,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
   handleSetGif,
   handleGifSubmit,
   results,
+  allConversationsLoading
 }): JSX.Element => {
   if (!client) {
     return (
@@ -63,8 +64,8 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
     );
   }
   return (
-    <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
-      <div className="relative w-72 h-full rounded-l-md col-start-1 grid grid-flow-col auto-cols-auto bg-offWhite">
+    <div className="relative w-full h-fit sm:h-full flex flex-row sm:flex-nowrap flex-wrap">
+      <div className="relative w-full h-full rounded-l-md grid grid-flow-col auto-cols-auto bg-offWhite">
         <div className="relative w-full h-fit col-start-1">
           <Search
             searchMessages={searchMessages}
@@ -79,11 +80,11 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
             previewMessages={previewMessages}
             profileLensData={profileLensData}
             handleChosenProfile={handleChosenProfile}
-            clientLoading={clientLoading}
+            allConversationsLoading={allConversationsLoading}
           />
         </div>
       </div>
-      <div className="relative w-full h-full col-start-2 col-span-6">
+      <div className="relative w-full h-full">
         <Message
           sendConversation={sendConversation}
           handleMessage={handleMessage}

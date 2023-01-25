@@ -9,7 +9,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
   previewMessages,
   profileLensData,
   handleChosenProfile,
-  clientLoading
+  allConversationsLoading,
 }): JSX.Element => {
   let ipfsRegex = /ipfs:\/\//;
   let gifRegex = /https:\/\/media\.tenor\.com/;
@@ -44,69 +44,69 @@ const Preview: FunctionComponent<PreviewProps> = ({
       .reverse();
   }
   return (
-    <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll">
-      {(previewMessages as any)?.size > 0 ? (
-        sortedPreviewMessages?.map((message: any, index: number) => {
-          const profileImage = createProfilePicture(
-            sortedProfileLensData?.[index]
-          );
-          return (
-            <div
-              key={index}
-              className="relative w-full h-full grid grid-flow-col auto-cols-auto text-black font-dosis text-sm cursor-pointer border-x border-b border-black/50 drop-shadow-md rounded-lg p-2 hover:opacity-70"
-              onClick={() =>
-                handleChosenProfile(sortedProfileLensData?.[index])
-              }
-            >
-              <div className="relative col-start-1 w-fit h-fit justify-self-start self-center grid grid-flow-col auto-cols-auto left-4 gap-4">
-                <div
-                  className={`relative rounded-full flex bg-white w-6 h-6 place-self-center col-start-1`}
-                  id="crt"
-                >
-                  {profileImage !== "" && (
-                    <Image
-                      src={profileImage}
-                      objectFit="cover"
-                      alt="pfp"
-                      layout="fill"
-                      className="relative w-fit h-fit rounded-full self-center"
-                    />
-                  )}
-                </div>
-                <div className="relative col-start-2 grid grid-flow-row auto-rows-auto gap-1">
-                  <div className="relative w-fit h-fit row-start-1 text-sm">
-                    @
-                    {sortedProfileLensData?.[index]?.handle?.length > 15
-                      ? sortedProfileLensData?.[index]?.handle?.substring(
-                          0,
-                          15
-                        ) + "..."
-                      : sortedProfileLensData?.[index]?.handle}
+    <div className="relative w-full h-40 sm:h-full grid grid-flow-row auto-rows-auto overflow-y-scroll">
+      {(previewMessages as any)?.size > 0
+        ? sortedPreviewMessages?.map((message: any, index: number) => {
+            const profileImage = createProfilePicture(
+              sortedProfileLensData?.[index]
+            );
+            return (
+              <div
+                key={index}
+                className="relative w-full h-full grid grid-flow-col auto-cols-auto text-black font-dosis text-sm cursor-pointer border-x border-b border-black/50 drop-shadow-md rounded-lg p-2 hover:opacity-70"
+                onClick={() =>
+                  handleChosenProfile(sortedProfileLensData?.[index])
+                }
+              >
+                <div className="relative row-start-2 sm:row-start-1 col-start-1 w-fit h-fit justify-self-start self-center grid grid-flow-col auto-cols-auto left-4 gap-4">
+                  <div
+                    className={`relative rounded-full flex bg-white w-6 h-6 place-self-center col-start-1`}
+                    id="crt"
+                  >
+                    {profileImage !== "" && (
+                      <Image
+                        src={profileImage}
+                        objectFit="cover"
+                        alt="pfp"
+                        layout="fill"
+                        className="relative w-fit h-fit rounded-full self-center"
+                      />
+                    )}
                   </div>
-                  <div className="relative w-fit h-fit row-start-2 text-sm">
-                    {ipfsRegex.test(message?.content)
-                      ? "Sent Image"
-                      : gifRegex.test(message?.content)
-                      ? "Sent Gif"
-                      : message?.content?.substring(0, 30)}
+                  <div className="relative col-start-2 grid grid-flow-row auto-rows-auto gap-1">
+                    <div className="relative w-fit h-fit row-start-1 text-sm">
+                      @
+                      {sortedProfileLensData?.[index]?.handle?.length > 15
+                        ? sortedProfileLensData?.[index]?.handle?.substring(
+                            0,
+                            15
+                          ) + "..."
+                        : sortedProfileLensData?.[index]?.handle}
+                    </div>
+                    <div className="relative w-fit h-fit row-start-2 text-sm break-all whitespace-pre-wrap">
+                      {ipfsRegex.test(message?.content)
+                        ? "Sent Image"
+                        : gifRegex.test(message?.content)
+                        ? "Sent Gif"
+                        : message?.content?.substring(0, 20)}
+                    </div>
+                  </div>
+                </div>
+                <div className="relative w-fit h-fit col-start-1 row-start-1 sm:col-start-2 grid grid-flow-col auto-cols-auto justify-self-end self-center">
+                  <div className="relative col-start-1 w-fit h-fit  pr-2 text-xs text-offBlack/70">
+                    {moment(message?.sent?.toString()).fromNow()}
                   </div>
                 </div>
               </div>
-              <div className="relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto justify-self-end self-center">
-                <div className="relative col-start-1 w-fit h-fit  pr-2 text-xs text-offBlack/70">
-                  {moment(message?.sent?.toString()).fromNow()}
-                </div>
+            );
+          })
+        : allConversationsLoading && (
+            <div className="relative w-fit h-fit justify-self-center grid grid-flow-col auto-cols-auto self-start pt-10">
+              <div className="relative col-start-1 place-self-center animate-spin">
+                <AiOutlineLoading color="black" size={15} />
               </div>
             </div>
-          );
-        })
-      ) : clientLoading && (
-        <div className="relative w-fit h-fit justify-self-center grid grid-flow-col auto-cols-auto self-start pt-10">
-          <div className="relative col-start-1 place-self-center animate-spin">
-            <AiOutlineLoading color="black" size={15} />
-          </div>
-        </div>
-      )}
+          )}
     </div>
   );
 };

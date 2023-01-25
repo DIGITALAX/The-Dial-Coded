@@ -50,6 +50,8 @@ const useConversations = (): UseConversationResults => {
   const [openImagePicker, setOpenImagePicker] = useState<string>("");
   const [allConversations, setAllConversations] = useState<any[]>([]);
   const [clientLoading, setClientLoading] = useState<boolean>(false);
+  const [allConversationsLoading, setAllConversationsLoading] =
+    useState<boolean>(false);
   const [searchTarget, setSearchTarget] = useState<string>("");
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [messageProfiles, setMessageProfiles] =
@@ -74,14 +76,15 @@ const useConversations = (): UseConversationResults => {
     try {
       const xmtp = await Client.create(signer as Signer | null);
       dispatch(setXmtpClient(xmtp));
-      getAllConversations(xmtp);
+      getAllConversations(true, xmtp);
     } catch (err: any) {
       console.error(err?.message);
     }
     setClientLoading(false);
   };
 
-  const getAllConversations = async (clientInput?: any) => {
+  const getAllConversations = async (load: boolean, clientInput?: any) => {
+    setAllConversationsLoading(load);
     try {
       const conversationList = await (clientInput
         ? clientInput
@@ -109,6 +112,7 @@ const useConversations = (): UseConversationResults => {
     } catch (err: any) {
       console.error(err.message);
     }
+    setAllConversationsLoading(false);
   };
 
   const buildConversationforDisplay = (lensConversations: any[]): any[] => {
@@ -164,7 +168,7 @@ const useConversations = (): UseConversationResults => {
 
   useEffect(() => {
     if (client) {
-      getAllConversations();
+      getAllConversations(false);
       messageStream();
     }
   }, [messageLoading]);
@@ -217,10 +221,14 @@ const useConversations = (): UseConversationResults => {
 
   const getProfileMessages = async () => {
     try {
+      console.log(profileIds);
       const { data } = await getAllProfiles({
-        profileIds: lodash.uniq(profileIds),
+        profileIds: lodash.remove(lodash.uniq(profileIds), (value: any) => {
+          return value !== "undefined";
+        }),
         limit: 50,
       });
+      console.log(data);
       const profiles = data?.profiles?.items as Profile[];
       if (profiles?.length > 0) {
         const sortedProfiles = profiles?.sort((a, b) => {
@@ -351,7 +359,7 @@ const useConversations = (): UseConversationResults => {
         }
       );
       for await (const message of await conversation?.streamMessages()) {
-        getAllConversations();
+        getAllConversations(false);
         if (message.senderAddress === client.address) {
           continue;
         }
@@ -553,6 +561,7 @@ const useConversations = (): UseConversationResults => {
     handleGifSubmit,
     results,
     handleUploadImage,
+    allConversationsLoading
   };
 };
 

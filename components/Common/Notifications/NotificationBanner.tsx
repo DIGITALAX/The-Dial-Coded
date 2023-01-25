@@ -61,9 +61,9 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
             : `/profile/${prefix?.id}`
         )
       }
-      className="relative w-full h-fit rounded-md grid grid-flow-cols auto-cols-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-6 border-2 border-black cursor-pointer"
+      className="relative w-full h-fit rounded-md grid grid-flow-cols auto-cols-auto p-6 bg-gradient-to-r from-offBlack via-gray-600 to-black gap-2 sm:gap-6 border-2 border-black cursor-pointer"
     >
-      <div className="relative justify-self-start self-center col-start-1 grid grid-flow-col auto-cols-auto gap-3">
+      <div className="relative justify-self-start self-center col-start-1 grid grid-flow-col auto-cols-auto gap-3 row-start-2 sm:row-start-1">
         <div
           className={`relative rounded-full flex bg-white w-6 h-6 place-self-center col-start-1`}
           id="crt"
@@ -78,11 +78,11 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
             />
           )}
         </div>
-        <div className="relative w-fit h-fit col-start-2 place-self-center text-white font-dosis">
+        <div className="relative w-fit h-fit col-start-2 place-self-center text-white font-dosis break-all whitespace-pre-wrap">
           @{prefix?.handle}
         </div>
       </div>
-      <div className="relative w-fit h-fit justify-self-start self-center col-start-2 text-white font-dosis grid grid-flow-col auto-cols-auto gap-3">
+      <div className="relative w-fit h-fit justify-self-start self-center col-start-1 f5:col-start-2 text-white font-dosis grid grid-flow-col auto-cols-auto gap-3 row-start-3 f5:row-start-2 sm:row-start-1 pt-3 f5:pt-0">
         <div className="relative w-fit h-fit col-start-1 place-self-center">
           {type === "collect" ? (
             <BsFillCollectionFill color={"#81A8F8"} size={15} />
@@ -114,7 +114,7 @@ const NotificationBanner: FunctionComponent<NotificationBannerProps> = ({
               (notification?.reaction === "UPVOTE" ? "liked your post" : <></>)}
         </div>
       </div>
-      <div className="relative justify-self-end self-center text-white font-digiB text-xs col-start-3">
+      <div className="relative justify-self-end self-center text-white font-digiB text-xs col-start-1 sm:col-start-3 row-start-1 sm:col-span-1 col-span-3">
         {moment(`${notification?.createdAt}`).fromNow()}
       </div>
     </div>
