@@ -41,7 +41,7 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
             />
           </div>
           {imageArray[index] && (
-            <div className="relative w-full h-full grid grid-flow-col auto-cols-auto col-start-2 gap-2">
+            <div className="relative w-10 self-center h-full flex flex-col gap-2">
               <div
                 key={index}
                 className={`relative w-10 h-full border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-1`}
