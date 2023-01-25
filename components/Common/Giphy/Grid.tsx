@@ -18,7 +18,7 @@ const Grid: FunctionComponent<GridProps> = ({
     >
       <input
         className={`relative row-start-1 col-start-1 h-10 bg-white font-dosis text-offBlack p-2 rounded-md caret-transparent ${
-          width ? "w-full" : "w-96"
+          width ? "w-full" : "w-full sm:w-96"
         }`}
         name="gif"
         onChange={(e: FormEvent) => handleGif(e)}
@@ -33,7 +33,7 @@ const Grid: FunctionComponent<GridProps> = ({
       </div>
       {results?.length !== 0 && (
         <div
-          className={`relative w-full h-40 row-start-3 col-span-2 col-start-1 grid grid-cols-3 overflow-y-scroll pb-3 gap-2 ${
+          className={`relative w-full h-40 row-start-3 col-span-2 col-start-1 grid grid-cols-2 sm:grid-cols-3 overflow-y-scroll pb-3 gap-2 ${
             background && `bg-${background}`
           }`}
         >

@@ -328,7 +328,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         />
         {!router.asPath.includes((publication as any)?.id) && (
           <div
-            className={`relative w-fit h-fit row-start-2 col-start-1 fo:row-start-1 fo:col-start-2 fo:pt-0 pt-3 justify-self-end self-center grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95 ${
+            className={`relative w-fit h-fit row-start-2 col-start-1 sm:row-start-1 sm:col-start-2 sm:pt-0 pt-3 justify-self-end self-center grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95 ${
               mixtapeMirror ? "text-offBlack" : "text-white"
             }`}
             onClick={

@@ -47,10 +47,10 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
       <div
         className={`relative w-fit h-fit ${
           showText ? "row-start-2" : "row-start-1"
-        } place-self-center grid grid-flow-col auto-cols-auto pb-4`}
+        } place-self-center grid grid-flow-row auto-rows-auto md:grid-flow-col md:auto-cols-auto pb-4`}
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center grid grid-flow-col auto-cols-auto py-2 bg-gray-50 rounded-md px-2 drop-shadow-lg gap-3">
-          <div className="relative w-44 h-60 flex col-start-1 place-self-center p-2">
+          <div className="relative w-44 h-60 flex row-start-1 col-start-1 place-self-center p-2">
             <Image
               src={`${INFURA_GATEWAY}/ipfs/QmcHYeemWE3z8qy7m42pJbasYzyvMRWNPRMfXvSNz6XKoK`}
               layout="fill"
@@ -59,7 +59,7 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
             />
           </div>
           {type !== "FreeCollectModule" && (
-            <div className="relative col-start-2 place-self-center w-fit h-fit grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3">
+            <div className="relative md:row-start-1 col-start-1 row-start-2 md:col-start-2 place-self-center w-fit h-fit grid grid-flow-row auto-rows-auto font-dosis text-black text-center gap-3">
               <div className="relative w-fit h-fit row-start-1 grid grid-flow-row auto-rows-auto">
                 <div className="relative w-fit h-fit text-offBlack font-digiB text-4xl place-self-center row-start-1">
                   {value} {symbol}

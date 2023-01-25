@@ -20,7 +20,7 @@ const FollowTypeModal: FunctionComponent<FollowTypeModalProps> = ({
   );
   return (
     <div className="inset-0 justify-center fixed z-40 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-[40vw] h-fit col-start-1 place-self-center bg-offBlue/70 rounded-lg p-2">
+      <div className="relative w-full md:w-[40vw] h-fit col-start-1 place-self-center bg-offBlue/70 rounded-lg p-2">
         <div className="relative bg-white w-full h-fit rounded-xl grid grid-flow-col auto-cols-auto">
           <div className="relative w-full h-full col-start-1 rounded-xl place-self-center grid grid-flow-row auto-rows-auto gap-10 pb-8">
             <div

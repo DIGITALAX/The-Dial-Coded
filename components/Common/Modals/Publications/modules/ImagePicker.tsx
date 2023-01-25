@@ -15,7 +15,7 @@ const ImagePicker: FunctionComponent<ImagePickerProps> = ({
   return (
     <div className="relative w-full h-fit content-center py-3">
       {imagePicker === "emoji" ? (
-        <Emoji onEmojiClick={handleEmoji} />
+        <Emoji onEmojiClick={handleEmoji} width={"100%"} />
       ) : (
         <Grid handleGif={handleGif} handleGifSubmit={handleGifSubmit} results={results} searchGif={searchGif} handleSetGif={handleSetGif} />
       )}

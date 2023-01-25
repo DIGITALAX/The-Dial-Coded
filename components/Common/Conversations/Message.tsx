@@ -66,7 +66,7 @@ const Message: FunctionComponent<MessageProps> = ({
     }
   }
   return (
-    <div className="relative w-full h-full flex flex-col rounded-x-md bg-white/50 text-black font-dosis">
+    <div className="relative w-full h-full flex flex-col rounded-x-md bg-white/50 text-black font-dosis flex-grow">
       <div className="relative w-full h-12 p-2 col-start-1 self-start grid grid-flow-col auto-cols-auto bg-white/70">
         {chosenProfile && (
           <div className="relative w-fit h-fit col-start-1 flex flex-row gap-3">
@@ -94,7 +94,7 @@ const Message: FunctionComponent<MessageProps> = ({
       </div>
       {conversationMessages && !conversationLoading && onNetwork ? (
         <div
-          className="relative h-full w-full grid grid-flow-col auto-cols-auto pb-4 px-3 overflow-y-scroll self-end"
+          className="relative h-full w-full grid grid-flow-col auto-cols-auto pb-4 px-3 overflow-y-scroll self-end flex-grow"
           id="scrollableDiv"
         >
           <InfiniteScroll
@@ -178,9 +178,9 @@ const Message: FunctionComponent<MessageProps> = ({
         <div className="relative w-full h-60 sm:h-full"></div>
       )}
       {openImagePicker === "emoji" ? (
-        <div className="absolute w-full h-full grid grid-flow-col auto-cols-auto pb-10">
+        <div className="absolute max-w-fit w-fit h-full grid grid-flow-col auto-cols-auto pb-10">
           <div className="relative w-fit h-fit self-end col-start-1 justify-self-center">
-            <Emoji onEmojiClick={handleEmoji} />
+            <Emoji onEmojiClick={handleEmoji} width={"100%"} />
           </div>
         </div>
       ) : (
