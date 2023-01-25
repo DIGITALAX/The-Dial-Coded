@@ -18,7 +18,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   setNewCanvas,
 }): JSX.Element => {
   return (
-    <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-4">
+    <div className="relative w-fit h-fit grid grid-cols-3 fo:grid-cols-5 md:grid-flow-row auto-rows-auto gap-4">
       <div id="ai-credits">
         <CanvasOption
           image="QmPt4LreaWAN3WRzcUvo7WnVLUrCW73xKPc86vB59HowLz"

@@ -18,7 +18,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
   setTool,
 }): JSX.Element => {
   return (
-    <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-6">
+    <div className="relative w-fit h-fit flex flex-row md:flex-nowrap flex-wrap gap-6">
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2 self-end">
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
           <div className="relative w-fit h-fit row-start-2 self-end">
