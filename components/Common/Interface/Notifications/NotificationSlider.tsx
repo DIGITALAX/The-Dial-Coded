@@ -7,7 +7,7 @@ const NotificationSlider: FunctionComponent<NotificationSliderProps> = ({
   images,
 }): JSX.Element => {
   return (
-    <div className="relative w-fit w-5/6 f5:max-w-[43vw] col-start-2 h-full justify-self-end grid grid-flow-col auto-cols-auto gap-8 overflow-x-scroll">
+    <div className="relative w-full max-w-[60vw] f5:max-w-[43vw] col-start-2 h-full justify-self-end grid grid-flow-col auto-cols-auto gap-8 overflow-x-scroll">
       {images?.map((image: string, index: number) => {
         return (
           <div

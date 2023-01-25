@@ -14,7 +14,7 @@ const MixCheck: FunctionComponent<MixCheckProps> = ({
   );
   return (
     <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto gap-1 pl-3 pb-3">
-      <div className="relative w-fit h-fit font-digiR text-black col-start-1 justify-self-end self-center">
+      <div className="relative w-fit h-fit font-digiR text-black col-start-1 justify-self-end self-center xl:whitespace-nowrap">
         {value}
       </div>
       <div

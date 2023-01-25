@@ -28,10 +28,10 @@ const CollectOptions: FunctionComponent<CollectOptionsMixtapeProps> = ({
   timeLimit,
 }): JSX.Element => {
   return (
-    <div className="relative w-fit h-fit rounded-xl grid grid-flow-col auto-cols-auto">
-      <div className="relative w-fit h-full col-start-1 rounded-xl place-self-center">
-        <div className="relative w-fit h-full grid grid-flow-row auto-rows-auto gap-10">
-          <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-3">
+    <div className="relative w-fit h-fit rounded-xl flex flex-row flex-wrap">
+      <div className="relative w-fit h-full flex flex-row flex-wrap rounded-xl place-self-center">
+        <div className="relative w-fit h-full flex flex-row flex-wrap  gap-10">
+          <div className="relative w-fit h-fit flex flex-row flex-wrap gap-3">
             <MixCheckCollect
               handleClicked={setCollectible}
               valueClicked={collectible}

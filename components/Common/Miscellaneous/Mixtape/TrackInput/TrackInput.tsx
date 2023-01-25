@@ -20,12 +20,10 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`grid grid-flow-row auto-rows-auto gap-2 relative w-full h-fit row-start-${
-        index + 1
-      }`}
+      className={`flex flex-row gap-2 relative w-full h-fit`}
     >
-      <div className="relative w-full h-full grid grid-flow-col auto-cols-auto row-start-1 gap-2">
-        <div className="relative w-fit h-fit col-start-1">
+      <div className="relative w-full h-full flex flex-row gap-2">
+        <div className="relative w-fit h-fit">
           <Arrow
             up={"Qmecvxs9tyMZ7NzgAcCqn4bnQ6oVp7s8TXvZB7hgEcMasD"}
             middle={"QmYoiFyV4tBP3dcqExDMepQcYogH6ZBMQCZQhxNHauEBGf"}
@@ -33,8 +31,8 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
             vertical={true}
           />
         </div>
-        <div className="relative w-full h-full col-start-2 grid grid-flow-col auto-cols-auto gap-5 justify-self-end">
-          <div className="relative w-[33vw] h-fit col-start-1 p-px bg-lB rounded-md">
+        <div className="relative w-full h-full flex flex-row gap-5 justify-self-end">
+          <div className="relative w-full h-fit col-start-1 p-px bg-lB rounded-md">
             <input
               name={"trackName"}
               className="relative w-full h-full p-2 text-black font-digiR rounded-md row-start-1 caret-transparent"
