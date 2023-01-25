@@ -75,6 +75,9 @@ module.exports = {
         galaxy: "300px",
         f1: "900px",
         f2: "360px",
+        f3: "1275px",
+        f4: "1475px",
+        f5: "400px"
       },
     },
   },

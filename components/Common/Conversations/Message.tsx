@@ -94,13 +94,13 @@ const Message: FunctionComponent<MessageProps> = ({
       </div>
       {conversationMessages && !conversationLoading && onNetwork ? (
         <div
-          className="relative h-full w-full grid grid-flow-col auto-cols-auto pb-4 px-3"
+          className="relative h-full w-full grid grid-flow-col auto-cols-auto pb-4 px-3 overflow-y-scroll self-end"
           id="scrollableDiv"
         >
           <InfiniteScroll
             className={`relative w-full h-full self-end col-start-1 text-right gap-2 grid grid-flow-row auto-rows-auto`}
             hasMore={true}
-            height={"53rem"}
+            height={"37rem"}
             loader={""}
             style={{ display: "flex", flexDirection: "column-reverse" }}
             inverse={true}
@@ -163,7 +163,7 @@ const Message: FunctionComponent<MessageProps> = ({
           </InfiniteScroll>
         </div>
       ) : conversationLoading && onNetwork && chosenProfile ? (
-        <div className="relative grid grid-flow-col auto-cols-auto w-full h-full">
+        <div className="relative grid grid-flow-col auto-cols-auto w-full h-60 sm:h-full">
           <div className="relative w-fit h-fit col-start-1 place-self-center animate-spin">
             <AiOutlineLoading color="black" size={20} />
           </div>
@@ -175,7 +175,7 @@ const Message: FunctionComponent<MessageProps> = ({
           </div>
         </div>
       ) : (
-        <div className="relative w-full h-full"></div>
+        <div className="relative w-full h-60 sm:h-full"></div>
       )}
       {openImagePicker === "emoji" ? (
         <div className="absolute w-full h-full grid grid-flow-col auto-cols-auto pb-10">

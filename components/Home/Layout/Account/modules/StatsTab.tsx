@@ -14,9 +14,9 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
   followingLoading,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-6">
-      <div className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto place-self-start gap-4">
-        <div className="relative w-full h-fit row-start-1 col-start-1 text-offBlack text-xl grid grid-flow-row auto-rows-auto justify-self-start self-center gap-2">
+    <div className="relative w-full h-fit flex flex-row flex-wrap gap-6">
+      <div className="relative w-full h-fit flex flex-row flex-wrap md:flex-nowrap place-self-start gap-4">
+        <div className="relative w-full h-fit row-start-1 col-start-1 text-offBlack text-xl grid grid-flow-row auto-rows-auto justify-self-start self-start gap-2">
           <div className="relative w-fit h-fit row-start-1 grid grid-flow-col auto-cols-auto gap-3">
             <div className="relative w-fit h-fit place-self-center font-digiR col-start-1">
               Total Followers:

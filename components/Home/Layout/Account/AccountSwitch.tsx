@@ -97,6 +97,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     handleGifSubmit,
     results,
     handleUploadImage,
+    allConversationsLoading
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
@@ -202,6 +203,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           results={results}
           handleSetGif={handleSetGif}
           handleUploadImage={handleUploadImage}
+          allConversationsLoading={allConversationsLoading}
         />
       );
 
