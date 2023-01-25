@@ -58,13 +58,13 @@ const Draw: FunctionComponent<DrawProps> = ({
   addImageToCanvas,
   draftsLoading,
   loadDraft,
-  setNewCanvas
+  setNewCanvas,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
       <div
         id="parent"
-        className={`relative w-full md:h-[105vw] lg:h-[80vw] xl:h-[70vw] grid grid-flow-col auto-cols-auto ${
+        className={`relative w-full h-[290vw] f5:h-[220vw] fo:h-[170vw] sm:h-[120vw] md:h-[115vw] lg:h-[90vw] xl:h-[70vw] grid grid-flow-col auto-cols-auto ${
           draftBoard ? `bg-board bg-boardSize bg-white` : `bg-spots`
         } ${
           tool === "selection"
