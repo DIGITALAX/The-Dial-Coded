@@ -64,7 +64,7 @@ const Draw: FunctionComponent<DrawProps> = ({
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
       <div
         id="parent"
-        className={`relative w-full h-[70vw] grid grid-flow-col auto-cols-auto ${
+        className={`relative w-full md:h-[105vw] lg:h-[80vw] xl:h-[70vw] grid grid-flow-col auto-cols-auto ${
           draftBoard ? `bg-board bg-boardSize bg-white` : `bg-spots`
         } ${
           tool === "selection"
