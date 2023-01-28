@@ -32,6 +32,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
         <Image
           src={`${INFURA_GATEWAY}/ipfs/QmQZ8UwjeizDQkbCiZED8Ya4LxpFD5JbVbNeAdowurHkiY`}
           className="relative w-fit h-fit relative cursor-pointer"
+          draggable={false}
           width={230}
           height={230}
           alt="dial"
