@@ -1,12 +1,12 @@
 import { FormEvent, FunctionComponent } from "react";
 import { DrawProps } from "../types/canvas.types";
 import SideMenu from "./Options/SideMenu";
-import Board from "./Board";
 import BottomMenu from "./Options/BottomMenu";
 import Publish from "./Options/Publish";
 import Base from "./Base";
 import Title from "./Title";
 import Drafts from "./Drafts";
+import Board from "./Board";
 
 const Draw: FunctionComponent<DrawProps> = ({
   setShowSideDrawOptions,

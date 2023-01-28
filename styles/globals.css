@@ -440,3 +440,23 @@ code::-webkit-scrollbar {
   scrollbar-width: none;
   color: black
 }
+
+#canvas #tl {
+  border-radius: 0.5rem;
+  background-color: transparent;
+}
+
+.tl-container {
+  border-radius: 0.5rem;
+  background-color: transparent;
+}
+
+#canvas.tl-absolute.tl-canvas {
+  border-radius: 0.5rem;
+  background-color: transparent;
+}
+
+#tl.tl-container {
+  border-radius: 0.5rem;
+  background-color: transparent;
+}

@@ -16,6 +16,7 @@ import getPostComments from "../../lib/lens/helpers/getPostComments";
 import NotFound from "../../components/Common/NotFound/NotFound";
 import syncScroll from "../../lib/lens/helpers/syncScroll";
 import checkDispatcher from "../../lib/lens/helpers/checkDispatcher";
+import Head from "next/head";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -119,6 +120,137 @@ const Post: NextPage = (): JSX.Element => {
 
   return (
     <div className="relative h-auto min-h-screen w-full grid grid-flow-col auto-col-auto overflow-hidden pt-72 sm:pt-56 md:pt-44">
+      <Head>
+        <title>
+          {publicationData?.__typename !== "Mirror"
+            ? publicationData?.metadata?.name
+            : publicationData?.mirrorOf?.metadata?.name}
+        </title>
+        <meta
+          name="og:url"
+          content={`https://thedial.xyz/post/${publicationData?.id}`}
+        />
+        <meta
+          name="og:title"
+          content={
+            publicationData?.__typename !== "Mirror"
+              ? publicationData?.metadata?.name
+              : publicationData?.mirrorOf?.metadata?.name
+          }
+        />
+        <meta
+          name="og:description"
+          content={
+            publicationData?.__typename !== "Mirror"
+              ? publicationData?.metadata?.description
+              : publicationData?.mirrorOf?.metadata?.description
+          }
+        />
+        <meta
+          name="og:image"
+          content={
+            !publicationData?.metadata?.media[0]?.original.url &&
+            !publicationData?.mirrorOf?.metadata?.media[0]?.original.url
+              ? "https://thedial.xyz/card.png/"
+              : publicationData?.__typename !== "Mirror"
+              ? `https://thedial.infura-ipfs.io/ipfs/${publicationData?.metadata?.media[0]?.original.url}`
+              : `https://thedial.infura-ipfs.io/ipfs/${publicationData?.mirrorOf?.metadata?.media[0]?.original.url}`
+          }
+        />
+        <meta name="twitter:card" content="summary" />
+        <meta
+          name="og:url"
+          content={`https://thedial.xyz/post/${publicationData?.id}`}
+        />
+        <meta
+          name="og:image"
+          content={
+            !publicationData?.metadata?.media[0]?.original.url &&
+            !publicationData?.mirrorOf?.metadata?.media[0]?.original.url
+              ? "https://thedial.xyz/card.png/"
+              : publicationData?.__typename !== "Mirror"
+              ? `https://thedial.infura-ipfs.io/ipfs/${publicationData?.metadata?.media[0]?.original.url}`
+              : `https://thedial.infura-ipfs.io/ipfs/${publicationData?.mirrorOf?.metadata?.media[0]?.original.url}`
+          }
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@digitalax" />
+        <meta name="twitter:creator" content="@digitalax" />
+        <meta
+          name="twitter:image"
+          content={
+            !publicationData?.metadata?.media[0]?.original.url &&
+            !publicationData?.mirrorOf?.metadata?.media[0]?.original.url
+              ? "https://thedial.xyz/card.png/"
+              : publicationData?.__typename !== "Mirror"
+              ? `https://thedial.infura-ipfs.io/ipfs/${publicationData?.metadata?.media[0]?.original.url}`
+              : `https://thedial.infura-ipfs.io/ipfs/${publicationData?.mirrorOf?.metadata?.media[0]?.original.url}`
+          }
+        />
+        <meta
+          name="twitter:url"
+          content={
+            !publicationData?.metadata?.media[0]?.original.url &&
+            !publicationData?.mirrorOf?.metadata?.media[0]?.original.url
+              ? "https://thedial.xyz/card.png/"
+              : publicationData?.__typename !== "Mirror"
+              ? `https://thedial.infura-ipfs.io/ipfs/${publicationData?.metadata?.media[0]?.original.url}`
+              : `https://thedial.infura-ipfs.io/ipfs/${publicationData?.mirrorOf?.metadata?.media[0]?.original.url}`
+          }
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="canonical"
+          href={
+            !publicationData?.metadata?.media[0]?.original.url &&
+            !publicationData?.mirrorOf?.metadata?.media[0]?.original.url
+              ? "https://thedial.xyz/card.png/"
+              : publicationData?.__typename !== "Mirror"
+              ? `https://thedial.infura-ipfs.io/ipfs/${publicationData?.metadata?.media[0]?.original.url}`
+              : `https://thedial.infura-ipfs.io/ipfs/${publicationData?.mirrorOf?.metadata?.media[0]?.original.url}`
+          }
+        />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+        <link
+          rel="preload"
+          href="/fonts/DosisRegular.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/DS-DIGI.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/DS-DIGIT.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/DS-DIGII.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/DS-DIGIB.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+      </Head>
       <div className="relative w-full h-full grid grid-flow-col auto-cols-auto col-start-1 rounded-t-md bg-white/90">
         {(publicationDataLoading || publicationDataLoading === undefined) &&
         !publicationData &&

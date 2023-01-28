@@ -14,6 +14,7 @@ import { setWalletConnected } from "../../redux/reducers/walletConnectedSlice";
 import { RootState } from "../../redux/store";
 import ProfileTab from "./../../components/Home/Layout/Account/modules/ProfileTab";
 import { useMediaQuery } from "@material-ui/core";
+import Head from "next/head";
 
 const Profile: NextPage = (): JSX.Element => {
   const {
@@ -61,6 +62,94 @@ const Profile: NextPage = (): JSX.Element => {
 
   return (
     <div className="relative h-fit w-full bg-black/70 grid grid-flow-col auto-col-auto overflow-hidden">
+      <Head>
+        <title>{profileData?.name}</title>
+        <meta
+          name="og:url"
+          content={`https://thedial.xyz/profile/${
+            profileData?.handle?.split(".lens")[0]
+          }`}
+        />
+        <meta
+          name="og:title"
+          content={profileData?.name ? profileData?.name : profileData?.handle}
+        />
+        <meta
+          name="og:description"
+          content={profileData?.bio ? profileData?.bio : "The Dial"}
+        />
+        <meta
+          name="og:image"
+          content={`https://thedial.infura-ipfs.io/ipfs/${profileData?.coverPicture}`}
+        />
+        <meta name="twitter:card" content="summary" />
+        <meta
+          name="og:url"
+          content={`https://thedial.xyz/profile/${
+            profileData?.handle?.split(".lens")[0]
+          }`}
+        />
+        <meta
+          name="og:image"
+          content={`https://thedial.infura-ipfs.io/ipfs/${profileData?.coverPicture}`}
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@digitalax" />
+        <meta name="twitter:creator" content="@digitalax" />
+        <meta
+          name="twitter:image"
+          content={`https://thedial.infura-ipfs.io/ipfs/${profileData?.coverPicture}`}
+        />
+        <meta
+          name="twitter:url"
+          content={`https://thedial.infura-ipfs.io/ipfs/${profileData?.coverPicture}`}
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="canonical"
+          href={`https://thedial.infura-ipfs.io/ipfs/${profileData?.coverPicture}`}
+        />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+        <link
+          rel="preload"
+          href="/fonts/DosisRegular.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/DS-DIGI.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/DS-DIGIT.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/DS-DIGII.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/DS-DIGIB.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+      </Head>
       {(profileDataLoading || profileDataLoading === undefined) &&
       !profileData &&
       reactionsFeed?.length === 0 ? (
