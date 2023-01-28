@@ -28,6 +28,41 @@ class Document extends NextDocument {
             href="https://fonts.gstatic.com"
             crossOrigin="true"
           />
+          <link
+            rel="preload"
+            href="/fonts/DosisRegular.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
+          <link
+            rel="preload"
+            href="/fonts/DS-DIGI.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
+          <link
+            rel="preload"
+            href="/fonts/DS-DIGIT.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
+          <link
+            rel="preload"
+            href="/fonts/DS-DIGII.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
+          <link
+            rel="preload"
+            href="/fonts/DS-DIGIB.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
           <style
             dangerouslySetInnerHTML={{
               __html: `
