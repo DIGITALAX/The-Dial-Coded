@@ -561,21 +561,26 @@ const useAccount = (): UseAccountResult => {
   }, [followFee]);
 
   const resetProfile = async () => {
-    setFinished(false);
-    const profile = await getDefaultProfile(address);
-    dispatch(setLensProfile(profile?.data?.defaultProfile));
-    if (
-      profile?.data?.defaultProfile?.followModule?.type === "FeeFollowModule"
-    ) {
-      setFollowFee("fee");
-      setEnabledCurrency(
-        profile?.data?.defaultProfile?.followModule?.amount?.asset?.symbol.toLowerCase()
-      );
-      setValue(profile?.data?.defaultProfile?.followModule?.amount?.value);
-    } else if (
-      profile?.data?.defaultProfile?.followModule?.type === "RevertFollowModule"
-    ) {
-      setFollowFee("revert");
+    try {
+      setFinished(false);
+      const profile = await getDefaultProfile(address);
+      dispatch(setLensProfile(profile?.data?.defaultProfile));
+      if (
+        profile?.data?.defaultProfile?.followModule?.type === "FeeFollowModule"
+      ) {
+        setFollowFee("fee");
+        setEnabledCurrency(
+          profile?.data?.defaultProfile?.followModule?.amount?.asset?.symbol.toLowerCase()
+        );
+        setValue(profile?.data?.defaultProfile?.followModule?.amount?.value);
+      } else if (
+        profile?.data?.defaultProfile?.followModule?.type ===
+        "RevertFollowModule"
+      ) {
+        setFollowFee("revert");
+      }
+    } catch (err: any) {
+      console.error(err.message);
     }
   };
 

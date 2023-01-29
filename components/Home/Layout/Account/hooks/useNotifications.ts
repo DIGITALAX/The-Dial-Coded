@@ -27,21 +27,21 @@ const useNotifications = () => {
 
   const getShortNotifications = async (): Promise<void> => {
     try {
-      const { data } = await shortNotifications({
+      const results = await shortNotifications({
         profileId: lensProfileId,
         limit: 50,
       });
       const previousNotifications = getNotificationLength()?.notifLength;
       if (!previousNotifications) {
-        if (data?.result?.items?.length > 0) {
+        if (results?.data?.result?.items?.length > 0) {
           dispatch(setNotifications(true));
         }
       } else {
-        if (data?.result?.items?.length > (previousNotifications as number)) {
+        if (results?.data?.result?.items?.length > (previousNotifications as number)) {
           dispatch(setNotifications(true));
         }
       }
-      setNotificationLength(data?.result?.items?.length);
+      setNotificationLength(results?.data?.result?.items?.length);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -50,11 +50,11 @@ const useNotifications = () => {
   const getNotifications = async (): Promise<void> => {
     setNotificationsLoading(true);
     try {
-      const { data } = await notifications({
+      const results = await notifications({
         profileId: lensProfileId,
         limit: 50,
       });
-      const newData = lodash.filter(data?.result?.items, (item: any) => {
+      const newData = lodash.filter(results?.data?.result?.items, (item: any) => {
         if (item?.__typename === "NewReactionNotification") {
           if (item?.reaction !== "DOWNVOTE") {
             return true;
@@ -68,7 +68,7 @@ const useNotifications = () => {
           return true;
         }
       });
-      setNotificationsPage(data?.result.pageInfo);
+      setNotificationsPage(results?.data?.result.pageInfo);
       setNotificationsList(newData);
     } catch (err: any) {
       console.error(err.message);
@@ -78,12 +78,12 @@ const useNotifications = () => {
 
   const getMoreNotifications = async (): Promise<void> => {
     try {
-      const { data } = await notifications({
+      const results = await notifications({
         profileId: lensProfileId,
         limit: 50,
         cursor: notificationsPage?.next,
       });
-      const newData = lodash.filter(data?.result?.items, (item: any) => {
+      const newData = lodash.filter(results?.data?.result?.items, (item: any) => {
         if (item?.__typename === "NewReactionNotification") {
           if (item?.reaction !== "DOWNVOTE") {
             return true;
@@ -98,7 +98,7 @@ const useNotifications = () => {
         }
       });
       setNotificationsList([...notificationsList, ...newData]);
-      setNotificationsPage(data?.result.pageInfo);
+      setNotificationsPage(results?.data?.result.pageInfo);
     } catch (err: any) {
       console.error(err.message);
     }
