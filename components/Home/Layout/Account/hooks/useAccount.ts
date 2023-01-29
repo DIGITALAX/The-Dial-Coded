@@ -138,6 +138,9 @@ const useAccount = (): UseAccountResult => {
 
   const accountImageUpload = async (e: FormEvent): Promise<void> => {
     let finalImages: string[] = [];
+    if ((e as any).target.files.length < 1) {
+      return;
+    }
     if (fileLimitAlert((e as any).target.files[0])) {
       return;
     }

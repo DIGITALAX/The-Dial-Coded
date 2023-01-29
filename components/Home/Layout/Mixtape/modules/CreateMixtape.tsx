@@ -51,15 +51,15 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
   titleValue,
   sourceValue,
 }): JSX.Element => {
-  let queryWindowSize350: boolean = useMediaQuery("(max-width:350px)");
+  let queryWindowSize500: boolean = useMediaQuery("(max-width:500px)");
   return (
     <div className="relative col-start-1 w-full h-full flex flex-col self-start gap-10 items-start f5:py-0 py-1">
-      <div className="relative self-start w-fit h-fit flex f5:flex-row gap-4">
+      <div className="relative self-start w-fit h-fit flex flex-row gap-4">
         <MixButton
           col={"1"}
           bgColor={"create"}
           text={"Add new mix"}
-          textSize={!queryWindowSize350 ? "xl" : "sm"}
+          textSize={!queryWindowSize500 ? "xl" : "xs"}
           width={"fit"}
           border={true}
           clickHandle={generateMixtape}
@@ -101,7 +101,7 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
         />
       </div>
       <div className="relative w-full h-full flex flex-wrap">
-        <div className="relative w-full h-fit flex flex-row f1:flex-nowrap flex-wrap gap-3 pb-6 flex-grow">
+        <div className="relative w-full h-fit flex flex-row f1:flex-nowrap flex-wrap gap-3 pb-6 grow">
           <div className="relative w-fit h-fit font-digiB text-xl text-black place-self-start">
             SET COLLECT OPTIONS:
           </div>
@@ -150,7 +150,7 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
           </div>
         </div>
       </div>
-      <div className="relative w-full h-full max-h-44 overflow-y-scroll flex flex-row flex-wrap gap-6 flex-grow">
+      <div className="relative w-full h-full max-h-44 overflow-y-scroll flex flex-row flex-wrap gap-6 grow">
         {titleArray &&
           titleArray?.length > 0 &&
           Array.from(Array(titleArray?.length).keys()).map((index: number) => {

@@ -54,6 +54,12 @@ import createFollowModule from "../../../../lib/lens/helpers/createFollowModule"
 import { Contract, Signer } from "ethers";
 import FollowNFT from "./../../../../abis/FollowNFT.json";
 import broadcast from "../../../../graphql/mutations/broadcast";
+import { setSearchTarget } from "../../../../redux/reducers/searchTargetSlice";
+import createXmtpClient from "../../../../lib/xmtp/helpers/createXmtpClient";
+import { setXmtpClient } from "../../../../redux/reducers/xmtpClientSlice";
+import { setAccountPage } from "../../../../redux/reducers/accountPageSlice";
+import getDefaultProfile from "../../../../graphql/queries/getDefaultProfile";
+import { setLensProfile } from "../../../../redux/reducers/lensProfileSlice";
 
 const useProfilePage = (): UseProfilePageResults => {
   const router = useRouter();
@@ -88,6 +94,9 @@ const useProfilePage = (): UseProfilePageResults => {
   );
   const approvalArgs = useSelector(
     (state: RootState) => state.app.approvalArgsReducer.args
+  );
+  const xmtpClient = useSelector(
+    (state: RootState) => state.app.xmtpClientReducer.value
   );
   const [followersLoading, setFollowersLoading] = useState<boolean>(false);
   const [followingLoading, setFollowingLoading] = useState<boolean>(false);
@@ -137,14 +146,8 @@ const useProfilePage = (): UseProfilePageResults => {
     try {
       const tx = await sendTransactionAsync?.();
       await tx?.wait();
-      const indexedStatus = await checkIndexed(tx?.hash);
-      if (
-        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS"
-      ) {
-        // re-get collect info
-        getFollowInfo();
-      }
+      await checkIndexed(tx?.hash);
+      await getFollowInfo();
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));
@@ -286,6 +289,7 @@ const useProfilePage = (): UseProfilePageResults => {
             dispatch,
             false
           );
+          await refetchProfile();
         }, 7000);
       }
     } catch (err: any) {
@@ -352,6 +356,7 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         const res = await tx?.wait();
         await handleIndexCheck(res?.transactionHash, dispatch, false);
+        await refetchProfile();
       } else {
         dispatch(
           setIndexModal({
@@ -365,6 +370,7 @@ const useProfilePage = (): UseProfilePageResults => {
             dispatch,
             false
           );
+          await refetchProfile();
         }, 7000);
       }
     } catch (err: any) {
@@ -683,6 +689,7 @@ const useProfilePage = (): UseProfilePageResults => {
       clearFollow();
       const res = await tx?.wait();
       await handleIndexCheck(res?.transactionHash, dispatch, false);
+      await refetchProfile();
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));
@@ -718,10 +725,25 @@ const useProfilePage = (): UseProfilePageResults => {
     }
   };
 
-  const handleSendDM = (profileData: Profile) => {
-    router.push("/#Account");
+  const handleSendDM = async (profileData: Profile) => {
+    if (!xmtpClient) {
+      const xmtp = await createXmtpClient(signer as Signer);
+      dispatch(setXmtpClient(xmtp));
+    }
     dispatch(setLayout("Account"));
+    dispatch(setAccountPage("conversations"));
     dispatch(setChosenDMProfile(profileData));
+    dispatch(setSearchTarget(profileData?.handle));
+    router.push("/?=conversations/#Account");
+  };
+
+  const refetchProfile = async (): Promise<void> => {
+    try {
+      const profile = await getDefaultProfile(address);
+      dispatch(setLensProfile(profile?.data?.defaultProfile));
+    } catch (err: any) {
+      console.error(err.message);
+    }
   };
 
   const {

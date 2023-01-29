@@ -25,6 +25,8 @@ import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFil
 import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 import { setXmtpClient } from "../../../../../redux/reducers/xmtpClientSlice";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
+import { setXmtpSearch } from "../../../../../redux/reducers/xmtpSearchSlice";
+import createXmtpClient from "../../../../../lib/xmtp/helpers/createXmtpClient";
 
 const useConversations = (): UseConversationResults => {
   const { data: signer } = useSigner();
@@ -33,6 +35,9 @@ const useConversations = (): UseConversationResults => {
   );
   const chosenProfile = useSelector(
     (state: RootState) => state.app.chosenDMProfileReducer.profile
+  );
+  const xmtpSearch = useSelector(
+    (state: RootState) => state.app.xmtpSearchReducer.value
   );
   const textElement = useRef<HTMLTextAreaElement>(null);
   const dispatch = useDispatch();
@@ -52,7 +57,6 @@ const useConversations = (): UseConversationResults => {
   const [clientLoading, setClientLoading] = useState<boolean>(false);
   const [allConversationsLoading, setAllConversationsLoading] =
     useState<boolean>(false);
-  const [searchTarget, setSearchTarget] = useState<string>("");
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [messageProfiles, setMessageProfiles] =
     useState<Map<string, Profile>>();
@@ -74,16 +78,19 @@ const useConversations = (): UseConversationResults => {
   const createClient = async () => {
     setClientLoading(true);
     try {
-      const xmtp = await Client.create(signer as Signer | null);
+      const xmtp = await createXmtpClient(signer as Signer);
       dispatch(setXmtpClient(xmtp));
-      getAllConversations(true, xmtp);
+      // getAllConversations(true, xmtp);
     } catch (err: any) {
       console.error(err?.message);
     }
     setClientLoading(false);
   };
 
-  const getAllConversations = async (load: boolean, clientInput?: any) => {
+  const getAllConversations = async (
+    load: boolean,
+    clientInput?: any
+  ): Promise<any[] | void> => {
     setAllConversationsLoading(load);
     try {
       const conversationList = await (clientInput
@@ -108,6 +115,8 @@ const useConversations = (): UseConversationResults => {
             ? messagedProfilesArray
             : []
         );
+
+        return lensConversations.length > 0 ? lensConversations : [];
       }
     } catch (err: any) {
       console.error(err.message);
@@ -156,6 +165,8 @@ const useConversations = (): UseConversationResults => {
     if (!client) {
       dispatch(setChosenDMProfile(undefined));
     } else {
+      // this may not work here
+      getAllConversations(true, client);
       conversationStream();
     }
   }, [client]);
@@ -187,7 +198,7 @@ const useConversations = (): UseConversationResults => {
       if (!res) {
         setConversationMessages([]);
         setConversationLoading(false);
-        setSearchTarget("");
+        dispatch(setXmtpSearch(""));
         dispatch(setChosenDMProfile(undefined));
         dispatch(setInsufficientFunds("xmtp"));
         return;
@@ -198,10 +209,19 @@ const useConversations = (): UseConversationResults => {
       const prof = (chosenProfile as any)?.id
         ? (chosenProfile as any)?.id
         : (chosenProfile as any)?.profileId;
-      if (allConversations?.length > 0) {
-        for (const convo in allConversations) {
-          if (allConversations[convo].context.conversationId.includes(prof)) {
-            chosenConversation.push(allConversations[convo]);
+      let recordedConversations: any;
+      if (allConversations.length === 0) {
+        // try one more time for dm click
+        recordedConversations = await getAllConversations(false);
+      }
+      if (allConversations?.length > 0 || recordedConversations.length > 0) {
+        const loopConvo =
+          allConversations.length > 0
+            ? allConversations
+            : recordedConversations;
+        for (const convo in loopConvo) {
+          if (loopConvo[convo as any].context.conversationId.includes(prof)) {
+            chosenConversation.push(loopConvo[convo as any]);
           }
         }
         if (chosenConversation?.length > 0) {
@@ -221,14 +241,12 @@ const useConversations = (): UseConversationResults => {
 
   const getProfileMessages = async () => {
     try {
-      console.log(profileIds);
       const { data } = await getAllProfiles({
         profileIds: lodash.remove(lodash.uniq(profileIds), (value: any) => {
           return value !== "undefined";
         }),
         limit: 50,
       });
-      console.log(data);
       const profiles = data?.profiles?.items as Profile[];
       if (profiles?.length > 0) {
         const sortedProfiles = profiles?.sort((a, b) => {
@@ -290,6 +308,12 @@ const useConversations = (): UseConversationResults => {
       }
     } catch (err: any) {
       console.error(err.message);
+    }
+  };
+
+  const handleKeyEnter = async (e: KeyboardEvent): Promise<void> => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      await sendConversation();
     }
   };
 
@@ -431,14 +455,18 @@ const useConversations = (): UseConversationResults => {
     }
   };
 
-  const checkOnNetwork = async (): Promise<boolean> => {
-    const res = await Client.canMessage(chosenProfile?.ownedBy);
-    if (res && chosenProfile?.ownedBy) setOnNetwork(true);
-    return res && chosenProfile?.ownedBy;
+  const checkOnNetwork = async (): Promise<boolean | undefined> => {
+    try {
+      const res = await Client.canMessage(chosenProfile?.ownedBy);
+      if (res && chosenProfile?.ownedBy) setOnNetwork(true);
+      return res && chosenProfile?.ownedBy;
+    } catch (err: any) {
+      console.error(err.message);
+    }
   };
 
   const handleChosenProfile = (user: Profile): void => {
-    setSearchTarget(user?.handle);
+    dispatch(setXmtpSearch(user?.handle));
     dispatch(setChosenDMProfile(user));
     setDropdown(false);
     setConversationMessages([]);
@@ -446,7 +474,7 @@ const useConversations = (): UseConversationResults => {
 
   const searchMessages = async (e: FormEvent): Promise<void> => {
     setSearchLoading(true);
-    setSearchTarget((e.target as HTMLFormElement).value);
+    dispatch(setXmtpSearch((e.target as HTMLFormElement).value));
     if ((e.target as HTMLFormElement).value === "") {
       setDropdown(false);
     } else {
@@ -470,7 +498,7 @@ const useConversations = (): UseConversationResults => {
   const searchMoreMessages = async (): Promise<void> => {
     try {
       const moreProfiles = await searchProfile({
-        query: searchTarget,
+        query: xmtpSearch,
         type: "PROFILE",
         limit: 50,
         cursor: pageCursor?.next,
@@ -509,6 +537,9 @@ const useConversations = (): UseConversationResults => {
   };
 
   const handleUploadImage = async (e: any): Promise<void> => {
+    if ((e as any).target.files.length < 1) {
+      return;
+    }
     if (fileLimitAlert((e as any).target.files[0])) {
       return;
     }
@@ -539,7 +570,6 @@ const useConversations = (): UseConversationResults => {
     searchMoreMessages,
     handleMessage,
     handleChosenProfile,
-    searchTarget,
     dropdown,
     previewMessages,
     profileLensData,
@@ -561,7 +591,8 @@ const useConversations = (): UseConversationResults => {
     handleGifSubmit,
     results,
     handleUploadImage,
-    allConversationsLoading
+    allConversationsLoading,
+    handleKeyEnter,
   };
 };
 

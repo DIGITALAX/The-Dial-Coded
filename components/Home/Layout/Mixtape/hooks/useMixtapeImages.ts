@@ -14,6 +14,9 @@ const useMixtapeImages = (): UseMixtapeImagesResults => {
   );
 
   const uploadImage = async (e: FormEvent, index: number): Promise<void> => {
+    if ((e as any).target.files.length < 1) {
+      return;
+    }
     if (fileLimitAlert((e as any).target.files[0])) {
       return;
     }

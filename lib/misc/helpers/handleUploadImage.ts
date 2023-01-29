@@ -5,6 +5,9 @@ const handleUploadImage = async (
   small: boolean
 ): Promise<string | void> => {
   try {
+    if ((e as any).target.files.length < 1) {
+      return;
+    }
     const compressedImage = await compressImageFiles(e, small);
     const response = await fetch("/api/ipfs", {
       method: "POST",

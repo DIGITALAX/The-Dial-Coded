@@ -32,7 +32,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
       className={`relative row-start-${row} bg-white w-full h-fit rounded-lg f5:p-1 flex flex-row`}
     >
       <div className="relative w-full h-fit bg-comp f5:p-4 flex flex-col gap-4 rounded items-center">
-        <div className="relative w-full h-fit gap-4 flex flex-row flex-grow">
+        <div className="relative w-full h-fit gap-4 flex flex-row grow">
           <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-4 self-center justify-self-start hidden sm:contents row-start-1">
             <ButtonIcon
               width={"12"}
@@ -48,7 +48,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
               }
             />
           </div>
-          <div className="relative w-fit h-fit font-digiB text-black text-2xl uppercase col-start-1 sm:col-start-2 text-center place-self-center px-10 row-start-1 flex-grow f5:py-0 py-2">
+          <div className="relative w-fit h-fit font-digiB text-black text-2xl uppercase col-start-1 sm:col-start-2 text-center place-self-center px-10 row-start-1 grow f5:py-0 py-2">
             *{title}*
           </div>
           <div className="relative w-fit h-fit col-start-3 justify-self-end self-center grid grid-flow-col auto-cols-auto gap-4 hidden sm:contents row-start-1">

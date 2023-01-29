@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount, useSignMessage } from "wagmi";
@@ -26,6 +27,7 @@ const useLensSignIn = (): useLensSignInResults => {
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
+  const router = useRouter();
   const dispatch = useDispatch();
   const { address } = useAccount();
   const { signMessageAsync, isSuccess, isLoading, isError } = useSignMessage({
@@ -83,7 +85,12 @@ const useLensSignIn = (): useLensSignInResults => {
         dispatch(setAuthStatus(true));
         dispatch(setSignIn(false));
         dispatch(setWalletConnected(true));
-        dispatch(setAccountPage("account"));
+        if (router.asPath.includes("?=")) {
+          let route = router.asPath?.split("?=")[1]?.split("/#")[0];
+          dispatch(setAccountPage(route));
+        } else {
+          dispatch(setAccountPage("account"));
+        }
         dispatch(setHamburger(false));
       } else {
         dispatch(setGetProfileModal(true));

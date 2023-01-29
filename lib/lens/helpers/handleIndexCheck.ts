@@ -1,5 +1,5 @@
 import { AnyAction, Dispatch } from "redux";
-import checkIndexed from "../../../graphql/queries/checkIndexed";
+import { pollUntilIndexed } from "../../../graphql/queries/checkIndexed";
 import { setIndexModal } from "../../../redux/reducers/indexModalSlice";
 
 const handleIndexCheck = async (
@@ -8,13 +8,8 @@ const handleIndexCheck = async (
   success: boolean
 ) => {
   try {
-    const indexedStatus = await checkIndexed(tx);
-    if (
-      (indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS" &&
-        success) ||
-      (indexedStatus?.data?.hasTxHashBeenIndexed?.indexed && !success)
-    ) {
+    const indexedStatus = await pollUntilIndexed(tx, success);
+    if (indexedStatus) {
       dispatch(
         setIndexModal({
           actionValue: true,

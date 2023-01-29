@@ -26,7 +26,9 @@ import {
   WhoCollectedPublicationRequest,
 } from "../../types/lens.types";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
-import checkIndexed from "../../../../graphql/queries/checkIndexed";
+import checkIndexed, {
+  pollUntilIndexed,
+} from "../../../../graphql/queries/checkIndexed";
 import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
 import omit from "../../../../lib/lens/helpers/omit";
 import splitSignature from "../../../../lib/lens/helpers/splitSignature";
@@ -189,14 +191,8 @@ const useCollected = () => {
     try {
       const tx = await sendTransactionAsync?.();
       await tx?.wait();
-      const indexedStatus = await checkIndexed(tx?.hash);
-      if (
-        indexedStatus?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
-        "SUCCESS"
-      ) {
-        // re-get collect info
-        getCollectInfo();
-      }
+      await pollUntilIndexed(tx?.hash as string, false);
+      await getCollectInfo();
     } catch (err: any) {
       console.error(err.message);
       dispatch(setInsufficientFunds("failed"));

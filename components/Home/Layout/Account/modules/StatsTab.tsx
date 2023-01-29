@@ -22,7 +22,7 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
               Total Followers:
             </div>
             <div className="relative w-fit h-fit place-self-center font-digiB col-start-2">
-              {profile?.stats?.totalFollowers}
+              {userFollowers?.length}
             </div>
           </div>
           {followersLoading ? (
@@ -57,7 +57,7 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
               Total Following:
             </div>
             <div className="relative w-fit h-fit place-self-center font-digiB col-start-2">
-              {profile?.stats?.totalFollowing}
+              {userFollowing?.length}
             </div>
           </div>
           {followingLoading ? (

@@ -53,7 +53,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
             return (
               <div
                 key={index}
-                className="relative w-full h-full grid grid-flow-col auto-cols-auto text-black font-dosis text-sm cursor-pointer border-x border-b border-black/50 drop-shadow-md rounded-lg p-2 hover:opacity-70"
+                className="relative w-full h-20 sm:h-16 grid grid-flow-col auto-cols-auto text-black font-dosis text-sm cursor-pointer border-x border-b border-black/50 drop-shadow-md rounded-lg p-2 hover:opacity-70"
                 onClick={() =>
                   handleChosenProfile(sortedProfileLensData?.[index])
                 }

@@ -2,20 +2,24 @@ const descriptionRegex = (description: string, messages?: boolean) => {
   const styledText = description?.split(" ")?.map((word: string) => {
     if (word[0] === "#") {
       if (messages) {
-        return `<em id="hashtags" style="color: #ffffff; cursor: pointer; font-style: normal;">${word}</em>`;
+        return `<em id="hashtags" style="color: #ff494a; cursor: pointer; font-style: normal;">${word}</em>`;
       } else {
         return `<em id="hashtags" style="color: #81A8F8; cursor: pointer; font-style: normal;">${word}</em>`;
       }
     } else if (word[0] === "@") {
       if (messages) {
         return `
-        <a href="${`/profile/${word?.replace("@", "")?.split(".test")[0]}`}" rel="noreferrer">
-        <span style="color: #ffffff;">${word}</span>
+        <a href="${`/profile/${
+          word?.replace("@", "")?.split(".test")[0]
+        }`}" rel="noreferrer">
+        <span style="color: #ff494a;">${word}</span>
         </a>
         `;
       } else {
         return `
-        <a href="${`/profile/${word?.replace("@", "")?.split(".test")[0]}`}" rel="noreferrer">
+        <a href="${`/profile/${
+          word?.replace("@", "")?.split(".test")[0]
+        }`}" rel="noreferrer">
         <span style="color: #81A8F8;">${word}</span>
         </a>
         `;
@@ -36,7 +40,7 @@ const descriptionRegex = (description: string, messages?: boolean) => {
       <a href=${
         word?.includes("//") ? word : `//${word}`
       } target="_blank" rel="noreferrer">
-      <span style="color: #ffffff;">${word}</span>
+      <span style="color: #ff494a;">${word}</span>
       </a>
       `;
       } else {

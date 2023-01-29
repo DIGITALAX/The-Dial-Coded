@@ -96,6 +96,7 @@ const getDefaultProfile = async (
         ethereumAddress: address,
       },
     },
+    fetchPolicy: "no-cache",
   });
 };
 

@@ -90,28 +90,30 @@ export const checkIndexed = (txHash?: string) => {
 };
 export default checkIndexed;
 
-export const pollUntilIndexed = async (txHash: string) => {
+export const pollUntilIndexed = async (txHash: string, success: boolean) => {
   while (true) {
-    const result = await checkIndexed(txHash);
-    const response = result.data.hasTxHashBeenIndexed;
-    if (response.__typename === "TransactionIndexedResult") {
-      if (response.metadataStatus) {
-        if (response.metadataStatus.status === "SUCCESS") {
-          return response;
-        }
-
-        if (response.metadataStatus.status === "METADATA_VALIDATION_FAILED") {
-          throw new Error(response.metadataStatus.reason);
-        }
+    const response: any = await checkIndexed(txHash);
+    console.log({response})
+    if (
+      response?.data?.hasTxHashBeenIndexed?.__typename ===
+      "TransactionIndexedResult"
+    ) {
+      if (
+        (response?.data?.hasTxHashBeenIndexed?.metadataStatus?.status ===
+          "SUCCESS" &&
+          success) ||
+        (response?.data?.hasTxHashBeenIndexed?.indexed && !success)
+      ) {
+        console.log("in here")
+        return true;
       } else {
-        if (response.indexed) {
-          return response;
+        if (response?.data?.hasTxHashBeenIndexed?.indexed === false) {
+          return false;
         }
       }
-
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+    } else {
+      return false;
     }
-
-    throw new Error(response.reason);
   }
 };

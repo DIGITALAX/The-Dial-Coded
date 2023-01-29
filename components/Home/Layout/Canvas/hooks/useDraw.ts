@@ -267,7 +267,6 @@ const useDraw = () => {
           const blob = await res.blob();
           const file = new File([blob], "draftDial", { type: "image/png" });
           const cid = await handleUploadImage(file, false);
-
           const newImage = {
             ...copyElements[elem as any],
             cid: cid?.split("ipfs://")[1],
@@ -288,6 +287,9 @@ const useDraw = () => {
 
   const handleImageAdd = async (e: any, url?: boolean): Promise<void> => {
     if (!url) {
+      if ((e as any).target.files.length < 1) {
+        return;
+      }
       if (fileLimitAlert((e as any).target.files[0])) {
         return;
       }

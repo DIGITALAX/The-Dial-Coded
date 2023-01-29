@@ -50,7 +50,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
       <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto row-start-1 gap-2 text-xs">
         <div
           className="relative col-start-1 row-start-1 grid grid-flow-col auto-cols-auto place-self-start cursor-pointer"
-          onClick={() => () =>
+          onClick={() =>
             router.push(
               `/profile/${
                 data?.__typename !== "Mirror"
