@@ -13,8 +13,8 @@ import handleHidePost from "../../lib/lens/helpers/handleHidePost";
 import { setWalletConnected } from "../../redux/reducers/walletConnectedSlice";
 import { RootState } from "../../redux/store";
 import ProfileTab from "./../../components/Home/Layout/Account/modules/ProfileTab";
-import { useMediaQuery } from "@material-ui/core";
 import Head from "next/head";
+import PostFeedLoading from "../../components/Common/Loaders/PostFeedLoading";
 
 const Profile: NextPage = (): JSX.Element => {
   const {
@@ -41,6 +41,8 @@ const Profile: NextPage = (): JSX.Element => {
     mixtapeMirror,
     handleSendDM,
     followerOnly,
+    mixtapesLoading,
+    publicationsLoading,
   } = useProfilePage();
   const { isConnected } = useAccount();
   const profileId = useSelector(
@@ -54,7 +56,6 @@ const Profile: NextPage = (): JSX.Element => {
   }, [profileId]);
 
   const profileImage = createProfilePicture(profileData);
-  let queryWindowSize900 = useMediaQuery("(max-width:900px)");
 
   if (!profileData && profileDataLoading === false) {
     return <NotFound />;
@@ -155,9 +156,9 @@ const Profile: NextPage = (): JSX.Element => {
       reactionsFeed?.length === 0 ? (
         <div className="relative w-full h-screen col-start-1 grid grid-flow-col auto-cols-auto"></div>
       ) : (
-        <div className="relative w-full h-full grid grid-flow-row auto-rows-auto col-start-1">
+        <div className="relative w-full h-full flex flex-col col-start-1">
           <Banner coverPicture={profileData?.coverPicture} />
-          <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto row-start-2">
+          <div className="relative w-full h-fit flex flex-col f1:flex-row">
             <div className="absolute w-fit h-fit grid grid-flow-col auto-cols-auto px-10">
               <div
                 id="crt"
@@ -190,12 +191,14 @@ const Profile: NextPage = (): JSX.Element => {
               mixtapes={mixtapes}
               handleHidePost={handleHidePost}
               handleSendDM={handleSendDM}
+              mixtapesLoading={mixtapesLoading}
             />
             <div
-              className={`relative w-full h-fit grid grid-flow-col auto-cols-auto px-3 fo:px-10 py-4 bg-offWhite/90 overflow-y-scroll ${
-                !queryWindowSize900
-                  ? "col-start-2 row-start-1"
-                  : "col-start-1 row-start-2"
+              className={`relative w-full flex px-3 fo:px-10 py-4 bg-offWhite/90 overflow-y-scroll 
+              ${
+                !publicationsLoading
+                  ? "h-fit f1:col-start-2 f1:row-start-1 col-start-1 row-start-2"
+                  : "h-full row-start-1 col-start-2"
               }`}
             >
               <ProfileTab
@@ -210,6 +213,7 @@ const Profile: NextPage = (): JSX.Element => {
                 mixtapeMirror={mixtapeMirror}
                 handleHidePost={handleHidePost}
                 followerOnly={followerOnly}
+                publicationsLoading={publicationsLoading}
               />
             </div>
           </div>

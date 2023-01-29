@@ -89,6 +89,9 @@ const useProfilePage = (): UseProfilePageResults => {
   const [hasHotReacted, setHasHotReacted] = useState<boolean[]>([]);
   const [hasHotMirrored, setHasHotMirrored] = useState<boolean[]>([]);
   const [hasHotCommented, setHasHotCommented] = useState<boolean[]>([]);
+  const [publicationsLoading, setPublicationsLoading] =
+    useState<boolean>(false);
+  const [mixtapesLoading, setMixtapesLoading] = useState<boolean>(false);
   const indexerModal = useSelector(
     (state: RootState) => state.app.indexModalReducer
   );
@@ -405,6 +408,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const getUserProfileFeed = async () => {
     let sortedArr: any[];
     let pageData: any;
+    setPublicationsLoading(true);
     try {
       if (!lensProfile?.id) {
         const { data } = await profilePublications({
@@ -443,6 +447,7 @@ const useProfilePage = (): UseProfilePageResults => {
         }
       });
       setUserFeed(filteredArr);
+      setPublicationsLoading(false);
       const isOnlyFollowers = await checkIfFollowerOnly(
         filteredArr,
         lensProfile?.id
@@ -540,6 +545,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const getUserMixtapes = async (): Promise<void> => {
     let sortedArr: any[];
     let pageData: any;
+    setMixtapesLoading(true);
     try {
       if (!lensProfile?.id) {
         const { data } = await profilePublications({
@@ -579,6 +585,7 @@ const useProfilePage = (): UseProfilePageResults => {
       }
       setMixtapes(sortedArr);
       setMixtapePaginated(pageData);
+      setMixtapesLoading(false);
       const response = await checkPostReactions(sortedArr, lensProfile?.id);
       setHotReactionsFeed(response?.reactionsFeedArr);
       if (lensProfile?.id) {
@@ -826,7 +833,8 @@ const useProfilePage = (): UseProfilePageResults => {
     followTypedData,
     approvalLoading,
     approveCurrency,
+    mixtapesLoading,
+    publicationsLoading,
   };
 };
-
 export default useProfilePage;

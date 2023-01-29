@@ -18,6 +18,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import HotPublication from "../../../Common/Feed/modules/HotPublication";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { useMediaQuery } from "@material-ui/core";
+import SideBarLoading from "../../../Common/Loaders/SideBarLoading";
 
 const SideBar: FunctionComponent<SideBarProps> = ({
   profileData,
@@ -35,6 +36,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   mixtapes,
   handleHidePost,
   handleSendDM,
+  mixtapesLoading,
 }): JSX.Element => {
   const location = lodash.filter(
     profileData?.attributes,
@@ -52,8 +54,11 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   );
   let queryWindowSize900 = useMediaQuery("(max-width:900px)");
   const { openConnectModal } = useConnectModal();
+  if (mixtapesLoading) {
+    return <SideBarLoading />;
+  }
   return (
-    <div className="col-start-1 relative w-full h-full grid grid-flow-row auto-rows-auto bg-offWhite/95 row-start-1 pl-4 f1:pl-14 pt-40 pb-10 pr-4 overflow-y-scroll overflow-x-clip">
+    <div className="col-start-1 relative w-full h-fit f1:h-full grid grid-flow-row auto-rows-auto bg-offWhite/95 row-start-1 pl-4 f1:pl-14 pt-40 pb-10 pr-4 overflow-y-scroll overflow-x-clip">
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto row-start-1 self-start gap-10">
         <div
           className={`relative w-fit h-fit row-start-1 ${
