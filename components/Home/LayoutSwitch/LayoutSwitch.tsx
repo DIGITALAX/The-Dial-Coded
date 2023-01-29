@@ -1,5 +1,7 @@
-import { FunctionComponent } from "react";
-import { useSelector } from "react-redux";
+import { FunctionComponent, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setChosenDMProfile } from "../../../redux/reducers/chosenDMProfileSlice";
+import { setSearchTarget } from "../../../redux/reducers/searchTargetSlice";
 import { RootState } from "../../../redux/store";
 import Account from "../Layout/Account/Account";
 import Canvas from "../Layout/Canvas/Canvas";
@@ -11,11 +13,23 @@ const LayoutSwitch: FunctionComponent = (): JSX.Element => {
   const layoutType: string | undefined = useSelector(
     (state: RootState) => state.app.layoutReducer.value
   );
+  const dispatch = useDispatch();
   let action: string = "Post";
   const decideStringAction = () => {
-    action = layoutType as string;
+    if (action.includes("?=")) {
+      action = layoutType?.split("/#")[1] as string;
+    } else {
+      action = layoutType as string;
+    }
     return action;
   };
+
+  useEffect(() => {
+    if (action !== "Account") {
+      dispatch(setSearchTarget(""));
+      dispatch(setChosenDMProfile(undefined));
+    }
+  }, [action]);
 
   switch (decideStringAction()) {
     case "Canvas":

@@ -153,6 +153,7 @@ export type MessageProps = {
   handleGifSubmit: (e: any) => Promise<void>;
   results: any[];
   handleUploadImage: (e: any) => Promise<void>;
+  handleKeyEnter: (e: KeyboardEvent) => Promise<void>;
 };
 
 export type ConversationsProps = {
@@ -190,6 +191,7 @@ export type ConversationsProps = {
   results: any[];
   handleUploadImage: (e: any) => Promise<void>;
   allConversationsLoading: boolean;
+  handleKeyEnter: (e: KeyboardEvent) => Promise<void>;
 };
 
 export type PreviewProps = {
@@ -209,7 +211,6 @@ export type UseConversationResults = {
   searchMoreMessages: () => Promise<void>;
   handleMessage: (e: FormEvent) => void;
   handleChosenProfile: (user: Profile) => void;
-  searchTarget: string | undefined;
   dropdown: boolean;
   previewMessages: Map<string, DecodedMessage> | undefined;
   profileLensData: Profile[];
@@ -232,6 +233,7 @@ export type UseConversationResults = {
   results: any[];
   handleUploadImage: (e: any) => Promise<void>;
   allConversationsLoading: boolean;
+  handleKeyEnter: (e: KeyboardEvent) => Promise<void>;
 };
 
 export type SearchProps = {

@@ -15,6 +15,7 @@ import { IoMdImage } from "react-icons/io";
 import Grid from "../Giphy/Grid";
 import messageRichMedia from "../../../lib/lens/helpers/messageRichMedia";
 import { setImageViewer } from "../../../redux/reducers/imageViewerSlice";
+import { useMediaQuery } from "@material-ui/core";
 
 const Message: FunctionComponent<MessageProps> = ({
   sendConversation,
@@ -38,6 +39,7 @@ const Message: FunctionComponent<MessageProps> = ({
   handleGifSubmit,
   results,
   handleUploadImage,
+  handleKeyEnter,
 }): JSX.Element => {
   const profileImage = createProfilePicture(chosenProfile);
   const lensProfileAddress = useSelector(
@@ -46,7 +48,7 @@ const Message: FunctionComponent<MessageProps> = ({
   const router = useRouter();
   const tags = document.querySelectorAll("em");
   const dispatch = useDispatch();
-
+  let queryWindowSize1475: boolean = useMediaQuery("(max-width:1475px)");
   if (tags.length > 0) {
     for (let i = 0; i < tags.length; i++) {
       tags[i].addEventListener("click", (e) => {
@@ -66,7 +68,7 @@ const Message: FunctionComponent<MessageProps> = ({
     }
   }
   return (
-    <div className="relative w-full h-full flex flex-col rounded-x-md bg-white/50 text-black font-dosis flex-grow">
+    <div className="relative w-full h-full flex flex-col rounded-x-md bg-white/50 text-black font-dosis grow">
       <div className="relative w-full h-12 p-2 col-start-1 self-start grid grid-flow-col auto-cols-auto bg-white/70">
         {chosenProfile && (
           <div className="relative w-fit h-fit col-start-1 flex flex-row gap-3">
@@ -94,15 +96,19 @@ const Message: FunctionComponent<MessageProps> = ({
       </div>
       {conversationMessages && !conversationLoading && onNetwork ? (
         <div
-          className="relative h-full w-full grid grid-flow-col auto-cols-auto pb-4 px-3 overflow-y-scroll self-end flex-grow"
+          className="relative h-full w-full flex flex-col pb-4 px-3 overflow-y-scroll self-end grow"
           id="scrollableDiv"
         >
           <InfiniteScroll
-            className={`relative w-full h-full self-end col-start-1 text-right gap-2 grid grid-flow-row auto-rows-auto`}
+            className={`relative w-full h-full self-end col-start-1 text-right gap-2 grid grid-flow-row auto-rows-auto grow`}
             hasMore={true}
             height={"37rem"}
             loader={""}
-            style={{ display: "flex", flexDirection: "column-reverse" }}
+            style={{
+              display: "flex",
+              flexDirection: "column-reverse",
+              flexGrow: 1,
+            }}
             inverse={true}
             scrollableTarget="scrollableDiv"
             dataLength={conversationMessages?.length}
@@ -208,6 +214,7 @@ const Message: FunctionComponent<MessageProps> = ({
               handleMessage(e);
               syncScroll(e, "highlighted-message");
             }}
+            onKeyDown={(e: any) => handleKeyEnter(e)}
             style={{ resize: "none" }}
             ref={textElement}
             value={message}

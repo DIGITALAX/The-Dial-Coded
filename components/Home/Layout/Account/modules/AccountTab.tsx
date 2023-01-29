@@ -326,12 +326,12 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
             </div>
           </div>
         </div>
-        <div className="relative w-full h-fit md:h-full flex flex-row gap-20 md:flex-nowrap flex-wrap md:flex-grow">
-          <div className="relative flex flex-col gap-3 flex-wrap flex-grow h-full w-fit">
+        <div className="relative w-full h-fit md:h-full flex flex-row gap-20 md:flex-nowrap flex-wrap md:grow">
+          <div className="relative flex flex-col gap-3 flex-wrap grow h-full w-fit">
             <div className="relative w-fit h-fit row-start-1 grid grid-flow-row auto-rows-auto gap-2">
               <div className="relative w-fit h-fit">Set Follow Module</div>
             </div>
-            <div className="relative w-fit h-fit row-start-2 flex flex-row gap-6 pb-5 flex-wrap flex-grow">
+            <div className="relative w-fit h-fit row-start-2 flex flex-row gap-6 pb-5 flex-wrap grow">
               <div className="relative w-fit h-fit col-start-1 row-start-1">
                 <AccountFollowCheck
                   valueClicked="free"
@@ -415,7 +415,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
                 {dispatcher ? "Disable Dispatcher?" : "Enable Dispatcher?"}
               </div>
             </div>
-            <div className="relative w-fit h-fit row-start-2 flex flex-row gap-2 md:flex-grow">
+            <div className="relative w-fit h-fit row-start-2 flex flex-row gap-2 md:grow">
               <div className="relative w-5/6 h-fit text-base">
                 A low latency shortcut which makes it easier to publish, react
                 and push updates to your account without needing to sign

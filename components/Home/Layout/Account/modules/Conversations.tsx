@@ -39,7 +39,8 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
   handleSetGif,
   handleGifSubmit,
   results,
-  allConversationsLoading
+  allConversationsLoading,
+  handleKeyEnter
 }): JSX.Element => {
   if (!client) {
     return (
@@ -107,6 +108,7 @@ const Conversations: FunctionComponent<ConversationsProps> = ({
           results={results}
           handleSetGif={handleSetGif}
           handleUploadImage={handleUploadImage}
+          handleKeyEnter={handleKeyEnter}
         />
       </div>
     </div>

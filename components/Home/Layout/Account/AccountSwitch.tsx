@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import useAccount from "./hooks/useAccount";
@@ -14,6 +14,9 @@ import Conversations from "./modules/Conversations";
 import useConversations from "./hooks/useConversations";
 import handleHidePost from "../../../../lib/lens/helpers/handleHidePost";
 import useParameters from "../Publish/modules/Parameters/hooks/useParameters";
+import { useRouter } from "next/router";
+import { setSearchTarget } from "../../../../redux/reducers/searchTargetSlice";
+import { setChosenDMProfile } from "../../../../redux/reducers/chosenDMProfileSlice";
 
 const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const accountType: string | undefined = useSelector(
@@ -24,6 +27,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   );
   const client = useSelector(
     (state: RootState) => state.app.xmtpClientReducer.value
+  );
+  const xmtpSearch = useSelector(
+    (state: RootState) => state.app.xmtpSearchReducer.value
   );
   const {
     profileImage,
@@ -75,7 +81,6 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     profileSearch,
     handleMessage,
     handleChosenProfile,
-    searchTarget,
     dropdown,
     previewMessages,
     profileLensData,
@@ -97,10 +102,12 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     handleGifSubmit,
     results,
     handleUploadImage,
-    allConversationsLoading
+    allConversationsLoading,
+    handleKeyEnter,
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
+  const router = useRouter();
   const { dispatcherLoading, setDispatcherEnabled } = useParameters();
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
@@ -118,13 +125,35 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   let action: string = "account";
   const decideStringAction = () => {
     if (authStatus && isConnected) {
-      action = accountType as string;
+      if (router.asPath.includes("?=")) {
+        let route = router.asPath?.split("?=")[1]?.split("/#")[0];
+        if (route === accountType) {
+          action = route;
+        } else {
+          action = accountType as string;
+        }
+      } else {
+        action = accountType as string;
+      }
     } else {
       action = "no profile";
     }
 
     return action;
   };
+
+  useEffect(() => {
+    if (action !== "conversations") {
+      dispatch(setSearchTarget(""));
+      dispatch(setChosenDMProfile(undefined));
+    } else {
+      router.replace(router.asPath, "/#Account").catch((e) => {
+        if (!e.cancelled) {
+          throw e;
+        }
+      });
+    }
+  }, [action]);
 
   switch (decideStringAction()) {
     case "profile feed":
@@ -179,7 +208,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           sendConversation={sendConversation}
           handleMessage={handleMessage}
           handleChosenProfile={handleChosenProfile}
-          searchTarget={searchTarget}
+          searchTarget={xmtpSearch}
           dropdown={dropdown}
           chosenProfile={chosenProfile}
           previewMessages={previewMessages}
@@ -204,6 +233,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           handleSetGif={handleSetGif}
           handleUploadImage={handleUploadImage}
           allConversationsLoading={allConversationsLoading}
+          handleKeyEnter={handleKeyEnter}
         />
       );
 

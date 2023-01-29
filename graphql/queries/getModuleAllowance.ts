@@ -18,6 +18,7 @@ const getModuleAllowance = (request: any) => {
     variables: {
       request: request,
     },
+    fetchPolicy: "no-cache",
   });
 };
 

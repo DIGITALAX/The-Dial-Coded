@@ -27,6 +27,9 @@ const useImageUpload = (): ImageUploadResults => {
     e: FormEvent | File,
     canvas?: boolean
   ): Promise<void> => {
+    if ((e as any).target.files.length < 1) {
+      return;
+    }
     let finalImages: UploadedMedia[] = [];
     setImageUploading(true);
     if (canvas) {
@@ -88,6 +91,9 @@ const useImageUpload = (): ImageUploadResults => {
 
   const uploadVideo = async (e: FormEvent) => {
     try {
+      if ((e as any).target.files.length < 1) {
+        return;
+      }
       if (videoLimitAlert((e as any).target.files[0])) {
         return;
       }
@@ -98,7 +104,7 @@ const useImageUpload = (): ImageUploadResults => {
       });
       let cid = await response.json();
       let newArr = [
-        ...imagesUploaded as any,
+        ...(imagesUploaded as any),
         { cid: String(cid?.cid), type: MediaType.Video },
       ];
       setMappedFeaturedFiles(newArr);
