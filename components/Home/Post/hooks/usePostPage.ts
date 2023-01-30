@@ -22,6 +22,7 @@ const usePostPage = () => {
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer?.profile?.id
   );
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
 
   const getPublicationData = async (id: string): Promise<void> => {
     setPublicationDataLoading(true);
@@ -67,6 +68,7 @@ const usePostPage = () => {
       console.error(err.message);
     }
     setPublicationDataLoading(false);
+    setFirstLoad(false);
   };
 
   return {
@@ -78,6 +80,7 @@ const usePostPage = () => {
     hasPostMirrored,
     hasPostReacted,
     followerOnly,
+    firstLoad
   };
 };
 

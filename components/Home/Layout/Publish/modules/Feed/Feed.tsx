@@ -24,6 +24,10 @@ const Feed: FunctionComponent<FeedProps> = ({
   mixtapeMirror,
   handleHidePost,
   followerOnly,
+  mixtapesLoading,
+  publicationsLoading,
+  firstMixLoad,
+  firstPubLoad
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -48,6 +52,8 @@ const Feed: FunctionComponent<FeedProps> = ({
           mixtapeMirror={mixtapeMirror}
           handleHidePost={handleHidePost}
           followerOnly={followerOnly}
+          publicationsLoading={publicationsLoading}
+          firstPubLoad={firstPubLoad}
         />
         <Hot
           isOpen={isOpen}
@@ -59,6 +65,8 @@ const Feed: FunctionComponent<FeedProps> = ({
           fetchMoreMixtapes={fetchMoreMixtapes}
           dispatch={dispatch}
           handleHidePost={handleHidePost}
+          mixtapesLoading={mixtapesLoading}
+          firstMixLoad={firstMixLoad}
         />
       </div>
       <div

@@ -88,12 +88,11 @@ export const checkIndexed = (txHash?: string) => {
     fetchPolicy: "network-only",
   });
 };
-export default checkIndexed;
 
-export const pollUntilIndexed = async (txHash: string, success: boolean) => {
+const pollUntilIndexed = async (txHash: string, success: boolean) => {
+  let count = 0;
   while (true) {
     const response: any = await checkIndexed(txHash);
-    console.log({response})
     if (
       response?.data?.hasTxHashBeenIndexed?.__typename ===
       "TransactionIndexedResult"
@@ -104,16 +103,18 @@ export const pollUntilIndexed = async (txHash: string, success: boolean) => {
           success) ||
         (response?.data?.hasTxHashBeenIndexed?.indexed && !success)
       ) {
-        console.log("in here")
         return true;
       } else {
         if (response?.data?.hasTxHashBeenIndexed?.indexed === false) {
-          return false;
+          if (count == 2) {
+            return false;
+          }
         }
       }
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-    } else {
-      return false;
     }
+    count += 1;
+    await new Promise((resolve) => setTimeout(resolve, 3000));
   }
 };
+
+export default pollUntilIndexed;

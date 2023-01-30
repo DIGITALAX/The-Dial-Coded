@@ -1,5 +1,5 @@
 import { AnyAction, Dispatch } from "redux";
-import { pollUntilIndexed } from "../../../graphql/queries/checkIndexed";
+import pollUntilIndexed from "../../../graphql/queries/checkIndexed";
 import { setIndexModal } from "../../../redux/reducers/indexModalSlice";
 
 const handleIndexCheck = async (

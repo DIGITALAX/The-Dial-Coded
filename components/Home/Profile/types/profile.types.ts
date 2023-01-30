@@ -23,6 +23,7 @@ export type SideBarProps = {
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   handleSendDM: (profile: Profile) => void;
   mixtapesLoading: boolean;
+  firstSideBarLoad: boolean;
 };
 
 export interface FollowArgs {
@@ -75,4 +76,6 @@ export type UseProfilePageResults = {
   approveCurrency: () => Promise<void>;
   mixtapesLoading: boolean;
   publicationsLoading: boolean;
+  firstPostLoad: boolean;
+  firstSideBarLoad: boolean;
 };

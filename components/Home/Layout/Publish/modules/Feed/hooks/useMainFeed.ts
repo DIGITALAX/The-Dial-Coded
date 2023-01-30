@@ -28,6 +28,7 @@ import checkIfMixtapeMirror from "../../../../../../../lib/lens/helpers/checkIfM
 import getPostComments from "../../../../../../../lib/lens/helpers/getPostComments";
 import checkIfFollowerOnly from "../../../../../../../lib/lens/helpers/checkIfFollowerOnly";
 import checkFeedTypes from "../../../../../../../lib/lens/helpers/checkFeedTypes";
+import { UseMainResults } from "../types/feed.types";
 
 const useMainFeed = () => {
   const router = useRouter();
@@ -85,8 +86,12 @@ const useMainFeed = () => {
   const [commentInfoLoading, setCommentInfoLoading] = useState<boolean>(false);
   const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
+  const [publicationsLoading, setPublicationsLoading] =
+    useState<boolean>(false);
+  const [firstPubLoad, setFirstPubLoad] = useState<boolean>(true);
 
   const fetchPublications = async (profileExists?: boolean): Promise<void> => {
+    setPublicationsLoading(true);
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     const feedType = checkFeedTypes(feedTypeState as string);
     try {
@@ -139,7 +144,8 @@ const useMainFeed = () => {
         );
         setFollowerOnly(isOnlyFollowers as boolean[]);
       }
-
+      setPublicationsLoading(false);
+      setFirstPubLoad(false);
       setPaginatedResults(publicationsList?.data?.explorePublications.pageInfo);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror(mixtapeMirrors);
@@ -147,7 +153,10 @@ const useMainFeed = () => {
       setReactionsFeed(response?.reactionsFeedArr);
       if (lensProfile) {
         setHasMirrored(mixtapeMirrors);
-        const hasCommentedArr = await checkIfCommented(filteredArr, lensProfile);
+        const hasCommentedArr = await checkIfCommented(
+          filteredArr,
+          lensProfile
+        );
         setHasCommented(hasCommentedArr);
         setHasReacted(response?.hasReactedArr);
       }
@@ -157,6 +166,7 @@ const useMainFeed = () => {
   };
 
   const getUserSelectFeed = async (): Promise<void> => {
+    setPublicationsLoading(true);
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     const feedType = checkFeedTypes(feedTypeState as string);
     let sortedArr: any[];
@@ -218,6 +228,8 @@ const useMainFeed = () => {
         feedPriorityState
       );
       setPublicationsFeed(orderedArr);
+      setPublicationsLoading(false);
+      setFirstPubLoad(false);
       const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
       setMixtapeMirror(mixtapeMirrors);
       setPaginatedResults(pageData);
@@ -241,6 +253,7 @@ const useMainFeed = () => {
   };
 
   const getFeedTimeline = async (): Promise<void> => {
+    setPublicationsLoading(true);
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     const feedType = checkFeedTypes(feedTypeState as string);
     try {
@@ -275,6 +288,8 @@ const useMainFeed = () => {
         if (orderedArr.length > 1) {
           fullArray = true;
           setPublicationsFeed(orderedArr);
+          setPublicationsLoading(false);
+          setFirstPubLoad(false);
           const isOnlyFollowers = await checkIfFollowerOnly(
             orderedArr,
             lensProfile
@@ -328,6 +343,8 @@ const useMainFeed = () => {
           orderedArr,
           lensProfile
         );
+        setPublicationsLoading(false);
+        setFirstPubLoad(false);
         setFollowerOnly(isOnlyFollowers as boolean[]);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror(mixtapeMirrors);
@@ -719,6 +736,8 @@ const useMainFeed = () => {
     setHasCommented,
     setHasReacted,
     followerOnly,
+    publicationsLoading,
+    firstPubLoad
   };
 };
 

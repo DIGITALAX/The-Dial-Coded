@@ -43,6 +43,8 @@ const Profile: NextPage = (): JSX.Element => {
     followerOnly,
     mixtapesLoading,
     publicationsLoading,
+    firstPostLoad,
+    firstSideBarLoad,
   } = useProfilePage();
   const { isConnected } = useAccount();
   const profileId = useSelector(
@@ -192,6 +194,7 @@ const Profile: NextPage = (): JSX.Element => {
               handleHidePost={handleHidePost}
               handleSendDM={handleSendDM}
               mixtapesLoading={mixtapesLoading}
+              firstSideBarLoad={firstSideBarLoad}
             />
             <div
               className={`relative w-full flex px-3 fo:px-10 py-4 bg-offWhite/90 overflow-y-scroll 
@@ -214,6 +217,7 @@ const Profile: NextPage = (): JSX.Element => {
                 handleHidePost={handleHidePost}
                 followerOnly={followerOnly}
                 publicationsLoading={publicationsLoading}
+                firstPostLoad={firstPostLoad}
               />
             </div>
           </div>

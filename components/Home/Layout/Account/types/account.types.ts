@@ -76,7 +76,8 @@ export type ProfileTabProps = {
   mixtapeMirror: boolean[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   followerOnly: boolean[];
-  publicationsLoading: boolean;
+  publicationsLoading?: boolean;
+  firstPostLoad?: boolean;
 };
 
 export type StatsTabProps = {

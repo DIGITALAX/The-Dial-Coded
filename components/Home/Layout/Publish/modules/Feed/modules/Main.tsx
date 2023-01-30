@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import FeedPublication from "../../../../../../Common/Feed/modules/FeedPublication";
 import { PublicationSearchResult } from "../../../../../../Common/types/lens.types";
 import InfiniteScroll from "react-infinite-scroll-component";
+import PostFeedLoading from "../../../../../../Common/Loaders/PostFeedLoading";
 
 const Main: FunctionComponent<MainProps> = ({
   publicationsFeed,
@@ -17,8 +18,13 @@ const Main: FunctionComponent<MainProps> = ({
   mixtapeMirror,
   handleHidePost,
   followerOnly,
+  publicationsLoading,
+  firstPubLoad
 }): JSX.Element => {
   const dispatch = useDispatch();
+  if (publicationsLoading && firstPubLoad) {
+    return <PostFeedLoading />;
+  }
   return (
     <div
       className="relative w-full md:w-[50vw] h-full row-start-2 md:row-start-1 col-start-1 grid grid-flow-row auto-rows-auto gap-5"
