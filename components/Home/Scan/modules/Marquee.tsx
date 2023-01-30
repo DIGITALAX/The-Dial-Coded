@@ -6,10 +6,10 @@ const Marquee: FunctionComponent = (): JSX.Element => {
   const router = useRouter();
   return (
     <div
-      className={`absolute w-full h-fit grid grid-flow-col auto-cols-auto row-start-2 self-end pb-32 ${
+      className={`absolute w-full h-fit grid grid-flow-col auto-cols-auto row-start-2 self-end ${
         router.asPath?.includes("Mixtape") || router.asPath?.includes("Account")
-          ? "fo:pb-28 md:pb-14"
-          : "fo:pb-14"
+          ? "pb-32 fo:pb-28 md:pb-14"
+          : "pb-32 fo:pb-14"
       }`}
     >
       <MarqueeText gradient={false} speed={30} direction={"right"}>
