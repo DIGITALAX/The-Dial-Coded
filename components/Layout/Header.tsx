@@ -55,6 +55,7 @@ const Header: FunctionComponent = (): JSX.Element => {
                 alt="headerIcon1"
                 width={50}
                 height={50}
+                draggable={false}
               />
             </div>
           )}
@@ -70,6 +71,7 @@ const Header: FunctionComponent = (): JSX.Element => {
                 alt="headerIcon2"
                 width={50}
                 height={50}
+                draggable={false}
               />
             </div>
           )}

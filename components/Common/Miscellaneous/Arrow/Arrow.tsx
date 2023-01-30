@@ -34,6 +34,7 @@ const Arrow: FunctionComponent<ArrowProps> = ({
           height={12}
           alt="leftArrow"
           src={`${INFURA_GATEWAY}/ipfs/${up}`}
+          draggable={false}
         />
       </div>
       <div
@@ -46,6 +47,7 @@ const Arrow: FunctionComponent<ArrowProps> = ({
           height={12}
           alt="centerDot"
           src={`${INFURA_GATEWAY}/ipfs/${middle}`}
+          draggable={false}
         />
       </div>
       <div
@@ -58,6 +60,7 @@ const Arrow: FunctionComponent<ArrowProps> = ({
           height={12}
           alt="rightArrow"
           src={`${INFURA_GATEWAY}/ipfs/${down}`}
+          draggable={false}
         />
       </div>
     </div>

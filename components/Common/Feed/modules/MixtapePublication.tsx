@@ -68,6 +68,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                 alt="pfp"
                 layout="fill"
                 className="relative w-fit h-fit rounded-full self-center"
+                draggable={false}
               />
             )}
           </div>
@@ -147,6 +148,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                     objectFit="cover"
                     objectPosition={"center"}
                     className="rounded-md"
+                    draggable={false}
                   />
                   <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto">
                     <div

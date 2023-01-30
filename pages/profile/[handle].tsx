@@ -173,6 +173,7 @@ const Profile: NextPage = (): JSX.Element => {
                     objectFit="cover"
                     objectPosition={"center"}
                     className="rounded-full"
+                    draggable={false}
                   />
                 )}
               </div>

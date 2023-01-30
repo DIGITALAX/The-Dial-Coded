@@ -71,6 +71,7 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
         >
           <MixSave col={"2"} />
         </div>
+        <div className="relative w-fit h-fit f5:flex hidden">
         <ReactTooltip
           anchorId="save-mixtape"
           place="right"
@@ -81,6 +82,7 @@ const CreateMixtape: FunctionComponent<CreateMixtapeProps> = ({
             opacity: "0.7",
           }}
         />
+        </div>
       </div>
       <div className="relative w-full h-fit flex flex-row xl:flex-nowrap flex-wrap row-start-2 gap-6">
         <MixInput

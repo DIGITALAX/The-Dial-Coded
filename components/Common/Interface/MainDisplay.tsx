@@ -86,6 +86,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                 objectFit="cover"
                 layout="fill"
                 className="absolute"
+                draggable={false}
               />
               <div className="relative w-full h-fit hidden f4:grid grid-flow-col auto-cols-auto">
                 <Panel col={"1"} />

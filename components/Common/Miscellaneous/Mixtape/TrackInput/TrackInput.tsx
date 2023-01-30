@@ -53,6 +53,7 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
                     objectFit="cover"
                     objectPosition={"center"}
                     className="rounded-md absolute"
+                    draggable={false}
                   />
                   <div
                     className={`relative w-fit h-fit col-start-1 justify-self-end self-start p-px ${
@@ -112,6 +113,7 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
                 width={20}
                 height={20}
                 className="relative w-fit h-fit"
+                draggable={false}
               />
             </div>
           </div>

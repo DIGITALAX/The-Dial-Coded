@@ -25,8 +25,9 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
           layout="fill"
           objectFit="cover"
           className="absolute w-full h-full p-2 rounded-xl"
+          draggable={false}
         />
-        <div className="relative w-full h-full col-start-1 f1:flex-row flex flex-col p-4 gap-6">
+        <div className="relative w-full h-full col-start-1 f1:flex-row flex flex-col p-4 gap-6 border-4 border-white/20 rounded-lg">
           {lensProfile && isConnected && (
             <div className="relative w-fit h-fit place-self-center col-start-1 row-start-1 grid grid-flow-row auto-rows-auto">
               <div className="relative w-12 h-12 row-start-1 place-self-center rounded-full">
@@ -36,6 +37,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
                     layout="fill"
                     objectFit="cover"
                     className="relative w-full h-full rounded-full"
+                    draggable={false}
                   />
                 )}
               </div>
@@ -69,9 +71,10 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
               <div className="relative w-fit h-fit col-start-1 flex flex-row gap-3 pl-4 pt-4">
                 <div className="relative col-start-1 w-fit h-fit">
                   <Image
-                    src={`${INFURA_GATEWAY}/ipfs/QmPzrV58nvgNZW9zTkNpy5YBCZBEs6kTKhai4ZkEFeaWQj`}
+                    src={`${INFURA_GATEWAY}/ipfs/QmYbuYSSdKb5jScR6Jjg3zutgYVAAbikmM3Y4pxmc7GJqr`}
                     width={30}
                     height={30}
+                    draggable={false}
                   />
                 </div>
                 <div className="relative col-start-2 w-fit h-fit font-dosis text-offBlack place-self-center">

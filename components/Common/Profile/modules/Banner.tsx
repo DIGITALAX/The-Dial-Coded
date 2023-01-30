@@ -28,6 +28,7 @@ const Banner: FunctionComponent<BannerProps> = ({
           objectPosition={"top"}
           layout="fill"
           src={coverImagePictureFormatted}
+          draggable={false}
         />
       ) : (
         <Image
@@ -35,6 +36,7 @@ const Banner: FunctionComponent<BannerProps> = ({
           objectPosition={"top"}
           layout="fill"
           src={`${INFURA_GATEWAY}/ipfs/QmcDKJt29aMZeFpHtv61R4TZU1MbBXeb5RzfdoY6Ee2hsY`}
+          draggable={false}
         />
       )}
     </div>

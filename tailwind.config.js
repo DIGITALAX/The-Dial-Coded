@@ -48,6 +48,7 @@ module.exports = {
         dialG: "#A6DA70",
         lB: "#06A9CF",
         ocean: "#078FD6",
+        shame: "#F6F5F0",
       },
       cursor: {
         focus: "url('/focus.png'), auto",

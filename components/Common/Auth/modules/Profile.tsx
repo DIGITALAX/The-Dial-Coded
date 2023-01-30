@@ -38,6 +38,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
         {authStatus && profileImage && (
           <Image
             src={profileImage}
+            draggable={false}
             layout="fill"
             objectFit="cover"
             className="w-full h-full rounded-full"

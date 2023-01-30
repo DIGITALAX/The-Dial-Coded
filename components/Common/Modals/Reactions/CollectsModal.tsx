@@ -116,6 +116,7 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                                 layout="fill"
                                 alt="pfp"
                                 className="relative w-fit h-fit rounded-full self-center"
+                                draggable={false}
                               />
                             )}
                           </div>

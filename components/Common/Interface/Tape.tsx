@@ -40,6 +40,7 @@ const Tape: FunctionComponent<TapeProps> = ({
             src={`${INFURA_GATEWAY}/ipfs/${sideImage}`}
             layout="fill"
             priority
+            draggable={false}
           />
         </div>
       )}
@@ -51,6 +52,7 @@ const Tape: FunctionComponent<TapeProps> = ({
             priority
             objectFit="cover"
             objectPosition={"center"}
+            draggable={false}
           />
         </div>
       )}

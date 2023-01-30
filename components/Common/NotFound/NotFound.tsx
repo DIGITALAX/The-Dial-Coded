@@ -72,6 +72,7 @@ const NotFound: FunctionComponent = (): JSX.Element => {
             width={100}
             height={100}
             alt="dial"
+            draggable={false}
           />
         </div>
       </div>

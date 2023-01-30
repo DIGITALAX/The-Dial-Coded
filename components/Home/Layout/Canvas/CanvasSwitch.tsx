@@ -94,6 +94,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
             objectFit="cover"
             layout="fill"
             className="absolute rounded-lg"
+            draggable={false}
           />
           <div className="relative w-fit h-fit place-self-center">
             Please Connect to Lens to use the Canvas.

@@ -113,6 +113,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                   alt="pfp"
                   layout="fill"
                   className="relative w-fit h-fit rounded-full self-center"
+                  draggable={false}
                 />
               )}
             </div>
@@ -241,6 +242,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                     objectFit="cover"
                     objectPosition={"center"}
                     className="rounded-md"
+                    draggable={false}
                   />
                 ) : (
                   <video

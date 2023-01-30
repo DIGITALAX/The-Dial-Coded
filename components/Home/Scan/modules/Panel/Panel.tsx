@@ -27,7 +27,7 @@ const Panel: FunctionComponent = (): JSX.Element => {
   let queryWindowSize500: boolean = useMediaQuery("(max-width:500px)");
   return (
     <div
-      className={`relative w-full h-full bg-white rounded-t-2xl row-start-3 grid grid-flow-col auto-cols-auto pl-3 md:pl-10 z-10 py-6 md:gap-0 gap-6 `}
+      className={`relative w-full h-full bg-shame rounded-t-2xl row-start-3 grid grid-flow-col auto-cols-auto pl-3 md:pl-10 z-10 py-6 md:gap-0 gap-6 `}
       id={"account"}
     >
       <div
@@ -37,7 +37,7 @@ const Panel: FunctionComponent = (): JSX.Element => {
             : !queryWindowSize500
             ? "w-fit"
             : "w-full"
-        } h-fit col-start-1 gap-3 flex flex-row self-center justify-self-start fo:pr-2 md:pl-3 bg-white z-1 overflow-x-scroll fo:overflow-x-clip`}
+        } h-fit col-start-1 gap-3 flex flex-row self-center justify-self-start fo:pr-2 md:pl-3 bg-shame z-1 overflow-x-scroll fo:overflow-x-clip`}
       >
         <div
           className={`relative ${

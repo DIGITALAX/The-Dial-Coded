@@ -28,6 +28,7 @@ const Rewind: FunctionComponent<RewindProps> = ({
         height={40}
         src={`${INFURA_GATEWAY}/ipfs/QmeEDch97j4u2fKzsSTZk5WxE4CWDppqngEXHmTJ9hne5T`}
         alt="forward"
+        draggable={false}
       />
     </div>
   );

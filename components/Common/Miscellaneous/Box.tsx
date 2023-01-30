@@ -26,6 +26,7 @@ const Box: FunctionComponent<BoxProps> = ({
         objectFit={contain ? "contain" : "cover"}
         objectPosition={"center"}
         layout="fill"
+        draggable={false}
       />
     </div>
   );

@@ -193,6 +193,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
                     objectFit="cover"
                     objectPosition={"cover"}
                     className="rounded-md col-start-1 justify-self-start"
+                    draggable={false}
                   />
                 </div>
               )}
@@ -284,6 +285,7 @@ const AccountTab: FunctionComponent<AccountTabProps> = ({
                       objectFit="cover"
                       objectPosition={"cover"}
                       className="rounded-md col-start-1 justify-self-start"
+                      draggable={false}
                     />
                   </div>
                 )}

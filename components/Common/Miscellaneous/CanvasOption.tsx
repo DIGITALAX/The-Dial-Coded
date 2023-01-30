@@ -34,6 +34,7 @@ const CanvasOption: FunctionComponent<CanvasOptionProps> = ({
           src={`${INFURA_GATEWAY}/ipfs/${image}`}
           width={width}
           height={height}
+          draggable={false}
         />
       </div>
     </div>

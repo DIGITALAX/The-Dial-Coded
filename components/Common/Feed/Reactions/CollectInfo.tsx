@@ -56,6 +56,7 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
               layout="fill"
               objectFit="cover"
               className="relative w-fit h-fit flex"
+              draggable={false}
             />
           </div>
           {type !== "FreeCollectModule" && (

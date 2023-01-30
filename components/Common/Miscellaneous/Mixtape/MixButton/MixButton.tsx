@@ -34,6 +34,7 @@ const MixButton: FunctionComponent<MixButtonProps> = ({
         className="absolute w-full h-full"
         layout="fill"
         objectFit="cover"
+        draggable={false}
       />
       <div
         className={`relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto  gap-3 pl-0.5 py-1 pr-2 rounded-tr-md ${

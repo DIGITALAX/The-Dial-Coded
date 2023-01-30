@@ -34,6 +34,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
           className="relative w-fit h-fit relative cursor-pointer"
           width={230}
           height={230}
+          draggable={false}
           alt="dial"
         />
       </div>
@@ -128,6 +129,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
                                     alt="pfp"
                                     layout="fill"
                                     className="relative w-fit h-fit rounded-full self-center"
+                                    draggable={false}
                                   />
                                 )}
                               </div>
@@ -151,6 +153,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
               src={`${INFURA_GATEWAY}/ipfs/${canvasURIs[currentSetting]}`}
               layout="fill"
               alt="canvas"
+              draggable={false}
             />
           </div>
         )}

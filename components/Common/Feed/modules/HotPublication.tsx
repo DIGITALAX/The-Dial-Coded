@@ -46,6 +46,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
         objectFit="cover"
         objectPosition={"center"}
         className="rounded absolute"
+        draggable={false}
       />
       <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto row-start-1 gap-2 text-xs">
         <div
@@ -70,6 +71,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
                 alt="pfp"
                 layout="fill"
                 className="relative w-fit h-fit rounded-full self-center"
+                draggable={false}
               />
             )}
           </div>

@@ -39,7 +39,6 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
   );
   const dispatch = useDispatch();
   let queryWindowSize1200: boolean = useMediaQuery("(max-width:1200px)");
-  console.log({ newLink });
   return (
     <div className="relative w-full h-full row-start-1 grid grid-flow-row auto-rows-auto">
       <BackgroundImage mainImage={mainImage} />
@@ -70,6 +69,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
                   src={`${INFURA_GATEWAY}/ipfs/Qmf6evtDntW5NPNp5vcGRpyG2LgK6qg5ndJ3kw7cNy4BuK`}
                   width={25}
                   height={25}
+                  draggable={false}
                 />
               </a>
               <div
@@ -81,9 +81,10 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
                   // layout="fill"
                   width={25}
                   height={25}
+                  draggable={false}
                 />
               </div>
-              <div className="relative w-fit h-fit justify-self-end row-start-2 border border-white col-start-1">
+              <div className="relative w-fit h-fit justify-self-end row-start-2 border border-offBlue col-start-1 rounded-md">
                 <iframe
                   width={!queryWindowSize1200 ? "900" : "550"}
                   height={!queryWindowSize1200 ? "650" : "400"}

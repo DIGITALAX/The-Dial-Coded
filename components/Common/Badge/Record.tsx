@@ -11,6 +11,7 @@ const Record: FunctionComponent<RecordProps> = ({index, recordImage}): JSX.Eleme
             src={`${INFURA_GATEWAY}/ipfs/${recordImage}`}
             layout="fill"
             objectFit="cover"
+            draggable={false}
           />
           <div
             className="relative w-full h-full col-start-1 grid grid-flow-col auto-cols-auto rounded-md p-1"
@@ -21,6 +22,7 @@ const Record: FunctionComponent<RecordProps> = ({index, recordImage}): JSX.Eleme
                 layout="fill"
                 objectFit="cover"
                 className="hover:rotate-12"
+                draggable={false}
               />
             </div>
           </div>

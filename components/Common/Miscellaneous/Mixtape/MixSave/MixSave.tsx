@@ -15,6 +15,7 @@ const MixSave: FunctionComponent<MixSaveProps> = ({ col }): JSX.Element => {
         // width={!queryWindowSize500 ? 30 : 18}
         // height={!queryWindowSize500 ? 30 : 18}
         priority
+        draggable={false}
       />
     </div>
   );

@@ -24,7 +24,12 @@ const ImageViewerModal: FunctionComponent = (): JSX.Element => {
         <div className="relative w-full h-screen grid grid-flow-row auto-rows-auto py-8">
           <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto px-4">
             {media.type === "image/png" || media.type === "image/gif" ? (
-              <Image src={media.image} layout="fill" objectFit="contain" />
+              <Image
+                src={media.image}
+                layout="fill"
+                objectFit="contain"
+                draggable={false}
+              />
             ) : (
               <video
                 muted
