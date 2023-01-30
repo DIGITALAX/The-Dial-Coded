@@ -16,6 +16,7 @@ const Footer: FunctionComponent = (): JSX.Element => {
             alt="grid"
             width={26}
             height={26}
+            draggable={false}
           />
         </div>
         <div className="col-start-2 grid grid-flow-col auto-cols-auto relative h-fit w-fit gap-3 place-self-end">
@@ -32,6 +33,7 @@ const Footer: FunctionComponent = (): JSX.Element => {
                 priority
                 className="h-fit relative pr-1"
                 alt="mirror"
+                draggable={false}
               />
             </Link>
           </div>
@@ -47,6 +49,7 @@ const Footer: FunctionComponent = (): JSX.Element => {
                 width={29}
                 height={28}
                 priority
+                draggable={false}
               />
             </Link>
           </div>
@@ -62,6 +65,7 @@ const Footer: FunctionComponent = (): JSX.Element => {
                 width={30}
                 height={30}
                 priority
+                draggable={false}
               />
             </Link>
           </div>

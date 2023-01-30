@@ -39,6 +39,7 @@ const OptionMenu: FunctionComponent<OptionMenuProps> = ({
             alt={image}
             width={imageWidth}
             height={imageHeight}
+            draggable={false}
           />
         </div>
         <div className="relative w-full h-fit col-start-2 text-white font-dosis lowercase self-center place-self-center grid grid-flow-col auto-cols-auto">

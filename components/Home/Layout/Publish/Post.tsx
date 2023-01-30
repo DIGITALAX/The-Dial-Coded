@@ -43,7 +43,7 @@ const Post: FunctionComponent = (): JSX.Element => {
     firstMixLoad,
   } = useHot();
   return (
-    <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-white p-3 sm:p-6 md:p-10 gap-10">
+    <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-shame p-3 sm:p-6 md:p-10 gap-10">
       <PostBox
         openConnectModal={openConnectModal}
         lensProfile={lensProfile}

@@ -34,6 +34,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             width={15}
             height={20}
             className={`flex w-fit h-fit relative col-start-1 place-self-center`}
+            draggable={false}
           />
         </div>
         <div

@@ -22,6 +22,7 @@ const ButtonIcon: FunctionComponent<ButtonIconProps> = ({
           objectPosition="center"
           layout="fill"
           className="absolute"
+          draggable={false}
         />
       )}
       <div className="relative row-start-1 w-full h-1 bg-white justify-self-center self-start"></div>

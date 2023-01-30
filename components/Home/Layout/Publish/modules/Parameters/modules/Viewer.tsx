@@ -98,6 +98,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                                 alt="pfp"
                                 layout="fill"
                                 className="relative w-fit h-fit rounded-full self-center"
+                                draggable={false}
                               />
                             )}
                           </div>
@@ -123,6 +124,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
           width={30}
           height={30}
           alt="venn"
+          draggable={false}
         />
       </div>
       <ReactTooltip
@@ -154,6 +156,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
             width={30}
             height={30}
             alt="dispatcher"
+            draggable={false}
           />
         ) : (
           <AiOutlineLoading size={20} color="black" />
@@ -183,6 +186,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
           width={30}
           height={30}
           alt="fire"
+          draggable={false}
         />
       </div>
       <ReactTooltip

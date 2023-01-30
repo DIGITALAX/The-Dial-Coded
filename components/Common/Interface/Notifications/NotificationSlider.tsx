@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { NotificationSliderProps } from "./../../types/common.types";
@@ -22,6 +22,7 @@ const NotificationSlider: FunctionComponent<NotificationSliderProps> = ({
               alt={image}
               layout="fill"
               className="p-0.5"
+              draggable={false}
             />
           </div>
         );

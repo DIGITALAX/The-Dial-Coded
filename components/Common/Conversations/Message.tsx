@@ -84,6 +84,7 @@ const Message: FunctionComponent<MessageProps> = ({
                     alt="pfp"
                     objectFit="cover"
                     className="rounded-full"
+                    draggable={false}
                   />
                 )}
               </div>
@@ -159,6 +160,7 @@ const Message: FunctionComponent<MessageProps> = ({
                             layout="fill"
                             objectFit="cover"
                             className="rounded-2xl flex"
+                            draggable={false}
                           />
                         </div>
                       </div>
@@ -262,6 +264,7 @@ const Message: FunctionComponent<MessageProps> = ({
                             alt="pfp"
                             layout="fill"
                             className="relative w-fit h-fit rounded-full self-center"
+                            draggable={false}
                           />
                         )}
                       </div>

@@ -45,6 +45,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                     objectFit="cover"
                     objectPosition={"center"}
                     className="rounded-t-2xl relative w-full h-full"
+                    draggable={false}
                   />
                 ) : (
                   <div className="relative w-full h-full animate-spin grid grid-flow-col auto-cols-auto">

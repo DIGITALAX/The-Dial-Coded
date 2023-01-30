@@ -16,6 +16,7 @@ const Badge: FunctionComponent<BadgeProps> = ({
         src={`${INFURA_GATEWAY}/ipfs/${badgeInfo.image}`}
         layout="fill"
         objectFit="cover"
+        draggable={false}
       />
       <div
         id={badgeInfo.color}
@@ -27,6 +28,7 @@ const Badge: FunctionComponent<BadgeProps> = ({
             layout="fill"
             objectFit="cover"
             className="hover:rotate-12"
+            draggable={false}
           />
           <div className="relative w-fit h-fit place-self-center capitalize font-dosis text-black text-xs text-center">
             {badgeInfo.name}

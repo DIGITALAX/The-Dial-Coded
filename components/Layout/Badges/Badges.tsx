@@ -55,6 +55,7 @@ const Badges: FunctionComponent = (): JSX.Element => {
                 layout="fill"
                 objectFit="cover"
                 className="opacity-60"
+                draggable={false}
               />
             </div>
             <div className="relative w-2/3 h-fit text-center text-sm f2:text-base md:text-[1.3rem] lg:text-[1.2vw] font-dosis text-white px-3 place-self-center">

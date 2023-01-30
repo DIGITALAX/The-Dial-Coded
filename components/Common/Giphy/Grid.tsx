@@ -48,6 +48,7 @@ const Grid: FunctionComponent<GridProps> = ({
                   layout="fill"
                   objectFit="cover"
                   src={result?.media_formats?.gif?.url}
+                  draggable={false}
                 />
               </div>
             );

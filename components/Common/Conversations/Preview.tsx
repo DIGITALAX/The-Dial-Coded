@@ -70,6 +70,7 @@ const Preview: FunctionComponent<PreviewProps> = ({
                         alt="pfp"
                         layout="fill"
                         className="relative w-fit h-fit rounded-full self-center"
+                        draggable={false}
                       />
                     )}
                   </div>

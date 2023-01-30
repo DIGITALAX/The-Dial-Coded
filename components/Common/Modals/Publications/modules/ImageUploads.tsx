@@ -33,6 +33,7 @@ const ImageUploads: FunctionComponent<ImageUploadProps> = ({
                     objectFit="cover"
                     objectPosition={"center"}
                     className="rounded-md absolute"
+                    draggable={false}
                   />
                 ) : (
                   <video

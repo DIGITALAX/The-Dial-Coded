@@ -68,6 +68,7 @@ const Base: FunctionComponent<BaseProps> = ({
                   layout="fill"
                   objectFit="cover"
                   className="rounded-md"
+                  draggable={false}
                 />
               </div>
             );
