@@ -17,6 +17,7 @@ import NotFound from "../../components/Common/NotFound/NotFound";
 import syncScroll from "../../lib/lens/helpers/syncScroll";
 import checkDispatcher from "../../lib/lens/helpers/checkDispatcher";
 import Head from "next/head";
+import PostPageLoading from "../../components/Common/Loaders/PostPageLoading";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -32,6 +33,7 @@ const Post: NextPage = (): JSX.Element => {
     hasPostMirrored,
     hasPostReacted,
     followerOnly,
+    firstLoad,
   } = usePostPage();
 
   const lensProfile = useSelector(
@@ -116,6 +118,10 @@ const Post: NextPage = (): JSX.Element => {
 
   if (!publicationData && publicationDataLoading === false) {
     return <NotFound />;
+  }
+
+  if (publicationDataLoading && firstLoad) {
+    return <PostPageLoading />;
   }
 
   return (

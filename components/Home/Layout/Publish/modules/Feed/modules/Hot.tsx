@@ -3,6 +3,7 @@ import { HotProps } from "../types/feed.types";
 import lodash from "lodash";
 import HotPublication from "../../../../../../Common/Feed/modules/HotPublication";
 import InfiniteScroll from "react-infinite-scroll-component";
+import HotFeedLoading from "../../../../../../Common/Loaders/HotFeedLoading";
 
 const Hot: FunctionComponent<HotProps> = ({
   hotFeed,
@@ -14,7 +15,12 @@ const Hot: FunctionComponent<HotProps> = ({
   isOpen,
   dispatch,
   handleHidePost,
+  mixtapesLoading,
+  firstMixLoad
 }): JSX.Element => {
+  if (mixtapesLoading && firstMixLoad) {
+    return <HotFeedLoading />;
+  }
   return (
     <div
       className={`relative w-full ${

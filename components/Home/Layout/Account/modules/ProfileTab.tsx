@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FeedPublication from "../../../../Common/Feed/modules/FeedPublication";
-import PostFeedLoading from "../../../../Common/Loaders/PostFeedLoading";
+import ProfileFeedLoading from "../../../../Common/Loaders/ProfileFeedLoading";
 import { PublicationSearchResult } from "../../../../Common/types/lens.types";
 import { ProfileTabProps } from "../types/account.types";
 
@@ -20,9 +20,10 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   handleHidePost,
   followerOnly,
   publicationsLoading,
+  firstPostLoad
 }): JSX.Element => {
-  if (publicationsLoading) {
-    return <PostFeedLoading />;
+  if (publicationsLoading && firstPostLoad) {
+    return <ProfileFeedLoading />;
   }
 
   return (

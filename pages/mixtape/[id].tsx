@@ -17,6 +17,8 @@ import syncScroll from "../../lib/lens/helpers/syncScroll";
 import checkDispatcher from "../../lib/lens/helpers/checkDispatcher";
 import Head from "next/head";
 import { INFURA_GATEWAY } from "../../lib/lens/constants";
+import NotFound from "../../components/Common/NotFound/NotFound";
+import PostPageLoading from "../../components/Common/Loaders/PostPageLoading";
 
 const Post: NextPage = (): JSX.Element => {
   const {
@@ -32,6 +34,7 @@ const Post: NextPage = (): JSX.Element => {
     hasPostMirrored,
     hasPostReacted,
     followerOnly,
+    firstLoad,
   } = usePostPage();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
@@ -113,6 +116,14 @@ const Post: NextPage = (): JSX.Element => {
     checkDispatcher(dispatch, lensProfile);
   }, [lensProfile]);
 
+  if (!publicationData && publicationDataLoading === false) {
+    return <NotFound />;
+  }
+
+  if (publicationDataLoading && firstLoad) {
+    return <PostPageLoading />;
+  }
+
   return (
     <div className="relative h-auto min-h-screen w-full grid grid-flow-col auto-col-auto overflow-hidden pt-72 fo:pt-32 bg-offWhite/60">
       <Head>
@@ -145,7 +156,9 @@ const Post: NextPage = (): JSX.Element => {
                     ?.split(",")[0]
                 }`
               : `${INFURA_GATEWAY}/ipfs/${
-                  publicationData?.metadata?.split("\n\n")[3]?.split(",")[0]
+                  publicationData?.metadata?.content
+                    ?.split("\n\n")[3]
+                    ?.split(",")[0]
                 }`
           }
         />
@@ -164,7 +177,9 @@ const Post: NextPage = (): JSX.Element => {
                     ?.split(",")[0]
                 }`
               : `${INFURA_GATEWAY}/ipfs/${
-                  publicationData?.metadata?.split("\n\n")[3]?.split(",")[0]
+                  publicationData?.metadata?.content
+                    ?.split("\n\n")[3]
+                    ?.split(",")[0]
                 }`
           }
         />
@@ -181,7 +196,9 @@ const Post: NextPage = (): JSX.Element => {
                     ?.split(",")[0]
                 }`
               : `${INFURA_GATEWAY}/ipfs/${
-                  publicationData?.metadata?.split("\n\n")[3]?.split(",")[0]
+                  publicationData?.metadata?.content
+                    ?.split("\n\n")[3]
+                    ?.split(",")[0]
                 }`
           }
         />
@@ -195,7 +212,9 @@ const Post: NextPage = (): JSX.Element => {
                     ?.split(",")[0]
                 }`
               : `${INFURA_GATEWAY}/ipfs/${
-                  publicationData?.metadata?.split("\n\n")[3]?.split(",")[0]
+                  publicationData?.metadata?.content
+                    ?.split("\n\n")[3]
+                    ?.split(",")[0]
                 }`
           }
         />
@@ -210,7 +229,9 @@ const Post: NextPage = (): JSX.Element => {
                     ?.split(",")[0]
                 }`
               : `${INFURA_GATEWAY}/ipfs/${
-                  publicationData?.metadata?.split("\n\n")[3]?.split(",")[0]
+                  publicationData?.metadata?.content
+                    ?.split("\n\n")[3]
+                    ?.split(",")[0]
                 }`
           }
         />

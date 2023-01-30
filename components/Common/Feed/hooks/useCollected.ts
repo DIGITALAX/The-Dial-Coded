@@ -26,9 +26,8 @@ import {
   WhoCollectedPublicationRequest,
 } from "../../types/lens.types";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
-import checkIndexed, {
-  pollUntilIndexed,
-} from "../../../../graphql/queries/checkIndexed";
+import 
+  pollUntilIndexed from "../../../../graphql/queries/checkIndexed";
 import { setIndexModal } from "../../../../redux/reducers/indexModalSlice";
 import omit from "../../../../lib/lens/helpers/omit";
 import splitSignature from "../../../../lib/lens/helpers/splitSignature";

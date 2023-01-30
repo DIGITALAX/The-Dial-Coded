@@ -49,7 +49,7 @@ import handleIndexCheck from "../../../../lib/lens/helpers/handleIndexCheck";
 import handleCoinUSDConversion from "../../../../lib/lens/helpers/handleCoinUSDConversion";
 import checkApproved from "../../../../lib/lens/helpers/checkApproved";
 import { setFollowTypeValues } from "../../../../redux/reducers/followTypeValuesSlice";
-import checkIndexed from "../../../../graphql/queries/checkIndexed";
+import { checkIndexed } from "../../../../graphql/queries/checkIndexed";
 import createFollowModule from "../../../../lib/lens/helpers/createFollowModule";
 import { Contract, Signer } from "ethers";
 import FollowNFT from "./../../../../abis/FollowNFT.json";
@@ -111,6 +111,8 @@ const useProfilePage = (): UseProfilePageResults => {
   >([]);
   const [paginatedFollowers, setPaginatedFollowers] = useState<any>();
   const [paginatedFollowing, setPaginatedFollowing] = useState<any>();
+  const [firstSideBarLoad, setFirstSideBarLoad] = useState<boolean>(true);
+  const [firstPostLoad, setFirstPostLoad] = useState<boolean>(true);
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
@@ -448,6 +450,7 @@ const useProfilePage = (): UseProfilePageResults => {
       });
       setUserFeed(filteredArr);
       setPublicationsLoading(false);
+      setFirstPostLoad(false);
       const isOnlyFollowers = await checkIfFollowerOnly(
         filteredArr,
         lensProfile?.id
@@ -586,6 +589,7 @@ const useProfilePage = (): UseProfilePageResults => {
       setMixtapes(sortedArr);
       setMixtapePaginated(pageData);
       setMixtapesLoading(false);
+      setFirstSideBarLoad(false);
       const response = await checkPostReactions(sortedArr, lensProfile?.id);
       setHotReactionsFeed(response?.reactionsFeedArr);
       if (lensProfile?.id) {
@@ -835,6 +839,8 @@ const useProfilePage = (): UseProfilePageResults => {
     approveCurrency,
     mixtapesLoading,
     publicationsLoading,
+    firstPostLoad,
+    firstSideBarLoad,
   };
 };
 export default useProfilePage;

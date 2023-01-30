@@ -33,10 +33,13 @@ const useHot = (): UseHotResults => {
   const [hasHotReacted, setHotHasReacted] = useState<boolean[]>([]);
   const [hasHotMirrored, setHotHasMirrored] = useState<boolean[]>([]);
   const [hasHotCommented, setHotHasCommented] = useState<boolean[]>([]);
+  const [mixtapesLoading, setMixtapesLoading] = useState<boolean>(false);
+  const [firstMixLoad, setFirstMixLoad] = useState<boolean>(true);
 
   const fetchMixtapes = async (): Promise<void> => {
     let sortedArr: any[];
     let pageData: any;
+    setMixtapesLoading(true);
     try {
       if (!lensProfile) {
         const { data } = await explorePublications({
@@ -77,6 +80,8 @@ const useHot = (): UseHotResults => {
       }
       setHotFeed(sortedArr);
       setPaginatedHotResults(pageData);
+      setMixtapesLoading(false);
+      setFirstMixLoad(false);
       const response = await checkPostReactions(sortedArr, lensProfile);
       setHotReactionsFeed(response?.reactionsFeedArr);
       if (lensProfile) {
@@ -98,7 +103,7 @@ const useHot = (): UseHotResults => {
       if (!lensProfile) {
         if (!paginatedHotResults?.next) {
           // fix apollo duplications on null next
-          return
+          return;
         }
         const { data } = await explorePublications({
           sources: "thedial",
@@ -121,7 +126,7 @@ const useHot = (): UseHotResults => {
       } else {
         if (!paginatedHotResults?.next) {
           // fix apollo duplications on null next
-          return
+          return;
         }
         const { data } = await explorePublicationsAuth({
           sources: "thedial",
@@ -177,6 +182,8 @@ const useHot = (): UseHotResults => {
     hasHotMirrored,
     hotReactionsFeed,
     fetchMoreMixtapes,
+    mixtapesLoading,
+    firstMixLoad
   };
 };
 

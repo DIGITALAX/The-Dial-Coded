@@ -18,6 +18,8 @@ export type MainProps = {
   mixtapeMirror: boolean[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   followerOnly: boolean[];
+  publicationsLoading: boolean;
+  firstPubLoad: boolean;
 };
 
 export type HotProps = {
@@ -30,6 +32,8 @@ export type HotProps = {
   fetchMoreMixtapes: () => Promise<void>;
   dispatch: Dispatch<AnyAction>;
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
+  mixtapesLoading: boolean;
+  firstMixLoad: boolean;
 };
 
 export type UseHotResults = {
@@ -39,12 +43,14 @@ export type UseHotResults = {
   hasHotMirrored: boolean[];
   hotReactionsFeed: any[];
   fetchMoreMixtapes: () => Promise<void>;
+  mixtapesLoading: boolean;
+  firstMixLoad: boolean;
 };
 
 export type UseMainResults = {
   setFeedType: (e: string[]) => void;
   setSortCriteria: (e: string) => void;
-  fetchMorePublications: () => Promise<void>;
+  fetchMoreFeed: () => Promise<void>;
   publicationsFeed: PublicationSearchResult[];
   fetchReactions: (id: string) => Promise<any>;
   getMoreFeedTimeline: () => Promise<void>;
@@ -53,4 +59,6 @@ export type UseMainResults = {
   hasReacted: boolean[];
   reactionsFeed: any[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
+  publicationsLoading: boolean;
+  firstPubLoad: boolean;
 };

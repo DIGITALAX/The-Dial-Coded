@@ -37,6 +37,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   handleHidePost,
   handleSendDM,
   mixtapesLoading,
+  firstSideBarLoad
 }): JSX.Element => {
   const location = lodash.filter(
     profileData?.attributes,
@@ -54,7 +55,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   );
   let queryWindowSize900 = useMediaQuery("(max-width:900px)");
   const { openConnectModal } = useConnectModal();
-  if (mixtapesLoading) {
+  if (mixtapesLoading && firstSideBarLoad) {
     return <SideBarLoading />;
   }
   return (

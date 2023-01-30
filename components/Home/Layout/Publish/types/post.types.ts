@@ -31,5 +31,9 @@ export type FeedProps = {
   noUserData: boolean;
   mixtapeMirror: boolean[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
-  followerOnly: boolean[]
+  followerOnly: boolean[];
+  mixtapesLoading: boolean;
+  publicationsLoading: boolean;
+  firstPubLoad: boolean;
+  firstMixLoad: boolean;
 };

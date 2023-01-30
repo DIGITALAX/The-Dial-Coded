@@ -28,7 +28,9 @@ const Post: FunctionComponent = (): JSX.Element => {
     hasMirrored,
     hasCommented,
     mixtapeMirror,
-    followerOnly
+    followerOnly,
+    publicationsLoading,
+    firstPubLoad,
   } = useMainFeed();
   const {
     hotFeed,
@@ -37,6 +39,8 @@ const Post: FunctionComponent = (): JSX.Element => {
     hasHotMirrored,
     hotReactionsFeed,
     fetchMoreMixtapes,
+    mixtapesLoading,
+    firstMixLoad,
   } = useHot();
   return (
     <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-white p-3 sm:p-6 md:p-10 gap-10">
@@ -45,7 +49,7 @@ const Post: FunctionComponent = (): JSX.Element => {
         lensProfile={lensProfile}
         isConnected={connected}
       />
-      <Parameters/>
+      <Parameters />
       <Feed
         hotFeed={hotFeed}
         hasHotReacted={hasHotReacted}
@@ -63,6 +67,10 @@ const Post: FunctionComponent = (): JSX.Element => {
         mixtapeMirror={mixtapeMirror}
         handleHidePost={handleHidePost}
         followerOnly={followerOnly}
+        mixtapesLoading={mixtapesLoading}
+        publicationsLoading={publicationsLoading}
+        firstMixLoad={firstMixLoad}
+        firstPubLoad={firstPubLoad}
       />
     </div>
   );

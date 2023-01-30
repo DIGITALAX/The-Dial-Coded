@@ -12,6 +12,8 @@ import { ScanProps } from "./types/scan.types";
 import Draggable from "react-draggable";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { setVideo } from "../../../redux/reducers/videoSlice";
+import Image from "next/legacy/image";
+import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 
 const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
   const {
@@ -37,6 +39,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
   );
   const dispatch = useDispatch();
   let queryWindowSize1200: boolean = useMediaQuery("(max-width:1200px)");
+  console.log({ newLink });
   return (
     <div className="relative w-full h-full row-start-1 grid grid-flow-row auto-rows-auto">
       <BackgroundImage mainImage={mainImage} />
@@ -53,14 +56,34 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
             cancel=".frame"
             enableUserSelectHack={false}
           >
-            <div className="absolute z-40 bg-black w-fit h-fit px-8 pb-8 pt-4 grid grid-flow-col auto-cols-auto cursor-pointer place-self-center">
+            <div className="absolute z-40 bg-video w-fit h-fit px-8 pb-8 pt-4 grid grid-flow-col auto-cols-auto cursor-grabbing place-self-center border-4 border-black rounded-lg"
+            id="videoplayer">
+              <a
+                className="relative w-fit h-fit justify-self-start row-start-1 col-start-1 pb-2 cursor-pointer"
+                href={`https://www.youtube.com/watch?v=${
+                  newLink?.split("/embed/")[1].split("?controls")[0]
+                }`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image
+                  src={`${INFURA_GATEWAY}/ipfs/Qmf6evtDntW5NPNp5vcGRpyG2LgK6qg5ndJ3kw7cNy4BuK`}
+                  width={25}
+                  height={25}
+                />
+              </a>
               <div
-                className="relative w-fit h-fit justify-self-end row-start-1 pb-4"
+                className="relative w-fit h-fit justify-self-end row-start-1 pb-2 col-start-1 cursor-pointer"
                 onClick={() => dispatch(setVideo(false))}
               >
-                <AiFillCloseCircle size={25} color={"white"} />
+                <Image
+                  src={`${INFURA_GATEWAY}/ipfs/QmRtXzfqbJXXZ6fReUihpauh9nz6pmjUv5CKGm3oXquzh4`}
+                  // layout="fill"
+                  width={25}
+                  height={25}
+                />
               </div>
-              <div className="relative w-fit h-fit justify-self-end row-start-2 border border-white">
+              <div className="relative w-fit h-fit justify-self-end row-start-2 border border-white col-start-1">
                 <iframe
                   width={!queryWindowSize1200 ? "900" : "550"}
                   height={!queryWindowSize1200 ? "650" : "400"}
