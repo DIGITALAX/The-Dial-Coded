@@ -11,7 +11,7 @@ const Preset: FunctionComponent<PresetProps> = ({
   return (
     <span
       key={index}
-      className={`relative w-fit h-fit inline-flex items-center px-3 py-1.5 rounded-full shadow-sm cursor-pointer hover:bg-white text-offBlack/80 lowercase underline underline-offset-2 drop-shadow-md md:whitespace-nowrap place-self-center text-xs galaxy:text-sm md:text-base`}
+      className={`relative w-fit h-fit inline-flex items-center px-3 py-1.5 rounded-full shadow-sm cursor-pointer hover:bg-white text-offBlack/80 lowercase underline underline-offset-2 drop-shadow-md md:whitespace-nowrap place-self-center text-xs galaxy:text-sm md:text-base bg-white`}
       onClick={() => handleOnClick(format, dispatch, searchTarget)}
     >
       {format}

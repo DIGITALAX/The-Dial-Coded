@@ -17,7 +17,7 @@ const Categories: FunctionComponent<CategoriesProps> = ({
             onClick={() => handleAddtoSearch(category, dispatch, searchTarget)}
             className={`relative col-start-${
               index + 1
-            } w-fit h-fit px-5 font-dosis text-white rounded-2xl grid grid-flow-col py-1.5 auto-cols-auto text-sm fo:text-lg whitespace-nowrap border-2 border-offYellow cursor-pointer`}
+            } w-fit h-fit px-5 font-dosis text-white rounded-2xl grid grid-flow-col py-1.5 auto-cols-auto text-sm fo:text-lg whitespace-nowrap border-2 border-offYellow cursor-pointer border-4 border-white/20`}
           >
             <div className="relative w-fit h-fit col-start-1 text-center">
               {category}

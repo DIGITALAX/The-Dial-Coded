@@ -81,52 +81,181 @@ div::-webkit-scrollbar-thumb:active {
 }
 
 #record1 {
-  background: conic-gradient(#2a36f6, #0714d6, #0710a2, #0a15c7, #2a36f6);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmWXbHhAV2zP7znFCAk7mk9m8CJwWEvg3Y2uXkF9FriB8R");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#2a36f6, #0714d6, #0710a2, #0a15c7, #2a36f6);
   opacity: 0.9;
+}
+
+#record1:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
 }
 
 #record2 {
-  background: conic-gradient(#f8f5e6, #e7b97b, #ffdb96, #ffde90, #fff4bc);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmcmgirQuQrY6WAdAZSVZtDZSLMVwXZ7qUZJ1YpytP6ciz");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#f8f5e6, #e7b97b, #ffdb96, #ffde90, #fff4bc);
   opacity: 0.9;
+}
+
+#record2:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
 }
 
 #record3 {
-  background: conic-gradient(#fc9cf3, #b9d9ff, #0091ff, #fd99dc);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmepsJm12yZfqGKHgGeXmYs5gDFMfoAzfszbdNX3gNMWZR");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#fc9cf3, #b9d9ff, #0091ff, #fd99dc);
   opacity: 0.9;
+}
+
+#record3:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
 }
 
 #record4 {
-  background: conic-gradient(#6486f3, #b620e0, #d66a71, #f7b500, #32c5ff);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmfPRMQV9T1QT4VukWxMnG3UXU9PBYAfBbZumggsLbkaku");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#6486f3, #b620e0, #d66a71, #f7b500, #32c5ff);
   opacity: 0.9;
+}
+
+#record4:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
 }
 
 #record5 {
-  background: conic-gradient(#2af651, #07d61d, #06cf0b, #2af640);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmbBay2PjNcKoUa25ZWYVDGAeZZ3n8aG6bRugpw3dZLJDT");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#2af651, #07d61d, #06cf0b, #2af640);
   opacity: 0.9;
+}
+
+#record5:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
 }
 
 #record6 {
-  background: conic-gradient(#000000, #131313);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmbyjAvcCjhxGDsn8h97dxn8j5KAU9WbHasxwvtbWFHnCq");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#000000, #131313);
   opacity: 0.9;
+}
+
+#record6:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
 }
 
 #record7 {
-  background: conic-gradient(#712af6, #7e07d6, #9806cf, #5a0ac7, #682af6);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmPeRQbckKH2RSbSrWaXRTkcXYKBJJVQpkc3mZwNsE5rHX");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#712af6, #7e07d6, #9806cf, #5a0ac7, #682af6);
   opacity: 0.9;
+}
+
+#record7:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
 }
 
 #record8 {
-  background: conic-gradient(#6dd400, #96d026, #96cb00, #cabf00, #f7b500);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmZHrEM2XK3QCQmuVZsb96L553N7Mxqa1d53QmA33bm3NM");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#6dd400, #96d026, #96cb00, #cabf00, #f7b500);
   opacity: 0.9;
+}
+
+#record8:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
 }
 
 #record9 {
-  background: conic-gradient(#f62ada, #d607cf, #cf06ad, #c70aa1, #f62ad3);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmVm9VbBtBjWh8sDcVm9Teaoo6XQYg2y7EwTamtq8rEyvf");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#f62ada, #d607cf, #cf06ad, #c70aa1, #f62ad3);
   opacity: 0.9;
 }
 
+#record9:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
 #record10 {
-  background: conic-gradient(
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmW2V1PyNz3DYwjfPsQQcCJnkTPtjQF5axJhjGHbEpVKbk");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(
     #f7f7f3,
     #dbdfb2,
     #aeeccf,
@@ -140,18 +269,60 @@ div::-webkit-scrollbar-thumb:active {
   opacity: 0.9;
 }
 
+#record10:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
 #record11 {
-  background: conic-gradient(#f62a2a, #d60707, #cf0606);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmRnEBe8sugCxF5aCNXEUtVrQmh3fPEva6fBCVfFm2FXn8");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#f62a2a, #d60707, #cf0606);
   opacity: 0.9;
+}
+
+#record11:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
 }
 
 #record12 {
-  background: conic-gradient(#2abdf6, #078fd6, #06a9cf, #0ac7ab, #2abcf6);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmQKyDvWHqurBiACGx1nUDy9he8w2dGsZjbrw1xSyGjLkn");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#2abdf6, #078fd6, #06a9cf, #0ac7ab, #2abcf6);
   opacity: 0.9;
 }
 
+#record12:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
 #record13 {
-  background: conic-gradient(
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmWXbHhAV2zP7znFCAk7mk9m8CJwWEvg3Y2uXkF9FriB8R");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(
     #f6f7f3,
     #f6ddc3,
     #fefffe,
@@ -163,14 +334,53 @@ div::-webkit-scrollbar-thumb:active {
   opacity: 0.9;
 }
 
+#record13:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
 #record14 {
-  background: conic-gradient(#f6f42a, #d6b407, #cfaa06, #c7c20a, #f5f62a);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmcmgirQuQrY6WAdAZSVZtDZSLMVwXZ7qUZJ1YpytP6ciz");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#f6f42a, #d6b407, #cfaa06, #c7c20a, #f5f62a);
   opacity: 0.9;
 }
 
+#record14:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
+}
+
 #record15 {
-  background: conic-gradient(#fc9cf3, #b9d9ff, #0091ff, #99fdc1);
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/QmepsJm12yZfqGKHgGeXmYs5gDFMfoAzfszbdNX3gNMWZR");
+  background-position: center;
+  background-size: cover;
+  background-color: conic-gradient(#fc9cf3, #b9d9ff, #0091ff, #99fdc1);
   opacity: 0.9;
+}
+
+#record15:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.18);
+  filter: blur(5px);
 }
 
 #select1 {
@@ -482,11 +692,7 @@ code::-webkit-scrollbar {
   border-radius: 0.375rem;
 }
 
-#panel:after {
-  background: linear-gradient(to right, #9cfcb6, #b9d9ff, #0091ff, #fd99dc);
-}
-
-#panel:before {
+#panel::before {
   content: "";
   position: absolute;
   top: 0;
@@ -495,13 +701,6 @@ code::-webkit-scrollbar {
   bottom: 0;
   box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.5);
   filter: blur(5px);
-  background: linear-gradient(to right, #9cfcb6, #b9d9ff, #0091ff, #fd99dc);
-}
-
-#panel {
-  background: url("https://thedial.infura-ipfs.io/ipfs/QmQDQhA2Wxydyf1Lf3BVPCzN5fySYbdTyYp5eSz1x2bReA");
-  filter: contrast(100%);
-  background-position: center;
-  background-size: cover;
-  border-radius: 0.375rem;
+  background: linear-gradient(to right, white, #b9d9ff, #0091ff, #44AFD3);
+  opacity: 80%;
 }
