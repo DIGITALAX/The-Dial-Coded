@@ -56,7 +56,7 @@ const Slider: FunctionComponent = (): JSX.Element => {
   let queryWindowSize500: boolean = useMediaQuery("(max-width:500px)");
 
   return (
-    <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-white py-3 pl-3 md:py-10 md:pl-10 gap-10">
+    <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-shame py-3 pl-3 md:py-10 md:pl-10 gap-10">
       <SliderSearch
         handleChangeSearch={handleChangeSearch}
         handleKeyEnter={handleKeyEnter}

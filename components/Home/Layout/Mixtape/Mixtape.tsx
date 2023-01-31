@@ -13,7 +13,7 @@ const Mixtape: FunctionComponent = (): JSX.Element => {
     getMoreMixtapes
   } = useMixtape();
   return (
-    <div className="relative w-full h-full row-start-2 bg-white grid grid-flow-col auto-cols-auto">
+    <div className="relative w-full h-full row-start-2 bg-shame grid grid-flow-col auto-cols-auto">
       <Interface
         title={"Mixtape Maker"}
         tapeTitles={mixtapeTitles}

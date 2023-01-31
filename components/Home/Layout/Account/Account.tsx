@@ -6,7 +6,7 @@ const Account: FunctionComponent = (): JSX.Element => {
   const { accountTitles, handleTapeSet, notificationImages } = useAccount();
   return (
     <div
-      className="relative w-full h-full row-start-2 bg-white grid grid-flow-col auto-cols-auto"
+      className="relative w-full h-full row-start-2 bg-shame grid grid-flow-col auto-cols-auto"
     >
       <Interface
         title={"Settings"}

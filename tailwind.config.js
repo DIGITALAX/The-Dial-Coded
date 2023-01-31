@@ -49,6 +49,8 @@ module.exports = {
         lB: "#06A9CF",
         ocean: "#078FD6",
         shame: "#F6F5F0",
+        disk: "#44AFD3",
+        coast: "#b9d9ff"
       },
       cursor: {
         focus: "url('/focus.png'), auto",

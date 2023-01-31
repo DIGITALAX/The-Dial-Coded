@@ -17,7 +17,7 @@ const PanelOption: FunctionComponent<PanelOptionProps> = ({
     <div
       className={`relative w-16 md:w-fit h-fit col-start-${
         index + 1
-      } grid grid-flow-col auto-cols-auto gap-2 cursor-pointer hover:opacity-80 active:scale-95 p-1.5 rounded-md border border-4 border-offBlue/60 shadow-md bg-deep`}
+      } grid grid-flow-col auto-cols-auto gap-2 cursor-pointer hover:opacity-80 active:scale-95 p-1.5 rounded-md border-4 border-coast/60 shadow-md bg-disk`}
       key={index}
       id="panel"
       onClick={() => {
@@ -27,12 +27,12 @@ const PanelOption: FunctionComponent<PanelOptionProps> = ({
           dispatch(setMixtapePage("Add New Mixtape"));
       }}
     >
-      {/* <Image
-        src={`${INFURA_GATEWAY}/ipfs/QmQDQhA2Wxydyf1Lf3BVPCzN5fySYbdTyYp5eSz1x2bReA`}
+      <Image
+        src={`${INFURA_GATEWAY}/ipfs/QmSjh6dsibg9yDfBwRfC5YSWFTmwpwPxRDTFG8DzLHzFyB`}
         layout="fill"
         objectFit="cover"
         className="absolute w-full h-full"
-      /> */}
+      />
       <div className="relative w-fit h-fit col-start-1 place-self-center flex">
         <Image
           alt="files"
