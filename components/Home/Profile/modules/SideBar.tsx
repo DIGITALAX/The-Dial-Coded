@@ -59,7 +59,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
     return <SideBarLoading />;
   }
   return (
-    <div className="col-start-1 relative w-full h-fit f1:h-full grid grid-flow-row auto-rows-auto bg-offWhite/95 row-start-1 pl-4 f1:pl-14 pt-40 pb-10 pr-4 overflow-y-scroll overflow-x-clip">
+    <div className="col-start-1 relative w-2/3 h-fit f1:h-full grid grid-flow-row auto-rows-auto bg-offWhite/95 row-start-1 pl-4 f1:pl-14 pt-40 pb-10 pr-4 overflow-y-scroll overflow-x-clip">
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto row-start-1 self-start gap-10">
         <div
           className={`relative w-fit h-fit row-start-1 ${
@@ -233,7 +233,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
         </div>
         <div className="relative w-full h-full row-start-2 grid f1:grid-flow-row f1:auto-rows-auto grid-flow-col auto-cols-auto overflow-x-scroll f1:overflow-x-clip">
           <InfiniteScroll
-            height={!queryWindowSize900 ? "300em" : undefined}
+            height={!queryWindowSize900 ? "266em" : undefined}
             loader={""}
             hasMore={true}
             next={getMoreUserMixtapes}

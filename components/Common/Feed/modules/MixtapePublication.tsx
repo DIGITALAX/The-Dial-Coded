@@ -152,7 +152,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                   />
                   <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto">
                     <div
-                      id="record2"
+                      id="mixtapeOne"
                       className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-2 py-1 text-base"
                     >
                       <div className="relative w-fit h-fit place-self-center col-start-1 break-all">

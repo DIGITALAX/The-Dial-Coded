@@ -56,55 +56,46 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   }
   return (
     <div
-      className={`relative ${
+      className={`relative w-full ${
         height ? "h-full" : "h-fit"
-      } w-full rounded-md grid grid-flow-row auto-rows-auto p-3 galaxy:p-6 gap-6 border-2 border-black z-0 ${
-        mixtapeMirror
-          ? "bg-white"
-          : "bg-gradient-to-r from-offBlack via-gray-600 to-black"
-      }`}
+      } flex flex-row flex-nowrap gap-6 rounded-md z-0`}
     >
-      {(publication as any)?.__typename === "Mirror" && (
-        <div className="relative w-fit h-fit row-start-1 justify-self-end self-center grid grid-flow-col auto-cols-auto gap-2 ">
-          <div
-            className={`relative w-fit h-fit col-start-1 place-self-center text-xs font-dosis ${
-              mixtapeMirror ? "text-offBlack" : "text-offWhite"
-            }`}
-          >
-            {mixtapeMirror
-              ? `Mixtape Mirrored by @${(publication as any)?.profile?.handle}`
-              : `Mirrored by @${(publication as any)?.profile?.handle}`}
-          </div>
-          <div className="relative w-fit h-fit col-start-2 place-self-center">
-            <AiOutlineRetweet color={"red"} size={15} />
-          </div>
-        </div>
-      )}
       <div
-        className={`relative w-full h-fit ${
-          (publication as any)?.__typename === "Mirror"
-            ? "row-start-2"
-            : "row-start-1"
-        } grid grid-flow-col auto-cols-auto`}
+        className="relative w-40 h-auto rounded-md pr-px py-px"
+        id="sideProfile"
       >
-        <div
-          className="relative w-fit h-fit row-start-2 fo:row-start-1 fo:col-span-1 col-span-2 col-start-1 grid grid-flow-col auto-cols-auto gap-3 cursor-pointer hover:opacity-70 active:scale-95"
-          onClick={() =>
-            router.push(
-              `/profile/${
-                (publication as any)?.__typename !== "Mirror"
-                  ? (publication as any)?.profile?.handle?.split(".test")[0]
-                  : (publication as any)?.mirrorOf?.profile?.handle?.split(
-                      ".test"
-                    )[0]
-              }`
-            )
-          }
-        >
-          <div className="relative w-full h-full col-start-1 self-center justify-self-start grid grid-flow-col auto-cols-auto">
+        <div className="relative w-full h-full bg-shame rounded-md flex flex-col items-center py-1.5 px-1">
+          <Image
+            src={`${INFURA_GATEWAY}/ipfs/QmSjh6dsibg9yDfBwRfC5YSWFTmwpwPxRDTFG8DzLHzFyB`}
+            layout="fill"
+            objectFit="cover"
+            className="absolute w-full h-full rounded-lg"
+          />
+          <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
+            <div className="relative w-20 h-6 rounded-full flex justify-self-center">
+              <Image
+                src={`${INFURA_GATEWAY}/ipfs/QmfDmMCcgcseCFzGam9DbmDk5sQRbt6zrQVhvj4nTeuLGq`}
+                layout="fill"
+                alt="backdrop"
+                priority
+                draggable={false}
+                className="rounded-full w-full h-full"
+              />
+            </div>
             <div
-              className={`relative rounded-full flex bg-white w-6 h-6 place-self-center col-start-1`}
+              className={`absolute rounded-full flex bg-white w-6 h-full justify-self-center right-6 col-start-1 cursor-pointer active:scale-95 hover:opacity-80`}
               id="crt"
+              onClick={() =>
+                router.push(
+                  `/profile/${
+                    (publication as any)?.__typename !== "Mirror"
+                      ? (publication as any)?.profile?.handle?.split(".test")[0]
+                      : (publication as any)?.mirrorOf?.profile?.handle?.split(
+                          ".test"
+                        )[0]
+                  }`
+                )
+              }
             >
               {profileImage !== "" && (
                 <Image
@@ -112,258 +103,302 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                   objectFit="cover"
                   alt="pfp"
                   layout="fill"
-                  className="relative w-fit h-fit rounded-full self-center"
+                  className="relative w-full h-full rounded-full"
                   draggable={false}
                 />
               )}
             </div>
           </div>
-          <div className="relative w-fit h-fit col-start-2 grid grid-flow-row auto-rows-auto place-self-center">
+          <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
             <div
-              className={`relative w-fit h-fit row-start-1 ${
-                mixtapeMirror ? "text-offBlack" : "text-white"
-              } font-dosis text-base self-center`}
+              className={`relative w-fit h-fit ${
+                mixtapeMirror && "text-offBlack"
+              } font-dosis text-xs justify-self-center`}
+              id={mixtapeMirror ? "" : "username"}
             >
               {(publication as any)?.__typename !== "Mirror"
-                ? (publication as any)?.profile?.name
-                : (publication as any)?.mirrorOf?.profile?.name}
+                ? (publication as any)?.profile?.name?.substring(0, 20)
+                : (publication as any)?.mirrorOf?.profile?.name?.substring(
+                    0,
+                    20
+                  )}
             </div>
+          </div>
+          <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
             <div
-              id={mixtapeMirror ? "profile" : "username"}
+              id={mixtapeMirror ? "profile" : ""}
               className={`relative w-fit h-fit ${
                 (publication as any)?.profile?.name
-                  ? "row-start02"
+                  ? "row-start-2"
                   : "row-start-1"
-              } font-dosis text-base self-center`}
+              } font-clash text-xs justify-self-center ${
+                !mixtapeMirror && "text-black"
+              }`}
             >
               @
               {(publication as any)?.__typename !== "Mirror"
-                ? (publication as any)?.profile?.handle
-                : (publication as any)?.mirrorOf?.profile?.handle}
+                ? (publication as any)?.profile?.handle?.substring(0, 15)
+                : (publication as any)?.mirrorOf?.profile?.handle?.substring(
+                    0,
+                    15
+                  )}
             </div>
           </div>
-        </div>
-        <div
-          className={`relative w-fit h-fit ${
-            mixtapeMirror ? "text-offBlack" : "text-white"
-          } font-dosis justify-self-end self-center col-start-2 fo:pb-0 pb-2`}
-        >
-          {moment(`${(publication as any)?.createdAt}`).fromNow()}
-        </div>
-      </div>
-      <div
-        className={`${
-          (publication as any)?.__typename === "Mirror"
-            ? "row-start-3"
-            : "row-start-2"
-        } relative w-full h-fit  text-left font-dosis grid grid-flow-row auto-rows-auto gap-6 pl-6`}
-      >
-        <div
-          className={`relative w-full h-fit row-start-1 relative w-fit h-fit ${
-            mixtapeMirror ? "text-offBlack" : "text-white"
-          } font-dosis self-center text-base self-center justify-self-start`}
-        >
-          {!mixtapeMirror ? (
+          <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
             <div
-              dangerouslySetInnerHTML={{
-                __html: descriptionRegex(
-                  (publication as any)?.__typename !== "Mirror"
-                    ? (publication as any)?.metadata?.description
-                    : (publication as any)?.mirrorOf?.metadata?.description
-                ),
-              }}
-              className="relative grid grid-flow-col auto-cols-auto place-self-center"
-            ></div>
-          ) : (
-            <>
-              {(publication as any)?.mirrorOf?.metadata?.name}
-              <br />
-              <br />
-              Src:
-              {
-                (publication as any)?.mirrorOf?.metadata?.content?.split(
-                  "\n\n"
-                )[0]
+              className={`relative w-fit h-fit text-offBlack font-dosis justify-self-center col-start-2 fo:pb-0 pb-2 text-xs `}
+            >
+              {moment(`${(publication as any)?.createdAt}`).fromNow()}
+            </div>
+          </div>
+          <div className="relative w-full h-fit">
+            <Reactions
+              id={(publication as any)?.id}
+              textColor={mixtapeMirror ? "black" : "white"}
+              commentColor={mixtapeMirror ? "black" : "#FBEED1"}
+              mirrorColor={mixtapeMirror ? "black" : "#FEEA66"}
+              collectColor={mixtapeMirror ? "black" : "#81A8F8"}
+              heartColor={mixtapeMirror ? "black" : "red"}
+              mirrorAmount={Number(
+                (publication as any)?.stats?.totalAmountOfMirrors
+              )}
+              collectAmount={Number(
+                (publication as any)?.stats?.totalAmountOfCollects
+              )}
+              commentAmount={Number(
+                (publication as any)?.stats?.totalAmountOfComments
+              )}
+              heartAmount={reactionsFeed}
+              heartExpand={setReactionState}
+              mirrorExpand={setReactionState}
+              collectExpand={setReactionState}
+              commentExpand={setCommentShow}
+              dispatch={dispatch}
+              mirrorValue={(publication as any)?.id}
+              collectValue={(publication as any)?.id}
+              commentValue={(publication as any)?.id}
+              heartValue={(publication as any)?.id}
+              canCollect={
+                (publication as any)?.collectModule?.__typename !==
+                "RevertCollectModuleSettings"
+                  ? true
+                  : false
               }
-              ——
-              {
-                (publication as any)?.mirrorOf?.metadata?.content?.split(
-                  "\n\n"
-                )[1]
+              hasCollected={
+                (publication as any)?.__typename === "Mirror"
+                  ? (publication as any)?.mirrorOf?.hasCollectedByMe
+                  : (publication as any)?.hasCollectedByMe
               }
-            </>
-          )}
+              hasReacted={hasReacted}
+              hasMirrored={hasMirrored}
+              hasCommented={hasCommented}
+              canDelete={
+                (publication as any)?.profile?.ownedBy === address
+                  ? true
+                  : false
+              }
+              handleHidePost={handleHidePost}
+              followerOnly={followerOnly}
+              isMixtape={mixtapeMirror as boolean}
+            />
+          </div>
         </div>
       </div>
       <div
-        className={`relative w-fit max-w-full h-fit rounded-lg overflow-x-scroll grid grid-flow-col auto-cols-auto gap-3 pl-6 z-10 ${
-          (publication as any)?.__typename === "Mirror"
-            ? "row-start-4"
-            : "row-start-3"
+        className={`relative w-full h-full rounded-md grid grid-flow-row auto-rows-auto p-3 galaxy:p-6 gap-6 border-2 border-black ${
+          mixtapeMirror
+            ? "bg-white"
+            : "bg-gradient-to-r from-offBlack via-gray-600 to-black"
         }`}
       >
-        {((publication as any)?.__typename === "Mirror"
-          ? (publication as any)?.mirrorOf?.metadata?.media
-          : (publication as any)?.metadata?.media
-        )?.map((image: MediaSet, index: number) => {
-          let formattedImageURL: string;
-          if (image.original.url.includes("ipfs://")) {
-            formattedImageURL = `${INFURA_GATEWAY}/ipfs/${
-              image.original.url?.split("://")[1]
-            }`;
-          } else {
-            formattedImageURL = image.original.url;
-          }
-          return (
+        {(publication as any)?.__typename === "Mirror" && (
+          <div className="relative w-fit h-fit row-start-1 justify-self-end self-center grid grid-flow-col auto-cols-auto gap-2">
             <div
-              key={index}
-              className={`relative w-60 h-60 border-2 border-black rounded-lg bg-spots grid grid-flow-col auto-cols-auto col-start-${
-                index + 1
-              } cursor-pointer hover:opacity-70 active:scale-95`}
-              onClick={() =>
-                dispatch(
-                  setImageViewer({
-                    actionType: image.original.mimeType,
-                    actionOpen: true,
-                    actionImage: formattedImageURL,
-                  })
-                )
-              }
+              className={`relative w-fit h-fit col-start-1 place-self-center text-xs font-dosis ${
+                mixtapeMirror ? "text-offBlack" : "text-offWhite"
+              }`}
             >
-              <div className="relative w-full h-full col-start-1 flex">
-                {image.original.mimeType !== "video/mp4" ? (
-                  <Image
-                    src={
-                      image.original.mimeType === "image/png"
-                        ? formattedImageURL
-                        : image.original.url
-                    }
-                    layout="fill"
-                    objectFit="cover"
-                    objectPosition={"center"}
-                    className="rounded-md"
-                    draggable={false}
-                  />
-                ) : (
-                  <video
-                    muted
-                    controls
-                    className="rounded-md absolute w-full h-full object-cover"
-                  >
-                    <source src={formattedImageURL} type="video/mp4" />
-                  </video>
-                )}
-                {mixtapeMirror && (
-                  <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto">
-                    <div
-                      id="record2"
-                      className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-2 py-1 text-base"
-                    >
-                      <div className="relative w-fit h-fit place-self-center col-start-1">
-                        {
-                          (publication as any)?.metadata?.content
-                            ?.split("\n\n")[2]
-                            ?.split(",")[index]
-                        }
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+              {mixtapeMirror
+                ? `Mixtape Mirrored by @${
+                    (publication as any)?.profile?.handle
+                  }`
+                : `Mirrored by @${(publication as any)?.profile?.handle}`}
             </div>
-          );
-        })}
-      </div>
-      <div
-        className={`relative w-full h-fit ${
-          (publication as any)?.__typename === "Mirror"
-            ? "row-start-5"
-            : "row-start-4"
-        } grid grid-flow-col auto-cols-auto pl-6`}
-      >
-        <Reactions
-          id={(publication as any)?.id}
-          textColor={mixtapeMirror ? "black" : "white"}
-          commentColor={mixtapeMirror ? "black" : "#FBEED1"}
-          mirrorColor={mixtapeMirror ? "black" : "#FEEA66"}
-          collectColor={mixtapeMirror ? "black" : "#81A8F8"}
-          heartColor={mixtapeMirror ? "black" : "red"}
-          mirrorAmount={Number(
-            (publication as any)?.stats?.totalAmountOfMirrors
-          )}
-          collectAmount={Number(
-            (publication as any)?.stats?.totalAmountOfCollects
-          )}
-          commentAmount={Number(
-            (publication as any)?.stats?.totalAmountOfComments
-          )}
-          heartAmount={reactionsFeed}
-          heartExpand={setReactionState}
-          mirrorExpand={setReactionState}
-          collectExpand={setReactionState}
-          commentExpand={setCommentShow}
-          dispatch={dispatch}
-          mirrorValue={(publication as any)?.id}
-          collectValue={(publication as any)?.id}
-          commentValue={(publication as any)?.id}
-          heartValue={(publication as any)?.id}
-          canCollect={
-            (publication as any)?.collectModule?.__typename !==
-            "RevertCollectModuleSettings"
-              ? true
-              : false
-          }
-          hasCollected={
-            (publication as any)?.__typename === "Mirror"
-              ? (publication as any)?.mirrorOf?.hasCollectedByMe
-              : (publication as any)?.hasCollectedByMe
-          }
-          hasReacted={hasReacted}
-          hasMirrored={hasMirrored}
-          hasCommented={hasCommented}
-          canDelete={
-            (publication as any)?.profile?.ownedBy === address ? true : false
-          }
-          handleHidePost={handleHidePost}
-          followerOnly={followerOnly}
-          isMixtape={mixtapeMirror as boolean}
-        />
-        {!router.asPath.includes((publication as any)?.id) && (
-          <div
-            className={`relative w-fit h-fit row-start-2 col-start-1 sm:row-start-1 sm:col-start-2 sm:pt-0 pt-3 justify-self-end self-center grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95 ${
-              mixtapeMirror ? "text-offBlack" : "text-white"
-            }`}
-            onClick={
-              viewerOpen
-                ? () => {}
-                : () => {
-                    router.push(
-                      `/${mixtapeMirror ? "mixtape" : "post"}/${
-                        (publication as any)?.id
-                      }`
-                    );
-                    dispatch(
-                      setCommentShow({
-                        actionOpen: false,
-                        actionType: "comment",
-                        actionValue: (publication as any)?.id,
-                      })
-                    );
-                  }
-            }
-          >
-            <div className="relative w-fit h-fit col-start-1 text-sm">
-              {type === "Post" && !mixtapeMirror
-                ? "View Post"
-                : !mixtapeMirror && type !== "Post"
-                ? "View Comment"
-                : "View Mixtape"}
-            </div>
-            <div className="relative w-fit h-fit col-start-2">
-              <AiFillEye color={mixtapeMirror ? "black" : "white"} size={20} />
+            <div className="relative w-fit h-fit col-start-2 place-self-center">
+              <AiOutlineRetweet color={"red"} size={15} />
             </div>
           </div>
         )}
+        <div
+          className={`${
+            (publication as any)?.__typename === "Mirror"
+              ? "row-start-2"
+              : "row-start-1"
+          } relative w-full h-fit  text-left font-dosis grid grid-flow-row auto-rows-auto gap-6`}
+        >
+          <div
+            className={`relative w-full h-fit row-start-1 relative w-fit h-fit ${
+              mixtapeMirror ? "text-offBlack" : "text-white"
+            } font-dosis self-center text-base justify-self-start`}
+          >
+            {!mixtapeMirror ? (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: descriptionRegex(
+                    (publication as any)?.__typename !== "Mirror"
+                      ? (publication as any)?.metadata?.description
+                      : (publication as any)?.mirrorOf?.metadata?.description
+                  ),
+                }}
+                className="relative grid grid-flow-col auto-cols-auto place-self-center"
+              ></div>
+            ) : (
+              <>
+                {(publication as any)?.mirrorOf?.metadata?.name}
+                <br />
+                <br />
+                Src:
+                {
+                  (publication as any)?.mirrorOf?.metadata?.content?.split(
+                    "\n\n"
+                  )[0]
+                }
+                ——
+                {
+                  (publication as any)?.mirrorOf?.metadata?.content?.split(
+                    "\n\n"
+                  )[1]
+                }
+              </>
+            )}
+          </div>
+        </div>
+        <div
+          className={`relative w-fit max-w-full h-fit rounded-lg overflow-x-scroll grid grid-flow-col auto-cols-auto gap-3 z-10 ${
+            (publication as any)?.__typename === "Mirror"
+              ? "row-start-3"
+              : "row-start-2"
+          }`}
+        >
+          {((publication as any)?.__typename === "Mirror"
+            ? (publication as any)?.mirrorOf?.metadata?.media
+            : (publication as any)?.metadata?.media
+          )?.map((image: MediaSet, index: number) => {
+            let formattedImageURL: string;
+            if (image.original.url.includes("ipfs://")) {
+              formattedImageURL = `${INFURA_GATEWAY}/ipfs/${
+                image.original.url?.split("://")[1]
+              }`;
+            } else {
+              formattedImageURL = image.original.url;
+            }
+            return (
+              <div
+                key={index}
+                className={`relative w-60 h-60 border-2 border-black rounded-lg bg-spots grid grid-flow-col auto-cols-auto col-start-${
+                  index + 1
+                } cursor-pointer hover:opacity-70 active:scale-95`}
+                onClick={() =>
+                  dispatch(
+                    setImageViewer({
+                      actionType: image.original.mimeType,
+                      actionOpen: true,
+                      actionImage: formattedImageURL,
+                    })
+                  )
+                }
+              >
+                <div className="relative w-full h-full col-start-1 flex">
+                  {image.original.mimeType !== "video/mp4" ? (
+                    <Image
+                      src={
+                        image.original.mimeType === "image/png"
+                          ? formattedImageURL
+                          : image.original.url
+                      }
+                      layout="fill"
+                      objectFit="cover"
+                      objectPosition={"center"}
+                      className="rounded-md"
+                      draggable={false}
+                    />
+                  ) : (
+                    <video
+                      muted
+                      controls
+                      className="rounded-md absolute w-full h-full object-cover"
+                    >
+                      <source src={formattedImageURL} type="video/mp4" />
+                    </video>
+                  )}
+                  {mixtapeMirror && (
+                    <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto">
+                      <div
+                        id="mixtapeOne"
+                        className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-2 py-1 text-base"
+                      >
+                        <div className="relative w-fit h-fit place-self-center col-start-1">
+                          {
+                            (publication as any)?.metadata?.content
+                              ?.split("\n\n")[2]
+                              ?.split(",")[index]
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div
+          className={`relative w-full h-fit ${
+            (publication as any)?.__typename === "Mirror"
+              ? "row-start-4"
+              : "row-start-3"
+          } grid grid-flow-col auto-cols-auto`}
+        >
+          {!router.asPath.includes((publication as any)?.id) && (
+            <div
+              className={`relative w-fit h-fit col-start-1 row-start-1 sm:col-start-2 sm:pt-0 pt-3 justify-self-end self-center grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95 ${
+                mixtapeMirror ? "text-offBlack" : "text-white"
+              }`}
+              onClick={
+                viewerOpen
+                  ? () => {}
+                  : () => {
+                      router.push(
+                        `/${mixtapeMirror ? "mixtape" : "post"}/${
+                          (publication as any)?.id
+                        }`
+                      );
+                      dispatch(
+                        setCommentShow({
+                          actionOpen: false,
+                          actionType: "comment",
+                          actionValue: (publication as any)?.id,
+                        })
+                      );
+                    }
+              }
+            >
+              <div className="relative w-fit h-fit col-start-1 text-sm">
+                {type === "Post" && !mixtapeMirror
+                  ? "View Post"
+                  : !mixtapeMirror && type !== "Post"
+                  ? "View Comment"
+                  : "View Mixtape"}
+              </div>
+              <div className="relative w-fit h-fit col-start-2">
+                <AiFillEye
+                  color={mixtapeMirror ? "black" : "white"}
+                  size={20}
+                />
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

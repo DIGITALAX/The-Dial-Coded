@@ -160,7 +160,7 @@ const Profile: NextPage = (): JSX.Element => {
       ) : (
         <div className="relative w-full h-full flex flex-col col-start-1">
           <Banner coverPicture={profileData?.coverPicture} />
-          <div className="relative w-full h-fit flex flex-col f1:flex-row">
+          <div className="relative w-full h-full flex flex-col f1:flex-row">
             <div className="absolute w-fit h-fit grid grid-flow-col auto-cols-auto px-10">
               <div
                 id="crt"
@@ -201,15 +201,16 @@ const Profile: NextPage = (): JSX.Element => {
               className={`relative w-full flex px-3 fo:px-10 py-4 bg-offWhite/90 overflow-y-scroll 
               ${
                 !publicationsLoading
-                  ? "h-fit f1:col-start-2 f1:row-start-1 col-start-1 row-start-2"
+                  ? "h-full items-start f1:col-start-2 f1:row-start-1 col-start-1 row-start-2"
                   : "h-full row-start-1 col-start-2"
               }`}
+              id="aboveProfile"
             >
               <ProfileTab
                 getMoreUserProfileFeed={getMoreUserProfileFeed}
                 userFeed={userFeed}
                 dispatch={dispatch}
-                height={"500rem"}
+                height={"300rem"}
                 hasMirrored={hasMirrored}
                 hasCommented={hasCommented}
                 hasReacted={hasReacted}

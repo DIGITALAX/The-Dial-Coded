@@ -13,7 +13,7 @@ const Marquee: FunctionComponent = (): JSX.Element => {
       }`}
     >
       <MarqueeText gradient={false} speed={30} direction={"right"}>
-        <div className="relative w-full h-fit text-white font-digiB uppercase leading-30 text-9xl lg:text-[10rem] px-2 pb-6">
+        <div className="relative w-full h-fit text-white font-digiB uppercase leading-30 text-9xl lg:text-[10rem] px-2 pb-10">
           WE’RE SO HAPPY YOU DISCOVERED THE NEW SOCIAL WEB.{" "}
         </div>
       </MarqueeText>

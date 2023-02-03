@@ -33,7 +33,7 @@ const Main: FunctionComponent<MainProps> = ({
       {!noUserData ? (
         <InfiniteScroll
           scrollableTarget={"targetDiv"}
-          height={isOpen ? undefined : "100rem"}
+          height={"240.2rem"}
           loader={""}
           hasMore={true}
           next={fetchMore}

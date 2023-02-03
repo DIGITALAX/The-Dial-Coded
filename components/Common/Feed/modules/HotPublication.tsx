@@ -82,7 +82,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
           </div>
         </div>
         <div
-          id="record2"
+          id="mixtapeOne"
           className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-1.5 py-px row-start-1 col-start-2"
         >
           <div className="relative w-fit h-fit place-self-center col-start-1">
@@ -90,7 +90,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
           </div>
         </div>
         <div
-          id="record13"
+          id="mixtapeTwo"
           className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-1.5 py-px row-start-2 col-start-2"
         >
           <div className="relative w-fit h-fit place-self-center col-start-1">
