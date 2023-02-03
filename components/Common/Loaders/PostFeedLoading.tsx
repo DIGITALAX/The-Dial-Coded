@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 
 const PostFeedLoading: FunctionComponent = (): JSX.Element => {
   return (
-    <div className="relative w-full h-full flex flex-col">
+    <div className="relative w-full md:w-[50vw] h-full flex flex-col">
       <div className="relative flex flex-col animate-pulse w-full h-fit row-start-1 self-start">
         <div className="flex-1 space-y-6 py-1">
           <div className="h-2 bg-offBlue/50 rounded"></div>

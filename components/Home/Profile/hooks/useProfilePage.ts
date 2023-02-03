@@ -431,6 +431,7 @@ const useProfilePage = (): UseProfilePageResults => {
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 30,
         });
+        console.log({data})
         const arr: any[] = [...data?.publications?.items];
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
@@ -449,6 +450,7 @@ const useProfilePage = (): UseProfilePageResults => {
         }
       });
       setUserFeed(filteredArr);
+      console.log({filteredArr})
       setPublicationsLoading(false);
       setFirstPostLoad(false);
       const isOnlyFollowers = await checkIfFollowerOnly(
@@ -482,6 +484,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const getMoreUserProfileFeed = async (): Promise<void> => {
     let sortedArr: any[];
     let pageData: any;
+    console.log("hit")
     try {
       if (!lensProfile?.id) {
         const { data } = await profilePublications({

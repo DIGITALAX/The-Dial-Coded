@@ -63,6 +63,13 @@ class Document extends NextDocument {
             crossOrigin=""
             type="font/ttf"
           />
+          <link
+            rel="preload"
+            href="/fonts/ClashDisplay.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
           <style
             dangerouslySetInnerHTML={{
               __html: `
@@ -94,6 +101,12 @@ class Document extends NextDocument {
                 font-family: "Digi T";
                 font-weight: 400;
                 src: url("./fonts/DS-DIGIT.ttf");
+              }
+
+              @font-face {
+                font-family: "Clash Display";
+                font-weight: 400;
+                src: url("./fonts/ClashDisplay.ttf");
               }
             `,
             }}

@@ -32,6 +32,12 @@
   src: url("/fonts/DS-DIGIT.ttf");
 }
 
+@font-face {
+  font-family: "Clash Display";
+  font-weight: 400;
+  src: url("/fonts/ClashDisplay.ttf");
+}
+
 html,
 body {
   touch-action: none;
@@ -426,11 +432,11 @@ div::-webkit-scrollbar-thumb:active {
 #username {
   background: linear-gradient(
     -86deg,
-    #f8f5e6,
-    #f9d78d,
-    #e7b97b,
-    #fff1cf,
-    #fdfedd
+    #000000,
+    #8dc6f9,
+    #7b7fe7,
+    #2a42fc,
+    #000000
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -701,6 +707,42 @@ code::-webkit-scrollbar {
   bottom: 0;
   box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.5);
   filter: blur(5px);
-  background: linear-gradient(to right, white, #b9d9ff, #0091ff, #44AFD3);
+  background: linear-gradient(to right, white, #b9d9ff, #0091ff, #44afd3);
   opacity: 80%;
+}
+
+#outside {
+  background: conic-gradient(
+    #f7f7f3,
+    #dbdfb2,
+    #aeeccf,
+    #cedfde,
+    #f1d2ef,
+    #f6ebf7,
+    #f0ecf6,
+    #ffffff,
+    #f6f7e6
+  );
+}
+
+#mixtapeOne {
+  background: conic-gradient(#f8f5e6, #e7b97b, #ffdb96, #ffde90, #fff4bc);
+  opacity: 0.9;
+}
+
+#mixtapeTwo {
+  background: conic-gradient(
+    #f6f7f3,
+    #f6ddc3,
+    #fefffe,
+    #f1d2ef,
+    #ffc4a1,
+    #f1cfbd,
+    #ffecfe
+  );
+  opacity: 0.9;
+}
+
+#sideProfile {
+  background: linear-gradient(to right, transparent, white, #44afd3);
 }

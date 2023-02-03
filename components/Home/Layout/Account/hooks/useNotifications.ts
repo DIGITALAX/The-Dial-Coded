@@ -30,6 +30,7 @@ const useNotifications = () => {
       const results = await shortNotifications({
         profileId: lensProfileId,
         limit: 50,
+        sources: "thedial",
       });
       const previousNotifications = getNotificationLength()?.notifLength;
       if (!previousNotifications) {
@@ -37,7 +38,10 @@ const useNotifications = () => {
           dispatch(setNotifications(true));
         }
       } else {
-        if (results?.data?.result?.items?.length > (previousNotifications as number)) {
+        if (
+          results?.data?.result?.items?.length >
+          (previousNotifications as number)
+        ) {
           dispatch(setNotifications(true));
         }
       }
@@ -53,21 +57,25 @@ const useNotifications = () => {
       const results = await notifications({
         profileId: lensProfileId,
         limit: 50,
+        sources: "thedial",
       });
-      const newData = lodash.filter(results?.data?.result?.items, (item: any) => {
-        if (item?.__typename === "NewReactionNotification") {
-          if (item?.reaction !== "DOWNVOTE") {
+      const newData = lodash.filter(
+        results?.data?.result?.items,
+        (item: any) => {
+          if (item?.__typename === "NewReactionNotification") {
+            if (item?.reaction !== "DOWNVOTE") {
+              return true;
+            }
+          } else if (
+            item?.__typename === "NewCollectNotification" &&
+            item?.collectedPublication?.collectedBy !== null
+          ) {
+            return true;
+          } else {
             return true;
           }
-        } else if (
-          item?.__typename === "NewCollectNotification" &&
-          item?.collectedPublication?.collectedBy !== null
-        ) {
-          return true;
-        } else {
-          return true;
         }
-      });
+      );
       setNotificationsPage(results?.data?.result.pageInfo);
       setNotificationsList(newData);
     } catch (err: any) {
@@ -82,21 +90,25 @@ const useNotifications = () => {
         profileId: lensProfileId,
         limit: 50,
         cursor: notificationsPage?.next,
+        sources: "thedial",
       });
-      const newData = lodash.filter(results?.data?.result?.items, (item: any) => {
-        if (item?.__typename === "NewReactionNotification") {
-          if (item?.reaction !== "DOWNVOTE") {
+      const newData = lodash.filter(
+        results?.data?.result?.items,
+        (item: any) => {
+          if (item?.__typename === "NewReactionNotification") {
+            if (item?.reaction !== "DOWNVOTE") {
+              return true;
+            }
+          } else if (
+            item?.__typename === "NewCollectNotification" &&
+            item?.collectedPublication?.collectedBy !== null
+          ) {
+            return true;
+          } else if (item?.__typename === "NewFollowerNotification") {
             return true;
           }
-        } else if (
-          item?.__typename === "NewCollectNotification" &&
-          item?.collectedPublication?.collectedBy !== null
-        ) {
-          return true;
-        } else if (item?.__typename === "NewFollowerNotification") {
-          return true;
         }
-      });
+      );
       setNotificationsList([...notificationsList, ...newData]);
       setNotificationsPage(results?.data?.result.pageInfo);
     } catch (err: any) {

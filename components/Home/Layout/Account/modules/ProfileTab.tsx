@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -20,25 +21,22 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   handleHidePost,
   followerOnly,
   publicationsLoading,
-  firstPostLoad
+  firstPostLoad,
 }): JSX.Element => {
   if (publicationsLoading && firstPostLoad) {
     return <ProfileFeedLoading />;
   }
-
   return (
     <div
-      className={`relative w-full h-fit grid grid-flow-row auto-rows-auto ${
-        height !== undefined && "gap-6"
-      }`}
+      className={`relative w-full h-full grid grid-flow-row auto-rows-auto gap-6`}
     >
       {!profileDataLoading ? (
         <div
-          className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto gap-5"
-          id="targetDiv"
+          className="relative w-full h-full row-start-1 grid grid-flow-row auto-rows-auto gap-5"
+          id="targetProfile"
         >
           <InfiniteScroll
-            scrollableTarget={"targetDiv"}
+            scrollableTarget={"targetProfile"}
             height={height}
             loader={""}
             hasMore={true}

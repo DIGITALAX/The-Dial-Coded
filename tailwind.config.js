@@ -12,6 +12,7 @@ module.exports = {
         digiB: "Digi Bold",
         digiI: "Digi Italic",
         digiT: "Digi T",
+        clash: "Clash Display"
       },
       colors: {
         offBlack: "#111313",
