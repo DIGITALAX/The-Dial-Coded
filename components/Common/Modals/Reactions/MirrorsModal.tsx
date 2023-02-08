@@ -69,7 +69,7 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                       hasMore={true}
                       dataLength={mirrorers.length}
                       next={getMorePostMirrors}
-                      loader={""}
+                      loader={<FetchMoreLoading />}
                       height={"10rem"}
                       className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4 gap-2"
                     >

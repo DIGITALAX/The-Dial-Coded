@@ -19,6 +19,7 @@ import HotPublication from "../../../Common/Feed/modules/HotPublication";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { useMediaQuery } from "@material-ui/core";
 import SideBarLoading from "../../../Common/Loaders/SideBarLoading";
+import FetchMoreLoading from "../../../Common/Loaders/FetchMoreLoading";
 
 const SideBar: FunctionComponent<SideBarProps> = ({
   profileData,
@@ -235,7 +236,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
         <div className="relative w-full h-full row-start-2 grid f1:grid-flow-row f1:auto-rows-auto grid-flow-col auto-cols-auto overflow-x-scroll f1:overflow-x-clip p-2">
           <InfiniteScroll
             height={!queryWindowSize900 ? "266em" : undefined}
-            loader={""}
+            loader={<FetchMoreLoading />}
             hasMore={true}
             next={getMoreUserMixtapes}
             dataLength={mixtapes?.length}

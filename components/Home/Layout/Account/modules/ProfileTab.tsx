@@ -43,7 +43,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
                 ? height
                 : undefined
             }
-            loader={""}
+            loader={<FetchMoreLoading />}
             hasMore={true}
             next={getMoreUserProfileFeed}
             dataLength={userFeed?.length}

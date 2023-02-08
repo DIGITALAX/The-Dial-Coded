@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../../../redux/store";
 import { setSignIn } from "../../../../../../../redux/reducers/signInSlice";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import FetchMoreLoading from "../../../../../../Common/Loaders/FetchMoreLoading";
 
 const Viewer: FunctionComponent<ViewerProps> = ({
   userTypeOpen,
@@ -72,7 +73,7 @@ const Viewer: FunctionComponent<ViewerProps> = ({
                   hasMore={true}
                   dataLength={profileSearch?.length}
                   next={getMoreProfiles}
-                  loader={""}
+                  loader={<FetchMoreLoading />}
                   height={"10rem"}
                   className="relative w-full h-fit"
                 >
