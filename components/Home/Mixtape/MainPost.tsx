@@ -9,7 +9,8 @@ const MainPost: FunctionComponent<MainPostMixtapeProps> = ({
   hasPostCommented,
   hasPostReacted,
   reactionsPostFeed,
-  handleHidePost
+  handleHidePost,
+  followerOnly,
 }): JSX.Element => {
   const dispatch = useDispatch();
   return (
@@ -25,11 +26,14 @@ const MainPost: FunctionComponent<MainPostMixtapeProps> = ({
               ? "Mirror"
               : "Comment"
           }
-          hasMirrored={hasPostMirrored?.length > 0 && hasPostMirrored[0]}
-          hasCommented={hasPostCommented?.length > 0 && hasPostCommented[0]}
-          hasReacted={hasPostReacted?.length > 0 && hasPostReacted[0]}
-          reactionsFeed={reactionsPostFeed?.length > 0 && reactionsPostFeed[0]}
+          hasMirrored={hasPostMirrored?.length > 0 && hasPostMirrored?.[0]}
+          hasCommented={hasPostCommented?.length > 0 && hasPostCommented?.[0]}
+          hasReacted={hasPostReacted?.length > 0 && hasPostReacted?.[0]}
+          reactionsFeed={
+            reactionsPostFeed?.length > 0 && reactionsPostFeed?.[0]
+          }
           handleHidePost={handleHidePost}
+          followerOnly={followerOnly}
         />
       </div>
     </div>

@@ -4,8 +4,6 @@ import { RootState } from "../../../../../../redux/store";
 import { FeedProps } from "../../types/post.types";
 import Hot from "./modules/Hot";
 import Main from "./modules/Main";
-import { MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
-import { setMoreFeed } from "../../../../../../redux/reducers/moreFeedSlice";
 
 const Feed: FunctionComponent<FeedProps> = ({
   hotFeed,
@@ -28,6 +26,7 @@ const Feed: FunctionComponent<FeedProps> = ({
   publicationsLoading,
   firstMixLoad,
   firstPubLoad,
+  hotFollowerOnly
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -67,6 +66,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           handleHidePost={handleHidePost}
           mixtapesLoading={mixtapesLoading}
           firstMixLoad={firstMixLoad}
+          hotFollowerOnly={hotFollowerOnly}
         />
       </div>
       {/* <div

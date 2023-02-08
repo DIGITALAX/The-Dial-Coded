@@ -726,6 +726,7 @@ export type HotPublicationProps = {
   hasCommented?: boolean | undefined;
   dispatch: Dispatch<AnyAction>;
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
+  followerOnly: boolean;
 };
 
 export type MixtapePublicationProps = {
@@ -737,6 +738,7 @@ export type MixtapePublicationProps = {
   hasMirrored?: boolean | undefined;
   hasCommented?: boolean | undefined;
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
+  followerOnly: boolean;
 };
 
 export type TagsProps = {
@@ -828,6 +830,7 @@ export type ProfileSideBarProps = {
   hasCommented: boolean | undefined;
   hasMirrored: boolean | undefined;
   hasReacted: boolean | undefined;
+  mixtape: boolean;
 };
 
 export type CassetteButton = {
@@ -838,5 +841,5 @@ export type CassetteButton = {
   position: string;
   loading?: boolean;
   handleSend?: () => Promise<void>;
-  value?: string
+  value?: string;
 };

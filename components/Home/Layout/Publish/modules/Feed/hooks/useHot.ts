@@ -5,6 +5,7 @@ import {
   explorePublicationsAuth,
 } from "../../../../../../../graphql/queries/explorePublications";
 import checkIfCommented from "../../../../../../../lib/lens/helpers/checkIfCommented";
+import checkIfFollowerOnly from "../../../../../../../lib/lens/helpers/checkIfFollowerOnly";
 import checkIfMirrored from "../../../../../../../lib/lens/helpers/checkIfMirrored";
 import checkPostReactions from "../../../../../../../lib/lens/helpers/checkPostReactions";
 import { RootState } from "../../../../../../../redux/store";
@@ -34,6 +35,7 @@ const useHot = (): UseHotResults => {
   const [hasHotMirrored, setHotHasMirrored] = useState<boolean[]>([]);
   const [hasHotCommented, setHotHasCommented] = useState<boolean[]>([]);
   const [mixtapesLoading, setMixtapesLoading] = useState<boolean>(false);
+  const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [firstMixLoad, setFirstMixLoad] = useState<boolean>(true);
 
   const fetchMixtapes = async (): Promise<void> => {
@@ -79,6 +81,16 @@ const useHot = (): UseHotResults => {
         pageData = data?.explorePublications?.pageInfo;
       }
       setHotFeed(sortedArr);
+      if (lensProfile) {
+        const isOnlyFollowers = await checkIfFollowerOnly(
+          sortedArr,
+          lensProfile
+        );
+        setFollowerOnly(isOnlyFollowers as boolean[]);
+      } else {
+        const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, undefined);
+        setFollowerOnly(isOnlyFollowers as boolean[]);
+      }
       setPaginatedHotResults(pageData);
       setMixtapesLoading(false);
       setFirstMixLoad(false);
@@ -148,6 +160,8 @@ const useHot = (): UseHotResults => {
         pageData = data?.explorePublications?.pageInfo;
       }
       setHotFeed([...hotFeed, ...sortedArr]);
+      const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, undefined);
+      setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
       setPaginatedHotResults(pageData);
       const response = await checkPostReactions(sortedArr, lensProfile);
       setHotReactionsFeed([...hotReactionsFeed, ...response?.reactionsFeedArr]);
@@ -183,7 +197,8 @@ const useHot = (): UseHotResults => {
     hotReactionsFeed,
     fetchMoreMixtapes,
     mixtapesLoading,
-    firstMixLoad
+    firstMixLoad,
+    followerOnly,
   };
 };
 

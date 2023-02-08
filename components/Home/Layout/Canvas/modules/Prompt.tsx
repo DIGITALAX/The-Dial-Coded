@@ -10,7 +10,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
   handleSendPrompt,
   promptLoading,
   setPrompt,
-  prompt
+  prompt,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-row flex-wrap f1:flex-nowrap gap-12 py-10 px-4 f5:px-12 f5:py-20">

@@ -4,7 +4,6 @@ import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { HotPublicationProps } from "../../types/common.types";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import { setCommentShow } from "../../../../redux/reducers/commentShowSlice";
-import moment from "moment";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -22,6 +21,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
   hasMirrored,
   hasCommented,
   handleHidePost,
+  followerOnly,
 }): JSX.Element => {
   const router = useRouter();
   const viewerOpen = useSelector(
@@ -44,11 +44,6 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
         draggable={false}
       />
       <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto row-start-1 gap-2 text-xs">
-        <div className="relative col-start-1 row-start-1 grid grid-flow-col auto-cols-auto text-white font-dosis">
-          <div className="relative w-fit h-fit col-start-1 justify-self-start self-center text-xs">
-            {moment(`${data?.createdAt}`).fromNow()}
-          </div>
-        </div>
         <div
           id="mixtapeOne"
           className="relative w-fit h-fit justify-self-end self-start grid grid-flow-col auto-cols-auto font-dosis text-offBlack rounded-md border border-offBlack px-1.5 py-px row-start-1 col-start-2"
@@ -83,12 +78,13 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
           reactionsFeed={reactionsFeed}
           setReactionState={setReactionState}
           handleHidePost={handleHidePost}
-          followerOnly={false}
+          followerOnly={followerOnly}
           dispatch={dispatch}
           setCommentShow={setCommentShow}
           hasCommented={hasCommented}
           hasMirrored={hasMirrored}
           hasReacted={hasReacted}
+          mixtape={true}
         />
       </div>
     </div>

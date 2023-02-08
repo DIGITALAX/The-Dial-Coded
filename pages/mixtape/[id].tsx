@@ -349,6 +349,7 @@ const Post: NextPage = (): JSX.Element => {
                 hasPostReacted={hasPostReacted}
                 reactionsPostFeed={reactionsPostFeed}
                 handleHidePost={handleHidePost}
+                followerOnly={followerOnly}
               />
               <Comments
                 commentors={commentors}

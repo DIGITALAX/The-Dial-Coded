@@ -16,7 +16,8 @@ const Hot: FunctionComponent<HotProps> = ({
   dispatch,
   handleHidePost,
   mixtapesLoading,
-  firstMixLoad
+  firstMixLoad,
+  hotFollowerOnly,
 }): JSX.Element => {
   if (mixtapesLoading && firstMixLoad) {
     return <HotFeedLoading />;
@@ -43,6 +44,7 @@ const Hot: FunctionComponent<HotProps> = ({
                 hasMirrored={hasHotMirrored?.[0]}
                 hasCommented={hasHotCommented?.[0]}
                 handleHidePost={handleHidePost}
+                followerOnly={hotFollowerOnly?.[0]}
               />
             );
           })}
@@ -61,11 +63,12 @@ const Hot: FunctionComponent<HotProps> = ({
                 index={index}
                 key={index}
                 dispatch={dispatch}
-                reactionsFeed={hotReactionsFeed[1]}
-                hasReacted={hasHotReacted[1]}
-                hasMirrored={hasHotMirrored[1]}
-                hasCommented={hasHotCommented[1]}
+                reactionsFeed={hotReactionsFeed?.[1]}
+                hasReacted={hasHotReacted?.[1]}
+                hasMirrored={hasHotMirrored?.[1]}
+                hasCommented={hasHotCommented?.[1]}
                 handleHidePost={handleHidePost}
+                followerOnly={hotFollowerOnly?.[1]}
               />
             );
           })}
@@ -105,6 +108,7 @@ const Hot: FunctionComponent<HotProps> = ({
                         hasMirrored={hasHotMirrored[indexOne + 2]}
                         hasCommented={hasHotCommented[indexOne + 2]}
                         handleHidePost={handleHidePost}
+                        followerOnly={hotFollowerOnly?.[indexOne + 2]}
                       />
                     );
                   })}
