@@ -16,7 +16,7 @@ const Publish: FunctionComponent<PublishProps> = ({
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
   return (
-    <div className="absolute justify-self-start self-start w-fit h-fit grid grid-flow-row auto-rows-auto gap-2 p-3 z-10">
+    <div className="absolute justify-self-start self-start w-fit h-fit grid grid-flow-row auto-rows-auto gap-2 p-3 z-10 top-10 left-4">
       <div
         className="relative row-start-1 w-fit h-fit"
         onClick={

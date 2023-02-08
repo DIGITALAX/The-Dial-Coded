@@ -19,7 +19,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = ({
   setNewCanvas
 }): JSX.Element => {
   return (
-    <div className="absolute w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto justify-self-end self-start p-3 gap-2 z-10">
+    <div className="absolute w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto justify-self-end self-start p-3 gap-2 z-10 top-10 right-4">
       <div
         className="relative w-12 h-12 rounded-md bg-white grid grid-flow-col auto-cols-auto drop-shadow-lg cursor-pointer active:scale-95 justify-self-end self-start"
         onClick={() => setShowSideDrawOptions(!showSideDrawOptions)}

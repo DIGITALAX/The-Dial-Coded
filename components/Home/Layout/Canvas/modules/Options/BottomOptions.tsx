@@ -18,7 +18,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
   setTool,
 }): JSX.Element => {
   return (
-    <div className="relative w-fit h-fit flex flex-row md:flex-nowrap flex-wrap gap-6">
+    <div className="relative w-fit h-fit flex flex-row f9:flex-nowrap flex-wrap gap-6">
       <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2 self-end">
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
           <div className="relative w-fit h-fit row-start-2 self-end">
@@ -57,7 +57,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
           </div>
         </div>
       </div>
-      <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-2 self-end">
+      <div className="relative w-fit h-fit grid f5:grid-flow-col auto-cols-auto gap-2 f5:grid-cols-none grid-cols-2">
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
           <div className="relative w-fit h-fit row-start-2 self-end">
             <CanvasOption
@@ -75,7 +75,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
             <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-1 bottom-6">
               <input
                 type="range"
-                className="absolute"
+                className="f11:right-10 right-auto f5:right-auto absolute w-[7rem] galaxy:w-[9rem] fo:w-[7rem] sm:w-[10rem] md:w-[15rem]"
                 value={brushWidth}
                 onChange={(e) => setBrushWidth(Number(e.target.value))}
               />

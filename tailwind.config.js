@@ -57,6 +57,7 @@ module.exports = {
         disk: "#44AFD3",
         coast: "#b9d9ff",
         post: "#712AF6",
+        moss: "#212929",
       },
       cursor: {
         focus: "url('/focus.png'), auto",
@@ -91,7 +92,8 @@ module.exports = {
         f7: "600px",
         f8: "340px",
         f9: "1100px",
-        f10: "700px"
+        f10: "700px",
+        f11: "393px"
       },
     },
   },

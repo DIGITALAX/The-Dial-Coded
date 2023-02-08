@@ -10,6 +10,7 @@ const Board: FunctionComponent<BoardProps> = ({
 }): JSX.Element => {
   return (
     <canvas
+      id="canvasId"
       ref={canvasRef}
       className="relative z-0 rounded-lg"
       style={{ width: "100%", height: "100%" }}
