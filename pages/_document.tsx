@@ -70,6 +70,34 @@ class Document extends NextDocument {
             crossOrigin=""
             type="font/ttf"
           />
+          <link
+            rel="preload"
+            href="/fonts/DonJoseBigote.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
+          <link
+            rel="preload"
+            href="/fonts/Satoshi-Medium.otf"
+            as="font"
+            crossOrigin=""
+            type="font/otf"
+          />
+          <link
+            rel="preload"
+            href="/fonts/multiple.otf"
+            as="font"
+            crossOrigin=""
+            type="font/otf"
+          />
+          <link
+            rel="preload"
+            href="/fonts/EarlsRevenge.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
           <style
             dangerouslySetInnerHTML={{
               __html: `
@@ -107,6 +135,30 @@ class Document extends NextDocument {
                 font-family: "Clash Display";
                 font-weight: 400;
                 src: url("./fonts/ClashDisplay.ttf");
+              }
+
+              @font-face {
+                font-family: "Don Jose";
+                font-weight: 400;
+                src: url("./fonts/DonJoseBigote.ttf");
+              }
+
+              @font-face {
+                font-family: "Satoshi";
+                font-weight: 400;
+                src: url("./fonts/Satoshi-Medium.otf");
+              }
+
+              @font-face {
+                font-family: "Multiple";
+                font-weight: 400;
+                src: url("./fonts/multiple.otf");
+              }
+
+              @font-face {
+                font-family: "Earls Revenge";
+                font-weight: 400;
+                src: url("./fonts/EarlsRevenge.ttf");
               }
             `,
             }}

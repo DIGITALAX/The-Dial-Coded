@@ -275,6 +275,34 @@ const Post: NextPage = (): JSX.Element => {
           crossOrigin=""
           type="font/ttf"
         />
+        <link
+          rel="preload"
+          href="/fonts/DonJoseBigote.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Satoshi-Medium.otf"
+          as="font"
+          crossOrigin=""
+          type="font/otf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/multiple.otf"
+          as="font"
+          crossOrigin=""
+          type="font/otf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/EarlsRevenge.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
       </Head>
       <div className="relative w-full h-full grid grid-flow-col auto-cols-auto col-start-1 rounded-t-md">
         {(publicationDataLoading || publicationDataLoading === undefined) &&

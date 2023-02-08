@@ -17,6 +17,8 @@ import useParameters from "../Publish/modules/Parameters/hooks/useParameters";
 import { useRouter } from "next/router";
 import { setSearchTarget } from "../../../../redux/reducers/searchTargetSlice";
 import { setChosenDMProfile } from "../../../../redux/reducers/chosenDMProfileSlice";
+import SynthAPI from "./modules/SynthAPI";
+import useSynthAPI from "./hooks/useSynthAPI";
 
 const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const accountType: string | undefined = useSelector(
@@ -107,6 +109,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
+  const { handleKeyAdd, keyValue, setKeyStorage } = useSynthAPI();
   const router = useRouter();
   const { dispatcherLoading, setDispatcherEnabled } = useParameters();
   const profile = useSelector(
@@ -234,6 +237,15 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           handleUploadImage={handleUploadImage}
           allConversationsLoading={allConversationsLoading}
           handleKeyEnter={handleKeyEnter}
+        />
+      );
+
+    case "synth api":
+      return (
+        <SynthAPI
+          handleKeyAdd={handleKeyAdd}
+          keyValue={keyValue}
+          setKeyStorage={setKeyStorage}
         />
       );
 

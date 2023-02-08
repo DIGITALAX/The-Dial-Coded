@@ -52,6 +52,7 @@ const useAccount = (): UseAccountResult => {
     "stats",
     "notifications",
     "conversations",
+    "synth api"
   ];
   const { address } = useAccountWagmi();
   const dispatch = useDispatch();
