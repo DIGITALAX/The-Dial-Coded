@@ -40,30 +40,22 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   id,
   canDelete,
   followerOnly,
-  isMixtape
+  isMixtape,
 }): JSX.Element => {
   const inCommentBox = useSelector(
     (state: RootState) => state.app.commentShowReducer
   );
-  // const hearted = useSelector((state: RootState) => state.app.heartedReducer);
-  // const [heartAmountAdded, setHeartAmountAdded] = useState<number>(
-  //   heartAmount && (heartAmount as number) > 0 ? (heartAmount as number) : 0
-  // );
-  // useEffect(() => {
-  //   if (hearted.id === id) {
-  //     let heartCount = heartAmountAdded;
-  //     if (hearted?.direction === "down") {
-  //       setHeartAmountAdded((heartCount -= 1));
-  //     } else {
-  //       setHeartAmountAdded((heartCount += 1));
-  //     }
-  //   }
-  // }, [hearted.direction, hearted.id]);
   const router = useRouter();
   return (
-    <div className="relative w-fit h-fit col-start-1 justify-self-start self-center grid grid-flow-col auto-cols-auto gap-4">
+    <div
+      className={`relative w-fit h-fit col-start-1 ${
+        router.asPath?.includes("mixtape")
+          ? "justify-self-start"
+          : "justify-self-center"
+      } grid grid-flow-col auto-cols-auto gap-4`}
+    >
       <div
-        className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto gap-2 place-self-center"
+        className="relative w-fit h-fit col-start-1 row-start-1 grid grid-flow-col auto-cols-auto gap-2 place-self-center"
         onClick={
           inCommentBox.open
             ? () => {
@@ -106,7 +98,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
         </div>
       </div>
       <div
-        className={`relative w-fit h-fit col-start-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
+        className={`relative w-fit h-fit row-start-1 col-start-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
         onClick={
           router.asPath.includes("post") ||
           router.asPath.includes("mixtape") ||
@@ -121,7 +113,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                       actionType: "comment",
                       actionValue: commentValue,
                       actionFollower: followerOnly,
-                      actionMixtape: isMixtape
+                      actionMixtape: isMixtape,
                     })
                   );
               }
@@ -133,7 +125,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                       actionOpen: true,
                       actionType: "comment",
                       actionValue: commentValue,
-                      actionMixtape: isMixtape
+                      actionMixtape: isMixtape,
                     })
                   );
               }
@@ -157,7 +149,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
         </div>
       </div>
       <div
-        className={`relative w-fit h-fit col-start-3 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
+        className={`relative w-fit h-fit row-start-2 col-start-1 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
         onClick={
           inCommentBox.open
             ? () => {
@@ -209,7 +201,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
       </div>
       {canCollect && (
         <div
-          className={`relative w-fit h-fit col-start-4 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
+          className={`relative w-fit h-fit row-start-2 col-start-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center`}
           onClick={
             inCommentBox.open
               ? () => {
@@ -253,9 +245,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
       )}
       {canDelete && (
         <div
-          className={`relative w-fit h-fit ${
-            canCollect ? "col-start-5" : "col-start-4"
-          } grid grid-flow-col auto-cols-auto gap-2 place-self-center cursor-pointer active:scale-95`}
+          className={`relative w-fit h-fit row-start-3 col-start-1 col-span-2 grid grid-flow-col auto-cols-auto gap-2 place-self-center cursor-pointer active:scale-95`}
           onClick={() => handleHidePost(id as string, dispatch)}
         >
           <AiOutlineMinusCircle color={textColor} size={15} />

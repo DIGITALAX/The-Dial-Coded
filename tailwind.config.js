@@ -12,7 +12,7 @@ module.exports = {
         digiB: "Digi Bold",
         digiI: "Digi Italic",
         digiT: "Digi T",
-        clash: "Clash Display"
+        clash: "Clash Display",
       },
       colors: {
         offBlack: "#111313",
@@ -51,7 +51,8 @@ module.exports = {
         ocean: "#078FD6",
         shame: "#F6F5F0",
         disk: "#44AFD3",
-        coast: "#b9d9ff"
+        coast: "#b9d9ff",
+        post: "#712AF6",
       },
       cursor: {
         focus: "url('/focus.png'), auto",

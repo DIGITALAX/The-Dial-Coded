@@ -1,6 +1,5 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import Reactions from "../Reactions/Reactions";
 import { FeedPublicationProps } from "../../types/common.types";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { MediaSet } from "../../types/lens.types";
@@ -11,10 +10,8 @@ import { RootState } from "../../../../redux/store";
 import { AiFillEye, AiOutlineRetweet } from "react-icons/ai";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import { setCommentShow } from "../../../../redux/reducers/commentShowSlice";
-import moment from "moment";
-import { useAccount } from "wagmi";
-import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 import descriptionRegex from "../../../../lib/lens/helpers/descriptionRegex";
+import Profile from "../Profile/Profile";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
@@ -29,12 +26,10 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   followerOnly,
   height,
 }): JSX.Element => {
-  const profileImage = createProfilePicture(publication, true);
   const router = useRouter();
   const viewerOpen = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
   );
-  const { address } = useAccount();
   const tags = document.querySelectorAll("em");
   if (tags.length > 0) {
     for (let i = 0; i < tags.length; i++) {
@@ -58,154 +53,23 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
     <div
       className={`relative w-full ${
         height ? "h-full" : "h-fit"
-      } flex flex-row flex-nowrap gap-6 rounded-md z-0`}
+      } flex flex-row flex-wrap sm:flex-nowrap gap-6 rounded-md z-0`}
     >
+      <Profile
+        publication={publication}
+        mixtapeMirror={mixtapeMirror}
+        reactionsFeed={reactionsFeed}
+        setReactionState={setReactionState}
+        handleHidePost={handleHidePost}
+        followerOnly={followerOnly}
+        dispatch={dispatch}
+        setCommentShow={setCommentShow}
+        hasCommented={hasCommented}
+        hasMirrored={hasMirrored}
+        hasReacted={hasReacted}
+      />
       <div
-        className="relative w-40 h-auto rounded-md pr-px py-px"
-        id="sideProfile"
-      >
-        <div className="relative w-full h-full bg-shame rounded-md flex flex-col items-center py-1.5 px-1">
-          <Image
-            src={`${INFURA_GATEWAY}/ipfs/QmSjh6dsibg9yDfBwRfC5YSWFTmwpwPxRDTFG8DzLHzFyB`}
-            layout="fill"
-            objectFit="cover"
-            className="absolute w-full h-full rounded-lg"
-          />
-          <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
-            <div className="relative w-20 h-6 rounded-full flex justify-self-center">
-              <Image
-                src={`${INFURA_GATEWAY}/ipfs/QmfDmMCcgcseCFzGam9DbmDk5sQRbt6zrQVhvj4nTeuLGq`}
-                layout="fill"
-                alt="backdrop"
-                priority
-                draggable={false}
-                className="rounded-full w-full h-full"
-              />
-            </div>
-            <div
-              className={`absolute rounded-full flex bg-white w-6 h-full justify-self-center right-6 col-start-1 cursor-pointer active:scale-95 hover:opacity-80`}
-              id="crt"
-              onClick={() =>
-                router.push(
-                  `/profile/${
-                    (publication as any)?.__typename !== "Mirror"
-                      ? (publication as any)?.profile?.handle?.split(".test")[0]
-                      : (publication as any)?.mirrorOf?.profile?.handle?.split(
-                          ".test"
-                        )[0]
-                  }`
-                )
-              }
-            >
-              {profileImage !== "" && (
-                <Image
-                  src={profileImage}
-                  objectFit="cover"
-                  alt="pfp"
-                  layout="fill"
-                  className="relative w-full h-full rounded-full"
-                  draggable={false}
-                />
-              )}
-            </div>
-          </div>
-          <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
-            <div
-              className={`relative w-fit h-fit ${
-                mixtapeMirror && "text-offBlack"
-              } font-dosis text-xs justify-self-center`}
-              id={mixtapeMirror ? "" : "username"}
-            >
-              {(publication as any)?.__typename !== "Mirror"
-                ? (publication as any)?.profile?.name?.substring(0, 20)
-                : (publication as any)?.mirrorOf?.profile?.name?.substring(
-                    0,
-                    20
-                  )}
-            </div>
-          </div>
-          <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
-            <div
-              id={mixtapeMirror ? "profile" : ""}
-              className={`relative w-fit h-fit ${
-                (publication as any)?.profile?.name
-                  ? "row-start-2"
-                  : "row-start-1"
-              } font-clash text-xs justify-self-center ${
-                !mixtapeMirror && "text-black"
-              }`}
-            >
-              @
-              {(publication as any)?.__typename !== "Mirror"
-                ? (publication as any)?.profile?.handle?.substring(0, 15)
-                : (publication as any)?.mirrorOf?.profile?.handle?.substring(
-                    0,
-                    15
-                  )}
-            </div>
-          </div>
-          <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
-            <div
-              className={`relative w-fit h-fit text-offBlack font-dosis justify-self-center col-start-2 fo:pb-0 pb-2 text-xs `}
-            >
-              {moment(`${(publication as any)?.createdAt}`).fromNow()}
-            </div>
-          </div>
-          <div className="relative w-full h-fit">
-            <Reactions
-              id={(publication as any)?.id}
-              textColor={mixtapeMirror ? "black" : "white"}
-              commentColor={mixtapeMirror ? "black" : "#FBEED1"}
-              mirrorColor={mixtapeMirror ? "black" : "#FEEA66"}
-              collectColor={mixtapeMirror ? "black" : "#81A8F8"}
-              heartColor={mixtapeMirror ? "black" : "red"}
-              mirrorAmount={Number(
-                (publication as any)?.stats?.totalAmountOfMirrors
-              )}
-              collectAmount={Number(
-                (publication as any)?.stats?.totalAmountOfCollects
-              )}
-              commentAmount={Number(
-                (publication as any)?.stats?.totalAmountOfComments
-              )}
-              heartAmount={reactionsFeed}
-              heartExpand={setReactionState}
-              mirrorExpand={setReactionState}
-              collectExpand={setReactionState}
-              commentExpand={setCommentShow}
-              dispatch={dispatch}
-              mirrorValue={(publication as any)?.id}
-              collectValue={(publication as any)?.id}
-              commentValue={(publication as any)?.id}
-              heartValue={(publication as any)?.id}
-              canCollect={
-                (publication as any)?.collectModule?.__typename !==
-                "RevertCollectModuleSettings"
-                  ? true
-                  : false
-              }
-              hasCollected={
-                (publication as any)?.__typename === "Mirror"
-                  ? (publication as any)?.mirrorOf?.hasCollectedByMe
-                  : (publication as any)?.hasCollectedByMe
-              }
-              hasReacted={hasReacted}
-              hasMirrored={hasMirrored}
-              hasCommented={hasCommented}
-              canDelete={
-                (publication as any)?.profile?.ownedBy === address
-                  ? true
-                  : false
-              }
-              handleHidePost={handleHidePost}
-              followerOnly={followerOnly}
-              isMixtape={mixtapeMirror as boolean}
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        className={`relative w-full h-full rounded-md grid grid-flow-row auto-rows-auto p-3 galaxy:p-6 gap-6 border-2 border-black ${
+        className={`relative w-full h-auto grow rounded-md grid grid-flow-row auto-rows-auto p-3 galaxy:p-6 gap-6 border-2 border-black ${
           mixtapeMirror
             ? "bg-white"
             : "bg-gradient-to-r from-offBlack via-gray-600 to-black"
@@ -247,7 +111,11 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                   __html: descriptionRegex(
                     (publication as any)?.__typename !== "Mirror"
                       ? (publication as any)?.metadata?.description
+                        ? (publication as any)?.metadata?.description
+                        : (publication as any)?.metadata?.content
                       : (publication as any)?.mirrorOf?.metadata?.description
+                      ? (publication as any)?.mirrorOf?.metadata?.description
+                      : (publication as any)?.mirrorOf?.metadata?.content
                   ),
                 }}
                 className="relative grid grid-flow-col auto-cols-auto place-self-center"
@@ -353,7 +221,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
           })}
         </div>
         <div
-          className={`relative w-full h-fit ${
+          className={`relative w-full h-full ${
             (publication as any)?.__typename === "Mirror"
               ? "row-start-4"
               : "row-start-3"
@@ -361,7 +229,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         >
           {!router.asPath.includes((publication as any)?.id) && (
             <div
-              className={`relative w-fit h-fit col-start-1 row-start-1 sm:col-start-2 sm:pt-0 pt-3 justify-self-end self-center grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95 ${
+              className={`relative w-fit h-full col-start-1 row-start-1 sm:col-start-2 sm:pt-0 pt-3 justify-self-end self-center grid grid-flow-col auto-cols-auto font-digiR gap-1 cursor-pointer hover:opacity-70 active:scale-95 ${
                 mixtapeMirror ? "text-offBlack" : "text-white"
               }`}
               onClick={
@@ -383,14 +251,14 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                     }
               }
             >
-              <div className="relative w-fit h-fit col-start-1 text-sm">
+              <div className="relative w-fit h-fit self-end col-start-1 text-sm">
                 {type === "Post" && !mixtapeMirror
                   ? "View Post"
                   : !mixtapeMirror && type !== "Post"
                   ? "View Comment"
                   : "View Mixtape"}
               </div>
-              <div className="relative w-fit h-fit col-start-2">
+              <div className="relative w-fit h-fit col-start-2 self-end">
                 <AiFillEye
                   color={mixtapeMirror ? "black" : "white"}
                   size={20}

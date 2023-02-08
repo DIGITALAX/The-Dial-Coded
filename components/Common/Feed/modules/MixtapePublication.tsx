@@ -141,7 +141,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                   )
                 }
               >
-                <div className="relative w-full h-full col-start-1 flex">
+                <div className="relative w-full h-full col-start-1 grid grid-flow-row auto-rows-auto">
                   <Image
                     src={`${INFURA_GATEWAY}/ipfs/${image}`}
                     layout="fill"
@@ -164,6 +164,62 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                       </div>
                     </div>
                   </div>
+                  <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto self-end">
+                    <div
+                      id="hot"
+                      className={`relative w-fit h-fit rounded-md grid grid-flow-col auto-cols-auto self-end justify-self-start px-6 py-4`}
+                    >
+                      <Reactions
+                        id={(publication as any)?.id}
+                        textColor={"black"}
+                        commentColor={"black"}
+                        mirrorColor={"black"}
+                        collectColor={"black"}
+                        heartColor={"black"}
+                        mirrorAmount={Number(
+                          (publication as any)?.stats?.totalAmountOfMirrors
+                        )}
+                        collectAmount={Number(
+                          (publication as any)?.stats?.totalAmountOfCollects
+                        )}
+                        commentAmount={Number(
+                          (publication as any)?.stats?.totalAmountOfComments
+                        )}
+                        heartAmount={reactionsFeed}
+                        heartExpand={setReactionState}
+                        mirrorExpand={setReactionState}
+                        collectExpand={setReactionState}
+                        commentExpand={setCommentShow}
+                        dispatch={dispatch}
+                        mirrorValue={(publication as any)?.id}
+                        collectValue={(publication as any)?.id}
+                        commentValue={(publication as any)?.id}
+                        heartValue={(publication as any)?.id}
+                        canCollect={
+                          (publication as any)?.collectModule?.__typename !==
+                          "RevertCollectModuleSettings"
+                            ? true
+                            : false
+                        }
+                        hasCollected={
+                          (publication as any)?.__typename === "Mirror"
+                            ? (publication as any)?.mirrorOf?.hasCollectedByMe
+                            : (publication as any)?.hasCollectedByMe
+                        }
+                        hasReacted={hasReacted}
+                        hasMirrored={hasMirrored}
+                        hasCommented={hasCommented}
+                        handleHidePost={handleHidePost}
+                        canDelete={
+                          address === (publication as any)?.profile?.id
+                            ? true
+                            : false
+                        }
+                        followerOnly={false}
+                        isMixtape={true}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             );
@@ -176,58 +232,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
             : "row-start-4"
         }`}
       >
-        <div
-          className={`relative w-full h-fit  grid grid-flow-col auto-cols-auto pl-6 col-start-1`}
-        >
-          <Reactions
-            id={(publication as any)?.id}
-            textColor={"black"}
-            commentColor={"black"}
-            mirrorColor={"black"}
-            collectColor={"black"}
-            heartColor={"black"}
-            mirrorAmount={Number(
-              (publication as any)?.stats?.totalAmountOfMirrors
-            )}
-            collectAmount={Number(
-              (publication as any)?.stats?.totalAmountOfCollects
-            )}
-            commentAmount={Number(
-              (publication as any)?.stats?.totalAmountOfComments
-            )}
-            heartAmount={reactionsFeed}
-            heartExpand={setReactionState}
-            mirrorExpand={setReactionState}
-            collectExpand={setReactionState}
-            commentExpand={setCommentShow}
-            dispatch={dispatch}
-            mirrorValue={(publication as any)?.id}
-            collectValue={(publication as any)?.id}
-            commentValue={(publication as any)?.id}
-            heartValue={(publication as any)?.id}
-            canCollect={
-              (publication as any)?.collectModule?.__typename !==
-              "RevertCollectModuleSettings"
-                ? true
-                : false
-            }
-            hasCollected={
-              (publication as any)?.__typename === "Mirror"
-                ? (publication as any)?.mirrorOf?.hasCollectedByMe
-                : (publication as any)?.hasCollectedByMe
-            }
-            hasReacted={hasReacted}
-            hasMirrored={hasMirrored}
-            hasCommented={hasCommented}
-            handleHidePost={handleHidePost}
-            canDelete={
-              address === (publication as any)?.profile?.id ? true : false
-            }
-            followerOnly={false}
-            isMixtape={true}
-          />
-        </div>
-        <div className="relative w-fit h-fit row-start-2 col-start-1 fo:row-start-1 fo:col-start-2 grid grid-flow-col auto-cols-auto justify-self-end fo:pt-0 pt-4">
+        <div className="relative w-fit h-fit col-start-1 row-start-1 fo:col-start-2 grid grid-flow-col auto-cols-auto justify-self-end fo:pt-0 pt-4">
           <div className="relative w-fit h-fit text-black font-dosis justify-self-end self-center col-start-2">
             {moment(`${(publication as any)?.createdAt}`).fromNow()}
           </div>

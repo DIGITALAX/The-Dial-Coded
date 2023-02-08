@@ -149,7 +149,11 @@ const Post: NextPage = (): JSX.Element => {
           content={
             publicationData?.__typename !== "Mirror"
               ? publicationData?.metadata?.description
+                ? publicationData?.metadata?.description
+                : publicationData?.metadata?.content
               : publicationData?.mirrorOf?.metadata?.description
+              ? publicationData?.mirrorOf?.metadata?.description
+              : publicationData?.mirrorOf?.metadata?.content
           }
         />
         <meta
