@@ -37,4 +37,5 @@ export type FeedProps = {
   firstPubLoad: boolean;
   firstMixLoad: boolean;
   hotFollowerOnly: boolean[]
+  noHotData: boolean;
 };

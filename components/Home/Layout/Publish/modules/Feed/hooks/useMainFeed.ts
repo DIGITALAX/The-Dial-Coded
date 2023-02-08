@@ -28,7 +28,6 @@ import checkIfMixtapeMirror from "../../../../../../../lib/lens/helpers/checkIfM
 import getPostComments from "../../../../../../../lib/lens/helpers/getPostComments";
 import checkIfFollowerOnly from "../../../../../../../lib/lens/helpers/checkIfFollowerOnly";
 import checkFeedTypes from "../../../../../../../lib/lens/helpers/checkFeedTypes";
-import { UseMainResults } from "../types/feed.types";
 
 const useMainFeed = () => {
   const router = useRouter();
@@ -254,14 +253,11 @@ const useMainFeed = () => {
 
   const getFeedTimeline = async (): Promise<void> => {
     setPublicationsLoading(true);
-    const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
-    const feedType = checkFeedTypes(feedTypeState as string);
     try {
       const res = await feedTimeline({
         sources: "thedial",
         profileId: lensProfile,
         limit: 50,
-        // metadata: feedType,
       });
       const arr: any[] = [...res?.data.feed.items];
       const sortedArr: any[] = arr.sort(
@@ -278,77 +274,24 @@ const useMainFeed = () => {
           return true;
         }
       });
-      let fullArray = false;
-      if (sortedArr.length > 1) {
+      if (filteredArr.length > 1) {
         const orderedArr = orderFeedManual(
           filteredArr,
           feedOrderState,
           feedPriorityState
         );
-        if (orderedArr.length > 1) {
-          fullArray = true;
-          setPublicationsFeed(orderedArr);
-          setPublicationsLoading(false);
-          setFirstPubLoad(false);
-          const isOnlyFollowers = await checkIfFollowerOnly(
-            orderedArr,
-            lensProfile
-          );
-          setFollowerOnly(isOnlyFollowers as boolean[]);
-          const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
-          setMixtapeMirror(mixtapeMirrors);
-          setPaginatedResults(res?.data.feed.pageInfo);
-          const response = await checkPostReactions(orderedArr, lensProfile);
-          setHasReacted(response?.hasReactedArr);
-          setReactionsFeed(response?.reactionsFeedArr);
-          const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
-          setHasMirrored(hasMirroredArr);
-          const hasCommentedArr = await checkIfCommented(
-            orderedArr,
-            lensProfile
-          );
-          setHasCommented(hasCommentedArr);
-        }
-      } else if (!fullArray || sortedArr.length === 0) {
-        const authPub = await explorePublicationsAuth({
-          sources: "thedial",
-          publicationTypes: feedOrder,
-          limit: 50,
-          sortCriteria: "LATEST",
-          noRandomize: true,
-          metadata: feedType,
-        });
-        const auth_arr: any[] = [...authPub?.data.explorePublications.items];
-        const auth_sortedArr: any[] = auth_arr.sort(
-          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-        );
-        const filteredArrAuth = lodash.filter(auth_sortedArr, (arr) => {
-          if (arr?.__typename === "Post") {
-            if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
-              return true;
-            } else {
-              return false;
-            }
-          } else {
-            return true;
-          }
-        });
-        const orderedArr = orderFeedManual(
-          filteredArrAuth,
-          feedOrderState,
-          feedPriorityState
-        );
+
         setPublicationsFeed(orderedArr);
+        setPublicationsLoading(false);
+        setFirstPubLoad(false);
         const isOnlyFollowers = await checkIfFollowerOnly(
           orderedArr,
           lensProfile
         );
-        setPublicationsLoading(false);
-        setFirstPubLoad(false);
         setFollowerOnly(isOnlyFollowers as boolean[]);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror(mixtapeMirrors);
-        setPaginatedResults(authPub.data.explorePublications.pageInfo);
+        setPaginatedResults(res?.data.feed.pageInfo);
         const response = await checkPostReactions(orderedArr, lensProfile);
         setHasReacted(response?.hasReactedArr);
         setReactionsFeed(response?.reactionsFeedArr);
@@ -356,10 +299,13 @@ const useMainFeed = () => {
         setHasMirrored(hasMirroredArr);
         const hasCommentedArr = await checkIfCommented(orderedArr, lensProfile);
         setHasCommented(hasCommentedArr);
+      } else {
+        await fetchPublications();
       }
     } catch (err: any) {
       console.error(err.message);
     }
+    setPublicationsLoading(false);
   };
 
   // fetch more
@@ -411,8 +357,6 @@ const useMainFeed = () => {
   };
 
   const getMoreFeedTimeline = async (): Promise<void> => {
-    const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
-    const feedType = checkFeedTypes(feedTypeState as string);
     try {
       if (!paginatedResults?.next) {
         // fix apollo duplications on null next
@@ -422,6 +366,7 @@ const useMainFeed = () => {
         profileId: lensProfile,
         limit: 50,
         cursor: paginatedResults?.next,
+        // metadata: feedType
       });
       const arr: PublicationSearchResult[] = [
         ...morePublications?.data.feed.items,
@@ -440,7 +385,6 @@ const useMainFeed = () => {
           return true;
         }
       });
-      let fullArray = false;
       if (filteredArr.length > 1) {
         if (!paginatedResults?.next) {
           // fix apollo duplications on null next
@@ -454,7 +398,6 @@ const useMainFeed = () => {
         );
 
         if (orderedArr.length > 1) {
-          fullArray = true;
           const isOnlyFollowers = await checkIfFollowerOnly(
             orderedArr,
             lensProfile
@@ -475,58 +418,12 @@ const useMainFeed = () => {
           );
           setHasCommented([...hasCommented, ...hasCommentedArr]);
         }
-      } else if (filteredArr.length === 0 || !fullArray) {
+      } else {
         if (!paginatedResults?.next) {
           // fix apollo duplications on null next
           return;
         }
-        const authPub = await explorePublicationsAuth({
-          sources: "thedial",
-          publicationTypes: feedOrder,
-          limit: 20,
-          sortCriteria: "LATEST",
-          noRandomize: true,
-          cursor: paginatedResults?.next,
-          metadata: feedType,
-        });
-        const auth_arr: PublicationSearchResult[] = [
-          ...authPub?.data.explorePublications.items,
-        ];
-        const auth_sortedArr: any[] = auth_arr.sort(
-          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-        );
-        const filteredArrAuth = lodash.filter(auth_sortedArr, (arr) => {
-          if (arr?.__typename === "Post") {
-            if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
-              return true;
-            } else {
-              return false;
-            }
-          } else {
-            return true;
-          }
-        });
-        const orderedArr = orderFeedManual(
-          filteredArrAuth,
-          feedOrderState,
-          feedPriorityState
-        );
-        const isOnlyFollowers = await checkIfFollowerOnly(
-          orderedArr,
-          lensProfile
-        );
-        setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
-        const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
-        setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
-        setPublicationsFeed([...publicationsFeed, ...orderedArr]);
-        setPaginatedResults(authPub?.data.explorePublications.pageInfo);
-        const response = await checkPostReactions(orderedArr, lensProfile);
-        setHasReacted([...hasReacted, ...response?.hasReactedArr]);
-        setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
-        const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
-        setHasMirrored([...hasMirrored, ...hasMirroredArr]);
-        const hasCommentedArr = await checkIfCommented(orderedArr, lensProfile);
-        setHasCommented([...hasCommented, ...hasCommentedArr]);
+        await fetchMorePublications();
       }
     } catch (err: any) {
       console.error(err.message);
@@ -737,7 +634,7 @@ const useMainFeed = () => {
     setHasReacted,
     followerOnly,
     publicationsLoading,
-    firstPubLoad
+    firstPubLoad,
   };
 };
 

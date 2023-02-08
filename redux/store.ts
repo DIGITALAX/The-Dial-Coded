@@ -57,6 +57,7 @@ import dispatcherReducer from "./reducers/dispatcherSlice";
 import mixtapesReducer from "./reducers/mixtapesSlice";
 import followTypeValuesReducer from "./reducers/followTypeValuesSlice";
 import xmtpSearchReducer from "./reducers/xmtpSearchSlice";
+import noHotDataReducer from "./reducers/noHotDataSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -116,6 +117,7 @@ const reducer = combineReducers({
   mixtapesReducer,
   followTypeValuesReducer,
   xmtpSearchReducer,
+  noHotDataReducer,
 });
 
 export const store = configureStore({

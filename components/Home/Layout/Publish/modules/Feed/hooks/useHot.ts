@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   explorePublications,
   explorePublicationsAuth,
 } from "../../../../../../../graphql/queries/explorePublications";
+import {
+  profilePublications,
+  profilePublicationsAuth,
+} from "../../../../../../../graphql/queries/profilePublication";
 import checkIfCommented from "../../../../../../../lib/lens/helpers/checkIfCommented";
 import checkIfFollowerOnly from "../../../../../../../lib/lens/helpers/checkIfFollowerOnly";
 import checkIfMirrored from "../../../../../../../lib/lens/helpers/checkIfMirrored";
 import checkPostReactions from "../../../../../../../lib/lens/helpers/checkPostReactions";
+import { setNoHotData } from "../../../../../../../redux/reducers/noHotDataSlice";
 import { RootState } from "../../../../../../../redux/store";
 import { PublicationsQueryRequest } from "../../../../../../Common/types/lens.types";
 import { UseHotResults } from "../types/feed.types";
@@ -28,6 +33,10 @@ const useHot = (): UseHotResults => {
   const indexerModal = useSelector(
     (state: RootState) => state.app.indexModalReducer
   );
+  const userView = useSelector(
+    (state: RootState) => state.app.userViewerReducer?.value
+  );
+  const dispatch = useDispatch();
   const [hotFeed, setHotFeed] = useState<PublicationsQueryRequest[]>([]);
   const [paginatedHotResults, setPaginatedHotResults] = useState<any>();
   const [hotReactionsFeed, setHotReactionsFeed] = useState<any[]>([]);
@@ -38,7 +47,7 @@ const useHot = (): UseHotResults => {
   const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [firstMixLoad, setFirstMixLoad] = useState<boolean>(true);
 
-  const fetchMixtapes = async (): Promise<void> => {
+  const getMixtapes = async (): Promise<void> => {
     let sortedArr: any[];
     let pageData: any;
     setMixtapesLoading(true);
@@ -81,16 +90,8 @@ const useHot = (): UseHotResults => {
         pageData = data?.explorePublications?.pageInfo;
       }
       setHotFeed(sortedArr);
-      if (lensProfile) {
-        const isOnlyFollowers = await checkIfFollowerOnly(
-          sortedArr,
-          lensProfile
-        );
-        setFollowerOnly(isOnlyFollowers as boolean[]);
-      } else {
-        const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, undefined);
-        setFollowerOnly(isOnlyFollowers as boolean[]);
-      }
+      const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, lensProfile);
+      setFollowerOnly(isOnlyFollowers as boolean[]);
       setPaginatedHotResults(pageData);
       setMixtapesLoading(false);
       setFirstMixLoad(false);
@@ -108,7 +109,7 @@ const useHot = (): UseHotResults => {
     }
   };
 
-  const fetchMoreMixtapes = async (): Promise<void> => {
+  const getMoreMixtapes = async (): Promise<void> => {
     let sortedArr: any[];
     let pageData: any;
     try {
@@ -160,7 +161,7 @@ const useHot = (): UseHotResults => {
         pageData = data?.explorePublications?.pageInfo;
       }
       setHotFeed([...hotFeed, ...sortedArr]);
-      const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, undefined);
+      const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, lensProfile);
       setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
       setPaginatedHotResults(pageData);
       const response = await checkPostReactions(sortedArr, lensProfile);
@@ -177,8 +178,163 @@ const useHot = (): UseHotResults => {
     }
   };
 
+  const getMixtapeUserSelect = async () => {
+    let sortedArr: any[];
+    let pageData: any;
+    setMixtapesLoading(true);
+    try {
+      if (!lensProfile) {
+        const { data } = await profilePublications({
+          sources: "thedial",
+          profileId: (userView as any)?.profileId,
+          publicationTypes: ["POST"],
+          limit: 20,
+          metadata: {
+            tags: {
+              all: ["dialMixtape"],
+            },
+          },
+        });
+        if (data?.publications?.items?.length < 1 || !data) {
+          dispatch(setNoHotData(true));
+          return;
+        } else {
+          dispatch(setNoHotData(false));
+        }
+        const arr: any[] = [...data?.explorePublications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.explorePublications?.pageInfo;
+      } else {
+        const { data } = await profilePublicationsAuth({
+          sources: "thedial",
+          profileId: (userView as any)?.profileId,
+          publicationTypes: ["POST"],
+          limit: 20,
+          metadata: {
+            tags: {
+              all: ["dialMixtape"],
+            },
+          },
+        });
+        if (data?.publications?.items?.length < 1 || !data) {
+          dispatch(setNoHotData(true));
+          return;
+        } else {
+          dispatch(setNoHotData(false));
+        }
+        const arr: any[] = [...data?.explorePublications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.explorePublications?.pageInfo;
+      }
+      setHotFeed(sortedArr);
+      const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, lensProfile);
+      setFollowerOnly(isOnlyFollowers as boolean[]);
+      setPaginatedHotResults(pageData);
+      setMixtapesLoading(false);
+      setFirstMixLoad(false);
+      const response = await checkPostReactions(sortedArr, lensProfile);
+      setHotReactionsFeed(response?.reactionsFeedArr);
+      if (lensProfile) {
+        const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
+        setHotHasMirrored(hasMirroredArr);
+        const hasCommentedArr = await checkIfCommented(sortedArr, lensProfile);
+        setHotHasCommented(hasCommentedArr);
+        setHotHasReacted(response?.hasReactedArr);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  const getMoreMixtapeUserSelect = async () => {
+    let sortedArr: any[];
+    let pageData: any;
+    try {
+      if (!lensProfile) {
+        if (!paginatedHotResults?.next) {
+          // fix apollo duplications on null next
+          return;
+        }
+        const { data } = await explorePublications({
+          profileId: (userView as any)?.profileId,
+          sources: "thedial",
+          publicationTypes: ["POST"],
+          limit: 20,
+          sortCriteria: "LATEST",
+          metadata: {
+            tags: {
+              all: ["dialMixtape"],
+            },
+          },
+          noRandomize: true,
+          cursor: paginatedHotResults?.next,
+        });
+        const arr: any[] = [...data?.explorePublications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.explorePublications?.pageInfo;
+      } else {
+        if (!paginatedHotResults?.next) {
+          // fix apollo duplications on null next
+          return;
+        }
+        const { data } = await explorePublicationsAuth({
+          profileId: (userView as any)?.profileId,
+          sources: "thedial",
+          publicationTypes: ["POST"],
+          limit: 20,
+          sortCriteria: "LATEST",
+          metadata: {
+            tags: {
+              all: ["dialMixtape"],
+            },
+          },
+          noRandomize: true,
+          cursor: paginatedHotResults?.next,
+        });
+        const arr: any[] = [...data?.explorePublications?.items];
+        sortedArr = arr.sort(
+          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+        );
+        pageData = data?.explorePublications?.pageInfo;
+      }
+      setHotFeed([...hotFeed, ...sortedArr]);
+      const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, lensProfile);
+      setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
+      setPaginatedHotResults(pageData);
+      const response = await checkPostReactions(sortedArr, lensProfile);
+      setHotReactionsFeed([...hotReactionsFeed, ...response?.reactionsFeedArr]);
+      if (lensProfile) {
+        const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
+        setHotHasMirrored([...hasHotMirrored, ...hasMirroredArr]);
+        const hasCommentedArr = await checkIfCommented(sortedArr, lensProfile);
+        setHotHasCommented([...hasHotCommented, ...hasCommentedArr]);
+        setHotHasReacted([...hasHotReacted, ...response?.hasReactedArr]);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  const fetchMoreMixtapes = async (): Promise<void> => {
+    if (userView) {
+      await getMoreMixtapeUserSelect();
+    } else {
+      getMoreMixtapes();
+    }
+  };
+
   useEffect(() => {
-    fetchMixtapes();
+    if (userView?.handle) {
+      getMixtapeUserSelect();
+    } else {
+      getMixtapes();
+    }
   }, [
     isConnected,
     lensProfile,
@@ -186,7 +342,7 @@ const useHot = (): UseHotResults => {
     commentShow,
     indexerModal.message,
     indexerModal.value,
-    // hearted,
+    userView,
   ]);
 
   return {

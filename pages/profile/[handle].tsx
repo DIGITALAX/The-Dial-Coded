@@ -45,6 +45,7 @@ const Profile: NextPage = (): JSX.Element => {
     publicationsLoading,
     firstPostLoad,
     firstSideBarLoad,
+    hotFollowerOnly
   } = useProfilePage();
   const { isConnected } = useAccount();
   const profileId = useSelector(
@@ -224,6 +225,7 @@ const Profile: NextPage = (): JSX.Element => {
               handleSendDM={handleSendDM}
               mixtapesLoading={mixtapesLoading}
               firstSideBarLoad={firstSideBarLoad}
+              hotFollowerOnly={hotFollowerOnly}
             />
             <div
               className={`relative w-full flex px-3 fo:px-10 py-4 bg-offWhite/90 overflow-y-scroll 
@@ -237,6 +239,7 @@ const Profile: NextPage = (): JSX.Element => {
               <ProfileTab
                 getMoreUserProfileFeed={getMoreUserProfileFeed}
                 userFeed={userFeed}
+                mixtapeLength={mixtapes?.length}
                 dispatch={dispatch}
                 height={"300rem"}
                 hasMirrored={hasMirrored}
