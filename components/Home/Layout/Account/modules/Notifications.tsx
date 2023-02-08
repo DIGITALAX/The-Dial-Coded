@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
+import FetchMoreLoading from "../../../../Common/Loaders/FetchMoreLoading";
 import NotificationBanner from "../../../../Common/Notifications/NotificationBanner";
 import { NotificationsProps } from "../types/account.types";
 
@@ -25,7 +26,7 @@ const Notifications: FunctionComponent<NotificationsProps> = ({
           <InfiniteScroll
             scrollableTarget={"targetDiv"}
             height={"44rem"}
-            loader={""}
+            loader={<FetchMoreLoading />}
             hasMore={true}
             next={getMoreNotifications}
             dataLength={notificationsList?.length}

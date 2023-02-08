@@ -7,6 +7,7 @@ import { TurnerProps } from "./../types/scan.types";
 import { TfiSearch } from "react-icons/tfi";
 import SearchBar from "../../../Common/Search/SearchBar";
 import { useMediaQuery } from "@material-ui/core";
+import FetchMoreLoading from "../../../Common/Loaders/FetchMoreLoading";
 
 const Turner: FunctionComponent<TurnerProps> = ({
   currentSetting,
@@ -87,7 +88,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
                       hasMore={true}
                       dataLength={profileSearchValues?.length}
                       next={handleMoreProfileQuickSearch}
-                      loader={""}
+                      loader={<FetchMoreLoading />}
                       height={"10rem"}
                       className={`${
                         publicationSearchValues?.length > 0

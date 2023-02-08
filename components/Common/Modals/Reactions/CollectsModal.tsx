@@ -61,7 +61,7 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                   hasMore={true}
                   dataLength={collectors.length}
                   next={getMorePostCollects}
-                  loader={""}
+                  loader={<FetchMoreLoading />}
                   height={"10rem"}
                   className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4 gap-2"
                 >

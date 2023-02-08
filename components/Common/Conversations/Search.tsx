@@ -4,6 +4,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import createProfilePicture from "../../../lib/lens/helpers/createProfilePicture";
 import { SearchProps } from "../../Home/Layout/Account/types/account.types";
+import FetchMoreLoading from "../Loaders/FetchMoreLoading";
 
 const Search: FunctionComponent<SearchProps> = ({
   searchMessages,
@@ -38,7 +39,7 @@ const Search: FunctionComponent<SearchProps> = ({
               hasMore={true}
               dataLength={profileSearch?.length}
               next={searchMoreMessages}
-              loader={""}
+              loader={<FetchMoreLoading />}
               height={"10rem"}
               className="relative w-full h-fit"
             >

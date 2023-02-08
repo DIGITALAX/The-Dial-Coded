@@ -4,6 +4,7 @@ import lodash from "lodash";
 import HotPublication from "../../../../../../Common/Feed/modules/HotPublication";
 import InfiniteScroll from "react-infinite-scroll-component";
 import HotFeedLoading from "../../../../../../Common/Loaders/HotFeedLoading";
+import FetchMoreLoading from "../../../../../../Common/Loaders/FetchMoreLoading";
 
 const Hot: FunctionComponent<HotProps> = ({
   hotFeed,
@@ -85,7 +86,7 @@ const Hot: FunctionComponent<HotProps> = ({
           <div className="relative w-full h-full row-start-3 grid grid-flow-row auto-rows-auto overflow-x-scroll">
             <InfiniteScroll
               height={"200rem"}
-              loader={""}
+              loader={<FetchMoreLoading />}
               hasMore={true}
               next={fetchMoreMixtapes}
               dataLength={hotFeed?.length - 2}

@@ -8,6 +8,7 @@ import createProfilePicture from "../../../../lib/lens/helpers/createProfilePict
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { RootState } from "../../../../redux/store";
 import FeedPublication from "../../../Common/Feed/modules/FeedPublication";
+import FetchMoreLoading from "../../../Common/Loaders/FetchMoreLoading";
 import useCollectionModal from "../../../Common/Modals/Publications/hooks/useCollectionModal";
 import useImageUpload from "../../../Common/Modals/Publications/hooks/useImageUpload";
 import CollectOptionsModal from "../../../Common/Modals/Publications/modules/CollectOptionsModal";
@@ -315,7 +316,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
             hasMore={true}
             dataLength={commentors.length}
             next={getMorePostComments}
-            loader={""}
+            loader={<FetchMoreLoading />}
             className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto gap-3"
           >
             {commentors?.map((commentor: any, index: number) => {

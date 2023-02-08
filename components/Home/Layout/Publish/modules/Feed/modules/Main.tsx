@@ -5,6 +5,7 @@ import FeedPublication from "../../../../../../Common/Feed/modules/FeedPublicati
 import { PublicationSearchResult } from "../../../../../../Common/types/lens.types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PostFeedLoading from "../../../../../../Common/Loaders/PostFeedLoading";
+import FetchMoreLoading from "../../../../../../Common/Loaders/FetchMoreLoading";
 
 const Main: FunctionComponent<MainProps> = ({
   publicationsFeed,
@@ -41,7 +42,7 @@ const Main: FunctionComponent<MainProps> = ({
               ? "242.95rem"
               : undefined
           }
-          loader={""}
+          loader={<FetchMoreLoading />}
           hasMore={true}
           next={fetchMore}
           dataLength={publicationsFeed?.length}
