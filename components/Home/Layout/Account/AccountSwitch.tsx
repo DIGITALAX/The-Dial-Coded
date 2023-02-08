@@ -174,6 +174,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           mixtapeMirror={mixtapeMirror}
           handleHidePost={handleHidePost}
           followerOnly={followerOnly}
+          mixtapeLength={0}
         />
       );
 

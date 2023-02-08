@@ -129,7 +129,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
             return (
               <div
                 key={index}
-                className={`relative w-96 h-[120vw] galaxy:h-[100vw] fo:h-[90vw] sm:h-[80vw] md:h-[65vw] h-[45vw] xl:h-[35vw] border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
+                className={`relative w-96 h-[150vw] galaxy:h-[130vw] fo:h-[90vw] sm:h-[80vw] md:h-[65vw] h-[45vw] xl:h-[35vw] border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
                   index + 1
                 }`}
               >

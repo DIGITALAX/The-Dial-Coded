@@ -928,3 +928,14 @@ code::-webkit-scrollbar {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+#load {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.4),
+    rgba(141, 198, 249, 0.4),
+    rgba(123, 127, 231, 0.4),
+    rgba(68, 175, 211, 0.4),
+    rgba(0, 0, 0, 0.4)
+  );
+}
