@@ -22,6 +22,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   followerOnly,
   publicationsLoading,
   firstPostLoad,
+  mixtapeLength,
 }): JSX.Element => {
   if (publicationsLoading && firstPostLoad) {
     return <ProfileFeedLoading />;
@@ -37,7 +38,11 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
         >
           <InfiniteScroll
             scrollableTarget={"targetProfile"}
-            height={height}
+            height={
+              userFeed?.length + mixtapeLength >= 30
+                ? height
+                : undefined
+            }
             loader={""}
             hasMore={true}
             next={getMoreUserProfileFeed}

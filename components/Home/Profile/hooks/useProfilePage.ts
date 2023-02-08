@@ -85,6 +85,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const [mixtapePaginated, setMixtapePaginated] = useState<any>();
   const [hotReactionsFeed, setHotReactionsFeed] = useState<boolean[]>([]);
   const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
+  const [hotFollowerOnly, setHotFollowerOnly] = useState<boolean[]>([]);
   const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
   const [hasHotReacted, setHasHotReacted] = useState<boolean[]>([]);
   const [hasHotMirrored, setHasHotMirrored] = useState<boolean[]>([]);
@@ -431,7 +432,6 @@ const useProfilePage = (): UseProfilePageResults => {
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 30,
         });
-        console.log({data})
         const arr: any[] = [...data?.publications?.items];
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
@@ -450,7 +450,6 @@ const useProfilePage = (): UseProfilePageResults => {
         }
       });
       setUserFeed(filteredArr);
-      console.log({filteredArr})
       setPublicationsLoading(false);
       setFirstPostLoad(false);
       const isOnlyFollowers = await checkIfFollowerOnly(
@@ -484,7 +483,6 @@ const useProfilePage = (): UseProfilePageResults => {
   const getMoreUserProfileFeed = async (): Promise<void> => {
     let sortedArr: any[];
     let pageData: any;
-    console.log("hit")
     try {
       if (!lensProfile?.id) {
         const { data } = await profilePublications({
@@ -525,6 +523,14 @@ const useProfilePage = (): UseProfilePageResults => {
         }
       });
       setUserFeed([...userFeed, ...filteredArr]);
+      const isOnlyFollowers = await checkIfFollowerOnly(
+        filteredArr,
+        lensProfile?.id
+      );
+      setHotFollowerOnly([
+        ...hotFollowerOnly,
+        ...(isOnlyFollowers as boolean[]),
+      ]);
       setPaginatedResults(pageData);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
@@ -590,6 +596,11 @@ const useProfilePage = (): UseProfilePageResults => {
         pageData = data?.publications?.pageInfo;
       }
       setMixtapes(sortedArr);
+      const isOnlyFollowers = await checkIfFollowerOnly(
+        sortedArr,
+        lensProfile?.id
+      );
+      setHotFollowerOnly(isOnlyFollowers as boolean[]);
       setMixtapePaginated(pageData);
       setMixtapesLoading(false);
       setFirstSideBarLoad(false);
@@ -844,6 +855,7 @@ const useProfilePage = (): UseProfilePageResults => {
     publicationsLoading,
     firstPostLoad,
     firstSideBarLoad,
+    hotFollowerOnly
   };
 };
 export default useProfilePage;

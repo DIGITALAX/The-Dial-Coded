@@ -19,6 +19,9 @@ const Post: FunctionComponent = (): JSX.Element => {
   const noUserData = useSelector(
     (state: RootState) => state.app.noUserDataReducer.value
   );
+  const noHotData = useSelector(
+    (state: RootState) => state.app.noHotDataReducer.value
+  );
   const { connected } = usePost();
   const {
     publicationsFeed,
@@ -65,6 +68,7 @@ const Post: FunctionComponent = (): JSX.Element => {
         hasMirrored={hasMirrored}
         hasCommented={hasCommented}
         noUserData={noUserData}
+        noHotData={noHotData}
         mixtapeMirror={mixtapeMirror}
         handleHidePost={handleHidePost}
         followerOnly={followerOnly}

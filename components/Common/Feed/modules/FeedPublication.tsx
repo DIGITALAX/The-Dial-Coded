@@ -2,7 +2,7 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { FeedPublicationProps } from "../../types/common.types";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
-import { MediaSet } from "../../types/lens.types";
+import { Media, MediaSet } from "../../types/lens.types";
 import { setImageViewer } from "../../../../redux/reducers/imageViewerSlice";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -127,11 +127,10 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                 <br />
                 <br />
                 Src:
-                {
+                {" " +
                   (publication as any)?.mirrorOf?.metadata?.content?.split(
                     "\n\n"
-                  )[0]
-                }
+                  )[0]}
                 ——
                 {
                   (publication as any)?.mirrorOf?.metadata?.content?.split(
@@ -149,18 +148,27 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               : "row-start-2"
           }`}
         >
-          {((publication as any)?.__typename === "Mirror"
-            ? (publication as any)?.mirrorOf?.metadata?.media
-            : (publication as any)?.metadata?.media
-          )?.map((image: MediaSet, index: number) => {
+          {(!mixtapeMirror
+            ? (publication as any)?.__typename === "Mirror"
+              ? (publication as any)?.mirrorOf?.metadata?.media
+              : (publication as any)?.metadata?.media
+            : (publication as any)?.mirrorOf?.metadata?.content
+                ?.split("\n\n")[3]
+                ?.split(",")
+          )?.map((image: MediaSet | string, index: number) => {
             let formattedImageURL: string;
-            if (image.original.url.includes("ipfs://")) {
-              formattedImageURL = `${INFURA_GATEWAY}/ipfs/${
-                image.original.url?.split("://")[1]
-              }`;
+            if (!mixtapeMirror) {
+              if ((image as MediaSet).original.url.includes("ipfs://")) {
+                formattedImageURL = `${INFURA_GATEWAY}/ipfs/${
+                  (image as MediaSet).original.url?.split("://")[1]
+                }`;
+              } else {
+                formattedImageURL = (image as MediaSet).original.url;
+              }
             } else {
-              formattedImageURL = image.original.url;
+              formattedImageURL = `${INFURA_GATEWAY}/ipfs/${image}`;
             }
+
             return (
               <div
                 key={index}
@@ -170,7 +178,9 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                 onClick={() =>
                   dispatch(
                     setImageViewer({
-                      actionType: image.original.mimeType,
+                      actionType: !mixtapeMirror
+                        ? (image as MediaSet).original.mimeType
+                        : "image/png",
                       actionOpen: true,
                       actionImage: formattedImageURL,
                     })
@@ -178,12 +188,14 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                 }
               >
                 <div className="relative w-full h-full col-start-1 flex">
-                  {image.original.mimeType !== "video/mp4" ? (
+                  {(image as MediaSet)?.original?.mimeType !== "video/mp4" ||
+                  mixtapeMirror ? (
                     <Image
                       src={
-                        image.original.mimeType === "image/png"
+                        (image as MediaSet)?.original?.mimeType ===
+                          "image/png" || mixtapeMirror
                           ? formattedImageURL
-                          : image.original.url
+                          : (image as MediaSet)?.original?.url
                       }
                       layout="fill"
                       objectFit="cover"

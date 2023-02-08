@@ -78,6 +78,7 @@ export type ProfileTabProps = {
   followerOnly: boolean[];
   publicationsLoading?: boolean;
   firstPostLoad?: boolean;
+  mixtapeLength: number;
 };
 
 export type StatsTabProps = {

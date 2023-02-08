@@ -20,6 +20,8 @@ const Main: FunctionComponent<MainProps> = ({
   followerOnly,
   publicationsLoading,
   firstPubLoad,
+  mixtapeLength,
+  noHotData,
 }): JSX.Element => {
   const dispatch = useDispatch();
   if (publicationsLoading && firstPubLoad) {
@@ -33,7 +35,12 @@ const Main: FunctionComponent<MainProps> = ({
       {!noUserData ? (
         <InfiniteScroll
           scrollableTarget={"targetDiv"}
-          height={"246.3rem"}
+          height={
+            (publicationsFeed?.length && noHotData) > 20 ||
+            (!noHotData && publicationsFeed?.length + mixtapeLength) > 20
+              ? "242.95rem"
+              : undefined
+          }
           loader={""}
           hasMore={true}
           next={fetchMore}

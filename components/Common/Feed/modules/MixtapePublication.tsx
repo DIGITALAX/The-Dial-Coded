@@ -4,7 +4,6 @@ import { FunctionComponent } from "react";
 import { AiOutlineRetweet } from "react-icons/ai";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import { MixtapePublicationProps } from "../../types/common.types";
-import moment from "moment";
 import { MediaSet } from "../../types/lens.types";
 import Reactions from "../Reactions/Reactions";
 import { setImageViewer } from "../../../../redux/reducers/imageViewerSlice";
@@ -12,6 +11,7 @@ import { setReactionState } from "../../../../redux/reducers/reactionStateSlice"
 import { setCommentShow } from "../../../../redux/reducers/commentShowSlice";
 import { useAccount } from "wagmi";
 import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
+import Profile from "../Profile/Profile";
 
 const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
   publication,
@@ -131,18 +131,20 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                 key={index}
                 className={`relative w-96 h-[120vw] galaxy:h-[100vw] fo:h-[90vw] sm:h-[80vw] md:h-[65vw] h-[45vw] xl:h-[35vw] border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
                   index + 1
-                } cursor-pointer hover:opacity-70 active:scale-95`}
-                onClick={() =>
-                  dispatch(
-                    setImageViewer({
-                      actionType: "image/png",
-                      actionOpen: true,
-                      actionImage: `${INFURA_GATEWAY}/ipfs/${image}`,
-                    })
-                  )
-                }
+                }`}
               >
-                <div className="relative w-full h-full col-start-1 grid grid-flow-row auto-rows-auto">
+                <div
+                  className="relative w-full h-full col-start-1 grid grid-flow-row auto-rows-auto cursor-pointer hover:opacity-70 active:scale-95"
+                  onClick={() =>
+                    dispatch(
+                      setImageViewer({
+                        actionType: "image/png",
+                        actionOpen: true,
+                        actionImage: `${INFURA_GATEWAY}/ipfs/${image}`,
+                      })
+                    )
+                  }
+                >
                   <Image
                     src={`${INFURA_GATEWAY}/ipfs/${image}`}
                     layout="fill"
@@ -165,79 +167,25 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                       </div>
                     </div>
                   </div>
-                  <div className="relative w-full h-fit p-3 grid grid-flow-col auto-cols-auto self-end">
-                    <div
-                      id="hot"
-                      className={`relative w-fit h-fit rounded-md grid grid-flow-col auto-cols-auto self-end justify-self-start px-6 py-4`}
-                    >
-                      <Reactions
-                        id={(publication as any)?.id}
-                        textColor={"black"}
-                        commentColor={"black"}
-                        mirrorColor={"black"}
-                        collectColor={"black"}
-                        heartColor={"black"}
-                        mirrorAmount={Number(
-                          (publication as any)?.stats?.totalAmountOfMirrors
-                        )}
-                        collectAmount={Number(
-                          (publication as any)?.stats?.totalAmountOfCollects
-                        )}
-                        commentAmount={Number(
-                          (publication as any)?.stats?.totalAmountOfComments
-                        )}
-                        heartAmount={reactionsFeed}
-                        heartExpand={setReactionState}
-                        mirrorExpand={setReactionState}
-                        collectExpand={setReactionState}
-                        commentExpand={setCommentShow}
-                        dispatch={dispatch}
-                        mirrorValue={(publication as any)?.id}
-                        collectValue={(publication as any)?.id}
-                        commentValue={(publication as any)?.id}
-                        heartValue={(publication as any)?.id}
-                        canCollect={
-                          (publication as any)?.collectModule?.__typename !==
-                          "RevertCollectModuleSettings"
-                            ? true
-                            : false
-                        }
-                        hasCollected={
-                          (publication as any)?.__typename === "Mirror"
-                            ? (publication as any)?.mirrorOf?.hasCollectedByMe
-                            : (publication as any)?.hasCollectedByMe
-                        }
-                        hasReacted={hasReacted}
-                        hasMirrored={hasMirrored}
-                        hasCommented={hasCommented}
-                        handleHidePost={handleHidePost}
-                        canDelete={
-                          address === (publication as any)?.profile?.id
-                            ? true
-                            : false
-                        }
-                        followerOnly={followerOnly}
-                        isMixtape={true}
-                      />
-                    </div>
-                  </div>
+                </div>
+                <div className="absolute w-fit h-fit p-2 self-end z-2">
+                  <Profile
+                    publication={publication}
+                    reactionsFeed={reactionsFeed}
+                    setReactionState={setReactionState}
+                    handleHidePost={handleHidePost}
+                    followerOnly={followerOnly}
+                    dispatch={dispatch}
+                    setCommentShow={setCommentShow}
+                    hasCommented={hasCommented}
+                    hasMirrored={hasMirrored}
+                    hasReacted={hasReacted}
+                    mixtape={true}
+                  />
                 </div>
               </div>
             );
           })}
-      </div>
-      <div
-        className={`relative w-full h-fit grid grid-flow-col auto-cols-auto ${
-          (publication as any)?.__typename === "Mirror"
-            ? "row-start-5"
-            : "row-start-4"
-        }`}
-      >
-        <div className="relative w-fit h-fit col-start-1 row-start-1 fo:col-start-2 grid grid-flow-col auto-cols-auto justify-self-end fo:pt-0 pt-4">
-          <div className="relative w-fit h-fit text-black font-dosis justify-self-end self-center col-start-2">
-            {moment(`${(publication as any)?.createdAt}`).fromNow()}
-          </div>
-        </div>
       </div>
     </div>
   );

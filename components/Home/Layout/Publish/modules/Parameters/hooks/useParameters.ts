@@ -19,6 +19,7 @@ import { splitSignature } from "ethers/lib/utils.js";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../../../../lib/lens/constants";
 import { setDispatcher } from "../../../../../../../redux/reducers/dispatcherSlice";
 import broadcast from "../../../../../../../graphql/mutations/broadcast";
+import { setNoHotData } from "../../../../../../../redux/reducers/noHotDataSlice";
 
 const useParameters = (): UseParametersResult => {
   const [orderDrop, setOrderDrop] = useState<boolean>(false);
@@ -65,6 +66,7 @@ const useParameters = (): UseParametersResult => {
       setUserTypeOpen(false);
       setSearchLoading(false);
       dispatch(setNoUserData(false));
+      dispatch(setNoHotData(false));
       return;
     }
     setSearchTarget((e.target as HTMLFormElement).value);
