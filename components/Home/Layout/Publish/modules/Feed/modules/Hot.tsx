@@ -54,7 +54,7 @@ const Hot: FunctionComponent<HotProps> = ({
           ?.map((image: any, index: number) => {
             return (
               <HotPublication
-                height={"60"}
+                height={"72"}
                 width={"96"}
                 data={hotFeed[1]}
                 image={image}

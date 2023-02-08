@@ -812,3 +812,20 @@ export type FollowInfoProps = {
   isApproved?: boolean;
   buttonText?: string;
 };
+
+export type ProfileSideBarProps = {
+  publication: PublicationSearchResult;
+  mixtapeMirror?: boolean;
+  reactionsFeed: number | undefined;
+  setReactionState: ActionCreatorWithPayload<
+    any,
+    "reactionState/setReactionState"
+  >;
+  handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
+  followerOnly: boolean | undefined;
+  dispatch: Dispatch<AnyAction>;
+  setCommentShow: ActionCreatorWithPayload<any, "commentShow/setCommentShow">;
+  hasCommented: boolean | undefined;
+  hasMirrored: boolean | undefined;
+  hasReacted: boolean | undefined;
+};

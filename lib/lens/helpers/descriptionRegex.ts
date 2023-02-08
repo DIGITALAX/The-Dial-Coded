@@ -57,7 +57,7 @@ const descriptionRegex = (description: string, messages?: boolean) => {
     }
   });
 
-  const wrappedText = `<div>${styledText.join(" ")}</div>`;
+  const wrappedText = `<div>${styledText?.join(" ")}</div>`;
   return wrappedText;
 };
 
