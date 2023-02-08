@@ -19,7 +19,7 @@ const Main: FunctionComponent<MainProps> = ({
   handleHidePost,
   followerOnly,
   publicationsLoading,
-  firstPubLoad
+  firstPubLoad,
 }): JSX.Element => {
   const dispatch = useDispatch();
   if (publicationsLoading && firstPubLoad) {
@@ -33,7 +33,7 @@ const Main: FunctionComponent<MainProps> = ({
       {!noUserData ? (
         <InfiniteScroll
           scrollableTarget={"targetDiv"}
-          height={"240.2rem"}
+          height={"246.3rem"}
           loader={""}
           hasMore={true}
           next={fetchMore}

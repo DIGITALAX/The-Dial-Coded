@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 
 const HotFeedLoading: FunctionComponent = (): JSX.Element => {
   return (
-    <div className="relative w-full h-full row-start-1 col-start-1 md:col-start-2 flex flex-col gap-10">
+    <div className="relative w-full md:w-[40vw] h-full row-start-1 col-start-1 md:col-start-2 flex flex-col gap-10">
       <div className="relative flex flex-col animate-pulse w-full h-fit row-start-1 self-start">
         <div className="flex-1 space-y-6 py-1">
           <div className="h-2 bg-offBlue/50 rounded"></div>

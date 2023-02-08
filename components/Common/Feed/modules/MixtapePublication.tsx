@@ -22,6 +22,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
   hasMirrored,
   hasCommented,
   handleHidePost,
+  followerOnly,
 }): JSX.Element => {
   const profileImage = createProfilePicture(publication, true);
   const router = useRouter();
@@ -215,7 +216,7 @@ const MixtapePublication: FunctionComponent<MixtapePublicationProps> = ({
                             ? true
                             : false
                         }
-                        followerOnly={false}
+                        followerOnly={followerOnly}
                         isMixtape={true}
                       />
                     </div>

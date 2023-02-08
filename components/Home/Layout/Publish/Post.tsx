@@ -41,6 +41,7 @@ const Post: FunctionComponent = (): JSX.Element => {
     fetchMoreMixtapes,
     mixtapesLoading,
     firstMixLoad,
+    followerOnly: hotFollowerOnly
   } = useHot();
   return (
     <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-shame p-3 sm:p-6 md:p-10 gap-10">
@@ -71,6 +72,7 @@ const Post: FunctionComponent = (): JSX.Element => {
         publicationsLoading={publicationsLoading}
         firstMixLoad={firstMixLoad}
         firstPubLoad={firstPubLoad}
+        hotFollowerOnly={hotFollowerOnly}
       />
     </div>
   );

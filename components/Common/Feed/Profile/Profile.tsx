@@ -20,16 +20,19 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
   hasCommented,
   hasMirrored,
   hasReacted,
+  mixtape,
 }): JSX.Element => {
   const router = useRouter();
   const profileImage = createProfilePicture(publication, true);
   const { address } = useAccount();
   return (
     <div
-      className="relative w-full sm:w-40 h-auto rounded-md pr-px py-px"
+      className={`relative h-auto rounded-md pr-px py-px ${
+        mixtape ? "w-fit" : "w-full sm:w-40 min-w-[7.5rem]"
+      }`}
       id="sideProfile"
     >
-      <div className="relative w-full h-full bg-shame rounded-md flex flex-col items-start sm:items-center py-1.5 px-1 gap-3">
+      <div className={`relative w-full h-full bg-shame rounded-md flex flex-col items-start sm:items-center ${!mixtape ? "py-1.5 px-1 gap-3" : "p-2 gap-1"}`}>
         <Image
           src={`${INFURA_GATEWAY}/ipfs/QmSjh6dsibg9yDfBwRfC5YSWFTmwpwPxRDTFG8DzLHzFyB`}
           layout="fill"
@@ -52,7 +55,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
             />
           </div>
           <div
-            className={`absolute rounded-full flex bg-white w-8 h-full justify-self-center right-6 col-start-1 cursor-pointer active:scale-95 hover:opacity-80`}
+            className={`absolute rounded-full flex bg-white w-8 h-full justify-self-center ${mixtape ? "right-1.5" : "right-6"} col-start-1 cursor-pointer active:scale-95 hover:opacity-80`}
             id="crt"
             onClick={() =>
               router.push(

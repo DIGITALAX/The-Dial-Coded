@@ -34,6 +34,7 @@ export type HotProps = {
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   mixtapesLoading: boolean;
   firstMixLoad: boolean;
+  hotFollowerOnly: boolean[];
 };
 
 export type UseHotResults = {
@@ -45,6 +46,7 @@ export type UseHotResults = {
   fetchMoreMixtapes: () => Promise<void>;
   mixtapesLoading: boolean;
   firstMixLoad: boolean;
+  followerOnly: boolean[];
 };
 
 export type UseMainResults = {

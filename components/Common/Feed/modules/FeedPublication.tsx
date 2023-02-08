@@ -67,6 +67,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         hasCommented={hasCommented}
         hasMirrored={hasMirrored}
         hasReacted={hasReacted}
+        mixtape={false}
       />
       <div
         className={`relative w-full h-auto grow rounded-md grid grid-flow-row auto-rows-auto p-3 galaxy:p-6 gap-6 border-2 border-black ${
