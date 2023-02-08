@@ -13,6 +13,10 @@ module.exports = {
         digiI: "Digi Italic",
         digiT: "Digi T",
         clash: "Clash Display",
+        jose: "Don Jose",
+        mult: "Multiple",
+        sats: "Satoshi",
+        earl: "Earls Revenge",
       },
       colors: {
         offBlack: "#111313",
@@ -86,6 +90,8 @@ module.exports = {
         f6: "1550px",
         f7: "600px",
         f8: "340px",
+        f9: "1100px",
+        f10: "700px"
       },
     },
   },

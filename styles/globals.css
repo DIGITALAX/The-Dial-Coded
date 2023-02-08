@@ -38,6 +38,30 @@
   src: url("/fonts/ClashDisplay.ttf");
 }
 
+@font-face {
+  font-family: "Don Jose";
+  font-weight: 400;
+  src: url("/fonts/DonJoseBigote.ttf");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  font-weight: 400;
+  src: url("/fonts/Satoshi-Medium.otf");
+}
+
+@font-face {
+  font-family: "Multiple";
+  font-weight: 400;
+  src: url("/fonts/multiple.otf");
+}
+
+@font-face {
+  font-family: "Earls Revenge";
+  font-weight: 400;
+  src: url("/fonts/EarlsRevenge.ttf");
+}
+
 html,
 body {
   touch-action: none;
@@ -442,6 +466,11 @@ div::-webkit-scrollbar-thumb:active {
   -webkit-text-fill-color: transparent;
 }
 
+#api {
+  background: conic-gradient(#000000, #8dc6f9, #7b7fe7, #2a42fc, #000000);
+  opacity: 0.9;
+}
+
 #handle {
   background: linear-gradient(
     -86deg,
@@ -745,4 +774,9 @@ code::-webkit-scrollbar {
 
 #sideProfile {
   background: linear-gradient(to right, transparent, white, #44afd3);
+}
+
+#set {
+  background: conic-gradient(#FF4949, #FF8D29, #541690, #FFCD38, #FF4949);
+  opacity: 0.9;
 }

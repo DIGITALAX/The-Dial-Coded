@@ -56,6 +56,13 @@ const NotFound: FunctionComponent = (): JSX.Element => {
           crossOrigin=""
           type="font/ttf"
         />
+        <link
+          rel="preload"
+          href="/fonts/DonJoseBigote.ttf"
+          as="font"
+          crossOrigin=""
+          type="font/ttf"
+        />
       </Head>
       <div className="col-start-1 relative w-fit h-fit grid grid-flow-row auto-rows-auto place-self-center gap-10">
         <div className="relative w-fit h-fit place-self-center font-digiB text-offWhite text-2xl text-center row-start-1">

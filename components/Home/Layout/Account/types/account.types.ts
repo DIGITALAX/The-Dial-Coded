@@ -247,3 +247,15 @@ export type SearchProps = {
   searchTarget: string | undefined;
   dropdown: boolean;
 };
+
+export type SynthAPIProps = {
+  handleKeyAdd: (e: FormEvent) => void;
+  setKeyStorage: () => void;
+  keyValue: boolean;
+};
+
+export type UseSynthAPIResults = {
+  handleKeyAdd: (e: FormEvent) => void;
+  setKeyStorage: () => void;
+  keyValue: boolean;
+}
