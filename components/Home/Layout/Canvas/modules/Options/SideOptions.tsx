@@ -1,7 +1,6 @@
 import { FormEvent, FunctionComponent } from "react";
 import CanvasOption from "../../../../../Common/Miscellaneous/CanvasOption";
 import { SideOptionsProps } from "../../types/canvas.types";
-import { Tooltip as ReactTooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 
 const SideOptions: FunctionComponent<SideOptionsProps> = ({
@@ -18,7 +17,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   setNewCanvas,
 }): JSX.Element => {
   return (
-    <div className="relative w-fit h-fit grid grid-cols-3 fo:grid-cols-5 f9:grid-cols-none f9:grid-flow-row auto-rows-auto gap-4">
+    <div className="relative w-fit h-fit grid grid-cols-3 f9:grid-cols-none f9:grid-flow-row auto-rows-auto gap-4">
       <div id="ai-credits">
         <CanvasOption
           image="QmPt4LreaWAN3WRzcUvo7WnVLUrCW73xKPc86vB59HowLz"
@@ -26,16 +25,6 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
           height={25}
         />
       </div>
-      <ReactTooltip
-        anchorId="ai-credits"
-        place="left"
-        content="Api Credits::Coming Soon::💯"
-        style={{
-          fontSize: "10px",
-          backgroundColor: "#131313",
-          opacity: "0.7",
-        }}
-      />
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
         <div
           className="relative w-fit h-fit"
@@ -98,23 +87,11 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
             onChange={(e: FormEvent) => handleImageAdd(e)}
           />
         </label>
-        <div id="pattern-seg">
-          <CanvasOption
-            image="QmR5aDNEr6iBzcNv1CFkG3ypRWTesvT6fbuqGCnRf7yNcB"
-            bgColor="black"
-            width={25}
-            height={25}
-          />
-        </div>
-        <ReactTooltip
-          anchorId="pattern-seg"
-          place="left"
-          content="Pattern Segmentation::Coming Soon::👗"
-          style={{
-            fontSize: "10px",
-            backgroundColor: "#131313",
-            opacity: "0.7",
-          }}
+        <CanvasOption
+          image="QmR5aDNEr6iBzcNv1CFkG3ypRWTesvT6fbuqGCnRf7yNcB"
+          bgColor="black"
+          width={25}
+          height={25}
         />
         <CanvasOption
           image="QmZZhPPzhmsicoiHGKPvqATdQ3JGakrZ2G3mK67goHA9CN"
