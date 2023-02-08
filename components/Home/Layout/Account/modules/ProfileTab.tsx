@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FeedPublication from "../../../../Common/Feed/modules/FeedPublication";
+import FetchMoreLoading from "../../../../Common/Loaders/FetchMoreLoading";
 import ProfileFeedLoading from "../../../../Common/Loaders/ProfileFeedLoading";
 import { PublicationSearchResult } from "../../../../Common/types/lens.types";
 import { ProfileTabProps } from "../types/account.types";
@@ -24,6 +25,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   firstPostLoad,
   mixtapeLength,
 }): JSX.Element => {
+  const router = useRouter();
   if (publicationsLoading && firstPostLoad) {
     return <ProfileFeedLoading />;
   }
@@ -39,7 +41,8 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
           <InfiniteScroll
             scrollableTarget={"targetProfile"}
             height={
-              userFeed?.length + mixtapeLength >= 30
+              userFeed?.length + mixtapeLength >= 30 ||
+              router.asPath.includes("Account")
                 ? height
                 : undefined
             }
