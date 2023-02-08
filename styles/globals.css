@@ -594,7 +594,6 @@ input[type="range"] {
   appearance: none;
   background: transparent;
   cursor: pointer;
-  width: 15rem;
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
@@ -777,6 +776,68 @@ code::-webkit-scrollbar {
 }
 
 #set {
-  background: conic-gradient(#FF4949, #FF8D29, #541690, #FFCD38, #FF4949);
+  background: conic-gradient(#ff4949, #ff8d29, #541690, #ffcd38, #ff4949);
   opacity: 0.9;
+}
+
+#baseDraw {
+  background: conic-gradient(
+    #011a1f,
+    #001f22,
+    #022023,
+    #133132,
+    #022124,
+    #001c23,
+    #022124,
+    #032123,
+    #00191d
+  );
+}
+
+#rainbow {
+  background: linear-gradient(
+    #e02020,
+    #fa6400,
+    #f7b500,
+    #6dd400,
+    #0091ff,
+    #6236ff,
+    #b620e0
+  );
+  border-radius: 30% / 6%;
+}
+
+#rainbow:before {
+  top: 4%;
+  bottom: 4%;
+  right: -5%;
+  left: -5%;
+  background: inherit;
+  border-radius: 3% / 8%;
+}
+
+#parent {
+  border-radius: 30% / 6%;
+}
+
+#parent:before {
+  top: 4%;
+  bottom: 4%;
+  right: -5%;
+  left: -5%;
+  background: inherit;
+  border-radius: 3% / 8%;
+}
+
+#canvasId {
+  border-radius: 30% / 6%;
+}
+
+#canvasId:before {
+  top: 4%;
+  bottom: 4%;
+  right: -5%;
+  left: -5%;
+  background: inherit;
+  border-radius: 3% / 8%;
 }

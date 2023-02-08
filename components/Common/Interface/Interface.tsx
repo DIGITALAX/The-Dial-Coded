@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -21,10 +22,19 @@ const Interface: FunctionComponent<InterfaceProps> = ({
   const layout = useSelector(
     (state: RootState) => state.app.layoutReducer.value
   );
+  const router = useRouter();
   return (
     <div className="relative w-full h-full col-start-1 grid grid-flow-row pt-10">
-      <div className="relative w-full fo:w-[95%] h-full bg-gradient-to-r from-offBlack via-black/70 to-offBlack rounded-lg flex flex-row pt-4 f5:px-4 pb-10 gap-4 place-self-center row-start-1">
-        <div className="relative w-fit h-full grid-flow-col auto-cols-auto gap-8 hidden f1:grid">
+      <div
+        className={`relative w-full fo:w-[95%] h-full bg-gradient-to-r from-offBlack via-black/70 to-offBlack rounded-lg flex flex-row pb-10 gap-4 place-self-center row-start-1 ${
+          router.asPath.includes("Canvas") ? "pt-0 px-0" : "pt-4 f5:px-4"
+        }`}
+      >
+        <div
+          className={`relative w-fit h-full grid-flow-col auto-cols-auto gap-8 ${
+            router.asPath.includes("Canvas") ? "hidden" : "hidden f1:grid"
+          }`}
+        >
           <div className="relative row-start-1 place-self-start w-fit h-fit grid grid-flow-row auto-rows-auto gap-6">
             <Box
               image={"QmdBxkJrAmEbn3dFTubcdaRToXnjwnz8ZqHp27p9mz1cDm"}
@@ -55,7 +65,11 @@ const Interface: FunctionComponent<InterfaceProps> = ({
           />
         </div>
         <div className="relative w-full h-fit flex flex-col gap-6 place-self-center">
-          <div className="relative row-start-1 w-full h-fit grid grid-flow-col auto-cols-auto self-start justify-between">
+          <div
+            className={`relative row-start-1 w-full h-fit grid-flow-col auto-cols-auto self-start justify-between ${
+              router.asPath.includes("Canvas") ? "hidden" : "grid"
+            }`}
+          >
             <Box
               image={"QmdiQ9NdH95kSgysocBj7uKbsVjPujPiavozihXRPYt1g5"}
               col={"1"}
@@ -93,7 +107,11 @@ const Interface: FunctionComponent<InterfaceProps> = ({
             />
           )}
         </div>
-        <div className="relative w-fit h-full grid grid-flow-col auto-cols-auto gap-8 hidden f1:grid">
+        <div
+          className={`relative w-fit h-full grid grid-flow-col auto-cols-auto gap-8 ${
+            router.asPath.includes("Canvas") ? "hidden" : "hidden f1:grid"
+          }`}
+        >
           <Box
             image={"Qme799mCrdfV5F35gbQzfresp8b6MZva8M72ydXoA9APkr"}
             col={"1"}
