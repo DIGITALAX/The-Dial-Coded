@@ -10,9 +10,7 @@ export const setReplicateKey = (key: string) => {
 export const getReplicateKey = () => {
   if (typeof window !== "undefined") {
     const data = localStorage.getItem(REPLICATE_STORAGE_KEY);
-
     if (!data) return null;
-
     return data;
   }
 };

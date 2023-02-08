@@ -202,6 +202,8 @@ const Modals = () => {
               ? "Couldn't Fetch Images. Please Try Again."
               : failed === "xmtp"
               ? "This user isn't on the XMTP Network."
+              : failed === "prompt"
+              ? " The NSFW filter is a bit overzealous with the current API. Can’t wait for a custom API? DIY Synth is on its way."
               : "Unsuccessful. Please Try Again."
           }
         />

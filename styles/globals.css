@@ -471,6 +471,16 @@ div::-webkit-scrollbar-thumb:active {
   opacity: 0.9;
 }
 
+#catch {
+  background: conic-gradient(
+    rgba(0, 0, 0, 0.4),
+    rgba(141, 198, 249, 0.4),
+    rgba(123, 127, 231, 0.4),
+    rgba(68, 175, 211, 0.4),
+    rgba(0, 0, 0, 0.4)
+  );
+}
+
 #handle {
   background: linear-gradient(
     -86deg,
@@ -840,4 +850,81 @@ code::-webkit-scrollbar {
   left: -5%;
   background: inherit;
   border-radius: 3% / 8%;
+}
+
+#mass {
+  background-image: url("https://thedial.infura-ipfs.io/ipfs/Qma5PAt5FePkrLejr5UtHP7UgRLCsAujw3R6jN8tnu9Vvu");
+  background-position: center;
+  background-size: cover;
+  border-radius: 0.2rem;
+}
+
+#mass::placeholder {
+  font-family: "Satoshi Medium";
+  color: #06cf0b !important;
+}
+
+#promptRange {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 9999px;
+}
+
+#promptRange::-webkit-slider-runnable-track {
+  background: black;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+/******** Firefox ********/
+#promptRange::-moz-range-track {
+  background: black;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+#promptRange::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  margin-top: -4px; /* Centers thumb on the track */
+  background: conic-gradient(#f8f5e6, #e7b97b, #ffdb96, #ffde90, #fff4bc);
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+}
+
+/***** Thumb Styles *****/
+/***** Firefox *****/
+#promptRange::-moz-range-thumb {
+  border: none; /*Removes extra border that FF applies*/
+  border-radius: 0; /*Removes default border-radius that FF applies*/
+  background: conic-gradient(
+    #f8f5e6,
+    #e7b97b,
+    #ffdb96,
+    #ffde90,
+    #fff4bc,
+    #f1d2ef,
+    #f8d4f7
+  );
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+}
+
+#guide {
+  background: linear-gradient(
+    -86deg,
+    #f8f5e6,
+    #e7b97b,
+    #ffdb96,
+    #ffde90,
+    #fff4bc,
+    #f1d2ef,
+    #f8d4f7
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

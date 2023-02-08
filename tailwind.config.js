@@ -58,6 +58,8 @@ module.exports = {
         coast: "#b9d9ff",
         post: "#712AF6",
         moss: "#212929",
+        weed: "#1C2222",
+        litnus: "#06cf0b"
       },
       cursor: {
         focus: "url('/focus.png'), auto",

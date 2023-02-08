@@ -7,6 +7,7 @@ import Base from "./Base";
 import Title from "./Title";
 import Drafts from "./Drafts";
 import Board from "./Board";
+import Prompt from "./Prompt";
 
 const Draw: FunctionComponent<DrawProps> = ({
   setShowSideDrawOptions,
@@ -59,12 +60,20 @@ const Draw: FunctionComponent<DrawProps> = ({
   draftsLoading,
   loadDraft,
   setNewCanvas,
+  steps,
+  setSteps,
+  cfg,
+  setCfg,
+  handleSendPrompt,
+  promptLoading,
+  prompt,
+  setPrompt,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
       <div className="relative w-full h-full p-px sm:p-1 md:p-4 f1:p-8 bg-moss rounded-lg sm:border-4 sm:border-black">
-        <div className="relative w-full h-full p-px sm:p-2 bg-moss rounded-lg sm:border-8 sm:border-black">
-          <div className="relative w-full h-full p-px sm:p-1 md:p-4 bg-moss rounded-lg sm:border-4 sm:border-black">
+        <div className="relative w-full h-full p-px sm:p-2 bg-moss rounded-lg sm:border-8 sm:border-black grid grid-flow-row auto-rows-auto">
+          <div className="relative w-full h-full p-px sm:p-1 md:p-4 bg-moss rounded-lg sm:border-4 sm:border-black row-start-1">
             <div
               className="relative w-full h-full p-px sm:p-1 sm:p-3 f1:p-8 f9:p-14 xl:p-20 rounded-lg sm:border-4 sm:border-black"
               id="baseDraw"
@@ -169,6 +178,18 @@ const Draw: FunctionComponent<DrawProps> = ({
                 </div>
               </div>
             </div>
+          </div>
+          <div className="relative w-full h-full row-start-2">
+            <Prompt
+              setCfg={setCfg}
+              cfg={cfg}
+              steps={steps}
+              setSteps={setSteps}
+              handleSendPrompt={handleSendPrompt}
+              promptLoading={promptLoading}
+              prompt={prompt}
+              setPrompt={setPrompt}
+            />
           </div>
         </div>
       </div>
