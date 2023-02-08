@@ -109,7 +109,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   } = useConversations();
   const { getMoreNotifications, notificationsList, notificationsLoading } =
     useNotifications();
-  const { handleKeyAdd, keyValue, setKeyStorage } = useSynthAPI();
+  const { handleKeyAdd, keyValue, setKeyStorage, setKeyValue } = useSynthAPI();
   const router = useRouter();
   const { dispatcherLoading, setDispatcherEnabled } = useParameters();
   const profile = useSelector(
@@ -246,6 +246,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           handleKeyAdd={handleKeyAdd}
           keyValue={keyValue}
           setKeyStorage={setKeyStorage}
+          setKeyValue={setKeyValue}
         />
       );
 

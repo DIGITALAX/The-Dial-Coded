@@ -252,10 +252,12 @@ export type SynthAPIProps = {
   handleKeyAdd: (e: FormEvent) => void;
   setKeyStorage: () => void;
   keyValue: boolean;
+  setKeyValue: (e: boolean) => void
 };
 
 export type UseSynthAPIResults = {
   handleKeyAdd: (e: FormEvent) => void;
   setKeyStorage: () => void;
   keyValue: boolean;
+  setKeyValue: (e: boolean) => void
 }

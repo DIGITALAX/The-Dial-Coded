@@ -1,12 +1,14 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/lens/constants";
+import { getReplicateKey } from "../../../../../lib/replicate/utils";
 import { SynthAPIProps } from "../types/account.types";
 
 const SynthAPI: FunctionComponent<SynthAPIProps> = ({
   handleKeyAdd,
   setKeyStorage,
   keyValue,
+  setKeyValue,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row flex-wrap gap-6 border-2 border-black bg-white">
@@ -79,10 +81,18 @@ const SynthAPI: FunctionComponent<SynthAPIProps> = ({
             <br />
             3) COPY your API key and ENTER below:
           </div>
-          <div className="relative h-10 rounded-md w-full border-2 border-deep">
+          <div
+            className="relative h-10 rounded-md w-full border-2 border-deep"
+            onClick={() => setKeyValue(!keyValue)}
+          >
             <input
               onChange={(e) => handleKeyAdd(e)}
               type={keyValue ? "password" : "text"}
+              defaultValue={
+                (getReplicateKey() as string)
+                  ? (getReplicateKey() as string)
+                  : ""
+              }
               className="h-full w-full rounded-md font-sats p-1"
             />
           </div>
@@ -99,7 +109,7 @@ const SynthAPI: FunctionComponent<SynthAPIProps> = ({
               draggable={false}
             />
             <div className="relative w-fit h-fit place-self-center text-white font-earl text-xl f10:text-4xl">
-                ALL SET!
+              ALL SET!
             </div>
           </div>
         </div>

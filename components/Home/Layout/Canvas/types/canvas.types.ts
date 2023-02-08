@@ -61,8 +61,16 @@ export type DrawProps = {
   setZoom: (e: number) => void;
   addImageToCanvas: (image: string) => Promise<void>;
   draftsLoading: boolean;
-  loadDraft: (e: FormEvent) => void
-  setNewCanvas: () => void
+  loadDraft: (e: FormEvent) => void;
+  setNewCanvas: () => void;
+  cfg: string;
+  setCfg: (e: string) => void;
+  steps: string;
+  setSteps: (e: string) => void;
+  handleSendPrompt: () => Promise<void>;
+  promptLoading: boolean;
+  setPrompt: (e: string) => void;
+  prompt: string;
 };
 
 export type ColorPickerProps = {
@@ -83,7 +91,7 @@ export type SideMenuProps = {
   handleClear: () => void;
   zoom: number;
   setZoom: (e: number) => void;
-  setNewCanvas: () => void
+  setNewCanvas: () => void;
 };
 
 export type BottomMenuProps = {
@@ -122,7 +130,7 @@ export type SideOptionsProps = {
   handleClear: () => void;
   zoom: number;
   setZoom: (e: number) => void;
-  setNewCanvas: () => void
+  setNewCanvas: () => void;
 };
 
 export type BottomOptionsProps = {
@@ -204,11 +212,44 @@ export interface Draft {
 
 export type DraftsProps = {
   draftsLoading: boolean;
-  loadDraft: (e: FormEvent) => void
+  loadDraft: (e: FormEvent) => void;
 };
 
 export type UseDraftsResult = {
   saveCanvasNetwork: (file: File, elements: string[]) => Promise<void>;
   draftsLoading: boolean;
-  loadDraft: (e: FormEvent) => void
+  loadDraft: (e: FormEvent) => void;
 };
+
+export type UsePromptResults = {
+  cfg: string;
+  setCfg: (e: string) => void;
+  steps: string;
+  setSteps: (e: string) => void;
+  handleSendPrompt: () => Promise<void>;
+  promptLoading: boolean;
+  setPrompt: (e: string) => void;
+  prompt: string;
+};
+
+export type PromptProps = {
+  cfg: string;
+  setCfg: (e: string) => void;
+  steps: string;
+  setSteps: (e: string) => void;
+  handleSendPrompt: () => Promise<void>;
+  promptLoading: boolean;
+  setPrompt: (e: string) => void;
+  prompt: string;
+};
+
+export interface InputType {
+  prompt: string;
+  width: number;
+  height: number;
+  num_outputs: number;
+  num_inference_steps: number;
+  guidance_scale: number;
+  init_image: string | undefined;
+  prompt_strength: number | undefined;
+}

@@ -829,3 +829,14 @@ export type ProfileSideBarProps = {
   hasMirrored: boolean | undefined;
   hasReacted: boolean | undefined;
 };
+
+export type CassetteButton = {
+  text: string;
+  textSize: string;
+  right: string;
+  bottom: string;
+  position: string;
+  loading?: boolean;
+  handleSend?: () => Promise<void>;
+  value?: string
+};
