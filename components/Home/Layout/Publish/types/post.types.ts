@@ -38,4 +38,6 @@ export type FeedProps = {
   firstMixLoad: boolean;
   hotFollowerOnly: boolean[]
   noHotData: boolean;
+  hasMore: boolean;
+  hasMoreHot: boolean;
 };

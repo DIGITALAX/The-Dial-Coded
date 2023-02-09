@@ -10,9 +10,11 @@ import { RootState } from "../../../../../redux/store";
 import PanelText from "./PanelText";
 import handleAddtoSearch from "../../../../../lib/lens/helpers/handleAddtoSearch";
 import { useMediaQuery } from "@material-ui/core";
+import { useRouter } from "next/router";
 
 const Panel: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { open, setOpen, uris, layoutType } = usePanel();
   const layoutState: string | undefined = useSelector(
     (state: RootState) => state.app.layoutReducer.value
@@ -27,10 +29,15 @@ const Panel: FunctionComponent = (): JSX.Element => {
   let queryWindowSize500: boolean = useMediaQuery("(max-width:500px)");
   return (
     <div
-      className={`relative w-full h-full bg-shame rounded-t-2xl row-start-3 grid grid-flow-col auto-cols-auto z-10 p-2`}
+      className={`${
+        router.asPath.includes("Post") ? "pt-2 px-2" : "px-2 pt-2 pb-2"
+      } relative w-full h-full bg-shame rounded-t-2xl row-start-3 grid grid-flow-col auto-cols-auto z-10`}
     >
       <div
-        className="relative w-full h-full grid grid-flow-col auto-cols-auto rounded-t-2xl border-2 border-x-white/40 border-t-white/40"
+        className={`relative w-full h-full grid grid-flow-col auto-cols-auto rounded-t-2xl ${
+          !router.asPath.includes("Post") &&
+          "border-2 border-x-white/40 border-t-white/40"
+        }`}
         id="outside"
       >
         <div className="relative w-full h-full grid grid-flow-col auto-cols-auto pl-3 md:pl-10 py-6 md:gap-0 gap-6">

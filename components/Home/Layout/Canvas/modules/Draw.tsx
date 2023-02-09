@@ -68,6 +68,7 @@ const Draw: FunctionComponent<DrawProps> = ({
   promptLoading,
   prompt,
   setPrompt,
+  keyExists,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -189,6 +190,7 @@ const Draw: FunctionComponent<DrawProps> = ({
               promptLoading={promptLoading}
               prompt={prompt}
               setPrompt={setPrompt}
+              keyExists={keyExists}
             />
           </div>
         </div>

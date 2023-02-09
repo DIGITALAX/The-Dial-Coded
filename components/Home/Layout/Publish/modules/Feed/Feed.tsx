@@ -28,6 +28,8 @@ const Feed: FunctionComponent<FeedProps> = ({
   firstPubLoad,
   hotFollowerOnly,
   noHotData,
+  hasMore,
+  hasMoreHot
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -37,7 +39,7 @@ const Feed: FunctionComponent<FeedProps> = ({
     (state: RootState) => state.app.userViewerReducer.value
   );
   return (
-    <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-3 gap-3">
+    <div className="relative w-full h-full grid grid-flow-row auto-rows-auto row-start-3 gap-3 p-3 sm:p-6 md:p-10">
       <div className="relative row-start-1 w-full h-full grid md:grid-flow-col md:auto-cols-auto grid-flow-row auto-rows-auto gap-6">
         <Main
           publicationsFeed={publicationsFeed}
@@ -56,6 +58,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           firstPubLoad={firstPubLoad}
           mixtapeLength={hotFeed?.length}
           noHotData={noHotData}
+          hasMore={hasMore}
         />
         <Hot
           isOpen={isOpen}
@@ -71,6 +74,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           firstMixLoad={firstMixLoad}
           hotFollowerOnly={hotFollowerOnly}
           noHotData={noHotData}
+          hasMoreHot={hasMoreHot}
         />
       </div>
       {/* <div

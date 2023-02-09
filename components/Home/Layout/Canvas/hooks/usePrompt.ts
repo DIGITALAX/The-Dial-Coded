@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getReplicateKey } from "../../../../../lib/replicate/utils";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
@@ -11,6 +11,7 @@ const usePrompt = (): UsePromptResults => {
   const [init, setInit] = useState<string>();
   const [strength, setStrength] = useState<string>("0.5");
   const [prompt, setPrompt] = useState<string>("");
+  const [keyExists, setKeyExists] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const handleSendPrompt = async (): Promise<void> => {
@@ -41,6 +42,17 @@ const usePrompt = (): UsePromptResults => {
     setPromptLoading(false);
   };
 
+  const CheckApi = () => {
+    const value = getReplicateKey();
+    if (value !== null && value !== "") {
+      setKeyExists(true);
+    }
+  };
+
+  useEffect(() => {
+    CheckApi();
+  }, []);
+
   return {
     cfg,
     setCfg,
@@ -50,6 +62,7 @@ const usePrompt = (): UsePromptResults => {
     promptLoading,
     prompt,
     setPrompt,
+    keyExists,
   };
 };
 

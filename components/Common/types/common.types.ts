@@ -842,4 +842,5 @@ export type CassetteButton = {
   loading?: boolean;
   handleSend?: () => Promise<void>;
   value?: string;
+  keyExists?: boolean;
 };

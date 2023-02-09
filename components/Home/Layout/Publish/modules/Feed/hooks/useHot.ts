@@ -46,11 +46,13 @@ const useHot = (): UseHotResults => {
   const [mixtapesLoading, setMixtapesLoading] = useState<boolean>(false);
   const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [firstMixLoad, setFirstMixLoad] = useState<boolean>(true);
+  const [hasMoreHot, setHasMoreHot] = useState<boolean>(true);
 
   const getMixtapes = async (): Promise<void> => {
     let sortedArr: any[];
     let pageData: any;
     setMixtapesLoading(true);
+    setHasMoreHot(true);
     try {
       if (!lensProfile) {
         const { data } = await explorePublications({
@@ -115,9 +117,11 @@ const useHot = (): UseHotResults => {
     try {
       if (!lensProfile) {
         if (!paginatedHotResults?.next) {
+          setHasMoreHot(false);
           // fix apollo duplications on null next
           return;
         }
+        setHasMoreHot(true);
         const { data } = await explorePublications({
           sources: "thedial",
           publicationTypes: ["POST"],
@@ -138,9 +142,11 @@ const useHot = (): UseHotResults => {
         pageData = data?.explorePublications?.pageInfo;
       } else {
         if (!paginatedHotResults?.next) {
+          setHasMoreHot(false);
           // fix apollo duplications on null next
           return;
         }
+        setHasMoreHot(true);
         const { data } = await explorePublicationsAuth({
           sources: "thedial",
           publicationTypes: ["POST"],
@@ -182,6 +188,7 @@ const useHot = (): UseHotResults => {
     let sortedArr: any[];
     let pageData: any;
     setMixtapesLoading(true);
+    setHasMoreHot(true);
     try {
       if (!lensProfile) {
         const { data } = await profilePublications({
@@ -256,9 +263,11 @@ const useHot = (): UseHotResults => {
     try {
       if (!lensProfile) {
         if (!paginatedHotResults?.next) {
+          setHasMoreHot(false);
           // fix apollo duplications on null next
           return;
         }
+        setHasMoreHot(true);
         const { data } = await explorePublications({
           profileId: (userView as any)?.profileId,
           sources: "thedial",
@@ -280,9 +289,11 @@ const useHot = (): UseHotResults => {
         pageData = data?.explorePublications?.pageInfo;
       } else {
         if (!paginatedHotResults?.next) {
+          setHasMoreHot(false);
           // fix apollo duplications on null next
           return;
         }
+        setHasMoreHot(true);
         const { data } = await explorePublicationsAuth({
           profileId: (userView as any)?.profileId,
           sources: "thedial",
@@ -355,6 +366,7 @@ const useHot = (): UseHotResults => {
     mixtapesLoading,
     firstMixLoad,
     followerOnly,
+    hasMoreHot,
   };
 };
 

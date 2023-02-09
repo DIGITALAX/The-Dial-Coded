@@ -34,6 +34,7 @@ const Post: FunctionComponent = (): JSX.Element => {
     followerOnly,
     publicationsLoading,
     firstPubLoad,
+    hasMore,
   } = useMainFeed();
   const {
     hotFeed,
@@ -44,16 +45,24 @@ const Post: FunctionComponent = (): JSX.Element => {
     fetchMoreMixtapes,
     mixtapesLoading,
     firstMixLoad,
-    followerOnly: hotFollowerOnly
+    followerOnly: hotFollowerOnly,
+    hasMoreHot,
   } = useHot();
   return (
-    <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-shame p-3 sm:p-6 md:p-10 gap-10">
-      <PostBox
-        openConnectModal={openConnectModal}
-        lensProfile={lensProfile}
-        isConnected={connected}
-      />
-      <Parameters />
+    <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-shame gap-10">
+      <div className="relative w-full h-fit px-2">
+        <div
+          className="relative w-full h-fit p-3 sm:p-6 md:p-10 grid grid-flow-row auto-rows-auto gap-10"
+          id="outside2"
+        >
+          <PostBox
+            openConnectModal={openConnectModal}
+            lensProfile={lensProfile}
+            isConnected={connected}
+          />
+          <Parameters />
+        </div>
+      </div>
       <Feed
         hotFeed={hotFeed}
         hasHotReacted={hasHotReacted}
@@ -77,6 +86,8 @@ const Post: FunctionComponent = (): JSX.Element => {
         firstMixLoad={firstMixLoad}
         firstPubLoad={firstPubLoad}
         hotFollowerOnly={hotFollowerOnly}
+        hasMore={hasMore}
+        hasMoreHot={hasMoreHot}
       />
     </div>
   );

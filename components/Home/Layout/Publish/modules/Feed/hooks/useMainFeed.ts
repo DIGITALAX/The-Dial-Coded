@@ -85,12 +85,14 @@ const useMainFeed = () => {
   const [commentInfoLoading, setCommentInfoLoading] = useState<boolean>(false);
   const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const [publicationsLoading, setPublicationsLoading] =
     useState<boolean>(false);
   const [firstPubLoad, setFirstPubLoad] = useState<boolean>(true);
 
   const fetchPublications = async (profileExists?: boolean): Promise<void> => {
     setPublicationsLoading(true);
+    setHasMore(true);
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     const feedType = checkFeedTypes(feedTypeState as string);
     try {
@@ -166,6 +168,7 @@ const useMainFeed = () => {
 
   const getUserSelectFeed = async (): Promise<void> => {
     setPublicationsLoading(true);
+    setHasMore(true);
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     const feedType = checkFeedTypes(feedTypeState as string);
     let sortedArr: any[];
@@ -253,6 +256,7 @@ const useMainFeed = () => {
 
   const getFeedTimeline = async (): Promise<void> => {
     setPublicationsLoading(true);
+    setHasMore(true);
     try {
       const res = await feedTimeline({
         sources: "thedial",
@@ -315,8 +319,10 @@ const useMainFeed = () => {
     try {
       if (!paginatedResults?.next) {
         // fix apollo duplications on null next
+        setHasMore(false);
         return;
       }
+      setHasMore(true);
       const morePublications = await explorePublications({
         sources: "thedial",
         publicationTypes: feedOrder,
@@ -360,8 +366,10 @@ const useMainFeed = () => {
     try {
       if (!paginatedResults?.next) {
         // fix apollo duplications on null next
+        setHasMore(false);
         return;
       }
+      setHasMore(true);
       const morePublications = await feedTimeline({
         profileId: lensProfile,
         limit: 50,
@@ -387,9 +395,11 @@ const useMainFeed = () => {
       });
       if (filteredArr.length > 1) {
         if (!paginatedResults?.next) {
+          setHasMore(false);
           // fix apollo duplications on null next
           return;
         }
+        setHasMore(true);
 
         const orderedArr = orderFeedManual(
           filteredArr,
@@ -420,9 +430,11 @@ const useMainFeed = () => {
         }
       } else {
         if (!paginatedResults?.next) {
+          setHasMore(false);
           // fix apollo duplications on null next
           return;
         }
+        setHasMore(true);
         await fetchMorePublications();
       }
     } catch (err: any) {
@@ -438,9 +450,11 @@ const useMainFeed = () => {
     try {
       if (!lensProfile) {
         if (!paginatedResults?.next) {
+          setHasMore(false);
           // fix apollo duplications on null next
           return;
         }
+        setHasMore(true);
         const { data } = await profilePublications({
           sources: "thedial",
           profileId: (userView as any)?.profileId,
@@ -456,9 +470,11 @@ const useMainFeed = () => {
         pageData = data?.publications?.pageInfo;
       } else {
         if (!paginatedResults?.next) {
+          setHasMore(false);
           // fix apollo duplications on null next
           return;
         }
+        setHasMore(true);
         const { data } = await profilePublicationsAuth({
           sources: "thedial",
           profileId: (userView as any)?.profileId,
@@ -527,9 +543,11 @@ const useMainFeed = () => {
   const getMorePostComments = async (id?: string): Promise<void> => {
     try {
       if (!commentPageInfo?.next) {
+        setHasMore(false);
         // fix apollo duplications on null next
         return;
       }
+      setHasMore(true);
       let comments: any;
       if (lensProfile) {
         comments = await whoCommentedPublicationsAuth({
@@ -635,6 +653,7 @@ const useMainFeed = () => {
     followerOnly,
     publicationsLoading,
     firstPubLoad,
+    hasMore
   };
 };
 
