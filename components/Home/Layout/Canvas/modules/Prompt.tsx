@@ -11,6 +11,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
   promptLoading,
   setPrompt,
   prompt,
+  keyExists,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-row flex-wrap f1:flex-nowrap gap-12 py-10 px-4 f5:px-12 f5:py-20">
@@ -42,6 +43,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
             <input
               name="steps"
               type={"range"}
+              step={"0.5"}
               id="promptRange"
               defaultValue={60}
               className="w-full"
@@ -71,6 +73,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
             <input
               type={"range"}
               id="promptRange"
+              step={"0.5"}
               defaultValue={10}
               className="w-full"
               onChange={(e) => setCfg(e.target.value)}
@@ -83,15 +86,18 @@ const Prompt: FunctionComponent<PromptProps> = ({
           <textarea
             onChange={(e) => setPrompt(e.target.value)}
             id="mass"
-            className="relative w-full h-full bg-weed rounded-lg p-1 text-litnus font-sats text-base"
+            className="relative w-full h-full bg-weed rounded-lg p-1 text-litnus font-sats text-base caret-white"
             style={{ resize: "none" }}
-            placeholder="Craft prompts for what you want to create here, with words first. 
-            Add modifiers for more spectacular results…"
-            disabled={promptLoading ? true : false}
+            placeholder={
+              keyExists
+                ? "Craft prompts for what you want to create here, with words first. Add modifiers for more spectacular results…"
+                : "The  DIAL operates a HUMAN IN THE LOOP + AI paradigm. You must complete the circuit to activate STABLE DIFFUSION."
+            }
+            disabled={promptLoading || !keyExists ? true : false}
           ></textarea>
           <div className="absolute w-fit h-fit bottom-2 right-2 z-1">
             <CassetteButton
-              text="synth"
+              text={keyExists ? "synth" : "add key"}
               textSize="sm"
               right="2"
               bottom="2"
@@ -99,6 +105,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
               handleSend={handleSendPrompt}
               loading={promptLoading}
               value={prompt as string}
+              keyExists={keyExists}
             />
           </div>
         </div>

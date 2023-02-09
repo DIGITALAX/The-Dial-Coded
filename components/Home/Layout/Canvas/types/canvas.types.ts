@@ -71,6 +71,7 @@ export type DrawProps = {
   promptLoading: boolean;
   setPrompt: (e: string) => void;
   prompt: string;
+  keyExists: boolean
 };
 
 export type ColorPickerProps = {
@@ -230,6 +231,7 @@ export type UsePromptResults = {
   promptLoading: boolean;
   setPrompt: (e: string) => void;
   prompt: string;
+  keyExists: boolean
 };
 
 export type PromptProps = {
@@ -241,6 +243,7 @@ export type PromptProps = {
   promptLoading: boolean;
   setPrompt: (e: string) => void;
   prompt: string;
+  keyExists: boolean
 };
 
 export interface InputType {

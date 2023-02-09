@@ -750,9 +750,11 @@ code::-webkit-scrollbar {
 }
 
 #outside {
-  background: conic-gradient(
-    #f7f7f3,
-    #dbdfb2,
+  background: linear-gradient(#f7f7f3, #dbdfb2, #aeeccf);
+}
+
+#outside2 {
+  background: linear-gradient(
     #aeeccf,
     #cedfde,
     #f1d2ef,
@@ -862,6 +864,10 @@ code::-webkit-scrollbar {
 #mass::placeholder {
   font-family: "Satoshi Medium";
   color: #06cf0b !important;
+}
+
+#mass {
+  caret-color: white !important;
 }
 
 #promptRange {

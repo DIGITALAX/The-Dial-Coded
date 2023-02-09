@@ -23,6 +23,7 @@ const Main: FunctionComponent<MainProps> = ({
   firstPubLoad,
   mixtapeLength,
   noHotData,
+  hasMore
 }): JSX.Element => {
   const dispatch = useDispatch();
   if (publicationsLoading && firstPubLoad) {
@@ -43,7 +44,7 @@ const Main: FunctionComponent<MainProps> = ({
               : undefined
           }
           loader={<FetchMoreLoading />}
-          hasMore={true}
+          hasMore={hasMore}
           next={fetchMore}
           dataLength={publicationsFeed?.length}
           className={`relative row-start-1 w-full h-full overflow-y-scroll grid grid-flow-row auto-rows-auto gap-3`}

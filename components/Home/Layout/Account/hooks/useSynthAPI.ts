@@ -12,13 +12,14 @@ const useSynthAPI = (): UseSynthAPIResults => {
 
   const setKeyStorage = (): void => {
     setReplicateKey(replicate);
+    setKeyValue(true);
   };
 
   return {
     handleKeyAdd,
     keyValue,
     setKeyStorage,
-    setKeyValue
+    setKeyValue,
   };
 };
 

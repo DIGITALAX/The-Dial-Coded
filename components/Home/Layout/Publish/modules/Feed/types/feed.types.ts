@@ -22,6 +22,7 @@ export type MainProps = {
   firstPubLoad: boolean;
   mixtapeLength: number;
   noHotData: boolean;
+  hasMore: boolean;
 };
 
 export type HotProps = {
@@ -38,6 +39,7 @@ export type HotProps = {
   firstMixLoad: boolean;
   hotFollowerOnly: boolean[];
   noHotData: boolean;
+  hasMoreHot: boolean;
 };
 
 export type UseHotResults = {
@@ -50,6 +52,7 @@ export type UseHotResults = {
   mixtapesLoading: boolean;
   firstMixLoad: boolean;
   followerOnly: boolean[];
+  hasMoreHot: boolean;
 };
 
 export type UseMainResults = {

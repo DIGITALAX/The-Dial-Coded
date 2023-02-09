@@ -29,6 +29,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     promptLoading,
     prompt,
     setPrompt,
+    keyExists,
   } = usePrompt();
   const {
     hex,
@@ -174,6 +175,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           promptLoading={promptLoading}
           prompt={prompt}
           setPrompt={setPrompt}
+          keyExists={keyExists}
         />
       );
   }

@@ -20,6 +20,7 @@ const Hot: FunctionComponent<HotProps> = ({
   firstMixLoad,
   hotFollowerOnly,
   noHotData,
+  hasMoreHot
 }): JSX.Element => {
   if (mixtapesLoading && firstMixLoad) {
     return <HotFeedLoading />;
@@ -53,8 +54,10 @@ const Hot: FunctionComponent<HotProps> = ({
             })}
         </div>
       ) : (
-        <div className="relative w-fit h-80 justify-self-center font-dosis text-offBlack text-base pt-5">
-          No Mixtapes yet...
+        <div className="relative w-96 h-fit grid grid-flow-col auto-cols-auto">
+          <div className="relative w-fit h-80 justify-self-center font-dosis text-offBlack text-base pt-5">
+            No Mixtapes to See Here Yet...
+          </div>
         </div>
       )}
       {!noHotData && (
@@ -87,7 +90,7 @@ const Hot: FunctionComponent<HotProps> = ({
             <InfiniteScroll
               height={"200rem"}
               loader={<FetchMoreLoading />}
-              hasMore={true}
+              hasMore={hasMoreHot}
               next={fetchMoreMixtapes}
               dataLength={hotFeed?.length - 2}
               className={`relative row-start-1 w-full h-full overflow-y-scroll grid grid-flow-row auto-rows-auto gap-3`}

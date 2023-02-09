@@ -43,6 +43,7 @@ const useProfile = () => {
   const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
   const [followersLoading, setFollowersLoading] = useState<boolean>(false);
   const [followingLoading, setFollowingLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [userFollowing, setUserFollowing] = useState<
     PaginatedFollowingResult[]
@@ -83,6 +84,7 @@ const useProfile = () => {
 
   const getUserProfileFeed = async () => {
     setProfileDataLoading(true);
+    setHasMore(true);
     try {
       const { data } = await profilePublicationsAuth({
         sources: "thedial",
