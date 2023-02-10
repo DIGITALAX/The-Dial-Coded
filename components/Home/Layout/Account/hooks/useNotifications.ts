@@ -24,6 +24,8 @@ const useNotifications = () => {
   const accountTab = useSelector(
     (state: RootState) => state.app.accountPageReducer.value
   );
+  const [hasMoreNotifications, setHasMoreNotifications] =
+    useState<boolean>(true);
 
   const getShortNotifications = async (): Promise<void> => {
     try {
@@ -59,6 +61,11 @@ const useNotifications = () => {
         limit: 50,
         sources: "thedial",
       });
+      if (!results || results?.data?.result?.items?.length < 50) {
+        setHasMoreNotifications(false);
+      } else {
+        setHasMoreNotifications(true);
+      }
       const newData = lodash.filter(
         results?.data?.result?.items,
         (item: any) => {
@@ -86,6 +93,12 @@ const useNotifications = () => {
 
   const getMoreNotifications = async (): Promise<void> => {
     try {
+      if (!notificationsPage?.next) {
+        // fix apollo duplications on null next
+        setHasMoreNotifications(false);
+        return;
+      }
+      setHasMoreNotifications(true);
       const results = await notifications({
         profileId: lensProfileId,
         limit: 50,
@@ -127,6 +140,7 @@ const useNotifications = () => {
     getShortNotifications,
     notificationsList,
     notificationsLoading,
+    hasMoreNotifications,
   };
 };
 

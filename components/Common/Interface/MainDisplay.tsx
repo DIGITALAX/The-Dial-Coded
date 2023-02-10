@@ -11,7 +11,6 @@ import { INFURA_GATEWAY } from "../../../lib/lens/constants";
 import AccountSwitch from "../../Home/Layout/Account/AccountSwitch";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useMediaQuery } from "@material-ui/core";
-import FetchMoreLoading from "../Loaders/FetchMoreLoading";
 
 const MainDisplay: FunctionComponent<MainDisplayProps> = ({
   row,
@@ -116,7 +115,7 @@ const MainDisplay: FunctionComponent<MainDisplayProps> = ({
                 <InfiniteScroll
                   // height={"30rem"}
                   scrollableTarget={"scrollable"}
-                  loader={<FetchMoreLoading />}
+                  loader={""}
                   hasMore={mixtape ? true : false}
                   next={more ? more : () => {}}
                   dataLength={tapeTitles.length}

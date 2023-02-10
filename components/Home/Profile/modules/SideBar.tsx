@@ -40,6 +40,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   mixtapesLoading,
   firstSideBarLoad,
   hotFollowerOnly,
+  hasMoreHot
 }): JSX.Element => {
   const location = lodash.filter(
     profileData?.attributes,
@@ -237,7 +238,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
           <InfiniteScroll
             height={!queryWindowSize900 ? "266em" : undefined}
             loader={<FetchMoreLoading />}
-            hasMore={true}
+            hasMore={hasMoreHot}
             next={getMoreUserMixtapes}
             dataLength={mixtapes?.length}
             className={`relative w-full h-full grid f1:grid-flow-row f1:auto-rows-auto auto-cols-auto grid-flow-col gap-16 justify-self-center`}

@@ -38,7 +38,7 @@ const Panel: FunctionComponent = (): JSX.Element => {
           !router.asPath.includes("Post") &&
           "border-2 border-x-white/40 border-t-white/40"
         }`}
-        id="outside"
+        id={!router.asPath.includes("Post") ? "conic" : "outside"}
       >
         <div className="relative w-full h-full grid grid-flow-col auto-cols-auto pl-3 md:pl-10 py-6 md:gap-0 gap-6">
           <div

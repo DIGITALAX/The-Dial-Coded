@@ -11,6 +11,7 @@ import moment from "moment";
 import CollectInfo from "../../Feed/Reactions/CollectInfo";
 import { AiOutlineLoading } from "react-icons/ai";
 import { useRouter } from "next/router";
+import FetchMoreLoading from "../../Loaders/FetchMoreLoading";
 
 const CollectsModal: FunctionComponent<CollectsModalProps> = ({
   collectors,
@@ -61,7 +62,7 @@ const CollectsModal: FunctionComponent<CollectsModalProps> = ({
                   hasMore={true}
                   dataLength={collectors.length}
                   next={getMorePostCollects}
-                  loader={<FetchMoreLoading />}
+                  loader={""}
                   height={"10rem"}
                   className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4 gap-2"
                 >

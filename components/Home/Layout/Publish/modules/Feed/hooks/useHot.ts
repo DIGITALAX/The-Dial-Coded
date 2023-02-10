@@ -52,7 +52,6 @@ const useHot = (): UseHotResults => {
     let sortedArr: any[];
     let pageData: any;
     setMixtapesLoading(true);
-    setHasMoreHot(true);
     try {
       if (!lensProfile) {
         const { data } = await explorePublications({
@@ -91,6 +90,11 @@ const useHot = (): UseHotResults => {
         );
         pageData = data?.explorePublications?.pageInfo;
       }
+      if (!sortedArr || sortedArr?.length < 20) {
+        setHasMoreHot(false);
+      } else {
+        setHasMoreHot(true);
+      }
       setHotFeed(sortedArr);
       const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, lensProfile);
       setFollowerOnly(isOnlyFollowers as boolean[]);
@@ -115,13 +119,13 @@ const useHot = (): UseHotResults => {
     let sortedArr: any[];
     let pageData: any;
     try {
+      if (!paginatedHotResults?.next) {
+        setHasMoreHot(false);
+        // fix apollo duplications on null next
+        return;
+      }
+      setHasMoreHot(true);
       if (!lensProfile) {
-        if (!paginatedHotResults?.next) {
-          setHasMoreHot(false);
-          // fix apollo duplications on null next
-          return;
-        }
-        setHasMoreHot(true);
         const { data } = await explorePublications({
           sources: "thedial",
           publicationTypes: ["POST"],
@@ -141,12 +145,6 @@ const useHot = (): UseHotResults => {
         );
         pageData = data?.explorePublications?.pageInfo;
       } else {
-        if (!paginatedHotResults?.next) {
-          setHasMoreHot(false);
-          // fix apollo duplications on null next
-          return;
-        }
-        setHasMoreHot(true);
         const { data } = await explorePublicationsAuth({
           sources: "thedial",
           publicationTypes: ["POST"],

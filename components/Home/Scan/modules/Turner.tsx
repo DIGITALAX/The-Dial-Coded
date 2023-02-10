@@ -7,7 +7,6 @@ import { TurnerProps } from "./../types/scan.types";
 import { TfiSearch } from "react-icons/tfi";
 import SearchBar from "../../../Common/Search/SearchBar";
 import { useMediaQuery } from "@material-ui/core";
-import FetchMoreLoading from "../../../Common/Loaders/FetchMoreLoading";
 
 const Turner: FunctionComponent<TurnerProps> = ({
   currentSetting,
@@ -35,7 +34,6 @@ const Turner: FunctionComponent<TurnerProps> = ({
           className="relative w-fit h-fit relative cursor-pointer"
           width={230}
           height={230}
-          draggable={false}
           alt="dial"
         />
       </div>
@@ -88,7 +86,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
                       hasMore={true}
                       dataLength={profileSearchValues?.length}
                       next={handleMoreProfileQuickSearch}
-                      loader={<FetchMoreLoading />}
+                      loader={""}
                       height={"10rem"}
                       className={`${
                         publicationSearchValues?.length > 0
@@ -130,7 +128,6 @@ const Turner: FunctionComponent<TurnerProps> = ({
                                     alt="pfp"
                                     layout="fill"
                                     className="relative w-fit h-fit rounded-full self-center"
-                                    draggable={false}
                                   />
                                 )}
                               </div>
@@ -154,7 +151,6 @@ const Turner: FunctionComponent<TurnerProps> = ({
               src={`${INFURA_GATEWAY}/ipfs/${canvasURIs[currentSetting]}`}
               layout="fill"
               alt="canvas"
-              draggable={false}
             />
           </div>
         )}

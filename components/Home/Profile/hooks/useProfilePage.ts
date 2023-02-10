@@ -69,6 +69,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const [followLoading, setFollowLoading] = useState<boolean>(false);
   const [followArgs, setFollowArgs] = useState<FollowArgs>();
   const [userFeed, setUserFeed] = useState<PublicationSearchResult[]>([]);
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const [followInfoLoading, setFollowInfoLoading] = useState<boolean>(false);
   const [paginatedResults, setPaginatedResults] = useState<any>();
   const { address } = useAccount();
@@ -84,6 +85,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const [mixtapes, setMixtapes] = useState<any[]>([]);
   const [mixtapePaginated, setMixtapePaginated] = useState<any>();
   const [hotReactionsFeed, setHotReactionsFeed] = useState<boolean[]>([]);
+  const [hasMoreHot, setHasMoreHot] = useState<boolean>(true);
   const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [hotFollowerOnly, setHotFollowerOnly] = useState<boolean[]>([]);
   const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
@@ -438,6 +440,11 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         pageData = data?.publications?.pageInfo;
       }
+      if (!sortedArr || sortedArr?.length < 30) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
       const filteredArr = lodash.filter(sortedArr, (arr) => {
         if (arr?.__typename === "Post") {
           if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
@@ -484,6 +491,11 @@ const useProfilePage = (): UseProfilePageResults => {
     let sortedArr: any[];
     let pageData: any;
     try {
+      if (!paginatedResults?.next) {
+        setHasMore(false);
+        return;
+      }
+      setHasMore(true);
       if (!lensProfile?.id) {
         const { data } = await profilePublications({
           sources: "thedial",
@@ -595,6 +607,11 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         pageData = data?.publications?.pageInfo;
       }
+      if (!sortedArr || sortedArr?.length < 30) {
+        setHasMoreHot(false);
+      } else {
+        setHasMoreHot(true);
+      }
       setMixtapes(sortedArr);
       const isOnlyFollowers = await checkIfFollowerOnly(
         sortedArr,
@@ -628,6 +645,12 @@ const useProfilePage = (): UseProfilePageResults => {
     let sortedArr: any[];
     let pageData: any;
     try {
+      if (!mixtapePaginated?.next) {
+        setHasMoreHot(false);
+        // fix apollo duplications on null next
+        return;
+      }
+      setHasMoreHot(true);
       if (!lensProfile?.id) {
         const { data } = await profilePublications({
           sources: "thedial",
@@ -855,7 +878,9 @@ const useProfilePage = (): UseProfilePageResults => {
     publicationsLoading,
     firstPostLoad,
     firstSideBarLoad,
-    hotFollowerOnly
+    hotFollowerOnly,
+    hasMoreHot,
+    hasMore,
   };
 };
 export default useProfilePage;

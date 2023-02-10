@@ -84,7 +84,6 @@ const useProfile = () => {
 
   const getUserProfileFeed = async () => {
     setProfileDataLoading(true);
-    setHasMore(true);
     try {
       const { data } = await profilePublicationsAuth({
         sources: "thedial",
@@ -96,6 +95,11 @@ const useProfile = () => {
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
+      if (!sortedArr || sortedArr?.length < 30) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
       const filteredArr = lodash.filter(sortedArr, (arr: any) => {
         if (arr?.__typename === "Post") {
           if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
@@ -128,6 +132,11 @@ const useProfile = () => {
 
   const getMoreUserProfileFeed = async (): Promise<void> => {
     try {
+      if (!paginatedResults?.next) {
+        setHasMore(false);
+        return;
+      }
+      setHasMore(true);
       const { data } = await profilePublicationsAuth({
         sources: "thedial",
         profileId: profileId,
@@ -204,6 +213,7 @@ const useProfile = () => {
     followingLoading,
     mixtapeMirror,
     followerOnly,
+    hasMore,
   };
 };
 

@@ -24,7 +24,8 @@ export type SideBarProps = {
   handleSendDM: (profile: Profile) => void;
   mixtapesLoading: boolean;
   firstSideBarLoad: boolean;
-  hotFollowerOnly: boolean[]
+  hotFollowerOnly: boolean[];
+  hasMoreHot: boolean;
 };
 
 export interface FollowArgs {
@@ -79,5 +80,7 @@ export type UseProfilePageResults = {
   publicationsLoading: boolean;
   firstPostLoad: boolean;
   firstSideBarLoad: boolean;
-  hotFollowerOnly: boolean[]
+  hotFollowerOnly: boolean[];
+  hasMoreHot: boolean;
+  hasMore: boolean;
 };
