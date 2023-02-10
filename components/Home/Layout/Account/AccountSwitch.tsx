@@ -72,6 +72,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     followingLoading,
     mixtapeMirror,
     followerOnly,
+    hasMore
   } = useProfile();
   const {
     createClient,
@@ -107,8 +108,12 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     allConversationsLoading,
     handleKeyEnter,
   } = useConversations();
-  const { getMoreNotifications, notificationsList, notificationsLoading } =
-    useNotifications();
+  const {
+    getMoreNotifications,
+    notificationsList,
+    notificationsLoading,
+    hasMoreNotifications,
+  } = useNotifications();
   const { handleKeyAdd, keyValue, setKeyStorage, setKeyValue } = useSynthAPI();
   const router = useRouter();
   const { dispatcherLoading, setDispatcherEnabled } = useParameters();
@@ -175,6 +180,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           handleHidePost={handleHidePost}
           followerOnly={followerOnly}
           mixtapeLength={0}
+          hasMore={hasMore}
         />
       );
 
@@ -197,6 +203,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           getMoreNotifications={getMoreNotifications}
           notificationsList={notificationsList}
           notificationsLoading={notificationsLoading}
+          hasMoreNotifications={hasMoreNotifications}
         />
       );
 

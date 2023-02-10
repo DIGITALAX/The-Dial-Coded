@@ -92,7 +92,6 @@ const useMainFeed = () => {
 
   const fetchPublications = async (profileExists?: boolean): Promise<void> => {
     setPublicationsLoading(true);
-    setHasMore(true);
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     const feedType = checkFeedTypes(feedTypeState as string);
     try {
@@ -115,6 +114,14 @@ const useMainFeed = () => {
           noRandomize: true,
           metadata: feedType,
         });
+      }
+      if (
+        !publicationsList ||
+        publicationsList?.data?.explorePublications?.items?.length < 20
+      ) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
       }
       const arr: any[] = [...publicationsList?.data.explorePublications.items];
       const sortedArr: any[] = arr.sort(
@@ -168,7 +175,6 @@ const useMainFeed = () => {
 
   const getUserSelectFeed = async (): Promise<void> => {
     setPublicationsLoading(true);
-    setHasMore(true);
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     const feedType = checkFeedTypes(feedTypeState as string);
     let sortedArr: any[];
@@ -213,6 +219,11 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       }
+      if (!sortedArr || sortedArr?.length < 20) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
       const filteredArr = lodash.filter(sortedArr, (arr) => {
         if (arr?.__typename === "Post") {
           if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
@@ -256,13 +267,17 @@ const useMainFeed = () => {
 
   const getFeedTimeline = async (): Promise<void> => {
     setPublicationsLoading(true);
-    setHasMore(true);
     try {
       const res = await feedTimeline({
         sources: "thedial",
         profileId: lensProfile,
         limit: 50,
       });
+      if (!res || res?.data?.feed?.items?.length < 50) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
       const arr: any[] = [...res?.data.feed.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
@@ -394,13 +409,6 @@ const useMainFeed = () => {
         }
       });
       if (filteredArr.length > 1) {
-        if (!paginatedResults?.next) {
-          setHasMore(false);
-          // fix apollo duplications on null next
-          return;
-        }
-        setHasMore(true);
-
         const orderedArr = orderFeedManual(
           filteredArr,
           feedOrderState,
@@ -429,12 +437,6 @@ const useMainFeed = () => {
           setHasCommented([...hasCommented, ...hasCommentedArr]);
         }
       } else {
-        if (!paginatedResults?.next) {
-          setHasMore(false);
-          // fix apollo duplications on null next
-          return;
-        }
-        setHasMore(true);
         await fetchMorePublications();
       }
     } catch (err: any) {
@@ -448,13 +450,13 @@ const useMainFeed = () => {
     let sortedArr: any[];
     let pageData: any;
     try {
+      if (!paginatedResults?.next) {
+        setHasMore(false);
+        // fix apollo duplications on null next
+        return;
+      }
+      setHasMore(true);
       if (!lensProfile) {
-        if (!paginatedResults?.next) {
-          setHasMore(false);
-          // fix apollo duplications on null next
-          return;
-        }
-        setHasMore(true);
         const { data } = await profilePublications({
           sources: "thedial",
           profileId: (userView as any)?.profileId,
@@ -469,12 +471,6 @@ const useMainFeed = () => {
         );
         pageData = data?.publications?.pageInfo;
       } else {
-        if (!paginatedResults?.next) {
-          setHasMore(false);
-          // fix apollo duplications on null next
-          return;
-        }
-        setHasMore(true);
         const { data } = await profilePublicationsAuth({
           sources: "thedial",
           profileId: (userView as any)?.profileId,
@@ -653,7 +649,7 @@ const useMainFeed = () => {
     followerOnly,
     publicationsLoading,
     firstPubLoad,
-    hasMore
+    hasMore,
   };
 };
 

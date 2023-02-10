@@ -79,6 +79,7 @@ export type ProfileTabProps = {
   publicationsLoading?: boolean;
   firstPostLoad?: boolean;
   mixtapeLength: number;
+  hasMore: boolean;
 };
 
 export type StatsTabProps = {
@@ -132,6 +133,7 @@ export type NotificationsProps = {
   getMoreNotifications: () => Promise<void>;
   notificationsList: any[];
   notificationsLoading: boolean;
+  hasMoreNotifications: boolean;
 };
 
 export type MessageProps = {
@@ -253,12 +255,12 @@ export type SynthAPIProps = {
   handleKeyAdd: (e: FormEvent) => void;
   setKeyStorage: () => void;
   keyValue: boolean;
-  setKeyValue: (e: boolean) => void
+  setKeyValue: (e: boolean) => void;
 };
 
 export type UseSynthAPIResults = {
   handleKeyAdd: (e: FormEvent) => void;
   setKeyStorage: () => void;
   keyValue: boolean;
-  setKeyValue: (e: boolean) => void
-}
+  setKeyValue: (e: boolean) => void;
+};

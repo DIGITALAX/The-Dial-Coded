@@ -16,7 +16,6 @@ import Grid from "../Giphy/Grid";
 import messageRichMedia from "../../../lib/lens/helpers/messageRichMedia";
 import { setImageViewer } from "../../../redux/reducers/imageViewerSlice";
 import { useMediaQuery } from "@material-ui/core";
-import FetchMoreLoading from "../Loaders/FetchMoreLoading";
 
 const Message: FunctionComponent<MessageProps> = ({
   sendConversation,
@@ -105,7 +104,7 @@ const Message: FunctionComponent<MessageProps> = ({
             className={`relative w-full h-full self-end col-start-1 text-right gap-2 grid grid-flow-row auto-rows-auto grow`}
             hasMore={true}
             height={"37rem"}
-            loader={<FetchMoreLoading />}
+            loader={""}
             style={{
               display: "flex",
               flexDirection: "column-reverse",

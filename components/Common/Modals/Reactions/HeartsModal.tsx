@@ -12,7 +12,6 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 import { useRouter } from "next/router";
-import FetchMoreLoading from "../../Loaders/FetchMoreLoading";
 
 const HeartsModal: FunctionComponent<ReactionModalProps> = ({
   reacters,
@@ -64,7 +63,7 @@ const HeartsModal: FunctionComponent<ReactionModalProps> = ({
                       hasMore={true}
                       dataLength={reacters?.length}
                       next={getMorePostReactions}
-                      loader={<FetchMoreLoading />}
+                      loader={""}
                       height={"10rem"}
                       className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4 gap-2"
                     >

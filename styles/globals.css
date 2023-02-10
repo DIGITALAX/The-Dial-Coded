@@ -749,6 +749,20 @@ code::-webkit-scrollbar {
   opacity: 80%;
 }
 
+#conic {
+  background: conic-gradient(
+    #f7f7f3,
+    #dbdfb2,
+    #aeeccf,
+    #cedfde,
+    #f1d2ef,
+    #f6ebf7,
+    #f0ecf6,
+    #ffffff,
+    #f6f7e6
+  );
+}
+
 #outside {
   background: linear-gradient(#f7f7f3, #dbdfb2, #aeeccf);
 }

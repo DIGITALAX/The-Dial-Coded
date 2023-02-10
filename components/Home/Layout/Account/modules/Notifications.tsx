@@ -9,6 +9,7 @@ const Notifications: FunctionComponent<NotificationsProps> = ({
   getMoreNotifications,
   notificationsList,
   notificationsLoading,
+  hasMoreNotifications
 }): JSX.Element => {
   return (
     <div className={`relative w-full h-full grid grid-flow-row auto-rows-auto`}>
@@ -27,7 +28,7 @@ const Notifications: FunctionComponent<NotificationsProps> = ({
             scrollableTarget={"targetDiv"}
             height={"44rem"}
             loader={<FetchMoreLoading />}
-            hasMore={true}
+            hasMore={hasMoreNotifications}
             next={getMoreNotifications}
             dataLength={notificationsList?.length}
             className={`relative row-start-1 w-full h-full overflow-y-scroll grid grid-flow-row auto-rows-auto gap-3`}

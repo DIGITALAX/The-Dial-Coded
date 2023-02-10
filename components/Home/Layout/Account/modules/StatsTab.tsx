@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import InfiniteScroll from "react-infinite-scroll-component";
-import FetchMoreLoading from "../../../../Common/Loaders/FetchMoreLoading";
 import { StatsTabProps } from "../types/account.types";
 import Follows from "./Follows";
 
@@ -37,7 +36,7 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
               hasMore={true}
               dataLength={userFollowers?.length}
               next={getMoreFollowers}
-              loader={<FetchMoreLoading />}
+              loader={""}
               // height={"25rem"}
               className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto gap-3 pt-3 pr-3"
             >
@@ -72,7 +71,7 @@ const StatsTab: FunctionComponent<StatsTabProps> = ({
               hasMore={true}
               dataLength={userFollowing?.length}
               next={getMoreFollowing}
-              loader={<FetchMoreLoading />}
+              loader={""}
               // height={"25rem"}
               className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto pt-3 pr-3 gap-3"
             >

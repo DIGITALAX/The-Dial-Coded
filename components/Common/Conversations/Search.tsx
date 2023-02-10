@@ -39,7 +39,7 @@ const Search: FunctionComponent<SearchProps> = ({
               hasMore={true}
               dataLength={profileSearch?.length}
               next={searchMoreMessages}
-              loader={<FetchMoreLoading />}
+              loader={""}
               height={"10rem"}
               className="relative w-full h-fit"
             >

@@ -8,7 +8,6 @@ import { CommentsModalProps } from "../../types/common.types";
 import FeedPublication from "../../Feed/modules/FeedPublication";
 import { useRouter } from "next/router";
 import { AiOutlineLoading } from "react-icons/ai";
-import FetchMoreLoading from "../../Loaders/FetchMoreLoading";
 
 const CommentsModal: FunctionComponent<CommentsModalProps> = ({
   commentors,
@@ -55,7 +54,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
                       hasMore={true}
                       dataLength={commentors.length}
                       next={getMorePostComments}
-                      loader={<FetchMoreLoading />}
+                      loader={""}
                       height={"25rem"}
                       className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto f5:px-4 gap-3"
                     >

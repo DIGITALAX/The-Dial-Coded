@@ -23,7 +23,7 @@ const Main: FunctionComponent<MainProps> = ({
   firstPubLoad,
   mixtapeLength,
   noHotData,
-  hasMore
+  hasMore,
 }): JSX.Element => {
   const dispatch = useDispatch();
   if (publicationsLoading && firstPubLoad) {
@@ -37,42 +37,43 @@ const Main: FunctionComponent<MainProps> = ({
       {!noUserData ? (
         <InfiniteScroll
           scrollableTarget={"targetDiv"}
-          height={
-            (publicationsFeed?.length && noHotData) > 20 ||
-            (!noHotData && publicationsFeed?.length + mixtapeLength) > 20
-              ? "242.95rem"
-              : undefined
-          }
+          height={"242.95rem"}
           loader={<FetchMoreLoading />}
           hasMore={hasMore}
           next={fetchMore}
           dataLength={publicationsFeed?.length}
-          className={`relative row-start-1 w-full h-full overflow-y-scroll grid grid-flow-row auto-rows-auto gap-3`}
+          className={`relative row-start-1 w-full h-full`}
           style={{ color: "#131313", fontFamily: "Digi Reg" }}
         >
-          {publicationsFeed?.map(
-            (publication: PublicationSearchResult, index: number) => {
-              return (
-                <FeedPublication
-                  dispatch={dispatch}
-                  publication={publication}
-                  key={index}
-                  type={publication.__typename}
-                  hasMirrored={hasMirrored?.length > 0 && hasMirrored[index]}
-                  hasReacted={hasReacted?.length > 0 && hasReacted[index]}
-                  reactionsFeed={
-                    reactionsFeed?.length > 0 && reactionsFeed[index]
-                  }
-                  hasCommented={hasCommented?.length > 0 && hasCommented[index]}
-                  mixtapeMirror={
-                    mixtapeMirror?.length > 0 && mixtapeMirror[index]
-                  }
-                  followerOnly={followerOnly?.length > 0 && followerOnly[index]}
-                  handleHidePost={handleHidePost}
-                />
-              );
-            }
-          )}
+          <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-3 overflow-y-scroll">
+            {publicationsFeed?.map(
+              (publication: PublicationSearchResult, index: number) => {
+                return (
+                  <FeedPublication
+                    dispatch={dispatch}
+                    publication={publication}
+                    key={index}
+                    type={publication.__typename}
+                    hasMirrored={hasMirrored?.length > 0 && hasMirrored[index]}
+                    hasReacted={hasReacted?.length > 0 && hasReacted[index]}
+                    reactionsFeed={
+                      reactionsFeed?.length > 0 && reactionsFeed[index]
+                    }
+                    hasCommented={
+                      hasCommented?.length > 0 && hasCommented[index]
+                    }
+                    mixtapeMirror={
+                      mixtapeMirror?.length > 0 && mixtapeMirror[index]
+                    }
+                    followerOnly={
+                      followerOnly?.length > 0 && followerOnly[index]
+                    }
+                    handleHidePost={handleHidePost}
+                  />
+                );
+              }
+            )}
+          </div>
         </InfiniteScroll>
       ) : (
         <div className="relative w-fit h-fit self-start justify-self-center row-start-1 pt-5 font-dosis text-offBlack text-base">

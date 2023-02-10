@@ -24,6 +24,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   publicationsLoading,
   firstPostLoad,
   mixtapeLength,
+  hasMore
 }): JSX.Element => {
   const router = useRouter();
   if (publicationsLoading && firstPostLoad) {
@@ -40,46 +41,45 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
         >
           <InfiniteScroll
             scrollableTarget={"targetProfile"}
-            height={
-              userFeed?.length + mixtapeLength >= 30 ||
-              router.asPath.includes("Account")
-                ? height
-                : undefined
-            }
+            height={height}
             loader={<FetchMoreLoading />}
-            hasMore={true}
+            hasMore={hasMore}
             next={getMoreUserProfileFeed}
             dataLength={userFeed?.length}
-            className={`relative row-start-1 w-full h-full overflow-y-scroll grid grid-flow-row auto-rows-auto gap-3`}
+            className={`relative row-start-1 w-full h-full `}
             style={{ color: "#131313", fontFamily: "Digi Reg" }}
           >
-            {userFeed?.map(
-              (publication: PublicationSearchResult, index: number) => {
-                return (
-                  <FeedPublication
-                    dispatch={dispatch}
-                    publication={publication}
-                    key={index}
-                    type={publication.__typename}
-                    hasMirrored={hasMirrored?.length > 0 && hasMirrored[index]}
-                    hasCommented={
-                      hasCommented?.length > 0 && hasCommented[index]
-                    }
-                    hasReacted={hasReacted?.length > 0 && hasReacted[index]}
-                    reactionsFeed={
-                      reactionsFeed?.length > 0 && reactionsFeed[index]
-                    }
-                    mixtapeMirror={
-                      mixtapeMirror?.length > 0 && mixtapeMirror[index]
-                    }
-                    handleHidePost={handleHidePost}
-                    followerOnly={
-                      followerOnly?.length > 0 && followerOnly[index]
-                    }
-                  />
-                );
-              }
-            )}
+            <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-3 overflow-y-scroll">
+              {userFeed?.map(
+                (publication: PublicationSearchResult, index: number) => {
+                  return (
+                    <FeedPublication
+                      dispatch={dispatch}
+                      publication={publication}
+                      key={index}
+                      type={publication.__typename}
+                      hasMirrored={
+                        hasMirrored?.length > 0 && hasMirrored[index]
+                      }
+                      hasCommented={
+                        hasCommented?.length > 0 && hasCommented[index]
+                      }
+                      hasReacted={hasReacted?.length > 0 && hasReacted[index]}
+                      reactionsFeed={
+                        reactionsFeed?.length > 0 && reactionsFeed[index]
+                      }
+                      mixtapeMirror={
+                        mixtapeMirror?.length > 0 && mixtapeMirror[index]
+                      }
+                      handleHidePost={handleHidePost}
+                      followerOnly={
+                        followerOnly?.length > 0 && followerOnly[index]
+                      }
+                    />
+                  );
+                }
+              )}
+            </div>
           </InfiniteScroll>
         </div>
       ) : (

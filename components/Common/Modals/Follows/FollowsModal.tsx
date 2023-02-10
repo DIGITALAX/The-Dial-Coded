@@ -4,7 +4,6 @@ import { ImCross } from "react-icons/im";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { setFollowModal } from "../../../../redux/reducers/followModalSlice";
 import Follows from "../../../Home/Layout/Account/modules/Follows";
-import FetchMoreLoading from "../../Loaders/FetchMoreLoading";
 import { FollowModalProps } from "../../types/common.types";
 
 const FollowsModal: FunctionComponent<FollowModalProps> = ({
@@ -55,7 +54,7 @@ const FollowsModal: FunctionComponent<FollowModalProps> = ({
                     next={
                       type === "followers" ? getMoreFollowers : getMoreFollowing
                     }
-                    loader={<FetchMoreLoading />}
+                    loader={""}
                     height={"10rem"}
                     className="relative w-full h-fit row-start-1 grid grid-flow-row auto-rows-auto px-4 gap-2"
                   >
