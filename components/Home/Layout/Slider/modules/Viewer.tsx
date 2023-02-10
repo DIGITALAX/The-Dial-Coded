@@ -12,65 +12,69 @@ const Viewer: FunctionComponent<ViewerProps> = ({
   imagesLoading,
   imagesScanLoading,
   col,
-  row
+  row,
 }): JSX.Element => {
   return (
     <div
       className={`relative w-fit h-full grid grid-flow-col auto-cols-auto col-start-${col} row-start-${row}`}
     >
       <div className="relative w-full h-full col-start-1 col-span-10 gap-3 overflow-x-scroll flex">
-        {slider?.map((result: LexicaImages, index: number) => {
-          return (
-            <div
-              key={index}
-              id="crt"
-              className={`relative w-full object-cover rounded-2xl h-fit grid grid-flow-row auto-rows-auto`}
-            >
+        {(slider?.length > 0 ? slider : Array.from(Array(10).keys()))?.map(
+          (result: any, index: number) => {
+            return (
               <div
-                className={`relative w-${width} h-96 rounded-t-2xl cursor-pointer active:scale-95`}
-                onClick={() =>
-                  dispatch(
-                    setImageViewer({
-                      actionType: "image/png",
-                      actionOpen: true,
-                      actionImage: `${result?.src}`,
-                    })
-                  )
-                }
+                key={index}
+                id="crt"
+                className={`relative w-full object-cover rounded-2xl h-fit grid grid-flow-row auto-rows-auto`}
               >
-                {!imagesLoading && !imagesScanLoading ? (
-                  <Image
-                    src={`${result?.src}`}
-                    layout="fill"
-                    objectFit="cover"
-                    objectPosition={"center"}
-                    className="rounded-t-2xl relative w-full h-full"
-                    draggable={false}
-                  />
-                ) : (
-                  <div className="relative w-full h-full animate-spin grid grid-flow-col auto-cols-auto">
-                    <div className="relative w-fit h-fit place-self-center">
-                      <AiOutlineLoading color="black" size={15} />
+                <div
+                  className={`relative w-${width} h-96 rounded-t-2xl cursor-pointer active:scale-95`}
+                  onClick={() =>
+                    slider?.length > 0 &&
+                    dispatch(
+                      setImageViewer({
+                        actionType: "image/png",
+                        actionOpen: true,
+                        actionImage: `${result?.src}`,
+                      })
+                    )
+                  }
+                >
+                  {slider?.length > 0 &&
+                    (!imagesLoading && !imagesScanLoading ? (
+                      <Image
+                        src={`${result?.src}`}
+                        layout="fill"
+                        objectFit="cover"
+                        objectPosition={"center"}
+                        className="rounded-t-2xl relative w-full h-full"
+                        draggable={false}
+                      />
+                    ) : (
+                      <div className="relative w-full h-full animate-spin grid grid-flow-col auto-cols-auto">
+                        <div className="relative w-fit h-fit place-self-center">
+                          <AiOutlineLoading color="black" size={15} />
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                <div className="relative w-full h-80 bg-offBlack rounded-b-2xl grid grid-flow-row auto-rows-auto">
+                  <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto text-center text-white font-dosis text-xs self-start p-3">
+                    <div className="relative w-fit h-56 row-start-1 p-2 overflow-y-scroll">
+                      {result?.prompt}
                     </div>
-                  </div>
-                )}
-              </div>
-              <div className="relative w-full h-80 bg-offBlack rounded-b-2xl grid grid-flow-row auto-rows-auto">
-                <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto text-center text-white font-dosis text-xs self-start p-3">
-                  <div className="relative w-fit h-56 row-start-1 p-2 overflow-y-scroll">
-                    {result?.prompt}
-                  </div>
-                  <div className="relative w-fit h-fit row-start-2 pb-2 pt-3 px-2">
-                    Model: {result?.model}
-                  </div>
-                  <div className="relative w-fit h-fit row-start-3 p-2">
-                    Guidance: {result?.guidance}
+                    <div className="relative w-fit h-fit row-start-2 pb-2 pt-3 px-2">
+                      Model: {result?.model}
+                    </div>
+                    <div className="relative w-fit h-fit row-start-3 p-2">
+                      Guidance: {result?.guidance}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          }
+        )}
       </div>
     </div>
   );
