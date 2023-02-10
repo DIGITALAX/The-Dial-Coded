@@ -21,6 +21,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
   handleChosenSearch,
   handleKeyDownEnter,
   searchTarget,
+  hasMore
 }): JSX.Element => {
   let queryWindowSize300: boolean = useMediaQuery("(max-width:300px)");
   return (
@@ -83,7 +84,7 @@ const Turner: FunctionComponent<TurnerProps> = ({
                   )}
                   {profileSearchValues?.length > 0 && dropDown && (
                     <InfiniteScroll
-                      hasMore={true}
+                      hasMore={hasMore}
                       dataLength={profileSearchValues?.length}
                       next={handleMoreProfileQuickSearch}
                       loader={""}
@@ -132,7 +133,10 @@ const Turner: FunctionComponent<TurnerProps> = ({
                                 )}
                               </div>
                               <div className="relative col-start-2 place-self-center w-fit h-fit text-sm">
-                                @{user?.handle}
+                                @
+                                {user?.handle?.length >= 20
+                                  ? user?.handle?.substring(0, 17) + "..."
+                                  : user?.handle}
                               </div>
                             </div>
                           </div>

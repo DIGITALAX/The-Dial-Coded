@@ -14,6 +14,7 @@ export type TurnerProps = {
   handleChosenSearch: (type: string, user?: Profile) => Promise<void>;
   handleKeyDownEnter: (e: any) => Promise<void>;
   searchTarget: string;
+  hasMore: boolean;
 };
 
 export type UseScanResult = {
@@ -34,6 +35,7 @@ export type UseScanResult = {
   handleKeyDownEnter: (e: any) => Promise<void>;
   scanSearchTarget: string;
   imagesScanLoading: boolean;
+  hasMore: boolean;
 };
 
 export type BackgroundImageProps = {

@@ -29,16 +29,11 @@ const Panel: FunctionComponent = (): JSX.Element => {
   let queryWindowSize500: boolean = useMediaQuery("(max-width:500px)");
   return (
     <div
-      className={`${
-        router.asPath.includes("Post") ? "pt-2 px-2" : "px-2 pt-2 pb-2"
-      } relative w-full h-full bg-shame rounded-t-2xl row-start-3 grid grid-flow-col auto-cols-auto z-10`}
+      className={`relative w-full h-full bg-shame rounded-t-2xl row-start-3 grid grid-flow-col auto-cols-auto z-10 px-2 pt-2`}
     >
       <div
-        className={`relative w-full h-full grid grid-flow-col auto-cols-auto rounded-t-2xl ${
-          !router.asPath.includes("Post") &&
-          "border-2 border-x-white/40 border-t-white/40"
-        }`}
-        id={!router.asPath.includes("Post") ? "conic" : "outside"}
+        className={`relative w-full h-full grid grid-flow-col auto-cols-auto rounded-t-2xl border-2 border-x-white/40 border-t-white/40`}
+        id={"conic"}
       >
         <div className="relative w-full h-full grid grid-flow-col auto-cols-auto pl-3 md:pl-10 py-6 md:gap-0 gap-6">
           <div

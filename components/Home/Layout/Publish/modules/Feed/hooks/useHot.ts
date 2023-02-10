@@ -111,6 +111,7 @@ const useHot = (): UseHotResults => {
         setHotHasReacted(response?.hasReactedArr);
       }
     } catch (err: any) {
+      dispatch(setNoHotData(true));
       console.error(err);
     }
   };
@@ -254,6 +255,7 @@ const useHot = (): UseHotResults => {
         setHotHasReacted(response?.hasReactedArr);
       }
     } catch (err: any) {
+      dispatch(setNoHotData(true));
       console.error(err);
     }
   };
