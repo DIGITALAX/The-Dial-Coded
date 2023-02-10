@@ -88,12 +88,6 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
           />
         </label>
         <CanvasOption
-          image="QmR5aDNEr6iBzcNv1CFkG3ypRWTesvT6fbuqGCnRf7yNcB"
-          bgColor="black"
-          width={25}
-          height={25}
-        />
-        <CanvasOption
           image="QmZZhPPzhmsicoiHGKPvqATdQ3JGakrZ2G3mK67goHA9CN"
           bgColor="black"
           width={25}

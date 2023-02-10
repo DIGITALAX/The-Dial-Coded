@@ -10,6 +10,7 @@ import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import useBase from "./hooks/useBase";
 import useDrafts from "./hooks/useDrafts";
 import usePrompt from "./hooks/usePrompt";
+import usePatterns from "./hooks/usePatterns";
 
 const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   const profile = useSelector(
@@ -20,6 +21,13 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   );
   const dispatch = useDispatch();
   const { openConnectModal } = useConnectModal();
+  const {
+    setShowPatternDrawOptions,
+    showPatternDrawOptions,
+    patternType,
+    setPatternType,
+    setTemplate,
+  } = usePatterns();
   const {
     steps,
     setSteps,
@@ -176,6 +184,11 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           prompt={prompt}
           setPrompt={setPrompt}
           keyExists={keyExists}
+          setShowPatternDrawOptions={setShowPatternDrawOptions}
+          showPatternDrawOptions={showPatternDrawOptions}
+          setPatternType={setPatternType}
+          setTemplate={setTemplate}
+          patternType={patternType as string}
         />
       );
   }

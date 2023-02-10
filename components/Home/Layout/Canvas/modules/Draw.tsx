@@ -8,6 +8,7 @@ import Title from "./Title";
 import Drafts from "./Drafts";
 import Board from "./Board";
 import Prompt from "./Prompt";
+import PatternMenu from "./Options/PatternMenu";
 
 const Draw: FunctionComponent<DrawProps> = ({
   setShowSideDrawOptions,
@@ -69,6 +70,11 @@ const Draw: FunctionComponent<DrawProps> = ({
   prompt,
   setPrompt,
   keyExists,
+  setShowPatternDrawOptions,
+  showPatternDrawOptions,
+  patternType,
+  setPatternType,
+  setTemplate,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -139,22 +145,32 @@ const Draw: FunctionComponent<DrawProps> = ({
                     setNewCanvas={setNewCanvas}
                     setZoom={setZoom}
                   />
-                  <BottomMenu
-                    showBottomDrawOptions={showBottomDrawOptions}
-                    setShowBottomDrawOptions={setShowBottomDrawOptions}
-                    colorPicker={colorPicker}
-                    setColorPicker={setColorPicker}
-                    hex={hex}
-                    setHex={setHex}
-                    setShapeFillType={setShapeFillType}
-                    setThickness={setThickness}
-                    thickness={thickness}
-                    setBrushWidth={setBrushWidth}
-                    brushWidth={brushWidth}
-                    setTool={setTool}
-                    shapes={shapes}
-                    setShapes={setShapes}
-                  />
+                  <div className="absolute w-fit h-fit grid grid-flow-row auto-rows-auto z-10 bottom-14 left-4">
+                    <PatternMenu
+                      setShowPatternDrawOptions={setShowPatternDrawOptions}
+                      showPatternDrawOptions={showPatternDrawOptions}
+                      setPatternType={setPatternType}
+                      setTemplate={setTemplate}
+                      patternType={patternType}
+                    />
+                    <BottomMenu
+                      showBottomDrawOptions={showBottomDrawOptions}
+                      setShowBottomDrawOptions={setShowBottomDrawOptions}
+                      colorPicker={colorPicker}
+                      setColorPicker={setColorPicker}
+                      hex={hex}
+                      setHex={setHex}
+                      setShapeFillType={setShapeFillType}
+                      setThickness={setThickness}
+                      thickness={thickness}
+                      setBrushWidth={setBrushWidth}
+                      brushWidth={brushWidth}
+                      setTool={setTool}
+                      shapes={shapes}
+                      setShapes={setShapes}
+                    />
+                  </div>
+
                   {action === "writing" && (
                     <textarea
                       ref={writingRef}
@@ -195,8 +211,8 @@ const Draw: FunctionComponent<DrawProps> = ({
           </div>
         </div>
       </div>
-      <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-3 p-3">
-        <Drafts draftsLoading={draftsLoading} loadDraft={loadDraft} />
+      <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto">
+        {/* <Drafts draftsLoading={draftsLoading} loadDraft={loadDraft} /> */}
         <Base
           addImageToCanvas={addImageToCanvas}
           searchTarget={searchTarget}

@@ -958,3 +958,28 @@ code::-webkit-scrollbar {
     rgba(0, 0, 0, 0.4)
   );
 }
+
+#conicBlack {
+  background: conic-gradient(
+    #000000,
+    #131313,
+    #000000,
+    #202022,
+    #000000,
+    #131313,
+    #000000
+  );
+}
+
+#infinite {
+  background: linear-gradient(
+    -86deg,
+    #2e2e2e,
+    #131313,
+    #2e2e2e,
+    #0a15c7,
+    #2e2e2e,
+    #131313,
+    #2e2e2e
+  );
+}

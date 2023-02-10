@@ -21,6 +21,7 @@ import { RootState } from "../../../../../redux/store";
 import { setDraftTitle } from "../../../../../redux/reducers/draftTitleSlice";
 import { setDraftElements } from "../../../../../redux/reducers/draftElementsSlice";
 import handleUploadImage from "../../../../../lib/misc/helpers/handleUploadImage";
+import useElements from "./useElements";
 
 const useDraw = () => {
   const { uploadImage } = useImageUpload();
@@ -28,9 +29,6 @@ const useDraw = () => {
   const dispatch = useDispatch();
   const title = useSelector(
     (state: RootState) => state.app.draftTitleReducer.value
-  );
-  const parsedElems = useSelector(
-    (state: RootState) => state.app.draftElementsReducer.value
   );
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const writingRef = useRef<HTMLTextAreaElement>(null);
@@ -69,33 +67,7 @@ const useDraw = () => {
   const dosis = new FontFace("dosis", "url(fonts/DosisRegular.ttf)");
   const [scale, setScale] = useState<number>(1);
 
-  const useElementHistory = (initialState: any) => {
-    const [index, setIndex] = useState(0);
-    const [history, setHistory] = useState([initialState]);
-
-    const setState = (action: any, overwrite = false) => {
-      const newState =
-        typeof action === "function" ? action(history[index]) : action;
-      if (overwrite) {
-        const historyCopy = [...history];
-        historyCopy[index] = newState;
-        setHistory(historyCopy);
-      } else {
-        const updatedState = [...history].slice(0, index + 1);
-        setHistory([...updatedState, newState]);
-        setIndex((prevState) => prevState + 1);
-      }
-    };
-
-    const undo = (): boolean | void =>
-      index > 0 && setIndex((prevState) => prevState - 1);
-    const redo = (): boolean | void =>
-      index < history.length - 1 && setIndex((prevState) => prevState + 1);
-
-    return [history[index], setState, undo, redo];
-  };
-
-  const [elements, setElements, undo, redo] = useElementHistory([]);
+  const [elements, setElements, undo, redo] = useElements([]);
 
   const getSvgPathFromStroke = (stroke: any) => {
     if (!stroke.length) return "";
@@ -367,7 +339,6 @@ const useDraw = () => {
     panStart,
     wheel,
     zoom,
-    parsedElems,
   ]);
 
   const nearPoint = (
@@ -809,7 +780,7 @@ const useDraw = () => {
 
       case "pencil":
         elementsCopy[index].points = [
-          ...(elementsCopy[index].points as any),
+          ...(elementsCopy[index]?.points as any),
           {
             x: (x2 as number) / zoom - bounds?.left / zoom,
             y: (y2 as number) / zoom - bounds?.top / zoom,
@@ -1266,13 +1237,6 @@ const useDraw = () => {
   useEffect(() => {
     loadFont();
   }, []);
-
-  useEffect(() => {
-    if (parsedElems?.length > 0) {
-      setElements(parsedElems);
-      dispatch(setDraftElements([]));
-    }
-  }, [parsedElems]);
 
   useEffect(() => {
     if (action !== "none") {

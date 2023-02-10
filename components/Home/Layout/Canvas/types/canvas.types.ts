@@ -71,7 +71,12 @@ export type DrawProps = {
   promptLoading: boolean;
   setPrompt: (e: string) => void;
   prompt: string;
-  keyExists: boolean
+  keyExists: boolean;
+  setShowPatternDrawOptions: (e: boolean) => void;
+  showPatternDrawOptions: boolean;
+  setPatternType: (e: string) => void;
+  setTemplate: (e: string) => void;
+  patternType: string;
 };
 
 export type ColorPickerProps = {
@@ -231,7 +236,7 @@ export type UsePromptResults = {
   promptLoading: boolean;
   setPrompt: (e: string) => void;
   prompt: string;
-  keyExists: boolean
+  keyExists: boolean;
 };
 
 export type PromptProps = {
@@ -243,7 +248,7 @@ export type PromptProps = {
   promptLoading: boolean;
   setPrompt: (e: string) => void;
   prompt: string;
-  keyExists: boolean
+  keyExists: boolean;
 };
 
 export interface InputType {
@@ -256,3 +261,17 @@ export interface InputType {
   init_image: string | undefined;
   prompt_strength: number | undefined;
 }
+
+export type PatternMenuProps = {
+  setShowPatternDrawOptions: (e: boolean) => void;
+  showPatternDrawOptions: boolean;
+  setPatternType: (e: string) => void;
+  setTemplate: (e: string) => void;
+  patternType: string;
+};
+
+export type PatternOptionsProps = {
+  setPatternType: (e: string) => void;
+  setTemplate: (e: string) => void;
+  patternType: string;
+};

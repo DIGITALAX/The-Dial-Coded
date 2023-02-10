@@ -59,7 +59,8 @@ module.exports = {
         post: "#712AF6",
         moss: "#212929",
         weed: "#1C2222",
-        litnus: "#06cf0b"
+        litnus: "#06cf0b",
+        posh: "#0a15c7",
       },
       cursor: {
         focus: "url('/focus.png'), auto",
@@ -95,7 +96,7 @@ module.exports = {
         f8: "340px",
         f9: "1100px",
         f10: "700px",
-        f11: "393px"
+        f11: "393px",
       },
     },
   },

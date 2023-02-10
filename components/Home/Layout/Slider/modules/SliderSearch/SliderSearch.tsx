@@ -21,7 +21,7 @@ const SliderSearch: FunctionComponent<SliderSearchProps> = ({
     >
       <div className="relative w-full h-fit row-start-1">
         <SearchBar
-          bg="grayBlue"
+          bg="bluey"
           borderColor="black"
           textColor="black"
           handleKeyDown={handleKeyEnter}
