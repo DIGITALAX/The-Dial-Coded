@@ -143,6 +143,9 @@ const useHot = (): UseHotResults => {
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
+        if (sortedArr?.length < 20) {
+          setHasMoreHot(false);
+        }
         pageData = data?.explorePublications?.pageInfo;
       } else {
         const { data } = await explorePublicationsAuth({
@@ -284,6 +287,9 @@ const useHot = (): UseHotResults => {
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
+        if (sortedArr?.length < 20) {
+          setHasMoreHot(false);
+        }
         pageData = data?.explorePublications?.pageInfo;
       } else {
         if (!paginatedHotResults?.next) {

@@ -132,6 +132,7 @@ const useProfile = () => {
 
   const getMoreUserProfileFeed = async (): Promise<void> => {
     try {
+      console.log(paginatedResults?.next);
       if (!paginatedResults?.next) {
         setHasMore(false);
         return;
@@ -148,6 +149,9 @@ const useProfile = () => {
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
+      if (sortedArr?.length < 30) {
+        setHasMore(false);
+      }
       const filteredArr = lodash.filter(sortedArr, (arr) => {
         if (arr?.__typename === "Post") {
           if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {

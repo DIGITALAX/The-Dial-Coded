@@ -47,7 +47,7 @@ const Profile: NextPage = (): JSX.Element => {
     firstSideBarLoad,
     hotFollowerOnly,
     hasMoreHot,
-    hasMore
+    hasMore,
   } = useProfilePage();
   const { isConnected } = useAccount();
   const profileId = useSelector(
@@ -231,11 +231,11 @@ const Profile: NextPage = (): JSX.Element => {
               hasMoreHot={hasMoreHot}
             />
             <div
-              className={`relative w-full flex px-3 fo:px-10 py-4 bg-offWhite/90 overflow-y-scroll 
+              className={`relative w-full h-full flex px-3 fo:px-10 py-4 bg-offWhite/90 overflow-y-scroll 
               ${
                 !publicationsLoading
-                  ? "h-full items-start f1:col-start-2 f1:row-start-1 col-start-1 row-start-2"
-                  : "h-full row-start-1 col-start-2"
+                  ? "items-start f1:col-start-2 f1:row-start-1 col-start-1 row-start-2"
+                  : "row-start-1 col-start-2"
               }`}
               id="aboveProfile"
             >

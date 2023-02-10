@@ -24,15 +24,14 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   publicationsLoading,
   firstPostLoad,
   mixtapeLength,
-  hasMore
+  hasMore,
 }): JSX.Element => {
-  const router = useRouter();
   if (publicationsLoading && firstPostLoad) {
     return <ProfileFeedLoading />;
   }
   return (
     <div
-      className={`relative w-full h-full grid grid-flow-row auto-rows-auto gap-6`}
+      className={`relative w-full h-full grid grid-flow-row auto-rows-auto`}
     >
       {!profileDataLoading ? (
         <div
@@ -46,7 +45,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
             hasMore={hasMore}
             next={getMoreUserProfileFeed}
             dataLength={userFeed?.length}
-            className={`relative row-start-1 w-full h-full `}
+            className={`relative row-start-1 w-full h-full`}
             style={{ color: "#131313", fontFamily: "Digi Reg" }}
           >
             <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-3 overflow-y-scroll">

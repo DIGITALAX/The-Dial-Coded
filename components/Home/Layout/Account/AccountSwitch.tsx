@@ -72,7 +72,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     followingLoading,
     mixtapeMirror,
     followerOnly,
-    hasMore
+    hasMore,
   } = useProfile();
   const {
     createClient,
@@ -166,22 +166,24 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   switch (decideStringAction()) {
     case "profile feed":
       return (
-        <ProfileTab
-          getMoreUserProfileFeed={getMoreUserProfileFeed}
-          userFeed={userFeed}
-          dispatch={dispatch}
-          height={"44rem"}
-          hasMirrored={hasMirrored}
-          hasCommented={hasCommented}
-          hasReacted={hasReacted}
-          reactionsFeed={reactionsFeed}
-          profileDataLoading={profileDataLoading}
-          mixtapeMirror={mixtapeMirror}
-          handleHidePost={handleHidePost}
-          followerOnly={followerOnly}
-          mixtapeLength={0}
-          hasMore={hasMore}
-        />
+        <div className="relative w-full h-full flex overflow-y-scroll">
+          <ProfileTab
+            getMoreUserProfileFeed={getMoreUserProfileFeed}
+            userFeed={userFeed}
+            dispatch={dispatch}
+            height={"44rem"}
+            hasMirrored={hasMirrored}
+            hasCommented={hasCommented}
+            hasReacted={hasReacted}
+            reactionsFeed={reactionsFeed}
+            profileDataLoading={profileDataLoading}
+            mixtapeMirror={mixtapeMirror}
+            handleHidePost={handleHidePost}
+            followerOnly={followerOnly}
+            mixtapeLength={0}
+            hasMore={hasMore}
+          />
+        </div>
       );
 
     case "stats":
