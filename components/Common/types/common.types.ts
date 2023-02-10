@@ -760,6 +760,7 @@ export type SearchBarProps = {
   height: string;
   textSize: string;
   loaderSize: number;
+  text?: string;
 };
 
 export type CanvasOptionProps = {
@@ -772,6 +773,7 @@ export type CanvasOptionProps = {
   width: number;
   height: number;
   color?: boolean;
+  text?: boolean;
 };
 
 export enum MediaType {

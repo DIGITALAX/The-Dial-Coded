@@ -13,6 +13,7 @@ const CanvasOption: FunctionComponent<CanvasOptionProps> = ({
   width,
   height,
   color,
+  text,
 }): JSX.Element => {
   return (
     <div
@@ -30,12 +31,18 @@ const CanvasOption: FunctionComponent<CanvasOptionProps> = ({
       }
     >
       <div className="col-start-1 relative w-fit h-fit place-self-center flex">
-        <Image
-          src={`${INFURA_GATEWAY}/ipfs/${image}`}
-          width={width}
-          height={height}
-          draggable={false}
-        />
+        {text ? (
+          <div className="relative w-fit h-fit text-white font-sats text-sm">
+            {image}
+          </div>
+        ) : (
+          <Image
+            src={`${INFURA_GATEWAY}/ipfs/${image}`}
+            width={width}
+            height={height}
+            draggable={false}
+          />
+        )}
       </div>
     </div>
   );
