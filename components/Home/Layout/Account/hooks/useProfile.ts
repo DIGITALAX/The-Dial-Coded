@@ -132,7 +132,6 @@ const useProfile = () => {
 
   const getMoreUserProfileFeed = async (): Promise<void> => {
     try {
-      console.log(paginatedResults?.next);
       if (!paginatedResults?.next) {
         setHasMore(false);
         return;

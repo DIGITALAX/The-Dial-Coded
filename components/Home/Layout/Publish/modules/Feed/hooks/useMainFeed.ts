@@ -117,7 +117,7 @@ const useMainFeed = () => {
       }
       if (
         !publicationsList ||
-        publicationsList?.data?.explorePublications?.items?.length < 20
+        publicationsList?.data.explorePublications.items.length < 20
       ) {
         setHasMore(false);
       } else {
@@ -169,6 +169,7 @@ const useMainFeed = () => {
         setHasReacted(response?.hasReactedArr);
       }
     } catch (err: any) {
+      dispatch(setNoUserData(true));
       console.error(err);
     }
   };
@@ -261,6 +262,7 @@ const useMainFeed = () => {
         setHasReacted(response?.hasReactedArr);
       }
     } catch (err: any) {
+      dispatch(setNoUserData(true));
       console.error(err.message);
     }
   };
@@ -273,6 +275,7 @@ const useMainFeed = () => {
         profileId: lensProfile,
         limit: 50,
       });
+
       if (!res || res?.data?.feed?.items?.length < 50) {
         setHasMore(false);
       } else {
@@ -293,7 +296,7 @@ const useMainFeed = () => {
           return true;
         }
       });
-      if (filteredArr.length > 1) {
+      if (!filteredArr || filteredArr.length > 1) {
         const orderedArr = orderFeedManual(
           filteredArr,
           feedOrderState,
@@ -322,6 +325,7 @@ const useMainFeed = () => {
         await fetchPublications();
       }
     } catch (err: any) {
+      await fetchPublications();
       console.error(err.message);
     }
     setPublicationsLoading(false);
@@ -636,6 +640,7 @@ const useMainFeed = () => {
     indexerModal.message,
     indexerModal.value,
     hearted,
+    router.asPath,
   ]);
 
   return {

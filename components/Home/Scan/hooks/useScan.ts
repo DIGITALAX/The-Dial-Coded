@@ -40,7 +40,7 @@ const useScan = (): UseScanResult => {
   const [publicationSearchValues, setPublicationSearchValues] = useState<any[]>(
     []
   );
-
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const [profilePageCursor, setProfilePageCursor] = useState<any>();
 
   const handleQuickSearch = async (e: FormEvent): Promise<void> => {
@@ -82,6 +82,12 @@ const useScan = (): UseScanResult => {
         profiles?.data?.search?.items,
         "handle"
       );
+      if (sortedProfileArr?.length < 50) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+
       const arr: any[] = [...publications?.data?.search?.items];
       const sortedPublicationArr = arr?.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
@@ -95,8 +101,13 @@ const useScan = (): UseScanResult => {
   };
 
   const handleMoreProfileQuickSearch = async (): Promise<void> => {
-    setSearchLoading(true);
     try {
+      if (!profilePageCursor?.next) {
+        setHasMore(false);
+        return;
+      } else {
+        setHasMore(true);
+      }
       const profiles = await searchProfile({
         query: searchTarget,
         type: "PROFILE",
@@ -107,12 +118,14 @@ const useScan = (): UseScanResult => {
         profiles?.data?.search?.items,
         "handle"
       );
+      if (sortedProfileArr?.length < 50) {
+        setHasMore(false);
+      }
       setProfileSearchValues([...profileSearchValues, ...sortedProfileArr]);
       setProfilePageCursor(profiles?.data?.search?.pageInfo);
     } catch (err: any) {
       console.error(err.message);
     }
-    setSearchLoading(false);
   };
 
   const handleKeyDownEnter = async (e: any): Promise<void> => {
@@ -147,7 +160,11 @@ const useScan = (): UseScanResult => {
         );
         if (e.target?.value !== "" || !e.target?.value) {
           dispatch(setSearchTarget(e.target?.value));
-          await callLexicaSearch(e.target?.value, dispatch, setImagesScanLoading);
+          await callLexicaSearch(
+            e.target?.value,
+            dispatch,
+            setImagesScanLoading
+          );
         }
         document.getElementById("sliderSearch")?.scrollIntoView({
           block: "start",
@@ -375,7 +392,8 @@ const useScan = (): UseScanResult => {
     handleChosenSearch,
     handleKeyDownEnter,
     scanSearchTarget,
-    imagesScanLoading
+    imagesScanLoading,
+    hasMore
   };
 };
 

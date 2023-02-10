@@ -10,7 +10,6 @@ import { RootState } from "../../../redux/store";
 import { useMediaQuery } from "@material-ui/core";
 import { ScanProps } from "./types/scan.types";
 import Draggable from "react-draggable";
-import { AiFillCloseCircle } from "react-icons/ai";
 import { setVideo } from "../../../redux/reducers/videoSlice";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../lib/lens/constants";
@@ -33,6 +32,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
     dropDown,
     handleKeyDownEnter,
     scanSearchTarget,
+    hasMore,
   } = useScan();
   const videoOpen = useSelector(
     (state: RootState) => state.app.videoReducer.value
@@ -55,8 +55,10 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
             cancel=".frame"
             enableUserSelectHack={false}
           >
-            <div className="absolute z-40 bg-video w-fit h-fit px-8 pb-8 pt-4 grid grid-flow-col auto-cols-auto cursor-grabbing place-self-center border-4 border-black rounded-lg"
-            id="videoplayer">
+            <div
+              className="absolute z-40 bg-video w-fit h-fit px-8 pb-8 pt-4 grid grid-flow-col auto-cols-auto cursor-grabbing place-self-center border-4 border-black rounded-lg"
+              id="videoplayer"
+            >
               <a
                 className="relative w-fit h-fit justify-self-start row-start-1 col-start-1 pb-2 cursor-pointer"
                 href={`https://www.youtube.com/watch?v=${
@@ -112,6 +114,7 @@ const Scan: FunctionComponent<ScanProps> = ({ newLink }): JSX.Element => {
           dropDown={dropDown}
           handleKeyDownEnter={handleKeyDownEnter}
           searchTarget={scanSearchTarget}
+          hasMore={hasMore}
         />
       </div>
       <Marquee />
