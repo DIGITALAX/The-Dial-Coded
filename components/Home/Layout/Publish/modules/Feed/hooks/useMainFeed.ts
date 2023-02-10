@@ -353,6 +353,9 @@ const useMainFeed = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
+      if (sortedArr?.length < 30) {
+        setHasMore(false);
+      }
       const filteredArr = lodash.filter(sortedArr, (arr) => {
         if (arr?.__typename === "Post") {
           if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
@@ -397,6 +400,9 @@ const useMainFeed = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
+      if (sortedArr?.length < 50) {
+        setHasMore(false);
+      }
       const filteredArr = lodash.filter(sortedArr, (arr) => {
         if (arr?.__typename === "Post") {
           if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
@@ -469,6 +475,9 @@ const useMainFeed = () => {
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
+        if (sortedArr?.length < 20) {
+          setHasMore(false);
+        }
         pageData = data?.publications?.pageInfo;
       } else {
         const { data } = await profilePublicationsAuth({
@@ -483,6 +492,9 @@ const useMainFeed = () => {
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
+        if (sortedArr?.length < 20) {
+          setHasMore(false);
+        }
         pageData = data?.publications?.pageInfo;
       }
       const filteredArr = lodash.filter(sortedArr, (arr) => {
@@ -539,11 +551,9 @@ const useMainFeed = () => {
   const getMorePostComments = async (id?: string): Promise<void> => {
     try {
       if (!commentPageInfo?.next) {
-        setHasMore(false);
         // fix apollo duplications on null next
         return;
       }
-      setHasMore(true);
       let comments: any;
       if (lensProfile) {
         comments = await whoCommentedPublicationsAuth({

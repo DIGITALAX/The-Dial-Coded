@@ -105,6 +105,9 @@ const useNotifications = () => {
         cursor: notificationsPage?.next,
         sources: "thedial",
       });
+      if (results?.data?.result?.items?.length < 50) {
+        setHasMoreNotifications(false);
+      }
       const newData = lodash.filter(
         results?.data?.result?.items,
         (item: any) => {

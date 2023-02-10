@@ -523,6 +523,9 @@ const useProfilePage = (): UseProfilePageResults => {
         );
         pageData = data?.publications?.pageInfo;
       }
+      if (sortedArr?.length < 30) {
+        setHasMore(false);
+      }
       const filteredArr = lodash.filter(sortedArr, (arr) => {
         if (arr?.__typename === "Post") {
           if (!arr?.metadata?.content.includes("*Dial Mixtape*")) {
@@ -687,6 +690,9 @@ const useProfilePage = (): UseProfilePageResults => {
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
         pageData = data?.publications?.pageInfo;
+      }
+      if (sortedArr?.length < 30) {
+        setHasMoreHot(false);
       }
       setMixtapes([...mixtapes, ...sortedArr]);
       setMixtapePaginated(pageData);
