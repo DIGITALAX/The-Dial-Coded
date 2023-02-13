@@ -22,8 +22,12 @@ const createElement = (
   switch (type) {
     case "rect":
       roughElement = generator.rectangle(
-        ((x1 - canvas?.offsetLeft - bounds?.left) / zoom) * devicePixelRatio,
-        ((y1 - canvas?.offsetTop - bounds?.top) / zoom) * devicePixelRatio,
+        ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
+          zoom) *
+          devicePixelRatio,
+        ((y1 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom * zoom) /
+          zoom) *
+          devicePixelRatio,
         ((x2 - x1) / zoom) * devicePixelRatio,
         ((y2 - y1) / zoom) * devicePixelRatio,
         {
@@ -48,8 +52,12 @@ const createElement = (
       };
     case "ell":
       roughElement = generator.ellipse(
-        ((x1 - canvas?.offsetLeft - bounds?.left) / zoom) * devicePixelRatio,
-        ((y1 - canvas?.offsetTop - bounds?.top) / zoom) * devicePixelRatio,
+        ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
+          zoom) *
+          devicePixelRatio,
+        ((y1 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom * zoom) /
+          zoom) *
+          devicePixelRatio,
         (((x2 - x1) * Math.PI) / zoom) * devicePixelRatio,
         (((y2 - y1) * Math.PI) / zoom) * devicePixelRatio,
         {
@@ -74,10 +82,18 @@ const createElement = (
       };
     case "line":
       roughElement = generator.line(
-        ((x1 - canvas?.offsetLeft - bounds?.left) / zoom) * devicePixelRatio,
-        ((y1 - canvas?.offsetTop - bounds?.top) / zoom) * devicePixelRatio,
-        ((x2 - canvas?.offsetLeft - bounds?.left) / zoom) * devicePixelRatio,
-        ((y2 - canvas?.offsetTop - bounds?.top) / zoom) * devicePixelRatio,
+        ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
+          zoom) *
+          devicePixelRatio,
+        ((y1 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom * zoom) /
+          zoom) *
+          devicePixelRatio,
+        ((x2 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
+          zoom) *
+          devicePixelRatio,
+        ((y2 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom * zoom) /
+          zoom) *
+          devicePixelRatio,
         {
           strokeWidth,
           stroke,
@@ -102,11 +118,17 @@ const createElement = (
         points: [
           {
             x:
-              ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom*zoom) /
+              ((x1 -
+                canvas?.offsetLeft -
+                bounds?.left -
+                pan.xOffset * zoom * zoom) /
                 zoom) *
               devicePixelRatio,
             y:
-              ((y1 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom*zoom) /
+              ((y1 -
+                canvas?.offsetTop -
+                bounds?.top -
+                pan.yOffset * zoom * zoom) /
                 zoom) *
               devicePixelRatio,
           },
@@ -118,8 +140,8 @@ const createElement = (
       return {
         id,
         type,
-        x1: x1 - bounds?.left,
-        y1: y1 - bounds?.top,
+        x1: ((x1 - bounds?.left) + canvas?.offsetLeft),
+        y1: (y1 - bounds?.top) + canvas?.offsetTop,
         x2: x2 + (strokeWidth as number),
         y2: y2 + (strokeWidth as number),
         fill,

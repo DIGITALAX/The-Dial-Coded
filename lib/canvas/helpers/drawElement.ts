@@ -7,8 +7,15 @@ const drawElement = (
   roughCanvas: any,
   ctx: CanvasRenderingContext2D | null,
   zoom: number,
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
+  pan: {
+    xInitial: number;
+    yInitial: number;
+    xOffset: number;
+    yOffset: number;
+  }
 ) => {
+  console.log(pan.xOffset, pan.yOffset);
   ctx?.setLineDash(element?.lineDash ? element?.lineDash : [0]);
   (ctx as CanvasRenderingContext2D).imageSmoothingEnabled = false;
   switch (element?.type) {
@@ -31,13 +38,13 @@ const drawElement = (
     case "text":
       (ctx as CanvasRenderingContext2D).textBaseline = "top";
       (ctx as CanvasRenderingContext2D).font = `${
-        (element.strokeWidth as number) * zoom * devicePixelRatio
+        (element.strokeWidth as number) * devicePixelRatio
       }px dosis`;
       (ctx as CanvasRenderingContext2D).fillStyle = element.fill as string;
       (ctx as CanvasRenderingContext2D).fillText(
         element.text as string,
-        element.x1 as number * (devicePixelRatio / zoom),
-        element.y1 as number * (devicePixelRatio / zoom)
+        element.x1 as number,
+        element.y1 as number
       );
       break;
 

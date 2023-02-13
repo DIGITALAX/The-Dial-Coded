@@ -26,6 +26,16 @@ const updateElement = (
 ) => {
   const elementsCopy = [...elements];
   const bounds = canvas?.getBoundingClientRect();
+  console.log({
+    x:
+      ((x1 - bounds?.left + pan.xOffset * zoom * zoom) / zoom) *
+      devicePixelRatio,
+    y:
+      ((y1 - bounds?.top + pan.yOffset * zoom * zoom) / zoom) *
+      devicePixelRatio,
+    ex: x1,
+    ey: y1,
+  });
   switch (type) {
     case "line":
     case "ell":
@@ -83,14 +93,14 @@ const updateElement = (
             (((x2 as number) -
               canvas?.offsetLeft -
               bounds?.left -
-              pan.xOffset*zoom*zoom) /
+              pan.xOffset * zoom * zoom) /
               zoom) *
             devicePixelRatio,
           y:
             (((y2 as number) -
               canvas?.offsetTop -
               bounds?.top -
-              pan.yOffset*zoom*zoom) /
+              pan.yOffset * zoom * zoom) /
               zoom) *
             devicePixelRatio,
         },
@@ -108,10 +118,12 @@ const updateElement = (
           canvas,
           zoom,
           generator,
-          x1,
-          y1,
-          x1 + textWidth,
-          y1 + (strokeWidth as number),
+          (x1 / zoom) * devicePixelRatio -
+            bounds.left* zoom / (devicePixelRatio ),
+          (y1 / zoom) * devicePixelRatio -
+            bounds.top* zoom / (devicePixelRatio),
+          (x2 as number) + textWidth,
+          (y2 as number) + (strokeWidth as number),
           type,
           index,
           strokeWidth as number,
