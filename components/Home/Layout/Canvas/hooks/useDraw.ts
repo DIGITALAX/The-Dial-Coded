@@ -233,7 +233,7 @@ const useDraw = () => {
         if (action === "writing" && selectedElement.id === element.id) {
           return;
         }
-        drawElement(element, roughCanvas, ctx, zoom, canvas);
+        drawElement(element, roughCanvas, ctx, zoom, canvas, pan);
       });
       ctx.save();
     }
@@ -289,13 +289,12 @@ const useDraw = () => {
       tool === "line" ||
       tool === "text"
     ) {
-      console.log(e.clientX, e.clientY, pan.xOffset*0.5, pan.yOffset*0.5)
       const filteredMarqueeElements = removeMarquee(elements);
       const id = filteredMarqueeElements?.length;
       const newElement = createElement(
         {
-          xOffset: pan.xOffset*0.5,
-          yOffset: pan.yOffset*0.5,
+          xOffset: pan.xOffset * 0.5,
+          yOffset: pan.yOffset * 0.5,
         },
         canvas,
         zoom,
@@ -329,16 +328,16 @@ const useDraw = () => {
       const id = filteredMarqueeElements?.length;
       const newElement = createElement(
         {
-          xOffset: pan.xOffset,
-          yOffset: pan.yOffset,
+          xOffset: pan.xOffset*0.5,
+          yOffset: pan.yOffset*0.5,
         },
         canvas,
         zoom,
         generator,
-        (e.clientX - bounds.left) * (devicePixelRatio / zoom),
-        (e.clientY - bounds.top) * (devicePixelRatio / zoom),
-        (e.clientX - bounds.left) * (devicePixelRatio / zoom),
-        (e.clientY - bounds.top) * (devicePixelRatio / zoom),
+        (e.clientX - bounds.left- pan.xOffset*0.5*zoom*zoom) * (devicePixelRatio / zoom),
+        (e.clientY - bounds.top- pan.yOffset*0.5*zoom*zoom) * (devicePixelRatio / zoom),
+        (e.clientX - bounds.left- pan.xOffset*0.5*zoom*zoom) * (devicePixelRatio / zoom),
+        (e.clientY - bounds.top- pan.yOffset*0.5*zoom*zoom) * (devicePixelRatio / zoom),
         tool,
         id
       );
@@ -392,8 +391,8 @@ const useDraw = () => {
       const values = elements?.[index];
       updateElement(
         {
-          xOffset: pan.xOffset*0.5,
-          yOffset: pan.yOffset*0.5,
+          xOffset: pan.xOffset * 0.5,
+          yOffset: pan.yOffset * 0.5,
         },
         canvas,
         zoom,
@@ -505,9 +504,9 @@ const useDraw = () => {
         xInitial: pan.xInitial,
         yInitial: pan.yInitial,
         xOffset:
-          pan.xOffset + 0.5 * ((e.clientX - bounds.left - pan.xInitial)/ zoom) ,
+          pan.xOffset + 0.5 * ((e.clientX - bounds.left - pan.xInitial) / zoom),
         yOffset:
-          pan.yOffset + 0.5 * ((e.clientY - bounds.top - pan.yInitial)/ zoom ),
+          pan.yOffset + 0.5 * ((e.clientY - bounds.top - pan.yInitial) / zoom),
       });
     } else if (action === "marquee") {
       const index = elements?.length - 1;
@@ -515,8 +514,8 @@ const useDraw = () => {
       const bounds = canvas?.getBoundingClientRect();
       updateElement(
         {
-          xOffset: pan.xOffset,
-          yOffset: pan.yOffset,
+          xOffset: pan.xOffset*0.5,
+          yOffset: pan.yOffset*0.5,
         },
         canvas,
         zoom,
@@ -526,8 +525,8 @@ const useDraw = () => {
         ctx as CanvasRenderingContext2D,
         x1 as number,
         y1 as number,
-        (e.clientX - bounds.left) * (devicePixelRatio / zoom),
-        (e.clientY - bounds.top) * (devicePixelRatio / zoom),
+        (e.clientX - bounds.left - pan.xOffset*0.5*zoom*zoom) * (devicePixelRatio / zoom),
+        (e.clientY - bounds.top- pan.yOffset*0.5*zoom*zoom) * (devicePixelRatio / zoom),
         tool,
         index,
         brushWidth,
@@ -666,8 +665,8 @@ const useDraw = () => {
       setSelectedElement(null);
       updateElement(
         {
-          xOffset: pan.xOffset,
-          yOffset: pan.yOffset,
+          xOffset: pan.xOffset*0.5,
+          yOffset: pan.yOffset*0.5,
         },
         canvas,
         zoom,
