@@ -27,6 +27,17 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     patternType,
     setPatternType,
     setTemplate,
+    template,
+    setSwitchType,
+    switchType,
+    setSynthArea,
+    synthArea,
+    handleMouseDownPattern,
+    handleMouseMovePattern,
+    handleWheelPattern,
+    canvasPatternRef,
+    zoom: patternZoom,
+    setZoom: setPatternZoom
   } = usePatterns();
   const {
     steps,
@@ -44,7 +55,6 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     setHex,
     showSideDrawOptions,
     setShowSideDrawOptions,
-    canvasRef,
     brushWidth,
     handleMouseDown,
     handleMouseUp,
@@ -82,6 +92,8 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     setZoom,
     setNewCanvas,
     addImageToCanvas,
+    handleWheel,
+    canvasRef,
   } = useDraw();
   const {
     quickSearchResults,
@@ -189,6 +201,18 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           setPatternType={setPatternType}
           setTemplate={setTemplate}
           patternType={patternType as string}
+          template={template}
+          switchType={switchType}
+          setSwitchType={setSwitchType}
+          synthArea={synthArea}
+          setSynthArea={setSynthArea}
+          handleMouseDownPattern={handleMouseDownPattern}
+          handleMouseMovePattern={handleMouseMovePattern}
+          handleWheel={handleWheel}
+          handleWheelPattern={handleWheelPattern}
+          canvasPatternRef={canvasPatternRef}
+          patternZoom={patternZoom}
+          setPatternZoom={setPatternZoom}
         />
       );
   }

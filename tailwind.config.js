@@ -61,6 +61,7 @@ module.exports = {
         weed: "#1C2222",
         litnus: "#06cf0b",
         posh: "#0a15c7",
+        cap: "#919191",
       },
       cursor: {
         focus: "url('/focus.png'), auto",
@@ -72,9 +73,12 @@ module.exports = {
           "url('https://thedial.infura-ipfs.io/ipfs/QmXcLBvsHDC8kNDe3WFQHzPpotVKG1AHsAHou1AbiYe6yp')",
         board:
           "linear-gradient(#131313 0.05em, transparent 0.05em),linear-gradient(90deg, #131313 0.05em, transparent 0.05em)",
+        smokes:
+          "url('https://thedial.infura-ipfs.io/ipfs/QmYHTASkqMAwRmAVRWaS8XverwHxwaABVMCbGE6RnKuZQ3')",
       },
       backgroundSize: {
         boardSize: "2em 2em",
+        tileSize: "80em 80em"
       },
       zIndex: {
         1: "1",

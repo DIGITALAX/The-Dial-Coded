@@ -1,0 +1,32 @@
+[
+  [
+    {
+      "image": "QmddMwRPHHDoau5VSmqqcvd3gh4AU6NihRtZB8suAr7HxK",
+      "x": 158,
+      "y": 90,
+      "scale": 11.5,
+      "stroke": "#0091FF"
+    },
+    {
+      "image": "QmSwaHGdW5M7ar85odUPZYohf7fCENw8jYGMZYvSs2Zy4u",
+      "x": 500,
+      "y": 115,
+      "scale": 11,
+      "stroke": "#0091FF"
+    },
+    {
+      "image": "QmV6B2uzKCCymnM2AWZho7BqurZHJHRc1MjCrcK65VuLwf",
+      "x": 160,
+      "y": 530,
+      "scale": 12,
+      "stroke": "#0091FF"
+    },
+    {
+      "image": "QmV6B2uzKCCymnM2AWZho7BqurZHJHRc1MjCrcK65VuLwf",
+      "x": 500,
+      "y": 530,
+      "scale": 12,
+      "stroke": "#0091FF"
+    }
+  ]
+]

@@ -870,17 +870,12 @@ code::-webkit-scrollbar {
 #mass {
   background-image: url("https://thedial.infura-ipfs.io/ipfs/Qma5PAt5FePkrLejr5UtHP7UgRLCsAujw3R6jN8tnu9Vvu");
   background-position: center;
-  background-size: cover;
-  border-radius: 0.2rem;
+  caret-color: white !important;
 }
 
 #mass::placeholder {
   font-family: "Satoshi Medium";
   color: #06cf0b !important;
-}
-
-#mass {
-  caret-color: white !important;
 }
 
 #promptRange {

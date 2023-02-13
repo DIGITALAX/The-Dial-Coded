@@ -58,6 +58,8 @@ import mixtapesReducer from "./reducers/mixtapesSlice";
 import followTypeValuesReducer from "./reducers/followTypeValuesSlice";
 import xmtpSearchReducer from "./reducers/xmtpSearchSlice";
 import noHotDataReducer from "./reducers/noHotDataSlice";
+import canvasTypeReducer from "./reducers/canvasTypeSlice";
+import addPromptImageReducer from "./reducers/addPromptImageSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -118,6 +120,8 @@ const reducer = combineReducers({
   followTypeValuesReducer,
   xmtpSearchReducer,
   noHotDataReducer,
+  canvasTypeReducer,
+  addPromptImageReducer,
 });
 
 export const store = configureStore({

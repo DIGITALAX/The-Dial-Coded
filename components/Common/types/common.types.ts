@@ -773,7 +773,7 @@ export type CanvasOptionProps = {
   width: number;
   height: number;
   color?: boolean;
-  text?: boolean;
+  text?: string;
 };
 
 export enum MediaType {

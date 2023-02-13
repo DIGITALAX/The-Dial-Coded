@@ -1,6 +1,6 @@
 import { HsvaColor, ColorResult } from "@uiw/color-convert";
 import { SwatchPresetColor } from "@uiw/react-color-swatch";
-import { Ref, MouseEvent, FormEvent } from "react";
+import { Ref, MouseEvent, FormEvent, WheelEvent } from "react";
 
 export interface SketchProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "color"> {
@@ -77,6 +77,18 @@ export type DrawProps = {
   setPatternType: (e: string) => void;
   setTemplate: (e: string) => void;
   patternType: string;
+  template: string;
+  switchType: boolean;
+  setSwitchType: (e: boolean) => void;
+  setSynthArea: (e: boolean) => void;
+  synthArea: boolean;
+  handleMouseDownPattern: (e: MouseEvent) => void;
+  handleMouseMovePattern: (e: MouseEvent) => void;
+  handleWheel: (e: WheelEvent) => void;
+  handleWheelPattern: (e: WheelEvent) => void;
+  canvasPatternRef: Ref<HTMLCanvasElement>;
+  patternZoom: number;
+  setPatternZoom: (e: number) => void;
 };
 
 export type ColorPickerProps = {
@@ -98,6 +110,9 @@ export type SideMenuProps = {
   zoom: number;
   setZoom: (e: number) => void;
   setNewCanvas: () => void;
+  patternZoom: number;
+  setPatternZoom: (e: number) => void;
+  synthArea: boolean;
 };
 
 export type BottomMenuProps = {
@@ -119,10 +134,16 @@ export type BottomMenuProps = {
 
 export type BoardProps = {
   canvasRef: Ref<HTMLCanvasElement>;
+  canvasPatternRef: Ref<HTMLCanvasElement>;
   handleMouseDown: (e: MouseEvent) => void;
   handleMouseMove: (e: MouseEvent) => void;
   handleMouseUp: (e: MouseEvent) => void;
+  handleMouseDownPattern: (e: MouseEvent) => void;
+  handleMouseMovePattern: (e: MouseEvent) => void;
   zoom: number;
+  synthArea: boolean;
+  handleWheel: (e: WheelEvent) => void;
+  handleWheelPattern: (e: WheelEvent) => void;
 };
 
 export type SideOptionsProps = {
@@ -137,6 +158,9 @@ export type SideOptionsProps = {
   zoom: number;
   setZoom: (e: number) => void;
   setNewCanvas: () => void;
+  patternZoom: number;
+  setPatternZoom: (e: number) => void;
+  synthArea: boolean;
 };
 
 export type BottomOptionsProps = {
@@ -268,10 +292,62 @@ export type PatternMenuProps = {
   setPatternType: (e: string) => void;
   setTemplate: (e: string) => void;
   patternType: string;
+  setSwitchType: (e: boolean) => void;
+  switchType: boolean;
+  setSynthArea: (e: boolean) => void;
+  synthArea: boolean;
 };
 
 export type PatternOptionsProps = {
   setPatternType: (e: string) => void;
   setTemplate: (e: string) => void;
   patternType: string;
+  setSwitchType: (e: boolean) => void;
+  switchType: boolean;
+  setSynthArea: (e: boolean) => void;
+  synthArea: boolean;
 };
+
+export type UsePatternsResult = {
+  setShowPatternDrawOptions: (e: boolean) => void;
+  showPatternDrawOptions: boolean;
+  setPatternType: (e: string) => void;
+  setTemplate: (e: string) => void;
+  patternType: string;
+  setSwitchType: (e: boolean) => void;
+  switchType: boolean;
+  template: string;
+  setSynthArea: (e: boolean) => void;
+  synthArea: boolean;
+  handleMouseDownPattern: (e: MouseEvent) => void;
+  handleMouseMovePattern: (e: MouseEvent) => void;
+  handleWheelPattern: (e: WheelEvent) => void;
+  canvasPatternRef: Ref<HTMLCanvasElement>;
+  zoom: number;
+  setZoom: (e: number) => void;
+};
+
+export interface SafeImage {
+  image: string;
+  x: number;
+  y: number;
+  scale: number;
+  stroke: string;
+}
+
+export enum TemplateTypes {
+  Base,
+  Safe,
+  Temp,
+}
+
+export interface SvgPatternType {
+  points: {
+    x: number;
+    y: number;
+  }[];
+  type: string;
+  posX: number;
+  posY: number;
+  stroke: string;
+}
