@@ -6,7 +6,6 @@ const Board: FunctionComponent<BoardProps> = ({
   handleMouseDown,
   handleMouseMove,
   handleMouseUp,
-  zoom,
   synthArea,
   handleMouseDownPattern,
   handleMouseMovePattern,

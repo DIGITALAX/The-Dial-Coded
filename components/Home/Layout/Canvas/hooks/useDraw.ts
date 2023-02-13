@@ -60,6 +60,17 @@ const useDraw = () => {
   const [tool, setTool] = useState<string>("pencil");
   const [action, setAction] = useState<string>("none");
   const [draftBoard, setDraftBoard] = useState<boolean>(false);
+  const [pan, setPan] = useState<{
+    xInitial: number;
+    yInitial: number;
+    xOffset: number;
+    yOffset: number;
+  }>({
+    xInitial: 0,
+    yInitial: 0,
+    xOffset: 0,
+    yOffset: 0,
+  });
   const [hex, setHex] = useState<string>("#000000");
   const [colorPicker, setColorPicker] = useState<boolean>(false);
   const [brushWidth, setBrushWidth] = useState<number>(12);
@@ -168,6 +179,10 @@ const useDraw = () => {
       imageObject.src = e.target?.result as string;
       imageObject.onload = () => {
         const newElement = createElement(
+          {
+            xOffset: pan.xOffset,
+            yOffset: pan.yOffset,
+          },
           canvas,
           zoom,
           generator,
@@ -204,11 +219,13 @@ const useDraw = () => {
 
   useLayoutEffect(() => {
     if (ctx && !canvasType) {
-      canvas.width = canvas.offsetWidth * devicePixelRatio;
-      canvas.height = canvas.offsetHeight * devicePixelRatio;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.width = canvas?.offsetWidth * devicePixelRatio;
+      canvas.height = canvas?.offsetHeight * devicePixelRatio;
+      ctx.clearRect(0, 0, canvas?.width, canvas?.height);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(zoom, zoom);
+      ctx.translate(pan.xOffset * zoom, pan.yOffset * zoom);
+
       const roughCanvas = rough?.canvas(canvas);
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
@@ -220,9 +237,10 @@ const useDraw = () => {
       });
       ctx.save();
     }
-  }, [elements, action, selectedElement, tool, ctx, zoom, canvasType]);
+  }, [elements, action, selectedElement, tool, ctx, zoom, canvasType, pan]);
 
   const handleMouseDown = (e: MouseEvent): void => {
+    const bounds = canvas?.getBoundingClientRect();
     if (tool === "selection" || tool === "resize") {
       const element = getElementPosition(
         e.clientX,
@@ -271,9 +289,14 @@ const useDraw = () => {
       tool === "line" ||
       tool === "text"
     ) {
+      console.log(e.clientX, e.clientY, pan.xOffset*0.5, pan.yOffset*0.5)
       const filteredMarqueeElements = removeMarquee(elements);
       const id = filteredMarqueeElements?.length;
       const newElement = createElement(
+        {
+          xOffset: pan.xOffset*0.5,
+          yOffset: pan.yOffset*0.5,
+        },
         canvas,
         zoom,
         generator,
@@ -292,6 +315,12 @@ const useDraw = () => {
       setSelectedElement(newElement);
       setAction(tool === "text" ? "writing" : "drawing");
     } else if (tool === "pan") {
+      setPan({
+        xInitial: e.clientX - bounds.left,
+        yInitial: e.clientY - bounds.top,
+        xOffset: pan.xOffset,
+        yOffset: pan.yOffset,
+      });
       setAction("panning");
     } else if (tool === "marquee") {
       // remove any previous marquee
@@ -299,6 +328,10 @@ const useDraw = () => {
       const bounds = canvas?.getBoundingClientRect();
       const id = filteredMarqueeElements?.length;
       const newElement = createElement(
+        {
+          xOffset: pan.xOffset,
+          yOffset: pan.yOffset,
+        },
         canvas,
         zoom,
         generator,
@@ -352,11 +385,16 @@ const useDraw = () => {
   };
 
   const handleMouseMove = (e: MouseEvent): void => {
+    const bounds = canvas?.getBoundingClientRect();
     if (!action || action === "writing") return;
     if (action === "drawing") {
       const index = elements?.length - 1;
       const values = elements?.[index];
       updateElement(
+        {
+          xOffset: pan.xOffset*0.5,
+          yOffset: pan.yOffset*0.5,
+        },
         canvas,
         zoom,
         generator,
@@ -396,6 +434,10 @@ const useDraw = () => {
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
+          {
+            xOffset: pan.xOffset,
+            yOffset: pan.yOffset,
+          },
           canvas,
           zoom,
           generator,
@@ -435,6 +477,10 @@ const useDraw = () => {
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
+          {
+            xOffset: pan.xOffset,
+            yOffset: pan.yOffset,
+          },
           canvas,
           zoom,
           generator,
@@ -455,11 +501,23 @@ const useDraw = () => {
         );
       }
     } else if (action === "panning") {
+      setPan({
+        xInitial: pan.xInitial,
+        yInitial: pan.yInitial,
+        xOffset:
+          pan.xOffset + 0.5 * ((e.clientX - bounds.left - pan.xInitial)/ zoom) ,
+        yOffset:
+          pan.yOffset + 0.5 * ((e.clientY - bounds.top - pan.yInitial)/ zoom ),
+      });
     } else if (action === "marquee") {
       const index = elements?.length - 1;
       const { x1, y1 } = elements[index];
       const bounds = canvas?.getBoundingClientRect();
       updateElement(
+        {
+          xOffset: pan.xOffset,
+          yOffset: pan.yOffset,
+        },
         canvas,
         zoom,
         generator,
@@ -495,6 +553,10 @@ const useDraw = () => {
           values?.y2
         );
         updateElement(
+          {
+            xOffset: pan.xOffset,
+            yOffset: pan.yOffset,
+          },
           canvas,
           zoom,
           generator,
@@ -546,6 +608,10 @@ const useDraw = () => {
             : (values?.position === "bl" || values?.position === "br") &&
               (updatedCoordinates?.y2 as number) - bounds.top;
         updateElement(
+          {
+            xOffset: pan.xOffset,
+            yOffset: pan.yOffset,
+          },
           canvas,
           zoom,
           generator,
@@ -567,6 +633,10 @@ const useDraw = () => {
         );
       } else if (values?.type === "ell" && values?.position !== "inside") {
         updateElement(
+          {
+            xOffset: pan.xOffset,
+            yOffset: pan.yOffset,
+          },
           canvas,
           zoom,
           generator,
@@ -595,6 +665,10 @@ const useDraw = () => {
       setAction("none");
       setSelectedElement(null);
       updateElement(
+        {
+          xOffset: pan.xOffset,
+          yOffset: pan.yOffset,
+        },
         canvas,
         zoom,
         generator,
@@ -677,7 +751,7 @@ const useDraw = () => {
 
   useLayoutEffect(() => {
     if (clear) {
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      ctx?.clearRect(0, 0, canvas?.width, canvas?.height);
       setElements([]);
       setClear(false);
     }
@@ -744,6 +818,7 @@ const useDraw = () => {
     setNewCanvas,
     handleWheel,
     canvasRef,
+    setPan,
   };
 };
 

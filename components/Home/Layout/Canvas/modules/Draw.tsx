@@ -84,7 +84,8 @@ const Draw: FunctionComponent<DrawProps> = ({
   handleWheelPattern,
   canvasPatternRef,
   setPatternZoom,
-  patternZoom
+  patternZoom,
+  setPan
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -161,6 +162,7 @@ const Draw: FunctionComponent<DrawProps> = ({
                     setPatternZoom={setPatternZoom}
                     patternZoom={patternZoom}
                     synthArea={synthArea}
+                    setPan={setPan}
                   />
                   <div className="absolute w-fit h-fit grid grid-flow-row auto-rows-auto z-10 bottom-14 left-4">
                     <PatternMenu
@@ -211,7 +213,6 @@ const Draw: FunctionComponent<DrawProps> = ({
                     handleMouseDown={handleMouseDown}
                     handleMouseUp={handleMouseUp}
                     handleMouseMove={handleMouseMove}
-                    zoom={zoom}
                     handleMouseDownPattern={handleMouseDownPattern}
                     synthArea={synthArea}
                     handleMouseMovePattern={handleMouseMovePattern}

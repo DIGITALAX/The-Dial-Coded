@@ -19,7 +19,8 @@ const SideMenu: FunctionComponent<SideMenuProps> = ({
   setNewCanvas,
   patternZoom,
   setPatternZoom,
-  synthArea
+  synthArea,
+  setPan
 }): JSX.Element => {
   return (
     <div className="absolute w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto justify-self-end self-start p-3 gap-2 z-10 top-10 right-4">
@@ -47,6 +48,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = ({
           patternZoom={patternZoom}
           setPatternZoom={setPatternZoom}
           synthArea={synthArea}
+          setPan={setPan}
         />
       )}
     </div>

@@ -18,6 +18,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   patternZoom,
   setPatternZoom,
   synthArea,
+  setPan,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-cols-3 f9:grid-cols-none f9:grid-flow-row auto-rows-auto gap-4">
@@ -61,7 +62,17 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
         </div>
         <div
           className="relative w-fit h-fit"
-          onClick={() => (synthArea ? setPatternZoom(1) : setZoom(1))}
+          onClick={() => {
+            synthArea ? setPatternZoom(1) : setZoom(1);
+            setPan({
+              xInitial: 0,
+              yInitial: 0,
+              xOffset: 0,
+              yOffset: 0,
+              currentX: 0,
+              currentY: 0,
+            })
+          }}
         >
           <CanvasOption
             image="QmRKP7reAbEFgGrv2KmPdUe1eZgAwVmTzZoWfSLAH4gMEc"
