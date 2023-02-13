@@ -1,6 +1,10 @@
 import createElement from "./createElement";
 
 const updateElement = (
+  pan: {
+    xOffset: number;
+    yOffset: number;
+  },
   canvas: HTMLCanvasElement,
   zoom: number,
   generator: any,
@@ -27,6 +31,10 @@ const updateElement = (
     case "ell":
     case "rect":
       elementsCopy[index] = createElement(
+        {
+          xOffset: pan.xOffset,
+          yOffset: pan.yOffset,
+        },
         canvas,
         zoom,
         generator,
@@ -46,6 +54,10 @@ const updateElement = (
 
     case "image":
       elementsCopy[index] = createElement(
+        {
+          xOffset: pan.xOffset,
+          yOffset: pan.yOffset,
+        },
         canvas,
         zoom,
         generator,
@@ -68,10 +80,18 @@ const updateElement = (
         ...(elementsCopy[index]?.points as any),
         {
           x:
-            (((x2 as number) - canvas?.offsetLeft - bounds?.left) / zoom) *
+            (((x2 as number) -
+              canvas?.offsetLeft -
+              bounds?.left -
+              pan.xOffset*zoom*zoom) /
+              zoom) *
             devicePixelRatio,
           y:
-            (((y2 as number) - canvas?.offsetTop - bounds?.top) / zoom) *
+            (((y2 as number) -
+              canvas?.offsetTop -
+              bounds?.top -
+              pan.yOffset*zoom*zoom) /
+              zoom) *
             devicePixelRatio,
         },
       ];
@@ -81,6 +101,10 @@ const updateElement = (
       const textWidth = ctx?.measureText(text as string).width as number;
       elementsCopy[index] = {
         ...createElement(
+          {
+            xOffset: pan.xOffset,
+            yOffset: pan.yOffset,
+          },
           canvas,
           zoom,
           generator,
@@ -102,6 +126,10 @@ const updateElement = (
 
     case "marquee":
       elementsCopy[index] = createElement(
+        {
+          xOffset: pan.xOffset,
+          yOffset: pan.yOffset,
+        },
         canvas,
         zoom,
         generator,
@@ -110,7 +138,7 @@ const updateElement = (
         x2 as number,
         y2 as number,
         type,
-        index,
+        index
       ) as any;
       break;
   }

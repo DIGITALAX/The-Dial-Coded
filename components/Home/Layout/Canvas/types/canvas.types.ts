@@ -89,6 +89,12 @@ export type DrawProps = {
   canvasPatternRef: Ref<HTMLCanvasElement>;
   patternZoom: number;
   setPatternZoom: (e: number) => void;
+  setPan: (e: {
+    xInitial: number;
+    yInitial: number;
+    xOffset: number;
+    yOffset: number;
+  }) => void;
 };
 
 export type ColorPickerProps = {
@@ -113,6 +119,12 @@ export type SideMenuProps = {
   patternZoom: number;
   setPatternZoom: (e: number) => void;
   synthArea: boolean;
+  setPan: (e: {
+    xInitial: number;
+    yInitial: number;
+    xOffset: number;
+    yOffset: number;
+  }) => void;
 };
 
 export type BottomMenuProps = {
@@ -140,7 +152,6 @@ export type BoardProps = {
   handleMouseUp: (e: MouseEvent) => void;
   handleMouseDownPattern: (e: MouseEvent) => void;
   handleMouseMovePattern: (e: MouseEvent) => void;
-  zoom: number;
   synthArea: boolean;
   handleWheel: (e: WheelEvent) => void;
   handleWheelPattern: (e: WheelEvent) => void;
@@ -161,6 +172,12 @@ export type SideOptionsProps = {
   patternZoom: number;
   setPatternZoom: (e: number) => void;
   synthArea: boolean;
+  setPan: (e: {
+    xInitial: number;
+    yInitial: number;
+    xOffset: number;
+    yOffset: number;
+  }) => void;
 };
 
 export type BottomOptionsProps = {

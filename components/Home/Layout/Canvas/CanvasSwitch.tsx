@@ -94,6 +94,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     addImageToCanvas,
     handleWheel,
     canvasRef,
+    setPan
   } = useDraw();
   const {
     quickSearchResults,
@@ -213,6 +214,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           canvasPatternRef={canvasPatternRef}
           patternZoom={patternZoom}
           setPatternZoom={setPatternZoom}
+          setPan={setPan}
         />
       );
   }

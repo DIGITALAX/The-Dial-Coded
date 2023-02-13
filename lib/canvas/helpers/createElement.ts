@@ -1,6 +1,7 @@
 import { ElementInterface } from "../../../components/Home/Layout/Canvas/types/canvas.types";
 
 const createElement = (
+  pan: { xOffset: number; yOffset: number },
   canvas: HTMLCanvasElement,
   zoom: number,
   generator: any,
@@ -101,10 +102,12 @@ const createElement = (
         points: [
           {
             x:
-              ((x1 - canvas?.offsetLeft - bounds?.left) / zoom) *
+              ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom*zoom) /
+                zoom) *
               devicePixelRatio,
             y:
-              ((y1 - canvas?.offsetTop - bounds?.top) / zoom) *
+              ((y1 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom*zoom) /
+                zoom) *
               devicePixelRatio,
           },
         ],
