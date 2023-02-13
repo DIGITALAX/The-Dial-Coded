@@ -6,10 +6,10 @@ import {
   MouseEvent,
   FormEvent,
   useEffect,
+  WheelEvent,
 } from "react";
 import rough from "roughjs/bundled/rough.cjs";
-import { ElementInterface, Point2 } from "../types/canvas.types";
-import getStroke from "perfect-freehand";
+import { ElementInterface } from "../types/canvas.types";
 import lodash from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
@@ -22,15 +22,29 @@ import { setDraftTitle } from "../../../../../redux/reducers/draftTitleSlice";
 import { setDraftElements } from "../../../../../redux/reducers/draftElementsSlice";
 import handleUploadImage from "../../../../../lib/misc/helpers/handleUploadImage";
 import useElements from "./useElements";
+import drawElement from "../../../../../lib/canvas/helpers/drawElement";
+import getCanvas from "../../../../../lib/canvas/helpers/hiddenCanvas";
+import updateElement from "../../../../../lib/canvas/helpers/updateElement";
+import resizedCoordinates from "../../../../../lib/canvas/helpers/resizedCoordinates";
+import getElementPosition from "../../../../../lib/canvas/helpers/getElementPosition";
+import removeMarquee from "../../../../../lib/canvas/helpers/removeMarquee";
+import dispatchPostCanvas from "../../../../../lib/canvas/helpers/dispatchPostCanvas";
+import createElement from "../../../../../lib/canvas/helpers/createElement";
+import wheelLogic from "../../../../../lib/canvas/helpers/wheelLogic";
 
 const useDraw = () => {
-  const { uploadImage } = useImageUpload();
   const { saveCanvasNetwork } = useDrafts();
+  const { uploadImage } = useImageUpload();
   const dispatch = useDispatch();
   const title = useSelector(
     (state: RootState) => state.app.draftTitleReducer.value
   );
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasType = useSelector(
+    (state: RootState) => state.app.canvasTypeReducer.value
+  );
+  const promptImage = useSelector(
+    (state: RootState) => state.app.addPromptImageReducer.value
+  );
   const writingRef = useRef<HTMLTextAreaElement>(null);
   const [showSideDrawOptions, setShowSideDrawOptions] =
     useState<boolean>(false);
@@ -40,16 +54,6 @@ const useDraw = () => {
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [shapeFillType, setShapeFillType] = useState<string>("solid");
   const [text, setText] = useState<boolean>(false);
-  const [transformCtx, setTransformCtx] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
-  const [panStart, setPanStart] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
-  const [reset, setReset] = useState<boolean>(false);
-  const [wheel, setWheel] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(1);
   const [shapes, setShapes] = useState<boolean>(false);
   const [selectedElement, setSelectedElement] = useState<any>(null);
@@ -62,160 +66,14 @@ const useDraw = () => {
   const [thickness, setThickness] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(false);
   const generator = rough.generator();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
   const ctx = canvas?.getContext("2d");
   const dosis = new FontFace("dosis", "url(fonts/DosisRegular.ttf)");
-  const [scale, setScale] = useState<number>(1);
-
   const [elements, setElements, undo, redo] = useElements([]);
-
-  const getSvgPathFromStroke = (stroke: any) => {
-    if (!stroke.length) return "";
-
-    const d = stroke.reduce(
-      (acc: any, [x0, y0]: any, i: number, arr: any[]) => {
-        const [x1, y1] = arr[(i + 1) % arr.length];
-        acc.push(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
-        return acc;
-      },
-      ["M", ...stroke[0], "Q"]
-    );
-
-    d.push("Z");
-    return d.join(" ");
-  };
-
-  const drawElement = (
-    element: ElementInterface,
-    roughCanvas: any,
-    ctx: CanvasRenderingContext2D | null
-  ) => {
-    ctx?.setLineDash(element?.lineDash ? element?.lineDash : [0]);
-    (ctx as CanvasRenderingContext2D).imageSmoothingEnabled = false;
-    switch (element?.type) {
-      case "line":
-      case "ell":
-      case "rect":
-        roughCanvas?.draw(element.roughElement);
-        break;
-
-      case "pencil":
-        (ctx as CanvasRenderingContext2D).fillStyle = element?.fill as string;
-        const pathData = getSvgPathFromStroke(
-          getStroke(element?.points as { x: number; y: number }[], {
-            size: element?.strokeWidth as number,
-          })
-        );
-        ctx?.fill(new Path2D(pathData));
-        break;
-
-      case "text":
-        (ctx as CanvasRenderingContext2D).textBaseline = "top";
-        (ctx as CanvasRenderingContext2D).font = `${
-          (element.strokeWidth as number) * zoom
-        }px dosis`;
-        (ctx as CanvasRenderingContext2D).fillStyle = element.fill as string;
-        (ctx as CanvasRenderingContext2D).fillText(
-          element.text as string,
-          element.x1 as number,
-          element.y1 as number
-        );
-        break;
-
-      case "image":
-        ctx?.drawImage(
-          element?.image as HTMLImageElement,
-          element.x1 as number,
-          element.y1 as number,
-          (element.x2 as number) - (element.x1 as number),
-          (element.y2 as number) - (element.y1 as number)
-        );
-        const imgData = canvas.toDataURL("image/jpeg", 0.75);
-        break;
-
-      case "marquee":
-        ctx?.beginPath();
-        (ctx as CanvasRenderingContext2D).strokeStyle =
-          element.stroke as string;
-        ctx?.strokeRect(
-          element.x1 as number,
-          element.y1 as number,
-          element.x2 as number,
-          element.y2 as number
-        );
-        ctx?.closePath();
-        break;
-    }
-  };
-
-  const getCanvas = (): string => {
-    let img: string;
-    const marquee = lodash.find(elements, { type: "marquee" });
-    if (marquee) {
-      const hiddenCanvas = document.createElement("canvas");
-      hiddenCanvas.style.display = "none";
-      document.body.appendChild(hiddenCanvas);
-      const hiddenCanvasCtx = hiddenCanvas.getContext("2d");
-      hiddenCanvas.width = marquee.x2;
-      hiddenCanvas.height = marquee.y2;
-      hiddenCanvasCtx?.drawImage(
-        canvas,
-        marquee.x1 + 1,
-        marquee.y1 + 1,
-        marquee.x2 - 2,
-        marquee.y2 - 2,
-        0,
-        0,
-        hiddenCanvas.width,
-        hiddenCanvas.height
-      );
-      img = hiddenCanvas.toDataURL("image/png");
-    } else {
-      img = canvas.toDataURL("image/png");
-    }
-
-    return img;
-  };
 
   const handleTitle = (e: any) => {
     dispatch(setDraftTitle(e.target.value));
-  };
-
-  const handleSave = async (): Promise<void> => {
-    const img = getCanvas();
-    let xhr = new XMLHttpRequest();
-    xhr.responseType = "blob";
-    xhr.onload = () => {
-      let a = document.createElement("a");
-      a.href = window.URL.createObjectURL(xhr.response);
-      a.download = "thedial_drafts.png";
-      a.style.display = "none";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    };
-    xhr.open("GET", img);
-    xhr.send();
-  };
-
-  const dispatchPostCanvas = async (): Promise<void> => {
-    const imgURL = getCanvas();
-    const res: Response = await fetch(imgURL);
-    const blob: Blob = await res.blob();
-    const postImage = new File([blob], "thedial_drafts", { type: "image/png" });
-    await uploadImage(postImage, true);
-  };
-
-  const handleCanvasPost = async (): Promise<void> => {
-    setPostLoading(true);
-    await dispatchPostCanvas();
-    dispatch(
-      setPublication({
-        actionOpen: true,
-        actionCanvas: true,
-      })
-    );
-    setPostLoading(false);
   };
 
   const handleCanvasSave = async (): Promise<void> => {
@@ -225,7 +83,7 @@ const useDraw = () => {
     }
     setSaveLoading(true);
     try {
-      const imgURL = getCanvas();
+      const imgURL = getCanvas(canvas, elements);
       const res: Response = await fetch(imgURL);
       const blob: Blob = await res.blob();
       const postImage = new File([blob], "thedial_drafts", {
@@ -257,6 +115,35 @@ const useDraw = () => {
     setSaveLoading(false);
   };
 
+  const handleSave = async (): Promise<void> => {
+    const img = getCanvas(canvas, elements);
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = "blob";
+    xhr.onload = () => {
+      let a = document.createElement("a");
+      a.href = window.URL.createObjectURL(xhr.response);
+      a.download = "thedial_drafts.png";
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+    xhr.open("GET", img);
+    xhr.send();
+  };
+
+  const handleCanvasPost = async (): Promise<void> => {
+    setPostLoading(true);
+    await dispatchPostCanvas(canvas, elements, uploadImage);
+    dispatch(
+      setPublication({
+        actionOpen: true,
+        actionCanvas: true,
+      })
+    );
+    setPostLoading(false);
+  };
+
   const handleImageAdd = async (e: any, url?: boolean): Promise<void> => {
     if (!url) {
       if ((e as any).target.files.length < 1) {
@@ -281,6 +168,9 @@ const useDraw = () => {
       imageObject.src = e.target?.result as string;
       imageObject.onload = () => {
         const newElement = createElement(
+          canvas,
+          zoom,
+          generator,
           50,
           50,
           50 + imageObject.width,
@@ -313,526 +203,34 @@ const useDraw = () => {
   };
 
   useLayoutEffect(() => {
-    if (ctx) {
+    if (ctx && !canvasType) {
+      canvas.width = canvas.offsetWidth * devicePixelRatio;
+      canvas.height = canvas.offsetHeight * devicePixelRatio;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.scale(zoom, zoom);
       const roughCanvas = rough?.canvas(canvas);
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
-      canvas.style.width = String(canvas.width / window.devicePixelRatio);
-      canvas.style.height = String(canvas.height / window.devicePixelRatio);
       elements?.forEach((element: any) => {
         if (action === "writing" && selectedElement.id === element.id) {
           return;
         }
-        drawElement(element, roughCanvas, ctx);
+        drawElement(element, roughCanvas, ctx, zoom, canvas);
       });
       ctx.save();
     }
-  }, [
-    elements,
-    action,
-    selectedElement,
-    tool,
-    ctx,
-    transformCtx,
-    panStart,
-    wheel,
-    zoom,
-  ]);
-
-  const nearPoint = (
-    x: number,
-    y: number,
-    x1: number,
-    y1: number,
-    name: string
-  ) => {
-    return Math.abs(x - x1) < 5 && Math.abs(y - y1) < 5 ? name : null;
-  };
-
-  const distance = (a: Point2, b: Point2) => {
-    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-  };
-
-  const onLine = (
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-    x: number,
-    y: number,
-    maxDistance: number
-  ) => {
-    const a: Point2 = { x: x1, y: y1 };
-    const b: Point2 = { x: x2, y: y2 };
-    const c: Point2 = { x: x / zoom, y: y / zoom };
-    const offset = distance(a, b) - (distance(a, c) + distance(b, c));
-    return Math.abs(offset) < maxDistance ? "inside" : null;
-  };
-
-  const onOnePoint = (
-    x: number,
-    y: number,
-    x1: number,
-    y1: number,
-    maxDistance: number
-  ) => {
-    const a: Point2 = { x: x1, y: y1 };
-    const c: Point2 = { x: x / zoom, y: y / zoom };
-    return Math.abs(distance(a, c)) < maxDistance ? "inside" : null;
-  };
-
-  const insideEllipse = (
-    x: number,
-    y: number,
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number
-  ) => {
-    const p =
-      Math.pow(x - x1, 2) / Math.pow((x2 - x1) * Math.PI, 2) +
-      Math.pow(y - y1, 2) / Math.pow((y2 - y1) * Math.PI, 2);
-    return p;
-  };
-
-  const positionWithinElement = (
-    x: number,
-    y: number,
-    element: ElementInterface
-  ) => {
-    const { type, x1, x2, y1, y2 } = element;
-    const bounds = canvas.getBoundingClientRect();
-    switch (type) {
-      case "rect":
-        const topLeft = nearPoint(x, y, x1 as number, y1 as number, "tl");
-        const topRight = nearPoint(x, y, x2 as number, y1 as number, "tr");
-        const bottomLeft = nearPoint(x, y, x1 as number, y2 as number, "bl");
-        const bottomRight = nearPoint(x, y, x2 as number, y2 as number, "br");
-        const inside =
-          x >= (x1 as number) &&
-          x <= (x2 as number) &&
-          y >= (y1 as number) &&
-          y <= (y2 as number)
-            ? "inside"
-            : null;
-        return topLeft || topRight || bottomLeft || bottomRight || inside;
-      case "ell":
-        const ellInside = insideEllipse(
-          x,
-          y,
-          x1 as number,
-          y1 as number,
-          x2 as number,
-          y2 as number
-        );
-        return ellInside < 0.3 && ellInside > 0.6 * 0.3
-          ? "edge"
-          : ellInside < 0.3 && "inside";
-      case "line":
-        const on = onLine(
-          x1 as number,
-          y1 as number,
-          x2 as number,
-          y2 as number,
-          x,
-          y,
-          element.strokeWidth as number
-        );
-        const start = nearPoint(x, y, x1 as number, y1 as number, "start");
-        const end = nearPoint(x, y, x2 as number, y2 as number, "end");
-        return start || end || on;
-      case "erase":
-        break;
-      case "pencil":
-        if ((element.points as any).length > 1) {
-          const betweenAnyPoint = element.points?.some((point, index) => {
-            const nextPoint: any = (
-              element.points as {
-                x: number;
-                y: number;
-              }[]
-            )[index + 1];
-            if (!nextPoint) return false;
-            return (
-              onLine(
-                point.x,
-                point.y,
-                nextPoint.x,
-                nextPoint.y,
-                x - bounds.left,
-                y - bounds.top,
-                element.strokeWidth as number
-              ) != null
-            );
-          });
-          return betweenAnyPoint ? "inside" : null;
-        } else {
-          const onPoint = onOnePoint(
-            x - bounds.left,
-            y - bounds.top,
-            element.points?.[0]?.x as number,
-            element.points?.[0]?.y as number,
-            element.strokeWidth as number
-          );
-          return onPoint ? "inside" : null;
-        }
-
-      case "text":
-        return x - bounds.left >= (x1 as number) &&
-          x <= (x2 as number) &&
-          y - bounds.top >= (y1 as number) &&
-          y <= (y2 as number)
-          ? "inside"
-          : null;
-      case "image":
-        const topImageLeft = nearPoint(
-          x - bounds.left,
-          y - bounds.top,
-          x1 as number,
-          y1 as number,
-          "tl"
-        );
-        const topImageRight = nearPoint(
-          x - bounds.left,
-          y - bounds.top,
-          x2 as number,
-          y1 as number,
-          "tr"
-        );
-        const bottomImageLeft = nearPoint(
-          x - bounds.left,
-          y - bounds.top,
-          x1 as number,
-          y2 as number,
-          "bl"
-        );
-        const bottomImageRight = nearPoint(
-          x - bounds.left,
-          y - bounds.top,
-          x2 as number,
-          y2 as number,
-          "br"
-        );
-        const insideImage =
-          x - bounds.left >= (x1 as number) &&
-          x - bounds.left <= (x2 as number) &&
-          y - bounds.top >= (y1 as number) &&
-          y - bounds.top <= (y2 as number)
-            ? "inside"
-            : null;
-        return (
-          topImageLeft ||
-          topImageRight ||
-          bottomImageLeft ||
-          bottomImageRight ||
-          insideImage
-        );
-      case "marquee":
-        break;
-      // const topMarqueeLeft = nearPoint(
-      //   x - bounds.left,
-      //   y - bounds.top,
-      //   x1 as number,
-      //   y1 as number,
-      //   "tl"
-      // );
-      // const topMarqueeRight = nearPoint(
-      //   x - bounds.left,
-      //   y - bounds.top,
-      //   (x2 as number) + (x1 as number),
-      //   y1 as number,
-      //   "tr"
-      // );
-      // const bottomMarqueeLeft = nearPoint(
-      //   x - bounds.left,
-      //   y - bounds.top,
-      //   x1 as number,
-      //   (y2 as number) + (y1 as number),
-      //   "bl"
-      // );
-      // const bottomMarqueeRight = nearPoint(
-      //   x - bounds.left,
-      //   y - bounds.top,
-      //   (x2 as number) + (x1 as number),
-      //   (y2 as number) + (y1 as number),
-      //   "br"
-      // );
-      // const insideMarquee =
-      //   x - bounds.left >= (x1 as number) &&
-      //   x - bounds.left <= (x2 as number) + (x1 as number);
-      // y - bounds.top >= (y1 as number) &&
-      // y - bounds.top <= (y2 as number) + (y1 as number)
-      //   ? "inside"
-      //   : null;
-      // return (
-      //   topMarqueeLeft ||
-      //   topMarqueeRight ||
-      //   bottomMarqueeLeft ||
-      //   bottomMarqueeRight ||
-      //   insideMarquee
-      // );
-    }
-  };
-
-  const createElement = (
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-    type: string,
-    id: number,
-    strokeWidth?: number,
-    fill?: string,
-    fillStyle?: string,
-    stroke?: string,
-    image?: HTMLImageElement
-  ): ElementInterface | undefined => {
-    let roughElement;
-    const bounds = canvas?.getBoundingClientRect();
-    switch (type) {
-      case "rect":
-        roughElement = generator.rectangle(
-          x1 / zoom - bounds?.left / zoom,
-          y1 / zoom - bounds?.top / zoom,
-          (x2 - x1) / zoom,
-          (y2 - y1) / zoom,
-          {
-            fill,
-            stroke,
-            strokeWidth,
-            fillStyle,
-          }
-        );
-        return {
-          id,
-          type,
-          x1,
-          y1,
-          x2,
-          y2,
-          roughElement,
-          fill,
-          stroke,
-          strokeWidth,
-          fillStyle,
-        };
-      case "ell":
-        roughElement = generator.ellipse(
-          x1 / zoom - bounds?.left / zoom,
-          y1 / zoom - bounds?.top / zoom,
-          (((x2 - x1) / zoom) * Math.PI) / zoom,
-          (((y2 - y1) / zoom) * Math.PI) / zoom,
-          {
-            fill,
-            stroke,
-            strokeWidth,
-            fillStyle,
-          }
-        );
-        return {
-          id,
-          type,
-          x1,
-          y1,
-          x2,
-          y2,
-          roughElement,
-          fill,
-          stroke,
-          strokeWidth,
-          fillStyle,
-        };
-      case "line":
-        roughElement = generator.line(
-          x1 / zoom - bounds?.left / zoom,
-          y1 / zoom - bounds?.top / zoom,
-          x2 / zoom - bounds?.left / zoom,
-          y2 / zoom - bounds?.top / zoom,
-          {
-            strokeWidth,
-            stroke,
-          }
-        );
-        return {
-          id,
-          type,
-          x1,
-          y1,
-          x2,
-          y2,
-          roughElement,
-          stroke,
-          strokeWidth,
-        };
-
-      case "pencil":
-        return {
-          id,
-          type,
-          points: [
-            {
-              x: x1 / zoom - bounds?.left / zoom,
-              y: y1 / zoom - bounds?.top / zoom,
-            },
-          ],
-          fill: fill,
-          strokeWidth,
-        };
-      case "text":
-        return {
-          id,
-          type,
-          x1: x1 - bounds?.left,
-          y1: y1 - bounds?.top,
-          x2: x2 + (strokeWidth as number),
-          y2: y2 + (strokeWidth as number),
-          fill,
-          strokeWidth,
-          text: "",
-        };
-      case "image":
-        return {
-          id,
-          type,
-          x1,
-          y1,
-          x2,
-          y2,
-          image,
-        };
-      case "marquee":
-        return {
-          id,
-          type,
-          x1: x1,
-          y1: y1,
-          x2: x2 - x1,
-          y2: y2 - y1,
-          stroke: "#929292",
-          lineDash: [10, 10],
-        };
-    }
-  };
-
-  const getElementPosition = (x: number, y: number) => {
-    let positionArray: ElementInterface[] = [];
-    lodash.filter(elements, (element) => {
-      const returned = positionWithinElement(x, y, element);
-      if (returned) {
-        positionArray.push({ ...element, position: returned });
-      }
-    });
-    return positionArray;
-  };
-
-  const updateElement = (
-    x1: number,
-    y1: number,
-    x2: number | null,
-    y2: number | null,
-    type: string | null,
-    index: number,
-    strokeWidth: number | null,
-    fill: string | null,
-    fillStyle: string | null,
-    stroke: string | null,
-    text?: string,
-    image?: any
-  ) => {
-    const elementsCopy = [...elements];
-    const bounds = canvas?.getBoundingClientRect();
-    switch (type) {
-      case "line":
-      case "ell":
-      case "rect":
-        elementsCopy[index] = createElement(
-          x1 as number,
-          y1 as number,
-          x2 as number,
-          y2 as number,
-          type,
-          index,
-          strokeWidth as number,
-          fill as string,
-          fillStyle as string,
-          stroke as string,
-          undefined
-        ) as ElementInterface;
-        break;
-
-      case "image":
-        elementsCopy[index] = createElement(
-          x1 as number,
-          y1 as number,
-          x2 as number,
-          y2 as number,
-          type,
-          index,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          image
-        ) as ElementInterface;
-        break;
-
-      case "pencil":
-        elementsCopy[index].points = [
-          ...(elementsCopy[index]?.points as any),
-          {
-            x: (x2 as number) / zoom - bounds?.left / zoom,
-            y: (y2 as number) / zoom - bounds?.top / zoom,
-          },
-        ];
-        break;
-
-      case "text":
-        const textWidth = ctx?.measureText(text as string).width as number;
-        elementsCopy[index] = {
-          ...createElement(
-            x1 / zoom,
-            y1 / zoom,
-            x1 / zoom + textWidth / zoom,
-            y1 / zoom + (strokeWidth as number),
-            type,
-            index,
-            strokeWidth as number,
-            fill as string,
-            undefined,
-            undefined,
-            undefined
-          ),
-          text,
-        };
-        break;
-
-      case "marquee":
-        elementsCopy[index] = createElement(
-          x1 as number,
-          y1 as number,
-          x2 as number,
-          y2 as number,
-          type,
-          index
-        ) as ElementInterface;
-        break;
-    }
-    setElements(elementsCopy, true);
-  };
-
-  const removeMarquee = (): ElementInterface[] => {
-    const filteredMarqueeElements = lodash.filter(
-      elements,
-      (element) => element.type !== "marquee"
-    );
-    return filteredMarqueeElements;
-  };
+  }, [elements, action, selectedElement, tool, ctx, zoom, canvasType]);
 
   const handleMouseDown = (e: MouseEvent): void => {
     if (tool === "selection" || tool === "resize") {
-      const element = getElementPosition(e.clientX, e.clientY);
+      const element = getElementPosition(
+        e.clientX,
+        e.clientY,
+        elements,
+        canvas,
+        zoom
+      );
       if (element?.length > 0) {
         if (element[element?.length - 1].type === "pencil") {
           const offsetXs = element[element?.length - 1].points?.map(
@@ -873,9 +271,12 @@ const useDraw = () => {
       tool === "line" ||
       tool === "text"
     ) {
-      const filteredMarqueeElements = removeMarquee();
+      const filteredMarqueeElements = removeMarquee(elements);
       const id = filteredMarqueeElements?.length;
       const newElement = createElement(
+        canvas,
+        zoom,
+        generator,
         e.clientX,
         e.clientY,
         e.clientX,
@@ -894,14 +295,17 @@ const useDraw = () => {
       setAction("panning");
     } else if (tool === "marquee") {
       // remove any previous marquee
-      const filteredMarqueeElements = removeMarquee();
+      const filteredMarqueeElements = removeMarquee(elements);
       const bounds = canvas?.getBoundingClientRect();
       const id = filteredMarqueeElements?.length;
       const newElement = createElement(
-        e.clientX - bounds.left,
-        e.clientY - bounds.top,
-        e.clientX - bounds.left,
-        e.clientY - bounds.top,
+        canvas,
+        zoom,
+        generator,
+        (e.clientX - bounds.left) * (devicePixelRatio / zoom),
+        (e.clientY - bounds.top) * (devicePixelRatio / zoom),
+        (e.clientX - bounds.left) * (devicePixelRatio / zoom),
+        (e.clientY - bounds.top) * (devicePixelRatio / zoom),
         tool,
         id
       );
@@ -909,7 +313,13 @@ const useDraw = () => {
       setElements([...filteredMarqueeElements, newElement]);
       setSelectedElement(newElement);
     } else if (tool === "erase") {
-      const eraseElement = getElementPosition(e.clientX, e.clientY);
+      const eraseElement = getElementPosition(
+        e.clientX,
+        e.clientY,
+        elements,
+        canvas,
+        zoom
+      );
       if (eraseElement?.length > 0) {
         const elementsCopy = [...elements];
         const index = lodash.findIndex(elementsCopy, (elem) => {
@@ -947,6 +357,12 @@ const useDraw = () => {
       const index = elements?.length - 1;
       const values = elements?.[index];
       updateElement(
+        canvas,
+        zoom,
+        generator,
+        elements,
+        setElements,
+        ctx as CanvasRenderingContext2D,
         values?.x1 as number,
         values?.y1 as number,
         e.clientX,
@@ -980,6 +396,12 @@ const useDraw = () => {
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
+          canvas,
+          zoom,
+          generator,
+          elements,
+          setElements,
+          ctx as CanvasRenderingContext2D,
           afterOffsetX,
           afterOffsetY,
           afterOffsetX + width,
@@ -1013,6 +435,12 @@ const useDraw = () => {
         const afterOffsetX = e.clientX - offsetX;
         const afterOffsetY = e.clientY - offsetY;
         updateElement(
+          canvas,
+          zoom,
+          generator,
+          elements,
+          setElements,
+          ctx as CanvasRenderingContext2D,
           type === "text" ? e.clientX : afterOffsetX,
           type === "text" ? e.clientY : afterOffsetY,
           afterOffsetX + width,
@@ -1032,10 +460,16 @@ const useDraw = () => {
       const { x1, y1 } = elements[index];
       const bounds = canvas?.getBoundingClientRect();
       updateElement(
+        canvas,
+        zoom,
+        generator,
+        elements,
+        setElements,
+        ctx as CanvasRenderingContext2D,
         x1 as number,
         y1 as number,
-        e.clientX - bounds.left,
-        e.clientY - bounds.top,
+        (e.clientX - bounds.left) * (devicePixelRatio / zoom),
+        (e.clientY - bounds.top) * (devicePixelRatio / zoom),
         tool,
         index,
         brushWidth,
@@ -1061,6 +495,12 @@ const useDraw = () => {
           values?.y2
         );
         updateElement(
+          canvas,
+          zoom,
+          generator,
+          elements,
+          setElements,
+          ctx as CanvasRenderingContext2D,
           updatedCoordinates?.x1 as number,
           updatedCoordinates?.y1 as number,
           updatedCoordinates?.x2 as number,
@@ -1106,6 +546,12 @@ const useDraw = () => {
             : (values?.position === "bl" || values?.position === "br") &&
               (updatedCoordinates?.y2 as number) - bounds.top;
         updateElement(
+          canvas,
+          zoom,
+          generator,
+          elements,
+          setElements,
+          ctx as CanvasRenderingContext2D,
           sizedx1 as number,
           sizedy1 as number,
           sizedx2 as number,
@@ -1121,6 +567,12 @@ const useDraw = () => {
         );
       } else if (values?.type === "ell" && values?.position !== "inside") {
         updateElement(
+          canvas,
+          zoom,
+          generator,
+          elements,
+          setElements,
+          ctx as CanvasRenderingContext2D,
           values?.x1,
           values?.y1,
           e.clientX,
@@ -1136,31 +588,6 @@ const useDraw = () => {
     }
   };
 
-  const resizedCoordinates = (
-    mouseX: number,
-    mouseY: number,
-    position: any,
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number
-  ): { x1: number; y1: number; x2: number; y2: number } | null => {
-    switch (position) {
-      case "tl":
-      case "start":
-        return { x1: mouseX, y1: mouseY, x2, y2 };
-      case "tr":
-        return { x1, y1: mouseY, x2: mouseX, y2 };
-      case "bl":
-        return { x1: mouseX, y1, x2, y2: mouseY };
-      case "br":
-      case "end":
-        return { x1, y1, x2: mouseX, y2: mouseY };
-      default:
-        return null;
-    }
-  };
-
   const handleBlur = (e: FormEvent) => {
     if ((e as any).key === "Enter") {
       const { id, x1, y1, x2, y2, type } = selectedElement;
@@ -1168,6 +595,12 @@ const useDraw = () => {
       setAction("none");
       setSelectedElement(null);
       updateElement(
+        canvas,
+        zoom,
+        generator,
+        elements,
+        setElements,
+        ctx as CanvasRenderingContext2D,
         x1 + bounds.left,
         y1 + bounds.top,
         x2,
@@ -1210,6 +643,12 @@ const useDraw = () => {
   };
 
   useEffect(() => {
+    if (promptImage) {
+      addImageToCanvas(promptImage);
+    }
+  }, [promptImage]);
+
+  useEffect(() => {
     const textAreaElement = writingRef.current;
     if (action === "writing") {
       textAreaElement?.focus();
@@ -1224,6 +663,16 @@ const useDraw = () => {
 
   const handleClear = () => {
     setClear(true);
+  };
+
+  const setNewCanvas = () => {
+    dispatch(setDraftElements([]));
+    setClear(true);
+    dispatch(setDraftTitle("untitled draft"));
+  };
+
+  const handleWheel = (e: WheelEvent) => {
+    wheelLogic(e, canvas, zoom, setZoom, ctx as CanvasRenderingContext2D, 5);
   };
 
   useLayoutEffect(() => {
@@ -1246,24 +695,11 @@ const useDraw = () => {
     }
   }, [action, thickness, shapes]);
 
-  const getTransformedPoint = (x: number, y: number) => {
-    const bounds = canvas.getBoundingClientRect();
-    const originalPoint = new DOMPoint(x - bounds.left, y - bounds.top);
-    return ctx?.getTransform().invertSelf().transformPoint(originalPoint);
-  };
-
-  const setNewCanvas = () => {
-    dispatch(setDraftElements([]));
-    setClear(true);
-    dispatch(setDraftTitle("untitled draft"));
-  };
-
   return {
     hex,
     setHex,
     showSideDrawOptions,
     setShowSideDrawOptions,
-    canvasRef,
     brushWidth,
     handleMouseDown,
     handleMouseMove,
@@ -1306,6 +742,8 @@ const useDraw = () => {
     setElements,
     addImageToCanvas,
     setNewCanvas,
+    handleWheel,
+    canvasRef,
   };
 };
 

@@ -82,11 +82,11 @@ const Prompt: FunctionComponent<PromptProps> = ({
         </div>
       </div>
       <div className="relative w-full h-44 f5:h-36 grid grid-flow-col auto-cols-auto border-b-4 border-x-2 border-black rounded-md bg-weed place-self-center">
-        <div className="relative w-full h-full p-px" id="mass">
+        <div className="relative w-full h-full p-px rounded-sm" id="mass">
           <textarea
             onChange={(e) => setPrompt(e.target.value)}
             id="mass"
-            className="relative w-full h-full bg-weed rounded-lg p-1 text-litnus font-sats text-base caret-white"
+            className="relative w-full h-full bg-weed rounded-xl p-1 text-litnus font-sats text-base caret-white"
             style={{ resize: "none" }}
             placeholder={
               keyExists

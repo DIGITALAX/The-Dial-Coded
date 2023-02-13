@@ -9,7 +9,6 @@ const useElements = (initialState: any) => {
       typeof action === "function" ? action(history[index]) : action;
     if (overwrite) {
       const historyCopy = [...history];
-      const historyCopyDispatch = [...history];
       historyCopy[index] = newState;
       setHistory(historyCopy);
     } else {
@@ -19,8 +18,10 @@ const useElements = (initialState: any) => {
     }
   };
 
-  const undo = (): boolean | void =>
+  const undo = (): boolean | void => {
     index > 0 && setIndex((prevState) => prevState - 1);
+  };
+
   const redo = (): boolean | void =>
     index < history.length - 1 && setIndex((prevState) => prevState + 1);
 

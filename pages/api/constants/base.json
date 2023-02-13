@@ -1,0 +1,32 @@
+[
+  [
+    {
+      "image": "QmVZ9AAuojXtE99987XsvXaGAPQbtcDjX5apgBh1gwBGrK",
+      "x": 100,
+      "y": 70,
+      "scale": 12,
+      "stroke": "black"
+    },
+    {
+      "image": "QmNXGaF4Y5cMa2Nt2KD6FJoaS5QKRmoj1dCz7d6tg9sKpi",
+      "x": 440,
+      "y": 70,
+      "scale": 11.55,
+      "stroke": "black"
+    },
+    {
+      "image": "QmRaBHB7bGjfv1LF1ZRGwoqK66d93jCvJZnbb6oyzQLSSp",
+      "x": 100,
+      "y": 500,
+      "scale": 12,
+      "stroke": "black"
+    },
+    {
+      "image": "QmZCYoSZe5Lo3V8neyh1UYTJ9V7jePCeLxPG7o3QCKdSPt",
+      "x": 440,
+      "y": 500,
+      "scale": 12,
+      "stroke": "black"
+    }
+  ]
+]

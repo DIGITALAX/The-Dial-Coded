@@ -32,8 +32,13 @@ const CanvasOption: FunctionComponent<CanvasOptionProps> = ({
     >
       <div className="col-start-1 relative w-fit h-fit place-self-center flex">
         {text ? (
-          <div className="relative w-fit h-fit text-white font-sats text-sm">
-            {image}
+          <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1">
+            <div className="relative w-fit h-fit text-white font-sats text-[0.5vw] place-self-center">
+              {text}
+            </div>
+            <div className="relative w-fit h-fit text-white font-sats text-sm place-self-center">
+              {image}
+            </div>
           </div>
         ) : (
           <Image

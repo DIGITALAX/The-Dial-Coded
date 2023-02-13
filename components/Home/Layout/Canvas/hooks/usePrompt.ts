@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getReplicateKey } from "../../../../../lib/replicate/utils";
+import { setAddPromptImage } from "../../../../../redux/reducers/addPromptImageSlice";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 import { InputType, UsePromptResults } from "../types/canvas.types";
 
@@ -35,6 +36,7 @@ const usePrompt = (): UsePromptResults => {
       if (responseJSON === null || !responseJSON) {
         dispatch(setInsufficientFunds("prompt"));
       } else {
+        dispatch(setAddPromptImage(responseJSON[0]));
       }
     } catch (err: any) {
       console.error(err.message);

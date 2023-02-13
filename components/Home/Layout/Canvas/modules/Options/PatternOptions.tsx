@@ -1,4 +1,6 @@
 import { FunctionComponent } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../../redux/store";
 import CanvasOption from "../../../../../Common/Miscellaneous/CanvasOption";
 import { PatternOptionsProps } from "../../types/canvas.types";
 
@@ -6,31 +8,48 @@ const PatternOptions: FunctionComponent<PatternOptionsProps> = ({
   setPatternType,
   setTemplate,
   patternType,
+  setSwitchType,
+  switchType,
+  setSynthArea,
+  synthArea,
 }): JSX.Element => {
+  const onPatternCanvas = useSelector(
+    (state: RootState) => state.app.canvasTypeReducer.value
+  );
   return (
     <div className="absolute flex flex-row gap-2 bottom-3 w-fit h-fit left-20">
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
         {patternType === "rash" && (
           <div className="relative w-fit h-fit row-start-1 place-self-center bottom-14 right-5">
             <div className="absolute w-fit h-fit grid grid-flow-col auto-cols-auto gap-1">
-              <CanvasOption
-                image="0x01"
-                bgColor="black"
-                width={30}
-                height={20}
-                setShowString={setTemplate}
-                string_option={"0x01"}
-                text
-              />
-              <CanvasOption
-                image="0x02"
-                bgColor="black"
-                width={30}
-                height={20}
-                setShowString={setTemplate}
-                string_option={"0x02"}
-                text
-              />
+              <div
+                className="relative w-fit h-fit"
+                onClick={() => (!switchType ? setSwitchType(true) : {})}
+              >
+                <CanvasOption
+                  image="0x01"
+                  bgColor="black"
+                  width={30}
+                  height={20}
+                  setShowString={setTemplate}
+                  string_option={"0x01"}
+                  text={"RashGuard"}
+                />
+              </div>
+              <div
+                className="relative w-fit h-fit"
+                onClick={() => (!switchType ? setSwitchType(true) : {})}
+              >
+                <CanvasOption
+                  image="0x02"
+                  bgColor="black"
+                  width={30}
+                  height={20}
+                  setShowString={setTemplate}
+                  string_option={"0x02"}
+                  text={"RashGuard"}
+                />
+              </div>
             </div>
           </div>
         )}
@@ -77,7 +96,6 @@ const PatternOptions: FunctionComponent<PatternOptionsProps> = ({
           string_option={"jacket"}
         />
       </div>
-
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
         <CanvasOption
           image="QmdJiFdGYedEAzK2SjVGzojYhByxrqBztvUYVK3p2r2sF8"
@@ -86,6 +104,26 @@ const PatternOptions: FunctionComponent<PatternOptionsProps> = ({
           height={25}
           setShowString={setPatternType}
           string_option={"tank"}
+        />
+      </div>
+      <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-1 self-end">
+        {onPatternCanvas && (
+          <CanvasOption
+            image="Qme2o2azyWD6iUtroLeYBojqaLQgHq2g1p5vbGxsnZed7S"
+            bgColor="black"
+            width={18}
+            height={25}
+            setShowBool={setSynthArea}
+            bool_option={synthArea}
+          />
+        )}
+        <CanvasOption
+          image="QmYKmPoozReHuuBLfxPB11CtQpaDuT2S3AJ54yYsdTWWwE"
+          bgColor="black"
+          width={18}
+          height={25}
+          setShowBool={setSwitchType}
+          bool_option={switchType}
         />
       </div>
     </div>
