@@ -15,7 +15,6 @@ const drawElement = (
     yOffset: number;
   }
 ) => {
-  console.log(pan.xOffset, pan.yOffset);
   ctx?.setLineDash(element?.lineDash ? element?.lineDash : [0]);
   (ctx as CanvasRenderingContext2D).imageSmoothingEnabled = false;
   switch (element?.type) {
@@ -63,13 +62,14 @@ const drawElement = (
       ctx?.beginPath();
       (ctx as CanvasRenderingContext2D).strokeStyle = element.stroke as string;
       (ctx as CanvasRenderingContext2D).lineWidth = 1 / zoom;
+      ctx?.setLineDash([5, 5]);
       ctx?.strokeRect(
         element.x1 as number,
         element.y1 as number,
         element.x2 as number,
         element.y2 as number
       );
-      ctx?.closePath();
+      ctx?.closePath;
       break;
   }
 };

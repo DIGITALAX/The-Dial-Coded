@@ -9,11 +9,10 @@ const onLine = (
   x: number,
   y: number,
   maxDistance: number,
-  zoom: number
 ) => {
   const a: Point2 = { x: x1, y: y1 };
   const b: Point2 = { x: x2, y: y2 };
-  const c: Point2 = { x: x / zoom, y: y / zoom };
+  const c: Point2 = { x, y};
   const offset = distance(a, b) - (distance(a, c) + distance(b, c));
   return Math.abs(offset) < maxDistance ? "inside" : null;
 };

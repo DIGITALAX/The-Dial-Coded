@@ -7,11 +7,15 @@ const getElementPosition = (
   y: number,
   elements: any,
   canvas: HTMLCanvasElement,
-  zoom: number
+  zoom: number,
+  pan: {
+    xOffset: number,
+    yOffset: number
+  }
 ) => {
   let positionArray: ElementInterface[] = [];
   lodash.filter(elements, (element) => {
-    const returned = positionWithinElement(x, y, element, canvas, zoom);
+    const returned = positionWithinElement(x, y, element, canvas, zoom, pan);
     if (returned) {
       positionArray.push({ ...element, position: returned });
     }

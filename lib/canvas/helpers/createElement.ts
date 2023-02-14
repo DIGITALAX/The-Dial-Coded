@@ -140,8 +140,8 @@ const createElement = (
       return {
         id,
         type,
-        x1: ((x1 - bounds?.left) + canvas?.offsetLeft),
-        y1: (y1 - bounds?.top) + canvas?.offsetTop,
+        x1: x1 - bounds?.left + canvas?.offsetLeft,
+        y1: y1 - bounds?.top + canvas?.offsetTop,
         x2: x2 + (strokeWidth as number),
         y2: y2 + (strokeWidth as number),
         fill,
@@ -152,10 +152,10 @@ const createElement = (
       return {
         id,
         type,
-        x1: (x1 / zoom) * devicePixelRatio,
-        y1: (y1 / zoom) * devicePixelRatio,
-        x2: (x2 / zoom) * devicePixelRatio,
-        y2: (y2 / zoom) * devicePixelRatio,
+        x1: ((x1 - pan.xOffset * zoom * zoom) / zoom) * devicePixelRatio,
+        y1: ((y1 - pan.yOffset * zoom * zoom) / zoom) * devicePixelRatio,
+        x2: ((x2 - pan.xOffset * zoom * zoom) / zoom) * devicePixelRatio,
+        y2: ((y2 - pan.yOffset * zoom * zoom) / zoom) * devicePixelRatio,
         image,
       };
     case "marquee":
