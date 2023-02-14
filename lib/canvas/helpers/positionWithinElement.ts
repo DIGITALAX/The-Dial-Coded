@@ -9,9 +9,15 @@ const positionWithinElement = (
   y: number,
   element: ElementInterface,
   canvas: HTMLCanvasElement,
-  zoom: number
+  zoom: number,
+  pan: {
+    xOffset: number;
+    yOffset: number;
+  }
 ) => {
   const { type, x1, x2, y1, y2 } = element;
+  console.log({ x, y, x1, y1, x2, y2 });
+  console.log({ element });
   const bounds = canvas.getBoundingClientRect();
   switch (type) {
     case "rect":
@@ -47,8 +53,7 @@ const positionWithinElement = (
         y2 as number,
         x,
         y,
-        element.strokeWidth as number,
-        zoom
+        element.strokeWidth as number
       );
       const start = nearPoint(x, y, x1 as number, y1 as number, "start");
       const end = nearPoint(x, y, x2 as number, y2 as number, "end");
@@ -71,22 +76,24 @@ const positionWithinElement = (
               point.y,
               nextPoint.x,
               nextPoint.y,
-              x - bounds.left,
-              y - bounds.top,
-              element.strokeWidth as number,
-              zoom
+              ((x - bounds?.left - pan.xOffset * zoom * zoom) / zoom) *
+                devicePixelRatio,
+              ((y - bounds.top - pan.yOffset * zoom * zoom) / zoom) *
+                devicePixelRatio,
+              element.strokeWidth as number
             ) != null
           );
         });
         return betweenAnyPoint ? "inside" : null;
       } else {
         const onPoint = onOnePoint(
-          x - bounds.left,
-          y - bounds.top,
+          ((x - bounds?.left - pan.xOffset * zoom * zoom) / zoom) *
+            devicePixelRatio,
+          ((y - bounds.top - pan.yOffset * zoom * zoom) / zoom) *
+            devicePixelRatio,
           element.points?.[0]?.x as number,
           element.points?.[0]?.y as number,
-          element.strokeWidth as number,
-          zoom
+          element.strokeWidth as number
         );
         return onPoint ? "inside" : null;
       }

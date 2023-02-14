@@ -7,10 +7,9 @@ const onOnePoint = (
   x1: number,
   y1: number,
   maxDistance: number,
-  zoom: number
 ) => {
   const a: Point2 = { x: x1, y: y1 };
-  const c: Point2 = { x: x / zoom, y: y / zoom };
+  const c: Point2 = { x, y };
   return Math.abs(distance(a, c)) < maxDistance ? "inside" : null;
 };
 
