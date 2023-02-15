@@ -20,8 +20,8 @@ const positionWithinElement = (
   const mouseX = (x / (devicePixelRatio * zoom) - pan.xOffset) / zoom;
   const mouseY = (y / (devicePixelRatio * zoom) - pan.yOffset) / zoom;
   console.log({
-    x: (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio,
-    y: (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio,
+    x: (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+    y: (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
     x1: (x1 as number) * zoom,
     y1: (y1 as number) * zoom,
     x2: ((x2 as number) + (x1 as number)) * zoom,
@@ -30,57 +30,58 @@ const positionWithinElement = (
   switch (type) {
     case "rect":
       const topLeft = nearPoint(
-        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio,
-        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio,
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
         (x1 as number) * zoom,
         (y1 as number) * zoom,
         "tl"
       );
       const topRight = nearPoint(
-        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio,
-        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio,
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
         ((x2 as number) + (x1 as number)) * zoom,
         (y1 as number) * zoom,
         "tr"
       );
       const bottomLeft = nearPoint(
-        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio,
-        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio,
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
         (x1 as number) * zoom,
         ((y2 as number) + (y1 as number)) * zoom,
         "bl"
       );
       const bottomRight = nearPoint(
-        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio,
-        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio,
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
         ((x2 as number) + (x1 as number)) * zoom,
         ((y2 as number) + (y1 as number)) * zoom,
         "br"
       );
       const inside =
-        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio >=
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio >=
           (x1 as number) * zoom &&
-        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio <=
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio <=
           ((x2 as number) + (x1 as number)) * zoom &&
-        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio >=
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio >=
           (y1 as number) * zoom &&
-        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio <=
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio <=
           ((y2 as number) + (y1 as number)) * zoom
           ? "inside"
           : null;
       return topLeft || topRight || bottomLeft || bottomRight || inside;
     case "ell":
       const ellInside = insideEllipse(
-        mouseX,
-        mouseY,
-        x1 as number,
-        y1 as number,
-        x2 as number,
-        y2 as number
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
+        (x1 as number) * zoom,
+        (y1 as number) * zoom,
+        ((x2 as number) + (x1 as number)) * zoom,
+        ((y2 as number) + (y1 as number)) * zoom
       );
-      return ellInside < 0.3 && ellInside > 0.6 * 0.3
+      console.log(ellInside)
+      return ellInside < 0.1 && ellInside > 0.6 * 0.1
         ? "edge"
-        : ellInside < 0.3 && "inside";
+        : ellInside < 0.1 && "inside";
     case "line":
       const on = onLine(
         x1 as number,

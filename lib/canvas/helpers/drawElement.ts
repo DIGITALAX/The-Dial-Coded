@@ -4,28 +4,53 @@ import getSvgPathFromStroke from "./getSvgPathFromStroke";
 
 const drawElement = (
   element: ElementInterface,
-  roughCanvas: any,
   ctx: CanvasRenderingContext2D | null,
   zoom: number,
   canvas: HTMLCanvasElement,
-  pan: {
-    xInitial: number;
-    yInitial: number;
-    xOffset: number;
-    yOffset: number;
-  }
 ) => {
+  console.log(element.x1,element.y1,element.x2,element.y2)
   ctx?.setLineDash(element?.lineDash ? element?.lineDash : [0]);
   (ctx as CanvasRenderingContext2D).imageSmoothingEnabled = false;
   switch (element?.type) {
     case "line":
+      break;
+
     case "ell":
-      roughCanvas?.draw(element.roughElement);
+      ctx?.beginPath();
+      if (element.fillStyle === "hachure") {
+        (ctx as CanvasRenderingContext2D).strokeStyle =
+          element.stroke as string;
+        (ctx as CanvasRenderingContext2D).lineWidth = 1 / zoom;
+        ctx?.ellipse(
+          element.x1 as number,
+          element.y1 as number,
+          Math.abs(element.x2 as number),
+          Math.abs(element.y2 as number),
+          0,
+          0,
+          2 * Math.PI
+        );
+        ctx?.stroke();
+      } else {
+        (ctx as CanvasRenderingContext2D).fillStyle = element.fill as string;
+        (ctx as CanvasRenderingContext2D).strokeStyle =
+          element.stroke as string;
+        ctx?.ellipse(
+          element.x1 as number,
+          element.y1 as number,
+          Math.abs(element.x2 as number),
+          Math.abs(element.y2 as number),
+          0,
+          0,
+          2 * Math.PI
+        );
+        ctx?.fill();
+      }
+      ctx?.closePath;
       break;
 
     case "rect":
       ctx?.beginPath();
-
       if (element.fillStyle === "hachure") {
         (ctx as CanvasRenderingContext2D).strokeStyle =
           element.stroke as string;
