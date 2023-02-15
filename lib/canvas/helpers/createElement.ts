@@ -21,35 +21,48 @@ const createElement = (
   const bounds = canvas?.getBoundingClientRect();
   switch (type) {
     case "rect":
-      roughElement = generator.rectangle(
-        ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
-          zoom) *
-          devicePixelRatio,
-        ((y1 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom * zoom) /
-          zoom) *
-          devicePixelRatio,
-        ((x2 - x1) / zoom) * devicePixelRatio,
-        ((y2 - y1) / zoom) * devicePixelRatio,
-        {
-          fill,
-          stroke,
-          strokeWidth,
-          fillStyle,
-        }
-      );
       return {
         id,
         type,
         x1,
         y1,
-        x2,
-        y2,
-        roughElement,
+        x2: x2 - x1,
+        y2: y2 - y1,
         fill,
         stroke,
         strokeWidth,
         fillStyle,
       };
+
+    // roughElement = generator.rectangle(
+    //   ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
+    //     zoom) *
+    //     devicePixelRatio,
+    //   ((y1 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom * zoom) /
+    //     zoom) *
+    //     devicePixelRatio,
+    //   ((x2 - x1) / zoom) * devicePixelRatio,
+    //   ((y2 - y1) / zoom) * devicePixelRatio,
+    //   {
+    //     fill,
+    //     stroke,
+    //     strokeWidth,
+    //     fillStyle,
+    //   }
+    // );
+    // return {
+    //   id,
+    //   type,
+    //   x1,
+    //   y1,
+    //   x2,
+    //   y2,
+    //   roughElement,
+    //   fill,
+    //   stroke,
+    //   strokeWidth,
+    //   fillStyle,
+    // };
     case "ell":
       roughElement = generator.ellipse(
         ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
@@ -162,8 +175,8 @@ const createElement = (
       return {
         id,
         type,
-        x1: x1,
-        y1: y1,
+        x1,
+        y1,
         x2: x2 - x1,
         y2: y2 - y1,
         stroke: "#929292",
