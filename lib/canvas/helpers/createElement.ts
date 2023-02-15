@@ -16,7 +16,6 @@ const createElement = (
   stroke?: string,
   image?: HTMLImageElement
 ): ElementInterface | undefined => {
-  let roughElement;
   const bounds = canvas?.getBoundingClientRect();
   switch (type) {
     case "line":

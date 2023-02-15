@@ -17,16 +17,6 @@ const positionWithinElement = (
 ) => {
   const { type, x1, x2, y1, y2 } = element;
   const bounds = canvas.getBoundingClientRect();
-  const mouseX = (x / (devicePixelRatio * zoom) - pan.xOffset) / zoom;
-  const mouseY = (y / (devicePixelRatio * zoom) - pan.yOffset) / zoom;
-  console.log({
-    x: (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
-    y: (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-    x1: (x1 as number) * zoom,
-    y1: (y1 as number) * zoom,
-    x2: ((x2 as number) + (x1 as number)) * zoom,
-    y2: ((y2 as number) + (y1 as number)) * zoom,
-  });
   switch (type) {
     case "rect":
       const topLeft = nearPoint(
@@ -78,28 +68,33 @@ const positionWithinElement = (
         ((x2 as number) + (x1 as number)) * zoom,
         ((y2 as number) + (y1 as number)) * zoom
       );
-      console.log(ellInside)
       return ellInside < 0.1 && ellInside > 0.6 * 0.1
         ? "edge"
         : ellInside < 0.1 && "inside";
     case "line":
       const on = onLine(
-        x1 as number,
-        y1 as number,
-        x2 as number,
-        y2 as number,
-        mouseX,
-        mouseY,
+        (x1 as number) * zoom,
+        (y1 as number) * zoom,
+        ((x2 as number) + (x1 as number)) * zoom,
+        ((y2 as number) + (y1 as number)) * zoom,
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
         1
       );
       const start = nearPoint(
-        mouseX,
-        mouseY,
-        x1 as number,
-        y1 as number,
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
+        (x1 as number) * zoom,
+        (y1 as number) * zoom,
         "start"
       );
-      const end = nearPoint(mouseX, mouseY, x2 as number, y2 as number, "end");
+      const end = nearPoint(
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
+        ((x2 as number) + (x1 as number)) * zoom,
+        ((y2 as number) + (y1 as number)) * zoom,
+        "end"
+      );
       return start || end || on;
     case "erase":
       break;
@@ -150,40 +145,49 @@ const positionWithinElement = (
         : null;
     case "image":
       const topImageLeft = nearPoint(
-        x - bounds.left,
-        y - bounds.top,
-        x1 as number,
-        y1 as number,
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
+        (x1 as number) * zoom,
+        (y1 as number) * zoom,
         "tl"
       );
       const topImageRight = nearPoint(
-        x - bounds.left,
-        y - bounds.top,
-        x2 as number,
-        y1 as number,
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
+        (x2 as number) * zoom,
+        (y1 as number) * zoom,
         "tr"
       );
       const bottomImageLeft = nearPoint(
-        x - bounds.left,
-        y - bounds.top,
-        x1 as number,
-        y2 as number,
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
+        (x1 as number) * zoom,
+        (y2 as number) * zoom,
         "bl"
       );
       const bottomImageRight = nearPoint(
-        x - bounds.left,
-        y - bounds.top,
-        x2 as number,
-        y2 as number,
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
+        (x2 as number) * zoom,
+        (y2 as number) * zoom,
         "br"
       );
       const insideImage =
-        x - bounds.left >= (x1 as number) &&
-        x - bounds.left <= (x2 as number) &&
-        y - bounds.top >= (y1 as number) &&
-        y - bounds.top <= (y2 as number)
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio >=
+          (x1 as number) * zoom &&
+        (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio <=
+          (x2 as number) * zoom &&
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio >=
+          (y1 as number) * zoom &&
+        (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio <=
+          (y2 as number) * zoom
           ? "inside"
           : null;
+      console.log(  topImageLeft ||
+        topImageRight ||
+        bottomImageLeft ||
+        bottomImageRight ||
+        insideImage)
       return (
         topImageLeft ||
         topImageRight ||
