@@ -95,6 +95,11 @@ export type DrawProps = {
     xOffset: number;
     yOffset: number;
   }) => void;
+  img2img: boolean;
+  setImg2img: (e: boolean) => void;
+  setStrength: (e: string) => void;
+  strength: string;
+  handleSendImg2Img: () => Promise<void>
 };
 
 export type ColorPickerProps = {
@@ -277,6 +282,11 @@ export type UsePromptResults = {
   setPrompt: (e: string) => void;
   prompt: string;
   keyExists: boolean;
+  img2img: boolean;
+  setImg2img: (e: boolean) => void;
+  setStrength: (e: string) => void;
+  strength: string;
+  handleSendImg2Img: () => Promise<void>
 };
 
 export type PromptProps = {
@@ -289,6 +299,11 @@ export type PromptProps = {
   setPrompt: (e: string) => void;
   prompt: string;
   keyExists: boolean;
+  img2img: boolean;
+  setImg2img: (e: boolean) => void;
+  setStrength: (e: string) => void;
+  strength: string;
+  handleSendImg2Img: () => Promise<void>
 };
 
 export interface InputType {

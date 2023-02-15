@@ -49,6 +49,11 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     prompt,
     setPrompt,
     keyExists,
+    strength,
+    setImg2img,
+    img2img,
+    setStrength,
+    handleSendImg2Img
   } = usePrompt();
   const {
     hex,
@@ -229,6 +234,11 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           patternZoom={patternZoom}
           setPatternZoom={setPatternZoom}
           setPan={setPan}
+          strength={strength}
+          setImg2img={setImg2img}
+          img2img={img2img}
+          setStrength={setStrength}
+          handleSendImg2Img={handleSendImg2Img}
         />
       );
   }

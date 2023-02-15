@@ -1,5 +1,5 @@
 import { FormEvent } from "react";
-import getCanvas from "./hiddenCanvas";
+import getCanvas from "./getCanvas";
 
 const dispatchPostCanvas = async (
   canvas: HTMLCanvasElement,

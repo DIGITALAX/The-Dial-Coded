@@ -60,6 +60,7 @@ import xmtpSearchReducer from "./reducers/xmtpSearchSlice";
 import noHotDataReducer from "./reducers/noHotDataSlice";
 import canvasTypeReducer from "./reducers/canvasTypeSlice";
 import addPromptImageReducer from "./reducers/addPromptImageSlice";
+import initImagePromptReducer from "./reducers/initImagePromptSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -122,6 +123,7 @@ const reducer = combineReducers({
   noHotDataReducer,
   canvasTypeReducer,
   addPromptImageReducer,
+  initImagePromptReducer
 });
 
 export const store = configureStore({

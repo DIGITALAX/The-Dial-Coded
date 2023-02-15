@@ -204,6 +204,8 @@ const Modals = () => {
               ? "This user isn't on the XMTP Network."
               : failed === "prompt"
               ? " The NSFW filter is a bit overzealous with the current API. Can’t wait for a custom API? DIY Synth is on its way."
+              : failed === "marquee"
+              ? "Use the Marquee Tool to Select the Canvas Area to Use as an Init for Img2Img Synth."
               : "Unsuccessful. Please Try Again."
           }
         />
