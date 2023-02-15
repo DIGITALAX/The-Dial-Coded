@@ -25,10 +25,7 @@ export default handler;
 const makePromptRequest = async (obj: any) => {
   const client = makeReplicateClient(obj.token);
   try {
-    const model: any = await client.models.get(
-      "stability-ai/stable-diffusion",
-      "a9758cbfbd5f3c2094457d996681af52552901775aa2d6dd0b17fd15df959bef"
-    );
+    const model: any = await client.models.get(obj.model);
     const prediction = await model.predict(obj.input);
     return prediction;
   } catch (err: any) {
