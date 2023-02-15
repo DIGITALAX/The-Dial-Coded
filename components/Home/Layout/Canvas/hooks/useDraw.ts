@@ -22,7 +22,7 @@ import { setDraftElements } from "../../../../../redux/reducers/draftElementsSli
 import handleUploadImage from "../../../../../lib/misc/helpers/handleUploadImage";
 import useElements from "./useElements";
 import drawElement from "../../../../../lib/canvas/helpers/drawElement";
-import getCanvas from "../../../../../lib/canvas/helpers/hiddenCanvas";
+import getCanvas from "../../../../../lib/canvas/helpers/getCanvas";
 import updateElement from "../../../../../lib/canvas/helpers/updateElement";
 import resizedCoordinates from "../../../../../lib/canvas/helpers/resizedCoordinates";
 import getElementPosition from "../../../../../lib/canvas/helpers/getElementPosition";
@@ -30,6 +30,8 @@ import removeMarquee from "../../../../../lib/canvas/helpers/removeMarquee";
 import dispatchPostCanvas from "../../../../../lib/canvas/helpers/dispatchPostCanvas";
 import createElement from "../../../../../lib/canvas/helpers/createElement";
 import wheelLogic from "../../../../../lib/canvas/helpers/wheelLogic";
+import { setAddPromptImage } from "../../../../../redux/reducers/addPromptImageSlice";
+import { setInitImagePrompt } from "../../../../../redux/reducers/initImagePromptSlice";
 
 const useDraw = () => {
   const { saveCanvasNetwork } = useDrafts();
@@ -571,7 +573,6 @@ const useDraw = () => {
         },
         canvas,
         zoom,
-
         elements,
         setElements,
         ctx as CanvasRenderingContext2D,
@@ -739,6 +740,10 @@ const useDraw = () => {
       } else {
       }
     }
+    if (action === "marquee") {
+      // send marquee for img2img
+      dispatch(setInitImagePrompt(getCanvas(canvas, elements)));
+    }
     if (action === "writing") return;
     setAction("none");
     setSelectedElement(null);
@@ -747,6 +752,7 @@ const useDraw = () => {
   useEffect(() => {
     if (promptImage) {
       addImageToCanvas(promptImage);
+      dispatch(setAddPromptImage(undefined));
     }
   }, [promptImage]);
 

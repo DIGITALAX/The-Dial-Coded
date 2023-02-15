@@ -85,7 +85,12 @@ const Draw: FunctionComponent<DrawProps> = ({
   canvasPatternRef,
   setPatternZoom,
   patternZoom,
-  setPan
+  setPan,
+  strength,
+  setImg2img,
+  img2img,
+  setStrength,
+  handleSendImg2Img,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -235,6 +240,11 @@ const Draw: FunctionComponent<DrawProps> = ({
               prompt={prompt}
               setPrompt={setPrompt}
               keyExists={keyExists}
+              strength={strength}
+              setImg2img={setImg2img}
+              img2img={img2img}
+              setStrength={setStrength}
+              handleSendImg2Img={handleSendImg2Img}
             />
           </div>
         </div>

@@ -1,4 +1,4 @@
-import getCanvas from "./hiddenCanvas";
+import getCanvas from "./getCanvas";
 
 import lodash from "lodash";
 import { ElementInterface } from "../../../components/Home/Layout/Canvas/types/canvas.types";
