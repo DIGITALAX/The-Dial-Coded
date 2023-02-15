@@ -69,8 +69,6 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
               yInitial: 0,
               xOffset: 0,
               yOffset: 0,
-              currentX: 0,
-              currentY: 0,
             })
           }}
         >
