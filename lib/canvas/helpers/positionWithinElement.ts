@@ -183,11 +183,6 @@ const positionWithinElement = (
           (y2 as number) * zoom
           ? "inside"
           : null;
-      console.log(  topImageLeft ||
-        topImageRight ||
-        bottomImageLeft ||
-        bottomImageRight ||
-        insideImage)
       return (
         topImageLeft ||
         topImageRight ||
