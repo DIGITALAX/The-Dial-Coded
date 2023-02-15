@@ -476,12 +476,12 @@ const useDraw = () => {
           e.clientX -
           bounds?.left -
           pan.xOffset * zoom * zoom * 0.5 -
-          ((offsetX - pan.xOffset* zoom ) * zoom) / devicePixelRatio;
+          ((offsetX - pan.xOffset * zoom) * zoom) / devicePixelRatio;
         const afterOffsetY =
           e.clientY -
           bounds?.top -
           pan.yOffset * zoom * zoom * 0.5 -
-          ((offsetY - pan.yOffset* zoom) * zoom) / devicePixelRatio;
+          ((offsetY - pan.yOffset * zoom) * zoom) / devicePixelRatio;
         updateElement(
           {
             xOffset: pan.xOffset * 0.5,
@@ -564,7 +564,6 @@ const useDraw = () => {
     } else if (action === "marquee") {
       const index = elements?.length - 1;
       const { x1, y1 } = elements[index];
-      const bounds = canvas?.getBoundingClientRect();
       updateElement(
         {
           xOffset: pan.xOffset * 0.5,
@@ -598,15 +597,46 @@ const useDraw = () => {
         values.type !== "ell"
       ) {
         const updatedCoordinates = resizedCoordinates(
-          (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
-            (devicePixelRatio / zoom),
-          (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
-            (devicePixelRatio / zoom),
+          (e.clientX - bounds?.left - pan.xOffset * zoom * zoom * 0.5) /
+            devicePixelRatio,
+          (e.clientY - bounds?.top - pan.yOffset * zoom * zoom * 0.5) /
+            devicePixelRatio,
           values?.position,
-          values?.x1 / zoom,
-          values?.y1 / zoom,
-          values?.x2 / zoom,
-          values?.y2 / zoom
+          values?.x1,
+          values?.y1,
+          values?.x2,
+          values?.y2
+        );
+        updateElement(
+          {
+            xOffset: pan.xOffset * 0.5,
+            yOffset: pan.yOffset * 0.5,
+          },
+          canvas,
+          zoom,
+          elements,
+          setElements,
+          ctx as CanvasRenderingContext2D,
+          (updatedCoordinates?.x1 as number) / devicePixelRatio,
+          (updatedCoordinates?.y1 as number) / devicePixelRatio,
+          (updatedCoordinates?.x2 as number) / devicePixelRatio,
+          (updatedCoordinates?.y2 as number) / devicePixelRatio,
+          values?.type,
+          values?.id,
+          values?.strokeWidth,
+          values?.fill,
+          values?.fillStyle,
+          values?.stroke
+        );
+      } else if (values?.type === "image" && values?.position !== "inside") {
+        const updatedCoordinates = resizedCoordinates(
+          e.clientX - bounds?.left,
+          e.clientY - bounds?.top,
+          values?.position,
+          (values?.x1 * zoom) / devicePixelRatio,
+          (values?.y1 * zoom) / devicePixelRatio,
+          (values?.x2 * zoom) / devicePixelRatio,
+          (values?.y2 * zoom) / devicePixelRatio
         );
         updateElement(
           {
@@ -622,60 +652,6 @@ const useDraw = () => {
           updatedCoordinates?.y1 as number,
           updatedCoordinates?.x2 as number,
           updatedCoordinates?.y2 as number,
-          values?.type,
-          values?.id,
-          values?.strokeWidth,
-          values?.fill,
-          values?.fillStyle,
-          values?.stroke
-        );
-      } else if (values?.type === "image" && values?.position !== "inside") {
-        const updatedCoordinates = resizedCoordinates(
-          e.clientX,
-          e.clientY,
-          values?.position,
-          values?.x1,
-          values?.y1,
-          values?.x2,
-          values?.y2
-        );
-        const bounds = canvas?.getBoundingClientRect();
-        const sizedx1 =
-          values?.position === "tl" || values?.position === "bl"
-            ? (updatedCoordinates?.x1 as number) - values.offsetX
-            : (values?.position === "tr" || values?.position === "br") &&
-              updatedCoordinates?.x1;
-        const sizedx2 =
-          values?.position === "tl" || values?.position === "bl"
-            ? updatedCoordinates?.x2
-            : (values?.position === "tr" || values?.position === "br") &&
-              (updatedCoordinates?.x2 as number) - bounds.left;
-        const sizedy1 =
-          values?.position === "tl"
-            ? (updatedCoordinates?.y1 as number) - values.offsetY
-            : values?.position === "tr"
-            ? (updatedCoordinates?.y1 as number) - bounds.top
-            : (values?.position === "bl" || values?.position === "br") &&
-              updatedCoordinates?.y1;
-        const sizedy2 =
-          values?.position === "tl" || values?.position === "tr"
-            ? updatedCoordinates?.y2
-            : (values?.position === "bl" || values?.position === "br") &&
-              (updatedCoordinates?.y2 as number) - bounds.top;
-        updateElement(
-          {
-            xOffset: pan.xOffset * 0.5,
-            yOffset: pan.yOffset * 0.5,
-          },
-          canvas,
-          zoom,
-          elements,
-          setElements,
-          ctx as CanvasRenderingContext2D,
-          sizedx1 as number,
-          sizedy1 as number,
-          sizedx2 as number,
-          sizedy2 as number,
           values?.type,
           values?.id,
           null,
