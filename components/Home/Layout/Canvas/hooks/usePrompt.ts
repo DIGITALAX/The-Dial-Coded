@@ -28,11 +28,9 @@ const usePrompt = (): UsePromptResults => {
       num_outputs: 1,
       num_inference_steps: Number(steps),
       guidance_scale: (Number(cfg) / 100) * 20,
-      init_image: undefined,
-      prompt_strength: undefined,
     };
     try {
-      await promptToReplicate(input);
+      await promptToReplicate(input, "stability-ai/stable-diffusion");
     } catch (err: any) {
       console.error(err.message);
     }
@@ -52,22 +50,26 @@ const usePrompt = (): UsePromptResults => {
       num_outputs: 1,
       num_inference_steps: Number(steps),
       guidance_scale: (Number(cfg) / 100) * 20,
-      init_image: init,
-      prompt_strength: Number(strength) / 100,
+      image: init,
+      prompt_strength: (100 - Number(strength)) / 100,
     };
     try {
-      await promptToReplicate(input);
+      await promptToReplicate(input, "stability-ai/stable-diffusion-img2img");
     } catch (err: any) {
       console.error(err.message);
     }
     setPromptLoading(false);
   };
 
-  const promptToReplicate = async (input: InputType) => {
+  const promptToReplicate = async (input: InputType, model: string) => {
     try {
       const response = await fetch("/api/replicate", {
         method: "POST",
-        body: JSON.stringify({ input, token: getReplicateKey() as string }),
+        body: JSON.stringify({
+          input,
+          token: getReplicateKey() as string,
+          model,
+        }),
       });
       let responseJSON = await response.json();
       if (responseJSON === null || !responseJSON) {
@@ -82,7 +84,7 @@ const usePrompt = (): UsePromptResults => {
 
   const CheckApi = () => {
     const value = getReplicateKey();
-    if (value !== null && value !== "") {
+    if (value !== null && value !== "init_image") {
       setKeyExists(true);
     }
   };

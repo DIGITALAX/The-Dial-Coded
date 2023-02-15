@@ -99,7 +99,7 @@ export type DrawProps = {
   setImg2img: (e: boolean) => void;
   setStrength: (e: string) => void;
   strength: string;
-  handleSendImg2Img: () => Promise<void>
+  handleSendImg2Img: () => Promise<void>;
 };
 
 export type ColorPickerProps = {
@@ -286,7 +286,7 @@ export type UsePromptResults = {
   setImg2img: (e: boolean) => void;
   setStrength: (e: string) => void;
   strength: string;
-  handleSendImg2Img: () => Promise<void>
+  handleSendImg2Img: () => Promise<void>;
 };
 
 export type PromptProps = {
@@ -303,7 +303,7 @@ export type PromptProps = {
   setImg2img: (e: boolean) => void;
   setStrength: (e: string) => void;
   strength: string;
-  handleSendImg2Img: () => Promise<void>
+  handleSendImg2Img: () => Promise<void>;
 };
 
 export interface InputType {
@@ -313,8 +313,8 @@ export interface InputType {
   num_outputs: number;
   num_inference_steps: number;
   guidance_scale: number;
-  init_image: string | undefined;
-  prompt_strength: number | undefined;
+  image?: string;
+  prompt_strength?: number;
 }
 
 export type PatternMenuProps = {
