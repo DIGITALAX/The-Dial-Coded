@@ -20,8 +20,35 @@ const drawElement = (
   switch (element?.type) {
     case "line":
     case "ell":
-    case "rect":
       roughCanvas?.draw(element.roughElement);
+      break;
+
+    case "rect":
+      ctx?.beginPath();
+
+      if (element.fillStyle === "hachure") {
+        (ctx as CanvasRenderingContext2D).strokeStyle =
+          element.stroke as string;
+        (ctx as CanvasRenderingContext2D).lineWidth = 1 / zoom;
+        ctx?.strokeRect(
+          element.x1 as number,
+          element.y1 as number,
+          element.x2 as number,
+          element.y2 as number
+        );
+      } else {
+        (ctx as CanvasRenderingContext2D).fillStyle = element.fill as string;
+        (ctx as CanvasRenderingContext2D).strokeStyle =
+          element.stroke as string;
+        ctx?.rect(
+          element.x1 as number,
+          element.y1 as number,
+          element.x2 as number,
+          element.y2 as number
+        );
+        ctx?.fill();
+      }
+      ctx?.closePath;
       break;
 
     case "pencil":

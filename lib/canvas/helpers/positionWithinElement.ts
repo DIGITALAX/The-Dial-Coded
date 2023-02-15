@@ -16,27 +16,63 @@ const positionWithinElement = (
   }
 ) => {
   const { type, x1, x2, y1, y2 } = element;
-  console.log({ x, y, x1, y1, x2, y2 });
-  console.log({ element });
   const bounds = canvas.getBoundingClientRect();
+  const mouseX = (x / (devicePixelRatio * zoom) - pan.xOffset) / zoom;
+  const mouseY = (y / (devicePixelRatio * zoom) - pan.yOffset) / zoom;
+  console.log({
+    x: (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio,
+    y: (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio,
+    x1: (x1 as number) * zoom,
+    y1: (y1 as number) * zoom,
+    x2: ((x2 as number) + (x1 as number)) * zoom,
+    y2: ((y2 as number) + (y1 as number)) * zoom,
+  });
   switch (type) {
     case "rect":
-      const topLeft = nearPoint(x, y, x1 as number, y1 as number, "tl");
-      const topRight = nearPoint(x, y, x2 as number, y1 as number, "tr");
-      const bottomLeft = nearPoint(x, y, x1 as number, y2 as number, "bl");
-      const bottomRight = nearPoint(x, y, x2 as number, y2 as number, "br");
+      const topLeft = nearPoint(
+        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio,
+        (x1 as number) * zoom,
+        (y1 as number) * zoom,
+        "tl"
+      );
+      const topRight = nearPoint(
+        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio,
+        ((x2 as number) + (x1 as number)) * zoom,
+        (y1 as number) * zoom,
+        "tr"
+      );
+      const bottomLeft = nearPoint(
+        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio,
+        (x1 as number) * zoom,
+        ((y2 as number) + (y1 as number)) * zoom,
+        "bl"
+      );
+      const bottomRight = nearPoint(
+        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio,
+        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio,
+        ((x2 as number) + (x1 as number)) * zoom,
+        ((y2 as number) + (y1 as number)) * zoom,
+        "br"
+      );
       const inside =
-        x >= (x1 as number) &&
-        x <= (x2 as number) &&
-        y >= (y1 as number) &&
-        y <= (y2 as number)
+        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio >=
+          (x1 as number) * zoom &&
+        (x - bounds?.left - pan.xOffset*zoom*zoom) * devicePixelRatio <=
+          ((x2 as number) + (x1 as number)) * zoom &&
+        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio >=
+          (y1 as number) * zoom &&
+        (y - bounds?.top - pan.yOffset*zoom*zoom) * devicePixelRatio <=
+          ((y2 as number) + (y1 as number)) * zoom
           ? "inside"
           : null;
       return topLeft || topRight || bottomLeft || bottomRight || inside;
     case "ell":
       const ellInside = insideEllipse(
-        x,
-        y,
+        mouseX,
+        mouseY,
         x1 as number,
         y1 as number,
         x2 as number,
@@ -51,12 +87,18 @@ const positionWithinElement = (
         y1 as number,
         x2 as number,
         y2 as number,
-        x,
-        y,
-        element.strokeWidth as number
+        mouseX,
+        mouseY,
+        1
       );
-      const start = nearPoint(x, y, x1 as number, y1 as number, "start");
-      const end = nearPoint(x, y, x2 as number, y2 as number, "end");
+      const start = nearPoint(
+        mouseX,
+        mouseY,
+        x1 as number,
+        y1 as number,
+        "start"
+      );
+      const end = nearPoint(mouseX, mouseY, x2 as number, y2 as number, "end");
       return start || end || on;
     case "erase":
       break;

@@ -37,7 +37,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handleWheelPattern,
     canvasPatternRef,
     zoom: patternZoom,
-    setZoom: setPatternZoom
+    setZoom: setPatternZoom,
   } = usePatterns();
   const {
     steps,
@@ -94,7 +94,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     addImageToCanvas,
     handleWheel,
     canvasRef,
-    setPan
+    setPan,
   } = useDraw();
   const {
     quickSearchResults,
@@ -116,21 +116,35 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   switch (decideStringAction()) {
     case "no profile":
       return (
-        <div
-          className="relative w-full h-[70vw] grid grid-flow-col auto-cols-auto bg-offBlack rounded-lg border border-white grid grid-flow-col auto-cols-auto text-white font-dosis"
-          onClick={
-            !isConnected ? openConnectModal : () => dispatch(setSignIn(true))
-          }
-        >
-          <Image
-            src={`${INFURA_GATEWAY}/ipfs/QmdCN3qFCJcao9HfQVbQm3SbCjErMJysefqgP1uogXjtve`}
-            objectFit="cover"
-            layout="fill"
-            className="absolute rounded-lg"
-            draggable={false}
-          />
-          <div className="relative w-fit h-fit place-self-center">
-            Please Connect to Lens to use the Canvas.
+        <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
+          <div className="relative w-full h-full p-px sm:p-1 md:p-4 f1:p-8 bg-moss rounded-lg sm:border-4 sm:border-black">
+            <div className="relative w-full h-full p-px sm:p-2 bg-moss rounded-lg sm:border-8 sm:border-black grid grid-flow-row auto-rows-auto">
+              <div className="relative w-full h-full p-px sm:p-1 md:p-4 bg-moss rounded-lg sm:border-4 sm:border-black row-start-1">
+                <div
+                  className="relative w-full h-full p-px sm:p-1 sm:p-3 f1:p-8 f9:p-14 xl:p-20 rounded-lg sm:border-4 sm:border-black"
+                  id="baseDraw"
+                >
+                  <div
+                    className="relative w-full h-full p-px rounded-xl"
+                    id="rainbow"
+                  >
+                    <div
+                      id="parent"
+                      className={`relative w-full h-[290vw] f5:h-[220vw] fo:h-[170vw] sm:h-[120vw] md:h-[115vw] lg:h-[90vw] xl:h-[70vw] grid grid-flow-col auto-cols-auto bg-spots`}
+                      onClick={
+                        !isConnected
+                          ? openConnectModal
+                          : () => dispatch(setSignIn(true))
+                      }
+                    >
+                      <div className="relative w-fit h-fit place-self-center text-white cursor-pointer">
+                        Please Connect to Lens to use the Canvas.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       );

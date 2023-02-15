@@ -120,9 +120,7 @@ const usePatterns = (): UsePatternsResult => {
   }, [patternType, template, switchType]);
 
   useLayoutEffect(() => {
-    console.log("here");
     if (ctx && canvasType) {
-      console.log("inside");
       canvas.width = canvas.offsetWidth * devicePixelRatio * zoom;
       canvas.height = canvas.offsetHeight * devicePixelRatio * zoom;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -187,7 +185,6 @@ const usePatterns = (): UsePatternsResult => {
               e.clientX - bounds?.left,
               e.clientY - bounds?.top,
               2,
-              1
             ) != null
           );
         });
