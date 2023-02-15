@@ -18,6 +18,7 @@ const getElementPosition = (
     const returned = positionWithinElement(x, y, element, canvas, zoom, pan);
     if (returned) {
       positionArray.push({ ...element, position: returned });
+      return;
     }
   });
   return positionArray;

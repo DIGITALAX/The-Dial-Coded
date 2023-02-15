@@ -6,13 +6,23 @@ const drawElement = (
   element: ElementInterface,
   ctx: CanvasRenderingContext2D | null,
   zoom: number,
-  canvas: HTMLCanvasElement,
+  canvas: HTMLCanvasElement
 ) => {
-  console.log(element.x1,element.y1,element.x2,element.y2)
   ctx?.setLineDash(element?.lineDash ? element?.lineDash : [0]);
   (ctx as CanvasRenderingContext2D).imageSmoothingEnabled = false;
   switch (element?.type) {
     case "line":
+      ctx?.beginPath();
+      (ctx as CanvasRenderingContext2D).strokeStyle = element.stroke as string;
+      (ctx as CanvasRenderingContext2D).lineWidth =
+        (element.strokeWidth as number) / zoom;
+      ctx?.moveTo(element.x1 as number, element.y1 as number);
+      ctx?.lineTo(
+        (element.x2 as number) + (element.x1 as number),
+        (element.y2 as number) + (element.y1 as number)
+      );
+      ctx?.stroke();
+      ctx?.closePath;
       break;
 
     case "ell":
@@ -20,7 +30,8 @@ const drawElement = (
       if (element.fillStyle === "hachure") {
         (ctx as CanvasRenderingContext2D).strokeStyle =
           element.stroke as string;
-        (ctx as CanvasRenderingContext2D).lineWidth = 1 / zoom;
+        (ctx as CanvasRenderingContext2D).lineWidth =
+          (element.strokeWidth as number) / zoom;
         ctx?.ellipse(
           element.x1 as number,
           element.y1 as number,
@@ -54,7 +65,8 @@ const drawElement = (
       if (element.fillStyle === "hachure") {
         (ctx as CanvasRenderingContext2D).strokeStyle =
           element.stroke as string;
-        (ctx as CanvasRenderingContext2D).lineWidth = 1 / zoom;
+        (ctx as CanvasRenderingContext2D).lineWidth =
+          (element.strokeWidth as number) / zoom;
         ctx?.strokeRect(
           element.x1 as number,
           element.y1 as number,
@@ -100,14 +112,33 @@ const drawElement = (
       break;
 
     case "image":
-      ctx?.drawImage(
-        element?.image as HTMLImageElement,
-        element.x1 as number,
-        element.y1 as number,
-        (element.x2 as number) - (element.x1 as number),
-        (element.y2 as number) - (element.y1 as number)
-      );
-      canvas.toDataURL("image/jpeg", 0.75);
+      if (element.fill) {
+        (ctx as CanvasRenderingContext2D).strokeStyle = "#078FD6";
+        (ctx as CanvasRenderingContext2D).lineWidth = 5 / zoom;
+        ctx?.drawImage(
+          element?.image as HTMLImageElement,
+          element.x1 as number,
+          element.y1 as number,
+          (element.x2 as number) - (element.x1 as number),
+          (element.y2 as number) - (element.y1 as number)
+        );
+        canvas.toDataURL("image/jpeg", 0.75);
+        ctx?.strokeRect(
+          element.x1 as number,
+          element.y1 as number,
+          (element.x2 as number) - (element.x1 as number),
+          (element.y2 as number) - (element.y1 as number)
+        );
+      } else {
+        ctx?.drawImage(
+          element?.image as HTMLImageElement,
+          element.x1 as number,
+          element.y1 as number,
+          (element.x2 as number) - (element.x1 as number),
+          (element.y2 as number) - (element.y1 as number)
+        );
+        canvas.toDataURL("image/jpeg", 0.75);
+      }
       break;
 
     case "marquee":
