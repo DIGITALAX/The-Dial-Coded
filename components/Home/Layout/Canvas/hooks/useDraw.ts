@@ -8,7 +8,6 @@ import {
   useEffect,
   WheelEvent,
 } from "react";
-import rough from "roughjs/bundled/rough.cjs";
 import { ElementInterface } from "../types/canvas.types";
 import lodash from "lodash";
 import { useDispatch, useSelector } from "react-redux";
@@ -76,7 +75,6 @@ const useDraw = () => {
   const [brushWidth, setBrushWidth] = useState<number>(12);
   const [thickness, setThickness] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(false);
-  const generator = rough.generator();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
   const ctx = canvas?.getContext("2d");
@@ -185,7 +183,6 @@ const useDraw = () => {
           },
           canvas,
           zoom,
-          generator,
           50,
           50,
           50 + imageObject.width,
@@ -226,14 +223,13 @@ const useDraw = () => {
       ctx.scale(zoom, zoom);
       ctx.translate(pan.xOffset * zoom, pan.yOffset * zoom);
 
-      const roughCanvas = rough?.canvas(canvas);
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
       elements?.forEach((element: ElementInterface) => {
         if (action === "writing" && selectedElement.id === element.id) {
           return;
         }
-        drawElement(element, roughCanvas, ctx, zoom, canvas, pan);
+        drawElement(element, ctx, zoom, canvas);
       });
       ctx.save();
     }
@@ -316,7 +312,7 @@ const useDraw = () => {
         },
         canvas,
         zoom,
-        generator,
+
         tool === "pencil"
           ? e.clientX
           : (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
@@ -363,7 +359,7 @@ const useDraw = () => {
         },
         canvas,
         zoom,
-        generator,
+
         (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
           (devicePixelRatio / zoom),
         (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
@@ -432,7 +428,6 @@ const useDraw = () => {
         },
         canvas,
         zoom,
-        generator,
         elements,
         setElements,
         ctx as CanvasRenderingContext2D,
@@ -494,7 +489,7 @@ const useDraw = () => {
           },
           canvas,
           zoom,
-          generator,
+
           elements,
           setElements,
           ctx as CanvasRenderingContext2D,
@@ -542,7 +537,7 @@ const useDraw = () => {
           },
           canvas,
           zoom,
-          generator,
+
           elements,
           setElements,
           ctx as CanvasRenderingContext2D,
@@ -579,7 +574,7 @@ const useDraw = () => {
         },
         canvas,
         zoom,
-        generator,
+
         elements,
         setElements,
         ctx as CanvasRenderingContext2D,
@@ -620,7 +615,7 @@ const useDraw = () => {
           },
           canvas,
           zoom,
-          generator,
+
           elements,
           setElements,
           ctx as CanvasRenderingContext2D,
@@ -675,7 +670,7 @@ const useDraw = () => {
           },
           canvas,
           zoom,
-          generator,
+
           elements,
           setElements,
           ctx as CanvasRenderingContext2D,
@@ -700,7 +695,7 @@ const useDraw = () => {
           },
           canvas,
           zoom,
-          generator,
+
           elements,
           setElements,
           ctx as CanvasRenderingContext2D,
@@ -732,7 +727,7 @@ const useDraw = () => {
         },
         canvas,
         zoom,
-        generator,
+
         elements,
         setElements,
         ctx as CanvasRenderingContext2D,

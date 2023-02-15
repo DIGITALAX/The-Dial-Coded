@@ -4,7 +4,6 @@ const createElement = (
   pan: { xOffset: number; yOffset: number },
   canvas: HTMLCanvasElement,
   zoom: number,
-  generator: any,
   x1: number,
   y1: number,
   x2: number,
@@ -20,6 +19,8 @@ const createElement = (
   let roughElement;
   const bounds = canvas?.getBoundingClientRect();
   switch (type) {
+    case "line":
+    case "ell":
     case "rect":
       return {
         id,
@@ -32,96 +33,6 @@ const createElement = (
         stroke,
         strokeWidth,
         fillStyle,
-      };
-
-    // roughElement = generator.rectangle(
-    //   ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
-    //     zoom) *
-    //     devicePixelRatio,
-    //   ((y1 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom * zoom) /
-    //     zoom) *
-    //     devicePixelRatio,
-    //   ((x2 - x1) / zoom) * devicePixelRatio,
-    //   ((y2 - y1) / zoom) * devicePixelRatio,
-    //   {
-    //     fill,
-    //     stroke,
-    //     strokeWidth,
-    //     fillStyle,
-    //   }
-    // );
-    // return {
-    //   id,
-    //   type,
-    //   x1,
-    //   y1,
-    //   x2,
-    //   y2,
-    //   roughElement,
-    //   fill,
-    //   stroke,
-    //   strokeWidth,
-    //   fillStyle,
-    // };
-    case "ell":
-      roughElement = generator.ellipse(
-        ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
-          zoom) *
-          devicePixelRatio,
-        ((y1 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom * zoom) /
-          zoom) *
-          devicePixelRatio,
-        (((x2 - x1) * Math.PI) / zoom) * devicePixelRatio,
-        (((y2 - y1) * Math.PI) / zoom) * devicePixelRatio,
-        {
-          fill,
-          stroke,
-          strokeWidth,
-          fillStyle,
-        }
-      );
-      return {
-        id,
-        type,
-        x1,
-        y1,
-        x2,
-        y2,
-        roughElement,
-        fill,
-        stroke,
-        strokeWidth,
-        fillStyle,
-      };
-    case "line":
-      roughElement = generator.line(
-        ((x1 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
-          zoom) *
-          devicePixelRatio,
-        ((y1 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom * zoom) /
-          zoom) *
-          devicePixelRatio,
-        ((x2 - canvas?.offsetLeft - bounds?.left - pan.xOffset * zoom * zoom) /
-          zoom) *
-          devicePixelRatio,
-        ((y2 - canvas?.offsetTop - bounds?.top - pan.yOffset * zoom * zoom) /
-          zoom) *
-          devicePixelRatio,
-        {
-          strokeWidth,
-          stroke,
-        }
-      );
-      return {
-        id,
-        type,
-        x1,
-        y1,
-        x2,
-        y2,
-        roughElement,
-        stroke,
-        strokeWidth,
       };
 
     case "pencil":

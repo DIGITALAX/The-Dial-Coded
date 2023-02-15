@@ -47,7 +47,6 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.2",
     "replicate-js": "github:nicholascelestin/replicate-js",
-    "roughjs": "^4.5.2",
     "shuffle-array": "^1.0.1",
     "textarea-caret": "^3.1.0",
     "uuid": "^9.0.0",
