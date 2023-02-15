@@ -202,7 +202,6 @@ export interface ElementInterface {
   y1?: number;
   x2?: number;
   y2?: number;
-  roughElement?: any;
   points?: {
     x: number;
     y: number;
