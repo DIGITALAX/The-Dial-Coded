@@ -634,10 +634,10 @@ const useDraw = () => {
           e.clientX - bounds?.left,
           e.clientY - bounds?.top,
           values?.position,
-          (values?.x1 * zoom) / devicePixelRatio,
-          (values?.y1 * zoom) / devicePixelRatio,
-          (values?.x2 * zoom) / devicePixelRatio,
-          (values?.y2 * zoom) / devicePixelRatio
+          (values?.x1 * zoom + pan.xOffset * zoom * zoom) / devicePixelRatio,
+          (values?.y1 * zoom + pan.yOffset * zoom * zoom) / devicePixelRatio,
+          (values?.x2 * zoom + pan.xOffset * zoom * zoom) / devicePixelRatio,
+          (values?.y2 * zoom + pan.yOffset * zoom * zoom) / devicePixelRatio
         );
         updateElement(
           {
