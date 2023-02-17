@@ -239,6 +239,12 @@ const useDraw = () => {
 
   const handleMouseDown = (e: MouseEvent): void => {
     const bounds = canvas?.getBoundingClientRect();
+    console.log(
+      (e.clientX - bounds.left) * devicePixelRatio,
+      (e.clientY - bounds.top) * devicePixelRatio,
+      bounds.left / devicePixelRatio,
+      bounds.top / devicePixelRatio
+    );
     if (tool === "selection" || tool === "resize") {
       const element = getElementPosition(
         e.clientX,
@@ -314,7 +320,6 @@ const useDraw = () => {
         },
         canvas,
         zoom,
-
         tool === "pencil"
           ? e.clientX
           : (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
@@ -597,16 +602,36 @@ const useDraw = () => {
         values?.type !== "image" &&
         values.type !== "ell"
       ) {
+        let updatedX2: number,
+          updatedY2: number,
+          updatedX1: number,
+          updatedY1: number;
+        if ((values?.x2 as number) < 1) {
+          updatedX1 = (values?.x2 as number) + (values?.x1 as number);
+          updatedX2 = values?.x1 as number;
+        } else {
+          updatedX1 = values?.x1 as number;
+          updatedX2 = (values?.x2 as number) + (values?.x1 as number);
+        }
+        if ((values?.y2 as number) < 1) {
+          updatedY1 = (values?.y2 as number) + (values?.y1 as number);
+          updatedY2 = values?.y1 as number;
+        } else {
+          updatedY1 = values?.y1 as number;
+          updatedY2 = (values?.y2 as number) + (values?.y1 as number);
+        }
         const updatedCoordinates = resizedCoordinates(
-          (e.clientX - bounds?.left - pan.xOffset * zoom * zoom * 0.5) /
-            devicePixelRatio,
-          (e.clientY - bounds?.top - pan.yOffset * zoom * zoom * 0.5) /
-            devicePixelRatio,
+          ((e.clientX - bounds.left - pan.xOffset * zoom * zoom * 0.5) *
+            devicePixelRatio) /
+            zoom,
+          ((e.clientY - bounds.top - pan.yOffset * zoom * zoom * 0.5) *
+            devicePixelRatio) /
+            zoom,
           values?.position,
-          values?.x1,
-          values?.y1,
-          values?.x2,
-          values?.y2
+          updatedX1,
+          updatedY1,
+          updatedX2,
+          updatedY2
         );
         updateElement(
           {
@@ -618,10 +643,10 @@ const useDraw = () => {
           elements,
           setElements,
           ctx as CanvasRenderingContext2D,
-          (updatedCoordinates?.x1 as number) / devicePixelRatio,
-          (updatedCoordinates?.y1 as number) / devicePixelRatio,
-          (updatedCoordinates?.x2 as number) / devicePixelRatio,
-          (updatedCoordinates?.y2 as number) / devicePixelRatio,
+          updatedCoordinates?.x1 as number,
+          updatedCoordinates?.y1 as number,
+          updatedCoordinates?.x2 as number,
+          updatedCoordinates?.y2 as number,
           values?.type,
           values?.id,
           values?.strokeWidth,
@@ -663,6 +688,12 @@ const useDraw = () => {
           values?.image
         );
       } else if (values?.type === "ell" && values?.position !== "inside") {
+        console.log(
+          values?.x1,
+          values?.y1,
+          e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom,
+          e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom
+        );
         updateElement(
           {
             xOffset: pan.xOffset * 0.5,
@@ -675,8 +706,8 @@ const useDraw = () => {
           ctx as CanvasRenderingContext2D,
           values?.x1,
           values?.y1,
-          e.clientX,
-          e.clientY,
+          Math.abs(e.clientX - bounds.left) * devicePixelRatio,
+          Math.abs(e.clientY - bounds.top) * devicePixelRatio,
           values?.type,
           values?.id,
           values?.strokeWidth,
@@ -737,7 +768,6 @@ const useDraw = () => {
           );
           setElements(filteredElements);
         }
-      } else {
       }
     }
     if (action === "marquee") {
@@ -747,6 +777,7 @@ const useDraw = () => {
     if (action === "writing") return;
     setAction("none");
     setSelectedElement(null);
+    console.log({ elements });
   };
 
   useEffect(() => {

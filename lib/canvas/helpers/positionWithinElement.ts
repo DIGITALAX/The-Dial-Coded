@@ -19,43 +19,61 @@ const positionWithinElement = (
   const bounds = canvas.getBoundingClientRect();
   switch (type) {
     case "rect":
+      let updatedX2: number,
+        updatedY2: number,
+        updatedX1: number,
+        updatedY1: number;
+      if ((x2 as number) < 1) {
+        updatedX1 = (x2 as number) + (x1 as number);
+        updatedX2 = x1 as number;
+      } else {
+        updatedX1 = x1 as number;
+        updatedX2 = (x2 as number) + (x1 as number);
+      }
+      if ((y2 as number) < 1) {
+        updatedY1 = (y2 as number) + (y1 as number);
+        updatedY2 = y1 as number;
+      } else {
+        updatedY1 = y1 as number;
+        updatedY2 = (y2 as number) + (y1 as number);
+      }
       const topLeft = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        (x1 as number) * zoom,
-        (y1 as number) * zoom,
+        updatedX1 * zoom,
+        updatedY1 * zoom,
         "tl"
       );
       const topRight = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        ((x2 as number) + (x1 as number)) * zoom,
-        (y1 as number) * zoom,
+        updatedX2 * zoom,
+        updatedY1 * zoom,
         "tr"
       );
       const bottomLeft = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        (x1 as number) * zoom,
-        ((y2 as number) + (y1 as number)) * zoom,
+        updatedX1 * zoom,
+        updatedY2 * zoom,
         "bl"
       );
       const bottomRight = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        ((x2 as number) + (x1 as number)) * zoom,
-        ((y2 as number) + (y1 as number)) * zoom,
+        updatedX2 * zoom,
+        updatedY2 * zoom,
         "br"
       );
       const inside =
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio >=
-          (x1 as number) * zoom &&
+          updatedX1 * zoom &&
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio <=
-          ((x2 as number) + (x1 as number)) * zoom &&
+          updatedX2 * zoom &&
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio >=
-          (y1 as number) * zoom &&
+          updatedY1 * zoom &&
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio <=
-          ((y2 as number) + (y1 as number)) * zoom
+          updatedY2 * zoom
           ? "inside"
           : null;
       return topLeft || topRight || bottomLeft || bottomRight || inside;

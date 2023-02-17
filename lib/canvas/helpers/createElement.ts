@@ -20,6 +20,18 @@ const createElement = (
   switch (type) {
     case "line":
     case "ell":
+      return {
+        id,
+        type,
+        x1,
+        y1,
+        x2: x2 - x1,
+        y2: y2 - y1,
+        fill,
+        stroke,
+        strokeWidth,
+        fillStyle,
+      };
     case "rect":
       return {
         id,
@@ -33,7 +45,6 @@ const createElement = (
         strokeWidth,
         fillStyle,
       };
-
     case "pencil":
       return {
         id,
