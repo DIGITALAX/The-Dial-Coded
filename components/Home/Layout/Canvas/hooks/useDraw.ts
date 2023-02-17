@@ -239,12 +239,6 @@ const useDraw = () => {
 
   const handleMouseDown = (e: MouseEvent): void => {
     const bounds = canvas?.getBoundingClientRect();
-    console.log(
-      (e.clientX - bounds.left) * devicePixelRatio,
-      (e.clientY - bounds.top) * devicePixelRatio,
-      bounds.left / devicePixelRatio,
-      bounds.top / devicePixelRatio
-    );
     if (tool === "selection" || tool === "resize") {
       const element = getElementPosition(
         e.clientX,
@@ -320,19 +314,19 @@ const useDraw = () => {
         },
         canvas,
         zoom,
-        tool === "pencil"
+        tool === "pencil" || tool === "text"
           ? e.clientX
           : (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
               (devicePixelRatio / zoom),
-        tool === "pencil"
+        tool === "pencil" || tool === "text"
           ? e.clientY
           : (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
               (devicePixelRatio / zoom),
-        tool === "pencil"
+        tool === "pencil" || tool === "text"
           ? e.clientX
           : (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
               (devicePixelRatio / zoom),
-        tool === "pencil"
+        tool === "pencil" || tool === "text"
           ? e.clientY
           : (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
               (devicePixelRatio / zoom),
@@ -688,12 +682,6 @@ const useDraw = () => {
           values?.image
         );
       } else if (values?.type === "ell" && values?.position !== "inside") {
-        console.log(
-          values?.x1,
-          values?.y1,
-          e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom,
-          e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom
-        );
         updateElement(
           {
             xOffset: pan.xOffset * 0.5,
@@ -706,8 +694,10 @@ const useDraw = () => {
           ctx as CanvasRenderingContext2D,
           values?.x1,
           values?.y1,
-          Math.abs(e.clientX - bounds.left) * devicePixelRatio,
-          Math.abs(e.clientY - bounds.top) * devicePixelRatio,
+          (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+            (devicePixelRatio / zoom),
+          (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+            (devicePixelRatio / zoom),
           values?.type,
           values?.id,
           values?.strokeWidth,
@@ -735,10 +725,10 @@ const useDraw = () => {
         elements,
         setElements,
         ctx as CanvasRenderingContext2D,
-        x1 + bounds.left,
-        y1 + bounds.top,
-        x2,
-        y2,
+        (x1*devicePixelRatio+bounds.left*zoom-pan.xOffset*zoom*zoom)/zoom,
+        (y1*devicePixelRatio+bounds.top*zoom-pan.yOffset*zoom*zoom)/zoom,
+        x2*devicePixelRatio,
+        y2*devicePixelRatio,
         type,
         id,
         brushWidth,
@@ -777,7 +767,6 @@ const useDraw = () => {
     if (action === "writing") return;
     setAction("none");
     setSelectedElement(null);
-    console.log({ elements });
   };
 
   useEffect(() => {

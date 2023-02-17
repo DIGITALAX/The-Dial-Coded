@@ -26,6 +26,7 @@ const drawElement = (
       break;
 
     case "ell":
+      
       ctx?.beginPath();
       if (element.fillStyle === "hachure") {
         (ctx as CanvasRenderingContext2D).strokeStyle =
