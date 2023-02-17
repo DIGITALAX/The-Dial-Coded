@@ -74,8 +74,8 @@ const createElement = (
       return {
         id,
         type,
-        x1: x1 - bounds?.left + canvas?.offsetLeft,
-        y1: y1 - bounds?.top + canvas?.offsetTop,
+        x1: x1 - bounds?.left,
+        y1: y1 - bounds?.top,
         x2: x2 + (strokeWidth as number),
         y2: y2 + (strokeWidth as number),
         fill,
