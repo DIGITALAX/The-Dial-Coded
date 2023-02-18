@@ -530,11 +530,6 @@ const useDraw = () => {
           ((e.clientY - bounds?.top - pan.yOffset * zoom * zoom * 0.5) / zoom) *
             devicePixelRatio -
           offsetY;
-        console.log(
-          (e.clientX - bounds.left) * devicePixelRatio,
-          (e.clientY - bounds.top / devicePixelRatio) * devicePixelRatio,
-          { selectedElement }
-        );
         updateElement(
           {
             xOffset: pan.xOffset * 0.5,
@@ -546,21 +541,23 @@ const useDraw = () => {
           setElements,
           ctx as CanvasRenderingContext2D,
           type === "text"
-            ? ((e.clientX - bounds.left / devicePixelRatio) *
+            ? ((e.clientX - bounds.left / devicePixelRatio - pan.xOffset*zoom*zoom/devicePixelRatio) *
                 devicePixelRatio) /
                 zoom
             : afterOffsetX,
           type === "text"
-            ? ((e.clientY - bounds.top / devicePixelRatio) * devicePixelRatio) /
+            ? ((e.clientY - bounds.top / devicePixelRatio - pan.yOffset*zoom*zoom/devicePixelRatio) *
+                devicePixelRatio) /
                 zoom
             : afterOffsetY,
           type === "text"
-            ? ((e.clientX - bounds.left / devicePixelRatio) *
+            ? ((e.clientX - bounds.left / devicePixelRatio - pan.xOffset*zoom*zoom/devicePixelRatio) *
                 devicePixelRatio) /
                 zoom
             : afterOffsetX + x2,
           type === "text"
-            ? ((e.clientY - bounds.top / devicePixelRatio) * devicePixelRatio) /
+            ? ((e.clientY - bounds.top / devicePixelRatio - pan.yOffset*zoom*zoom/devicePixelRatio) *
+                devicePixelRatio) /
                 zoom
             : afterOffsetY + y2,
           type,
