@@ -11,11 +11,13 @@ const checkPostReactions = async (
     for (let pub = 0; pub < arr?.length; pub++) {
       const reactions = await fetchReactions(arr[pub]?.id);
       reactionsFeedArr.push(reactions.length);
-      const checkReacted = lodash.filter(
-        reactions,
-        (arr) => arr?.profile?.id === lensProfile
-      );
-      hasReactedArr.push(checkReacted.length > 0 ? true : false);
+      if (lensProfile) {
+        const checkReacted = lodash.filter(
+          reactions,
+          (arr) => arr?.profile?.id === lensProfile
+        );
+        hasReactedArr.push(checkReacted.length > 0 ? true : false);
+      }
     }
     return { hasReactedArr, reactionsFeedArr };
   } catch (err: any) {

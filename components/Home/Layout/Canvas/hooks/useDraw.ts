@@ -530,6 +530,11 @@ const useDraw = () => {
           ((e.clientY - bounds?.top - pan.yOffset * zoom * zoom * 0.5) / zoom) *
             devicePixelRatio -
           offsetY;
+        console.log(
+          (e.clientX - bounds.left) * devicePixelRatio,
+          (e.clientY - bounds.top / devicePixelRatio) * devicePixelRatio,
+          { selectedElement }
+        );
         updateElement(
           {
             xOffset: pan.xOffset * 0.5,
@@ -540,10 +545,24 @@ const useDraw = () => {
           elements,
           setElements,
           ctx as CanvasRenderingContext2D,
-          type === "text" ? e.clientX : afterOffsetX,
-          type === "text" ? e.clientY : afterOffsetY,
-          afterOffsetX + x2,
-          afterOffsetY + y2,
+          type === "text"
+            ? ((e.clientX - bounds.left / devicePixelRatio) *
+                devicePixelRatio) /
+                zoom
+            : afterOffsetX,
+          type === "text"
+            ? ((e.clientY - bounds.top / devicePixelRatio) * devicePixelRatio) /
+                zoom
+            : afterOffsetY,
+          type === "text"
+            ? ((e.clientX - bounds.left / devicePixelRatio) *
+                devicePixelRatio) /
+                zoom
+            : afterOffsetX + x2,
+          type === "text"
+            ? ((e.clientY - bounds.top / devicePixelRatio) * devicePixelRatio) /
+                zoom
+            : afterOffsetY + y2,
           type,
           id,
           strokeWidth,
@@ -725,10 +744,16 @@ const useDraw = () => {
         elements,
         setElements,
         ctx as CanvasRenderingContext2D,
-        (x1*devicePixelRatio+bounds.left*zoom-pan.xOffset*zoom*zoom)/zoom,
-        (y1*devicePixelRatio+bounds.top*zoom-pan.yOffset*zoom*zoom)/zoom,
-        x2*devicePixelRatio,
-        y2*devicePixelRatio,
+        (x1 * devicePixelRatio +
+          bounds.left * zoom -
+          pan.xOffset * zoom * zoom) /
+          zoom,
+        (y1 * devicePixelRatio +
+          bounds.top * zoom -
+          pan.yOffset * zoom * zoom) /
+          zoom,
+        x2,
+        y2,
         type,
         id,
         brushWidth,

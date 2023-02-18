@@ -95,6 +95,9 @@ const updateElement = (
       break;
 
     case "text":
+      (ctx as CanvasRenderingContext2D).font = `${
+        (strokeWidth as number) * devicePixelRatio
+      }px dosis`;
       const textWidth = ctx?.measureText(text as string).width as number;
       elementsCopy[index] = {
         ...createElement(
@@ -106,8 +109,8 @@ const updateElement = (
           zoom,
           x1,
           y1,
-          (x2 as number) + textWidth,
-          (y2 as number) + (strokeWidth as number),
+          (x1 as number) + textWidth * zoom,
+          (y1 as number) + (strokeWidth as number) * zoom,
           type,
           index,
           strokeWidth as number,
