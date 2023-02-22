@@ -20,7 +20,6 @@ import safe from "./../../../../../pages/api/constants/safe.json";
 import temp from "./../../../../../pages/api/constants/temp.json";
 import useElements from "./useElements";
 import { RootState } from "../../../../../redux/store";
-import normalizePoints from "../../../../../lib/canvas/helpers/normalizePoints";
 import convertSvgToPath from "../../../../../lib/canvas/helpers/convertSvgToPath";
 import onLine from "../../../../../lib/canvas/helpers/onLine";
 import lodash from "lodash";
@@ -44,6 +43,7 @@ const usePatterns = (): UsePatternsResult => {
     useState<boolean>(false);
   const [synthArea, setSynthArea] = useState<boolean>(false);
   const [elements, setElements, undo, redo] = useElements([]);
+
   const templateSwitch = async (template: string | undefined) => {
     if (patternType === "rash") {
       await addRashToCanvas(
@@ -74,6 +74,7 @@ const usePatterns = (): UsePatternsResult => {
           stroke: imageBase[image].stroke,
         });
       }
+
       for (const image in imageSafe) {
         const newElement = await convertSvgToPath(
           imageSafe[image].image,
@@ -88,19 +89,19 @@ const usePatterns = (): UsePatternsResult => {
         });
       }
 
-      // for (const image in imageTemp) {
-      //   const newElement = await convertSvgToPath(
-      //     imageTemp[image].image,
-      //     imageTemp[image].scale
-      //   );
-      //   elementsArray.push({
-      //     points: newElement,
-      //     type: TemplateTypes.Temp,
-      //     posX: imageTemp[image].x,
-      //     posY: imageTemp[image].y,
-      //     stroke: imageTemp[image].stroke,
-      //   });
-      // }
+      for (const image in imageTemp) {
+        const newElement = await convertSvgToPath(
+          imageTemp[image].image,
+          imageTemp[image].scale
+        );
+        elementsArray.push({
+          points: newElement,
+          type: TemplateTypes.Temp,
+          posX: imageTemp[image].x,
+          posY: imageTemp[image].y,
+          stroke: imageTemp[image].stroke,
+        });
+      }
       setElements(elementsArray);
     } catch (err: any) {
       console.error(err.message);
@@ -121,33 +122,33 @@ const usePatterns = (): UsePatternsResult => {
 
   useLayoutEffect(() => {
     if (ctx && canvasType) {
-      canvas.width = canvas.offsetWidth * devicePixelRatio * zoom;
-      canvas.height = canvas.offsetHeight * devicePixelRatio * zoom;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset the transformation before applying the zoom
-      ctx.scale(zoom, zoom); // Apply the zoom
+      canvas.width = canvas?.offsetWidth * devicePixelRatio;
+      canvas.height = canvas?.offsetHeight * devicePixelRatio;
+      ctx.clearRect(0, 0, canvas?.width, canvas?.height);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(zoom, zoom);
+
       ctx.beginPath();
-      ctx.rect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-      ctx.clip();
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
-
       elements?.forEach((element: any) => {
         ctx?.setLineDash(element?.type !== 0 ? [5, 5] : [0]);
         ctx.lineWidth = 3 * zoom;
 
-        if (element.points == synthElement?.points) {
+        if (element.points === synthElement?.points) {
           ctx.strokeStyle = "red";
         } else {
           ctx.strokeStyle = element.stroke;
         }
-        const normalizedPoints = normalizePoints(element, zoom);
         ctx.beginPath();
-        ctx.moveTo(normalizedPoints.points[0].x, normalizedPoints.points[0].y);
-        for (let i = 1; i < normalizedPoints.points.length; i++) {
+        ctx.moveTo(
+          (element.points[0].x + element.posX) * zoom * devicePixelRatio,
+          (element.points[0].y + element.posY) * zoom * devicePixelRatio
+        );
+        for (let i = 1; i < element.points.length; i++) {
           ctx.lineTo(
-            normalizedPoints.points[i].x,
-            normalizedPoints.points[i].y
+            (element.points[i].x + element.posX) * zoom * devicePixelRatio,
+            (element.points[i].y + element.posY) * zoom * devicePixelRatio
           );
         }
         ctx.stroke();
@@ -155,7 +156,7 @@ const usePatterns = (): UsePatternsResult => {
       });
       ctx.save();
     }
-  }, [elements, synthElement, zoom]);
+  }, [elements, synthElement, zoom, ctx, canvasType]);
 
   useEffect(() => {
     if (!showPatternDrawOptions) {
@@ -164,48 +165,48 @@ const usePatterns = (): UsePatternsResult => {
   }, [showPatternDrawOptions]);
 
   const handleMouseMovePattern = (e: MouseEvent): void => {
-    if (synthArea) {
-      const bounds = canvas?.getBoundingClientRect();
-      let positionArray: SvgPatternType[] = [];
-      lodash.filter(elements, (element: SvgPatternType) => {
-        const returned = element.points?.some((point, index) => {
-          const nextPoint: any = (
-            element.points as {
-              x: number;
-              y: number;
-            }[]
-          )[index + 1];
-          if (!nextPoint) return false;
-          return (
-            onLine(
-              point.x,
-              point.y,
-              nextPoint.x,
-              nextPoint.y,
-              e.clientX - bounds?.left,
-              e.clientY - bounds?.top,
-              2,
-            ) != null
-          );
-        });
-        if (returned) {
-          positionArray.push({ ...element });
-        }
-      });
-      if (positionArray[0]) {
-        setSynthElement(positionArray[0]);
-      } else {
-        setSynthElement(undefined);
-      }
-    }
+    // if (synthArea) {
+    //   const bounds = canvas?.getBoundingClientRect();
+    //   let positionArray: SvgPatternType[] = [];
+    //   lodash.filter(elements, (element: SvgPatternType) => {
+    //     const returned = element.points?.some((point, index) => {
+    //       const nextPoint: any = (
+    //         element.points as {
+    //           x: number;
+    //           y: number;
+    //         }[]
+    //       )[index + 1];
+    //       if (!nextPoint) return false;
+    //       return (
+    //         onLine(
+    //           point.x,
+    //           point.y,
+    //           nextPoint.x,
+    //           nextPoint.y,
+    //           e.clientX - bounds?.left,
+    //           e.clientY - bounds?.top,
+    //           2
+    //         ) != null
+    //       );
+    //     });
+    //     if (returned) {
+    //       positionArray.push({ ...element });
+    //     }
+    //   });
+    //   if (positionArray[0]) {
+    //     setSynthElement(positionArray[0]);
+    //   } else {
+    //     setSynthElement(undefined);
+    //   }
+    // }
   };
 
   const handleMouseDownPattern = (e: MouseEvent): void => {
     const bounds = canvas.getBoundingClientRect();
   };
-
+  
   const handleWheelPattern = (e: WheelEvent) => {
-    wheelLogic(e, canvas, zoom, setZoom, ctx as CanvasRenderingContext2D, 7);
+    wheelLogic(e, zoom, setZoom, 7);
   };
 
   return {
