@@ -9,24 +9,25 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCanvasType } from "../../../../../redux/reducers/canvasTypeSlice";
-import {
-  SafeImage,
-  UsePatternsResult,
-  SvgPatternType,
-  TemplateTypes,
-} from "../types/canvas.types";
+import { UsePatternsResult, SvgPatternType } from "../types/canvas.types";
 import base from "./../../../../../pages/api/constants/base.json";
 import safe from "./../../../../../pages/api/constants/safe.json";
 import temp from "./../../../../../pages/api/constants/temp.json";
 import useElements from "./useElements";
 import { RootState } from "../../../../../redux/store";
-import convertSvgToPath from "../../../../../lib/canvas/helpers/convertSvgToPath";
 import onLine from "../../../../../lib/canvas/helpers/onLine";
 import lodash from "lodash";
 import wheelLogic from "../../../../../lib/canvas/helpers/wheelLogic";
+import { setAddPromptImage } from "../../../../../redux/reducers/addPromptImageSlice";
+import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
+import drawPatternElement from "../../../../../lib/canvas/helpers/drawPatternElement";
+import addRashToCanvas from "../../../../../lib/canvas/helpers/addRashToCanvas";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
+  const promptImage = useSelector(
+    (state: RootState) => state.app.addPromptImageReducer.value
+  );
   const canvasPatternRef = useRef<HTMLCanvasElement>(null);
   const canvas = (canvasPatternRef as MutableRefObject<HTMLCanvasElement>)
     ?.current;
@@ -63,64 +64,13 @@ const usePatterns = (): UsePatternsResult => {
       await addRashToCanvas(
         base[0],
         safe[0],
-        temp[Number(template?.split("0x0")[1]) - 1]
+        temp[Number(template?.split("0x0")[1]) - 1],
+        setElements
       );
     }
   };
 
-  const addRashToCanvas = async (
-    imageBase: SafeImage[],
-    imageSafe: SafeImage[],
-    imageTemp: SafeImage[]
-  ) => {
-    try {
-      let elementsArray: {}[] = [];
-      for (const image in imageBase) {
-        const newElement = await convertSvgToPath(
-          imageBase[image].image,
-          imageBase[image].scale
-        );
-        elementsArray.push({
-          points: newElement,
-          type: TemplateTypes.Base,
-          posX: imageBase[image].x,
-          posY: imageBase[image].y,
-          stroke: imageBase[image].stroke,
-        });
-      }
-
-      for (const image in imageSafe) {
-        const newElement = await convertSvgToPath(
-          imageSafe[image].image,
-          imageSafe[image].scale
-        );
-        elementsArray.push({
-          points: newElement,
-          type: TemplateTypes.Safe,
-          posX: imageSafe[image].x,
-          posY: imageSafe[image].y,
-          stroke: imageSafe[image].stroke,
-        });
-      }
-
-      for (const image in imageTemp) {
-        const newElement = await convertSvgToPath(
-          imageTemp[image].image,
-          imageTemp[image].scale
-        );
-        elementsArray.push({
-          points: newElement,
-          type: TemplateTypes.Temp,
-          posX: imageTemp[image].x,
-          posY: imageTemp[image].y,
-          stroke: imageTemp[image].stroke,
-        });
-      }
-      setElements(elementsArray);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
+  console.log({ elements });
 
   useEffect(() => {
     dispatch(setCanvasType(switchType));
@@ -146,40 +96,16 @@ const usePatterns = (): UsePatternsResult => {
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
       elements?.forEach((element: any) => {
-        ctx?.setLineDash(element?.type !== 0 ? [5, 5] : [0]);
-        ctx.lineWidth = 3 * zoom;
-
-        if (element.points === synthElementMove?.points && tool !== "pan") {
-          ctx.strokeStyle = "#f1d2ef";
-        } else if (element.points === synthElementSelect?.points) {
-          ctx.strokeStyle = "#aeeccf";
-        } else {
-          ctx.strokeStyle = element.stroke;
-        }
-
-        ctx.beginPath();
-        ctx.moveTo(
-          (element.points[0].x + element.posX - pan.xOffset * 0.5 * zoom) *
-            zoom *
-            devicePixelRatio,
-          (element.points[0].y + element.posY - pan.yOffset * 0.5 * zoom) *
-            zoom *
-            devicePixelRatio
+        drawPatternElement(
+          element,
+          ctx,
+          zoom,
+          pan,
+          tool,
+          synthElementMove,
+          synthElementSelect
         );
-        for (let i = 1; i < element.points.length; i++) {
-          ctx.lineTo(
-            (element.points[i].x + element.posX - pan.xOffset * 0.5 * zoom) *
-              zoom *
-              devicePixelRatio,
-            (element.points[i].y + element.posY - pan.yOffset * 0.5 * zoom) *
-              zoom *
-              devicePixelRatio
-          );
-        }
-        ctx.stroke();
-        ctx.closePath();
       });
-      ctx.save();
     }
   }, [
     elements,
@@ -198,6 +124,58 @@ const usePatterns = (): UsePatternsResult => {
       setPatternType("");
     }
   }, [showPatternDrawOptions]);
+
+  useEffect(() => {
+    if (promptImage && canvasType) {
+      addImageToCanvas(promptImage);
+      dispatch(setAddPromptImage(undefined));
+    }
+  }, [promptImage]);
+
+  const promptImageResize = (element: any) => {
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    synthElementSelect?.points.forEach((point: any) => {
+      if (point.x < minX) {
+        minX = point.x;
+      }
+      if (point.x > maxX) {
+        maxX = point.x;
+      }
+      if (point.y < minY) {
+        minY = point.y;
+      }
+      if (point.y > maxY) {
+        maxY = point.y;
+      }
+    });
+
+    const width = maxX - minX;
+    const height = maxY - minY;
+
+    const imageAspectRatio = element.image.width / element.image.height;
+    const pathAspectRatio = width / height;
+    let destWidth, destHeight, destX, destY;
+
+    if (imageAspectRatio >= pathAspectRatio) {
+      // image is wider than path
+      destWidth = width;
+      destHeight = width / imageAspectRatio;
+      destX = minX;
+      destY = minY + (height - destHeight) / 2;
+    } else {
+      // path is taller than image
+      destWidth = height * imageAspectRatio;
+      destHeight = height;
+      destX = minX + (width - destWidth) / 2;
+      destY = minY;
+    }
+
+    return { destX, destY, destWidth, destHeight };
+  };
 
   const handleMouseMovePattern = (e: MouseEvent): void => {
     if (!action) return;
@@ -282,6 +260,44 @@ const usePatterns = (): UsePatternsResult => {
     wheelLogic(e, zoom, setZoom, 7);
   };
 
+  const addImageToCanvas = async (imgURL: string): Promise<void> => {
+    try {
+      const res: Response = await fetch(imgURL);
+      const blob: Blob = await res.blob();
+      const postImage = new File([blob], "thedial_drafts", {
+        type: "image/png",
+      });
+      await handleImageAdd(postImage);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const handleImageAdd = async (e: any): Promise<void> => {
+    const compressedImage = await compressImageFiles(e);
+    const reader = new FileReader();
+    reader?.readAsDataURL(compressedImage as File);
+
+    reader.onloadend = (e) => {
+      const imageObject = new Image();
+      imageObject.src = e.target?.result as string;
+      imageObject.onload = () => {
+        setElements([
+          ...elements,
+          {
+            clipElement: synthElementSelect,
+            image: imageObject,
+            type: "image",
+          },
+        ]);
+      };
+    };
+  };
+
+  const handlePatternClear = () => {};
+
+  const handlePatternSave = () => {};
+
   return {
     template,
     patternType,
@@ -302,6 +318,8 @@ const usePatterns = (): UsePatternsResult => {
     tool,
     setTool,
     handleMouseUpPattern,
+    handlePatternClear,
+    handlePatternSave,
   };
 };
 

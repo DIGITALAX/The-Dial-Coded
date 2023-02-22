@@ -42,6 +42,8 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     tool: patternTool,
     setTool: setPatternTool,
     action: patternAction,
+    handlePatternClear,
+    handlePatternSave,
   } = usePatterns();
   const {
     steps,
@@ -247,6 +249,8 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           patternAction={patternAction}
           handleMouseUpPattern={handleMouseUpPattern}
           canvasType={canvasType}
+          handlePatternClear={handlePatternClear}
+          handlePatternSave={handlePatternSave}
         />
       );
   }

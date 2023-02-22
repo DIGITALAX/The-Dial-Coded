@@ -18,6 +18,7 @@ const BottomMenu: FunctionComponent<BottomMenuProps> = ({
   setTool,
   shapes,
   setShapes,
+  canvasType
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto justify-self-start self-end pb-3 px-3 gap-2 row-start-2">
@@ -43,6 +44,7 @@ const BottomMenu: FunctionComponent<BottomMenuProps> = ({
           setTool={setTool}
           shapes={shapes}
           setShapes={setShapes}
+          canvasType={canvasType}
         />
       )}
     </div>

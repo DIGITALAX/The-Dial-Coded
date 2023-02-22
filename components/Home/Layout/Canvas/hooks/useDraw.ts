@@ -800,7 +800,7 @@ const useDraw = () => {
   };
 
   useEffect(() => {
-    if (promptImage) {
+    if (promptImage && !canvasType) {
       addImageToCanvas(promptImage);
       dispatch(setAddPromptImage(undefined));
     }

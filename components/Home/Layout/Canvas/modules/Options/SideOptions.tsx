@@ -21,6 +21,8 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   setPatternPan,
   setPatternTool,
   canvasType,
+  handlePatternSave,
+  handlePatternClear
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-cols-3 f9:grid-cols-none f9:grid-flow-row auto-rows-auto gap-4">
@@ -112,35 +114,37 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
           />
         </div>
       </div>
-      <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
-        <label>
+      {!canvasType && (
+        <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
+          <label>
+            <CanvasOption
+              image="QmeBHHf7Ueca9bs4xWqNAj4UEgChPkwtpiG68xqPxaavSo"
+              bgColor="black"
+              width={25}
+              height={25}
+            />
+            <input
+              type="file"
+              accept="image/png"
+              hidden
+              required
+              id="files"
+              multiple={false}
+              name="images"
+              className="caret-transparent"
+              onChange={(e: FormEvent) => handleImageAdd(e)}
+            />
+          </label>
           <CanvasOption
-            image="QmeBHHf7Ueca9bs4xWqNAj4UEgChPkwtpiG68xqPxaavSo"
+            image="QmZZhPPzhmsicoiHGKPvqATdQ3JGakrZ2G3mK67goHA9CN"
             bgColor="black"
             width={25}
             height={25}
+            setShowBool={setDraftBoard}
+            bool_option={draftBoard}
           />
-          <input
-            type="file"
-            accept="image/png"
-            hidden
-            required
-            id="files"
-            multiple={false}
-            name="images"
-            className="caret-transparent"
-            onChange={(e: FormEvent) => handleImageAdd(e)}
-          />
-        </label>
-        <CanvasOption
-          image="QmZZhPPzhmsicoiHGKPvqATdQ3JGakrZ2G3mK67goHA9CN"
-          bgColor="black"
-          width={25}
-          height={25}
-          setShowBool={setDraftBoard}
-          bool_option={draftBoard}
-        />
-      </div>
+        </div>
+      )}
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
         <div
           className="relative row-start-1 w-fit h-fit"
@@ -166,7 +170,12 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
         </div>
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
-        <div className="relative w-fit h-fit" onClick={() => handleClear()}>
+        <div
+          className="relative w-fit h-fit"
+          onClick={
+            canvasType ? () => handlePatternClear() : () => handleClear()
+          }
+        >
           <CanvasOption
             image="QmTXMPNsTNyEExqHeTMM3SvsowEdt4Xn2eeZ2Xe3tteLkK"
             bgColor="black"
@@ -174,7 +183,10 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
             height={35}
           />
         </div>
-        <div className="relative w-fit h-fit" onClick={() => handleSave()}>
+        <div
+          className="relative w-fit h-fit"
+          onClick={canvasType ? () => handlePatternSave() : () => handleSave()}
+        >
           <CanvasOption
             image="QmYMJJ2U8fCWsoiaX2Twmmks8sj3z4bCU5BMNT9dXhnaBj"
             bgColor="black"
