@@ -149,7 +149,7 @@ const usePatterns = (): UsePatternsResult => {
         ctx?.setLineDash(element?.type !== 0 ? [5, 5] : [0]);
         ctx.lineWidth = 3 * zoom;
 
-        if (element.points === synthElementMove?.points) {
+        if (element.points === synthElementMove?.points && tool !== "pan") {
           ctx.strokeStyle = "#f1d2ef";
         } else if (element.points === synthElementSelect?.points) {
           ctx.strokeStyle = "#aeeccf";
@@ -224,12 +224,20 @@ const usePatterns = (): UsePatternsResult => {
           if (!nextPoint) return false;
           return (
             onLine(
-              (point.x + element.posX) * devicePixelRatio * zoom,
-              (point.y + element.posY) * devicePixelRatio * zoom,
-              (nextPoint.x + element.posX) * devicePixelRatio * zoom,
-              (nextPoint.y + element.posY) * devicePixelRatio * zoom,
-              (e.clientX - bounds?.left) * devicePixelRatio / zoom,
-              (e.clientY - bounds?.top) * devicePixelRatio / zoom,
+              (point.x + element.posX - pan.xOffset * 0.5 * zoom) *
+                devicePixelRatio *
+                zoom,
+              (point.y + element.posY - pan.yOffset * 0.5 * zoom) *
+                devicePixelRatio *
+                zoom,
+              (nextPoint.x + element.posX - pan.xOffset * 0.5 * zoom) *
+                devicePixelRatio *
+                zoom,
+              (nextPoint.y + element.posY - pan.yOffset * 0.5 * zoom) *
+                devicePixelRatio *
+                zoom,
+              ((e.clientX - bounds?.left) * devicePixelRatio) / zoom,
+              ((e.clientY - bounds?.top) * devicePixelRatio) / zoom,
               2
             ) != null
           );
