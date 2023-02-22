@@ -109,6 +109,8 @@ export type DrawProps = {
   setPatternTool: (e: string) => void;
   patternAction: string;
   canvasType: boolean;
+  handlePatternSave: () => void;
+  handlePatternClear: () => void;
 };
 
 export type ColorPickerProps = {
@@ -146,6 +148,8 @@ export type SideMenuProps = {
     yOffset: number;
   }) => void;
   setPatternTool: (e: string) => void;
+  handlePatternSave: () => void;
+  handlePatternClear: () => void;
 };
 
 export type BottomMenuProps = {
@@ -163,6 +167,7 @@ export type BottomMenuProps = {
   setBrushWidth: (e: number) => void;
   brushWidth: number;
   setTool: (e: string) => void;
+  canvasType: boolean;
 };
 
 export type BoardProps = {
@@ -207,6 +212,8 @@ export type SideOptionsProps = {
   }) => void;
   setPatternTool: (e: string) => void;
   canvasType: boolean;
+  handlePatternSave: () => void;
+  handlePatternClear: () => void;
 };
 
 export type BottomOptionsProps = {
@@ -222,6 +229,7 @@ export type BottomOptionsProps = {
   setBrushWidth: (e: number) => void;
   brushWidth: number;
   setTool: (e: string) => void;
+  canvasType: boolean;
 };
 
 export interface ElementInterface {
@@ -386,6 +394,8 @@ export type UsePatternsResult = {
   action: string;
   tool: string;
   setTool: (e: string) => void;
+  handlePatternSave: () => void;
+  handlePatternClear: () => void;
 };
 
 export interface SafeImage {

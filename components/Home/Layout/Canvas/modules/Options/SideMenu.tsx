@@ -23,6 +23,8 @@ const SideMenu: FunctionComponent<SideMenuProps> = ({
   setPan,
   setPatternPan,
   setPatternTool,
+  handlePatternClear,
+  handlePatternSave,
 }): JSX.Element => {
   return (
     <div className="absolute w-fit h-fit col-start-1 grid grid-flow-row auto-rows-auto justify-self-end self-start p-3 gap-2 z-10 top-10 right-4">
@@ -53,6 +55,8 @@ const SideMenu: FunctionComponent<SideMenuProps> = ({
           setPatternPan={setPatternPan}
           setPatternTool={setPatternTool}
           canvasType={canvasType}
+          handlePatternClear={handlePatternClear}
+          handlePatternSave={handlePatternSave}
         />
       )}
     </div>

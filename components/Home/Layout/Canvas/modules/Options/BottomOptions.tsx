@@ -16,22 +16,25 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
   setBrushWidth,
   brushWidth,
   setTool,
+  canvasType,
 }): JSX.Element => {
   return (
     <div className="absolute w-fit h-fit flex flex-row f9:flex-nowrap flex-wrap gap-6 left-20 bottom-3 f9:bottom-auto f9:-top-1">
       <div className="relative w-fit h-fit grid f5:grid-flow-col auto-cols-auto gap-2 self-end f5:grid-cols-none grid-cols-2 f5:right-auto right-16">
-        <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
-          <div className="relative w-fit h-fit row-start-2 self-end">
-            <CanvasOption
-              image="QmcWMzgeq6vGShetnRvJDy1Dt3yZ8LxDDQHLwWy5zf9YPX"
-              bgColor="black"
-              width={20}
-              height={20}
-              setShowString={setTool}
-              string_option={"default"}
-            />
+        {!canvasType && (
+          <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
+            <div className="relative w-fit h-fit row-start-2 self-end">
+              <CanvasOption
+                image="QmcWMzgeq6vGShetnRvJDy1Dt3yZ8LxDDQHLwWy5zf9YPX"
+                bgColor="black"
+                width={20}
+                height={20}
+                setShowString={setTool}
+                string_option={"default"}
+              />
+            </div>
           </div>
-        </div>
+        )}
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
           <div className="relative w-fit h-fit row-start-2 self-end">
             <CanvasOption
@@ -174,16 +177,18 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               </div>
             </div>
           )}
-          <div className="relative w-fit h-fit row-start-2 self-end">
-            <CanvasOption
-              image="QmfP8bDqCTZpui8jQKcfnZPtprGJVcLgrgqf71FPSY9mK2"
-              bgColor="black"
-              width={25}
-              height={25}
-              setShowBool={setShapes}
-              bool_option={shapes}
-            />
-          </div>
+          {!canvasType && (
+            <div className="relative w-fit h-fit row-start-2 self-end">
+              <CanvasOption
+                image="QmfP8bDqCTZpui8jQKcfnZPtprGJVcLgrgqf71FPSY9mK2"
+                bgColor="black"
+                width={25}
+                height={25}
+                setShowBool={setShapes}
+                bool_option={shapes}
+              />
+            </div>
+          )}
         </div>
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
           <div className="relative w-fit h-fit row-start-2 self-end">
@@ -211,18 +216,20 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
             />
           </div>
         </div>
-        <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
-          <div className="relative w-fit h-fit row-start-2 self-end">
-            <CanvasOption
-              image="QmXXTr7nuQDgTGMivfxbpYYvwykNZcXMwgST7Z1U6SAV6X"
-              bgColor="black"
-              width={25}
-              height={25}
-              setShowString={setTool}
-              string_option={"marquee"}
-            />
+        {!canvasType && (
+          <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
+            <div className="relative w-fit h-fit row-start-2 self-end">
+              <CanvasOption
+                image="QmXXTr7nuQDgTGMivfxbpYYvwykNZcXMwgST7Z1U6SAV6X"
+                bgColor="black"
+                width={25}
+                height={25}
+                setShowString={setTool}
+                string_option={"marquee"}
+              />
+            </div>
           </div>
-        </div>
+        )}
         {/* <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
           <div className="relative w-fit h-fit row-start-1"></div>
           <div className="relative w-fit h-fit row-start-2 self-end">

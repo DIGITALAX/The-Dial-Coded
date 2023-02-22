@@ -123,7 +123,7 @@ const reducer = combineReducers({
   noHotDataReducer,
   canvasTypeReducer,
   addPromptImageReducer,
-  initImagePromptReducer
+  initImagePromptReducer,
 });
 
 export const store = configureStore({
