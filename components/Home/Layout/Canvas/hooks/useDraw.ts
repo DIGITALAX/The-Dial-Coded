@@ -541,22 +541,30 @@ const useDraw = () => {
           setElements,
           ctx as CanvasRenderingContext2D,
           type === "text"
-            ? ((e.clientX - bounds.left / devicePixelRatio - pan.xOffset*zoom*zoom/devicePixelRatio) *
+            ? ((e.clientX -
+                bounds.left / devicePixelRatio -
+                (pan.xOffset * zoom * zoom) / devicePixelRatio) *
                 devicePixelRatio) /
                 zoom
             : afterOffsetX,
           type === "text"
-            ? ((e.clientY - bounds.top / devicePixelRatio - pan.yOffset*zoom*zoom/devicePixelRatio) *
+            ? ((e.clientY -
+                bounds.top / devicePixelRatio -
+                (pan.yOffset * zoom * zoom) / devicePixelRatio) *
                 devicePixelRatio) /
                 zoom
             : afterOffsetY,
           type === "text"
-            ? ((e.clientX - bounds.left / devicePixelRatio - pan.xOffset*zoom*zoom/devicePixelRatio) *
+            ? ((e.clientX -
+                bounds.left / devicePixelRatio -
+                (pan.xOffset * zoom * zoom) / devicePixelRatio) *
                 devicePixelRatio) /
                 zoom
             : afterOffsetX + x2,
           type === "text"
-            ? ((e.clientY - bounds.top / devicePixelRatio - pan.yOffset*zoom*zoom/devicePixelRatio) *
+            ? ((e.clientY -
+                bounds.top / devicePixelRatio -
+                (pan.yOffset * zoom * zoom) / devicePixelRatio) *
                 devicePixelRatio) /
                 zoom
             : afterOffsetY + y2,
@@ -822,7 +830,7 @@ const useDraw = () => {
   };
 
   const handleWheel = (e: WheelEvent) => {
-    wheelLogic(e, canvas, zoom, setZoom, ctx as CanvasRenderingContext2D, 5);
+    wheelLogic(e, zoom, setZoom, 5);
   };
 
   useLayoutEffect(() => {
