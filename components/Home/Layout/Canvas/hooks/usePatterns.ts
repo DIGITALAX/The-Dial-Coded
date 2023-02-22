@@ -35,13 +35,27 @@ const usePatterns = (): UsePatternsResult => {
     (state: RootState) => state.app.canvasTypeReducer.value
   );
   const [zoom, setZoom] = useState<number>(1);
+  const [tool, setTool] = useState<string>("default");
+  const [action, setAction] = useState<string>("none");
+  const [pan, setPan] = useState<{
+    xInitial: number;
+    yInitial: number;
+    xOffset: number;
+    yOffset: number;
+  }>({
+    xInitial: 0,
+    yInitial: 0,
+    xOffset: 0,
+    yOffset: 0,
+  });
   const [patternType, setPatternType] = useState<string>("");
   const [template, setTemplate] = useState<string>("");
   const [switchType, setSwitchType] = useState<boolean>(false);
-  const [synthElement, setSynthElement] = useState<SvgPatternType>();
+  const [synthElementMove, setSynthElementMove] = useState<SvgPatternType>();
+  const [synthElementSelect, setSynthElementSelect] =
+    useState<SvgPatternType>();
   const [showPatternDrawOptions, setShowPatternDrawOptions] =
     useState<boolean>(false);
-  const [synthArea, setSynthArea] = useState<boolean>(false);
   const [elements, setElements, undo, redo] = useElements([]);
 
   const templateSwitch = async (template: string | undefined) => {
@@ -111,10 +125,10 @@ const usePatterns = (): UsePatternsResult => {
   useEffect(() => {
     dispatch(setCanvasType(switchType));
     if (switchType && template !== "") {
-      setSynthArea(true);
+      setTool("synth");
       templateSwitch(template);
     } else if (!switchType) {
-      setSynthArea(false);
+      setTool("default");
     } else if (ctx && switchType && template === "") {
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
     }
@@ -135,20 +149,31 @@ const usePatterns = (): UsePatternsResult => {
         ctx?.setLineDash(element?.type !== 0 ? [5, 5] : [0]);
         ctx.lineWidth = 3 * zoom;
 
-        if (element.points === synthElement?.points) {
-          ctx.strokeStyle = "red";
+        if (element.points === synthElementMove?.points) {
+          ctx.strokeStyle = "#f1d2ef";
+        } else if (element.points === synthElementSelect?.points) {
+          ctx.strokeStyle = "#aeeccf";
         } else {
           ctx.strokeStyle = element.stroke;
         }
+
         ctx.beginPath();
         ctx.moveTo(
-          (element.points[0].x + element.posX) * zoom * devicePixelRatio,
-          (element.points[0].y + element.posY) * zoom * devicePixelRatio
+          (element.points[0].x + element.posX - pan.xOffset * 0.5 * zoom) *
+            zoom *
+            devicePixelRatio,
+          (element.points[0].y + element.posY - pan.yOffset * 0.5 * zoom) *
+            zoom *
+            devicePixelRatio
         );
         for (let i = 1; i < element.points.length; i++) {
           ctx.lineTo(
-            (element.points[i].x + element.posX) * zoom * devicePixelRatio,
-            (element.points[i].y + element.posY) * zoom * devicePixelRatio
+            (element.points[i].x + element.posX - pan.xOffset * 0.5 * zoom) *
+              zoom *
+              devicePixelRatio,
+            (element.points[i].y + element.posY - pan.yOffset * 0.5 * zoom) *
+              zoom *
+              devicePixelRatio
           );
         }
         ctx.stroke();
@@ -156,7 +181,17 @@ const usePatterns = (): UsePatternsResult => {
       });
       ctx.save();
     }
-  }, [elements, synthElement, zoom, ctx, canvasType]);
+  }, [
+    elements,
+    synthElementMove,
+    zoom,
+    ctx,
+    canvasType,
+    pan,
+    tool,
+    action,
+    synthElementSelect,
+  ]);
 
   useEffect(() => {
     if (!showPatternDrawOptions) {
@@ -165,46 +200,76 @@ const usePatterns = (): UsePatternsResult => {
   }, [showPatternDrawOptions]);
 
   const handleMouseMovePattern = (e: MouseEvent): void => {
-    // if (synthArea) {
-    //   const bounds = canvas?.getBoundingClientRect();
-    //   let positionArray: SvgPatternType[] = [];
-    //   lodash.filter(elements, (element: SvgPatternType) => {
-    //     const returned = element.points?.some((point, index) => {
-    //       const nextPoint: any = (
-    //         element.points as {
-    //           x: number;
-    //           y: number;
-    //         }[]
-    //       )[index + 1];
-    //       if (!nextPoint) return false;
-    //       return (
-    //         onLine(
-    //           point.x,
-    //           point.y,
-    //           nextPoint.x,
-    //           nextPoint.y,
-    //           e.clientX - bounds?.left,
-    //           e.clientY - bounds?.top,
-    //           2
-    //         ) != null
-    //       );
-    //     });
-    //     if (returned) {
-    //       positionArray.push({ ...element });
-    //     }
-    //   });
-    //   if (positionArray[0]) {
-    //     setSynthElement(positionArray[0]);
-    //   } else {
-    //     setSynthElement(undefined);
-    //   }
-    // }
+    if (!action) return;
+    const bounds = canvas?.getBoundingClientRect();
+    if (action === "panning") {
+      setPan({
+        xInitial: pan.xInitial,
+        yInitial: pan.yInitial,
+        xOffset:
+          pan.xOffset + 0.5 * ((e.clientX - bounds.left - pan.xInitial) / zoom),
+        yOffset:
+          pan.yOffset + 0.5 * ((e.clientY - bounds.top - pan.yInitial) / zoom),
+      });
+    } else if (action === "synth" || action === "none") {
+      let positionArray: SvgPatternType[] = [];
+      lodash.filter(elements, (element: SvgPatternType) => {
+        const returned = element.points?.some((point, index) => {
+          const nextPoint: any = (
+            element.points as {
+              x: number;
+              y: number;
+            }[]
+          )[index + 1];
+          if (!nextPoint) return false;
+          return (
+            onLine(
+              (point.x + element.posX) * devicePixelRatio * zoom,
+              (point.y + element.posY) * devicePixelRatio * zoom,
+              (nextPoint.x + element.posX) * devicePixelRatio * zoom,
+              (nextPoint.y + element.posY) * devicePixelRatio * zoom,
+              (e.clientX - bounds?.left) * devicePixelRatio / zoom,
+              (e.clientY - bounds?.top) * devicePixelRatio / zoom,
+              2
+            ) != null
+          );
+        });
+        if (returned) {
+          positionArray.push({ ...element });
+        }
+      });
+      if (positionArray[0]) {
+        setSynthElementMove(positionArray[0]);
+      } else {
+        setSynthElementMove(undefined);
+      }
+    }
   };
 
   const handleMouseDownPattern = (e: MouseEvent): void => {
-    const bounds = canvas.getBoundingClientRect();
+    const bounds = canvas?.getBoundingClientRect();
+    if (tool === "pan") {
+      setPan({
+        xInitial: e.clientX - bounds.left,
+        yInitial: e.clientY - bounds.top,
+        xOffset: pan.xOffset,
+        yOffset: pan.yOffset,
+      });
+      setAction("panning");
+    } else if (tool === "synth") {
+      setAction("synth");
+      if (synthElementMove) {
+        setSynthElementSelect(synthElementMove);
+      }
+    } else if (tool === "default") {
+      setAction("none");
+    }
   };
-  
+
+  const handleMouseUpPattern = (e: MouseEvent) => {
+    setAction("none");
+  };
+
   const handleWheelPattern = (e: WheelEvent) => {
     wheelLogic(e, zoom, setZoom, 7);
   };
@@ -218,14 +283,17 @@ const usePatterns = (): UsePatternsResult => {
     showPatternDrawOptions,
     setSwitchType,
     switchType,
-    setSynthArea,
-    synthArea,
     handleMouseDownPattern,
     handleMouseMovePattern,
     handleWheelPattern,
     canvasPatternRef,
     zoom,
     setZoom,
+    setPan,
+    action,
+    tool,
+    setTool,
+    handleMouseUpPattern,
   };
 };
 

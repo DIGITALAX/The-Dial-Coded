@@ -12,8 +12,7 @@ const PatternMenu: FunctionComponent<PatternMenuProps> = ({
   setPatternType,
   switchType,
   setSwitchType,
-  setSynthArea,
-  synthArea,
+  setPatternTool,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto justify-self-start self-end p-3 gap-2 row-start-1">
@@ -38,8 +37,7 @@ const PatternMenu: FunctionComponent<PatternMenuProps> = ({
           setPatternType={setPatternType}
           setSwitchType={setSwitchType}
           switchType={switchType}
-          synthArea={synthArea}
-          setSynthArea={setSynthArea}
+          setPatternTool={setPatternTool}
         />
       )}
     </div>
