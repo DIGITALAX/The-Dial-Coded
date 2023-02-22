@@ -6,34 +6,33 @@ const Board: FunctionComponent<BoardProps> = ({
   handleMouseDown,
   handleMouseMove,
   handleMouseUp,
-  synthArea,
+  canvasType,
   handleMouseDownPattern,
   handleMouseMovePattern,
   handleWheel,
   handleWheelPattern,
   canvasPatternRef,
+  handleMouseUpPattern,
 }): JSX.Element => {
   return (
     <canvas
       id="canvasId"
-      ref={synthArea ? canvasPatternRef : canvasRef}
+      ref={canvasType ? canvasPatternRef : canvasRef}
       className="relative z-0 rounded-lg"
       style={{ width: "100%", height: "100%" }}
-      width={String(
-        (document.getElementById("parent")?.offsetWidth as number)
-      )}
-      height={String(
-        (document.getElementById("parent")?.offsetHeight as number)
-      )}
+      width={String(document.getElementById("parent")?.offsetWidth as number)}
+      height={String(document.getElementById("parent")?.offsetHeight as number)}
       onMouseDown={(e: MouseEvent<HTMLCanvasElement>) =>
-        synthArea ? handleMouseDownPattern(e) : handleMouseDown(e)
+        canvasType ? handleMouseDownPattern(e) : handleMouseDown(e)
       }
-      onMouseUp={(e: MouseEvent<HTMLCanvasElement>) => handleMouseUp(e)}
+      onMouseUp={(e: MouseEvent<HTMLCanvasElement>) =>
+        canvasType ? handleMouseUpPattern(e) : handleMouseUp(e)
+      }
       onMouseMove={(e: MouseEvent<HTMLCanvasElement>) =>
-        synthArea ? handleMouseMovePattern(e) : handleMouseMove(e)
+        canvasType ? handleMouseMovePattern(e) : handleMouseMove(e)
       }
       onWheel={(e: WheelEvent<HTMLCanvasElement>) =>
-        synthArea ? handleWheelPattern(e) : handleWheel(e)
+        canvasType ? handleWheelPattern(e) : handleWheel(e)
       }
     ></canvas>
   );

@@ -17,8 +17,10 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   setNewCanvas,
   patternZoom,
   setPatternZoom,
-  synthArea,
   setPan,
+  setPatternPan,
+  setPatternTool,
+  canvasType,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-cols-3 f9:grid-cols-none f9:grid-flow-row auto-rows-auto gap-4">
@@ -33,7 +35,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
         <div
           className="relative w-fit h-fit"
           onClick={() =>
-            synthArea
+            canvasType
               ? setPatternZoom(patternZoom < 7 ? patternZoom + 0.1 : 7)
               : setZoom(zoom < 5 ? zoom + 0.1 : 5)
           }
@@ -48,7 +50,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
         <div
           className="relative w-fit h-fit"
           onClick={() =>
-            synthArea
+            canvasType
               ? setPatternZoom(patternZoom > 0.2 ? patternZoom - 0.1 : 0.1)
               : setZoom(zoom > 0.2 ? zoom - 0.1 : 0.1)
           }
@@ -62,15 +64,27 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
         </div>
         <div
           className="relative w-fit h-fit"
-          onClick={() => {
-            synthArea ? setPatternZoom(1) : setZoom(1);
-            setPan({
-              xInitial: 0,
-              yInitial: 0,
-              xOffset: 0,
-              yOffset: 0,
-            })
-          }}
+          onClick={
+            canvasType
+              ? () => {
+                  setPatternZoom(1);
+                  setPatternPan({
+                    xInitial: 0,
+                    yInitial: 0,
+                    xOffset: 0,
+                    yOffset: 0,
+                  });
+                }
+              : () => {
+                  setZoom(1);
+                  setPan({
+                    xInitial: 0,
+                    yInitial: 0,
+                    xOffset: 0,
+                    yOffset: 0,
+                  });
+                }
+          }
         >
           <CanvasOption
             image="QmRKP7reAbEFgGrv2KmPdUe1eZgAwVmTzZoWfSLAH4gMEc"
@@ -86,7 +100,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
             width={25}
             height={25}
             string_option={"pan"}
-            setShowString={setTool}
+            setShowString={canvasType ? setPatternTool : setTool}
           />
         </div>
         <div className="relative w-fit h-fit" onClick={() => setNewCanvas()}>

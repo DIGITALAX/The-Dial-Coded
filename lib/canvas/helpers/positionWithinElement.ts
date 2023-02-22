@@ -155,13 +155,18 @@ const positionWithinElement = (
       }
 
     case "text":
-      return ((x - bounds.left - pan.xOffset*zoom*zoom) * devicePixelRatio) / zoom >=
+      return ((x - bounds.left - pan.xOffset * zoom * zoom) *
+        devicePixelRatio) /
+        zoom >=
         (x1 as number) &&
-        ((x - bounds.left - pan.xOffset*zoom*zoom) * devicePixelRatio) / zoom <=
+        ((x - bounds.left - pan.xOffset * zoom * zoom) * devicePixelRatio) /
+          zoom <=
           (x2 as number) &&
-        ((y - bounds.top - pan.yOffset*zoom*zoom) * devicePixelRatio) / zoom >=
+        ((y - bounds.top - pan.yOffset * zoom * zoom) * devicePixelRatio) /
+          zoom >=
           (y1 as number) &&
-        ((y - bounds.top - pan.yOffset*zoom*zoom) * devicePixelRatio) / zoom <=
+        ((y - bounds.top - pan.yOffset * zoom * zoom) * devicePixelRatio) /
+          zoom <=
           (y2 as number)
         ? "inside"
         : null;

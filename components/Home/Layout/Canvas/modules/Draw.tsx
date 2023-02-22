@@ -76,8 +76,6 @@ const Draw: FunctionComponent<DrawProps> = ({
   setTemplate,
   setSwitchType,
   switchType,
-  setSynthArea,
-  synthArea,
   handleMouseDownPattern,
   handleMouseMovePattern,
   handleWheel,
@@ -91,6 +89,12 @@ const Draw: FunctionComponent<DrawProps> = ({
   img2img,
   setStrength,
   handleSendImg2Img,
+  setPatternPan,
+  patternTool,
+  setPatternTool,
+  patternAction,
+  handleMouseUpPattern,
+  canvasType,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -120,11 +124,19 @@ const Draw: FunctionComponent<DrawProps> = ({
                       ? "cursor-text"
                       : tool === "erase"
                       ? "cursor-cell"
-                      : tool === "pan" && action !== "panning"
+                      : (tool === "pan" && action !== "panning") ||
+                        (patternTool === "pan" &&
+                          patternAction !== "panning" &&
+                          canvasType)
                       ? "cursor-grab"
-                      : tool === "pan" && action === "panning"
+                      : (tool === "pan" && action === "panning") ||
+                        (patternTool === "pan" &&
+                          patternAction === "panning" &&
+                          canvasType)
                       ? "cursor-grabbing"
-                      : tool === "marquee" || synthArea
+                      : tool === "marquee" ||
+                        canvasType ||
+                        (canvasType && patternTool === "default")
                       ? "cursor-crosshair"
                       : tool === "resize" &&
                         (selectedElement?.position === "start" ||
@@ -166,8 +178,10 @@ const Draw: FunctionComponent<DrawProps> = ({
                     setZoom={setZoom}
                     setPatternZoom={setPatternZoom}
                     patternZoom={patternZoom}
-                    synthArea={synthArea}
                     setPan={setPan}
+                    setPatternPan={setPatternPan}
+                    setPatternTool={setPatternTool}
+                    canvasType={canvasType}
                   />
                   <div className="absolute w-fit h-fit grid grid-flow-row auto-rows-auto z-10 bottom-14 left-4">
                     <PatternMenu
@@ -178,8 +192,7 @@ const Draw: FunctionComponent<DrawProps> = ({
                       patternType={patternType}
                       switchType={switchType}
                       setSwitchType={setSwitchType}
-                      synthArea={synthArea}
-                      setSynthArea={setSynthArea}
+                      setPatternTool={setPatternTool}
                     />
                     <BottomMenu
                       showBottomDrawOptions={showBottomDrawOptions}
@@ -219,11 +232,12 @@ const Draw: FunctionComponent<DrawProps> = ({
                     handleMouseUp={handleMouseUp}
                     handleMouseMove={handleMouseMove}
                     handleMouseDownPattern={handleMouseDownPattern}
-                    synthArea={synthArea}
                     handleMouseMovePattern={handleMouseMovePattern}
                     handleWheel={handleWheel}
                     handleWheelPattern={handleWheelPattern}
                     canvasPatternRef={canvasPatternRef}
+                    handleMouseUpPattern={handleMouseUpPattern}
+                    canvasType={canvasType}
                   />
                 </div>
               </div>

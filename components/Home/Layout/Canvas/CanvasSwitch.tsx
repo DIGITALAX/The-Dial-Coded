@@ -5,8 +5,6 @@ import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Draw from "./modules/Draw";
 import useDraw from "./hooks/useDraw";
-import Image from "next/legacy/image";
-import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import useBase from "./hooks/useBase";
 import useDrafts from "./hooks/useDrafts";
 import usePrompt from "./hooks/usePrompt";
@@ -19,6 +17,9 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   const isConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
   );
+  const canvasType = useSelector(
+    (state: RootState) => state.app.canvasTypeReducer.value
+  );
   const dispatch = useDispatch();
   const { openConnectModal } = useConnectModal();
   const {
@@ -30,14 +31,17 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     template,
     setSwitchType,
     switchType,
-    setSynthArea,
-    synthArea,
     handleMouseDownPattern,
     handleMouseMovePattern,
+    handleMouseUpPattern,
     handleWheelPattern,
     canvasPatternRef,
     zoom: patternZoom,
     setZoom: setPatternZoom,
+    setPan: setPatternPan,
+    tool: patternTool,
+    setTool: setPatternTool,
+    action: patternAction,
   } = usePatterns();
   const {
     steps,
@@ -53,7 +57,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     setImg2img,
     img2img,
     setStrength,
-    handleSendImg2Img
+    handleSendImg2Img,
   } = usePrompt();
   const {
     hex,
@@ -224,8 +228,6 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           template={template}
           switchType={switchType}
           setSwitchType={setSwitchType}
-          synthArea={synthArea}
-          setSynthArea={setSynthArea}
           handleMouseDownPattern={handleMouseDownPattern}
           handleMouseMovePattern={handleMouseMovePattern}
           handleWheel={handleWheel}
@@ -239,6 +241,12 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           img2img={img2img}
           setStrength={setStrength}
           handleSendImg2Img={handleSendImg2Img}
+          setPatternPan={setPatternPan}
+          patternTool={patternTool}
+          setPatternTool={setPatternTool}
+          patternAction={patternAction}
+          handleMouseUpPattern={handleMouseUpPattern}
+          canvasType={canvasType}
         />
       );
   }

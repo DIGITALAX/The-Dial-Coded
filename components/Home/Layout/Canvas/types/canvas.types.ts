@@ -80,10 +80,9 @@ export type DrawProps = {
   template: string;
   switchType: boolean;
   setSwitchType: (e: boolean) => void;
-  setSynthArea: (e: boolean) => void;
-  synthArea: boolean;
   handleMouseDownPattern: (e: MouseEvent) => void;
   handleMouseMovePattern: (e: MouseEvent) => void;
+  handleMouseUpPattern: (e: MouseEvent) => void;
   handleWheel: (e: WheelEvent) => void;
   handleWheelPattern: (e: WheelEvent) => void;
   canvasPatternRef: Ref<HTMLCanvasElement>;
@@ -95,11 +94,21 @@ export type DrawProps = {
     xOffset: number;
     yOffset: number;
   }) => void;
+  setPatternPan: (e: {
+    xInitial: number;
+    yInitial: number;
+    xOffset: number;
+    yOffset: number;
+  }) => void;
   img2img: boolean;
   setImg2img: (e: boolean) => void;
   setStrength: (e: string) => void;
   strength: string;
   handleSendImg2Img: () => Promise<void>;
+  patternTool: string;
+  setPatternTool: (e: string) => void;
+  patternAction: string;
+  canvasType: boolean;
 };
 
 export type ColorPickerProps = {
@@ -123,13 +132,20 @@ export type SideMenuProps = {
   setNewCanvas: () => void;
   patternZoom: number;
   setPatternZoom: (e: number) => void;
-  synthArea: boolean;
+  canvasType: boolean;
   setPan: (e: {
     xInitial: number;
     yInitial: number;
     xOffset: number;
     yOffset: number;
   }) => void;
+  setPatternPan: (e: {
+    xInitial: number;
+    yInitial: number;
+    xOffset: number;
+    yOffset: number;
+  }) => void;
+  setPatternTool: (e: string) => void;
 };
 
 export type BottomMenuProps = {
@@ -157,9 +173,10 @@ export type BoardProps = {
   handleMouseUp: (e: MouseEvent) => void;
   handleMouseDownPattern: (e: MouseEvent) => void;
   handleMouseMovePattern: (e: MouseEvent) => void;
-  synthArea: boolean;
+  handleMouseUpPattern: (e: MouseEvent) => void;
   handleWheel: (e: WheelEvent) => void;
   handleWheelPattern: (e: WheelEvent) => void;
+  canvasType: boolean;
 };
 
 export type SideOptionsProps = {
@@ -176,13 +193,20 @@ export type SideOptionsProps = {
   setNewCanvas: () => void;
   patternZoom: number;
   setPatternZoom: (e: number) => void;
-  synthArea: boolean;
   setPan: (e: {
     xInitial: number;
     yInitial: number;
     xOffset: number;
     yOffset: number;
   }) => void;
+  setPatternPan: (e: {
+    xInitial: number;
+    yInitial: number;
+    xOffset: number;
+    yOffset: number;
+  }) => void;
+  setPatternTool: (e: string) => void;
+  canvasType: boolean;
 };
 
 export type BottomOptionsProps = {
@@ -325,8 +349,7 @@ export type PatternMenuProps = {
   patternType: string;
   setSwitchType: (e: boolean) => void;
   switchType: boolean;
-  setSynthArea: (e: boolean) => void;
-  synthArea: boolean;
+  setPatternTool: (e: string) => void;
 };
 
 export type PatternOptionsProps = {
@@ -335,8 +358,7 @@ export type PatternOptionsProps = {
   patternType: string;
   setSwitchType: (e: boolean) => void;
   switchType: boolean;
-  setSynthArea: (e: boolean) => void;
-  synthArea: boolean;
+  setPatternTool: (e: string) => void;
 };
 
 export type UsePatternsResult = {
@@ -348,14 +370,22 @@ export type UsePatternsResult = {
   setSwitchType: (e: boolean) => void;
   switchType: boolean;
   template: string;
-  setSynthArea: (e: boolean) => void;
-  synthArea: boolean;
   handleMouseDownPattern: (e: MouseEvent) => void;
   handleMouseMovePattern: (e: MouseEvent) => void;
+  handleMouseUpPattern: (e: MouseEvent) => void;
   handleWheelPattern: (e: WheelEvent) => void;
   canvasPatternRef: Ref<HTMLCanvasElement>;
   zoom: number;
   setZoom: (e: number) => void;
+  setPan: (e: {
+    xInitial: number;
+    yInitial: number;
+    xOffset: number;
+    yOffset: number;
+  }) => void;
+  action: string;
+  tool: string;
+  setTool: (e: string) => void;
 };
 
 export interface SafeImage {

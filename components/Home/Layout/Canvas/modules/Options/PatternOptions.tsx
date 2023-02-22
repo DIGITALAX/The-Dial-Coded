@@ -10,8 +10,7 @@ const PatternOptions: FunctionComponent<PatternOptionsProps> = ({
   patternType,
   setSwitchType,
   switchType,
-  setSynthArea,
-  synthArea,
+  setPatternTool,
 }): JSX.Element => {
   const onPatternCanvas = useSelector(
     (state: RootState) => state.app.canvasTypeReducer.value
@@ -106,15 +105,17 @@ const PatternOptions: FunctionComponent<PatternOptionsProps> = ({
           string_option={"tank"}
         />
       </div>
-      <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-1 self-end">
+      <div
+        className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-1 self-end"
+      >
         {onPatternCanvas && (
           <CanvasOption
             image="Qme2o2azyWD6iUtroLeYBojqaLQgHq2g1p5vbGxsnZed7S"
             bgColor="black"
             width={18}
             height={25}
-            setShowBool={setSynthArea}
-            bool_option={synthArea}
+            setShowString={setPatternTool}
+            string_option={"synth"}
           />
         )}
         <CanvasOption
