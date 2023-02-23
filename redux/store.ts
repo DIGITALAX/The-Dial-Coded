@@ -62,6 +62,7 @@ import canvasTypeReducer from "./reducers/canvasTypeSlice";
 import addPromptImageReducer from "./reducers/addPromptImageSlice";
 import initImagePromptReducer from "./reducers/initImagePromptSlice";
 import selectSynthElementReducer from "./reducers/selectSynthElementSlice";
+import synthLoadingReducer from "./reducers/synthLoadingSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -125,7 +126,8 @@ const reducer = combineReducers({
   canvasTypeReducer,
   addPromptImageReducer,
   initImagePromptReducer,
-  selectSynthElementReducer
+  selectSynthElementReducer,
+  synthLoadingReducer
 });
 
 export const store = configureStore({

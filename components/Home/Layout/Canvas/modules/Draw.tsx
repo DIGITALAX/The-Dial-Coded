@@ -100,6 +100,14 @@ const Draw: FunctionComponent<DrawProps> = ({
   synthElementSelect,
   patternUndo,
   patternRedo,
+  patternBrushWidth,
+  setPatternBrushWidth,
+  patternColorPicker,
+  setPatternColorPicker,
+  patternHex,
+  setPatternHex,
+  patternThickness,
+  setPatternThickness,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -220,6 +228,14 @@ const Draw: FunctionComponent<DrawProps> = ({
                       setShapes={setShapes}
                       canvasType={canvasType}
                       setPatternTool={setPatternTool}
+                      patternHex={patternHex}
+                      setPatternHex={setPatternHex}
+                      patternColorPicker={patternColorPicker}
+                      setPatternColorPicker={setPatternColorPicker}
+                      patternThickness={patternThickness}
+                      setPatternThickness={setPatternThickness}
+                      patternBrushWidth={patternBrushWidth}
+                      setPatternBrushWidth={setPatternBrushWidth}
                     />
                   </div>
 

@@ -18,6 +18,14 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
   setTool,
   canvasType,
   setPatternTool,
+  patternBrushWidth,
+  setPatternBrushWidth,
+  patternColorPicker,
+  setPatternColorPicker,
+  patternHex,
+  setPatternHex,
+  patternThickness,
+  setPatternThickness,
 }): JSX.Element => {
   return (
     <div className="absolute w-fit h-fit flex flex-row f9:flex-nowrap flex-wrap gap-6 left-20 bottom-3 f9:bottom-auto f9:-top-1">
@@ -75,24 +83,29 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
           </div>
         </div>
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
-          {thickness && (
-            <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-1 bottom-6">
-              <input
-                type="range"
-                className="f11:right-10 right-auto f5:right-auto absolute w-[7rem] galaxy:w-[9rem] fo:w-[7rem] sm:w-[10rem] md:w-[15rem]"
-                value={brushWidth}
-                onChange={(e) => setBrushWidth(Number(e.target.value))}
-              />
-            </div>
-          )}
+          {thickness ||
+            (patternThickness && (
+              <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-1 bottom-6">
+                <input
+                  type="range"
+                  className="f11:right-10 right-auto f5:right-auto absolute w-[7rem] galaxy:w-[9rem] fo:w-[7rem] sm:w-[10rem] md:w-[15rem]"
+                  value={canvasType ? patternBrushWidth : brushWidth}
+                  onChange={
+                    canvasType
+                      ? (e) => setPatternBrushWidth(Number(e.target.value))
+                      : (e) => setBrushWidth(Number(e.target.value))
+                  }
+                />
+              </div>
+            ))}
           <div className="relative w-fit h-fit row-start-2 self-end">
             <CanvasOption
               image="QmXsWSdgvoieTtWYFskRmZCUnTN7WHvffxd3kSZMTcBjxm"
               bgColor="black"
               width={30}
               height={40}
-              setShowBool={setThickness}
-              bool_option={thickness}
+              setShowBool={canvasType ? setPatternThickness : setThickness}
+              bool_option={canvasType ? patternThickness : thickness}
             />
           </div>
         </div>
@@ -246,7 +259,10 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
         {colorPicker && (
           <div className="absolute bottom-20 row-start-1 w-fit h-fit">
-            <ColorPicker hex={hex} setHex={setHex} />
+            <ColorPicker
+              hex={canvasType ? patternHex : hex}
+              setHex={canvasType ? setPatternHex : setHex}
+            />
           </div>
         )}
         <div className="relative w-fit h-fit row-start-2 self-end">
@@ -255,8 +271,8 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
             color
             width={40}
             height={40}
-            setShowBool={setColorPicker}
-            bool_option={colorPicker}
+            setShowBool={canvasType ? setPatternColorPicker : setColorPicker}
+            bool_option={canvasType ? patternColorPicker : colorPicker}
           />
         </div>
       </div>
