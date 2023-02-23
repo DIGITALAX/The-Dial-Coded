@@ -22,11 +22,15 @@ import { setAddPromptImage } from "../../../../../redux/reducers/addPromptImageS
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import drawPatternElement from "../../../../../lib/canvas/helpers/drawPatternElement";
 import addRashToCanvas from "../../../../../lib/canvas/helpers/addRashToCanvas";
+import { setSelectSynthElement } from "../../../../../redux/reducers/selectSynthElementSlice";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
   const promptImage = useSelector(
     (state: RootState) => state.app.addPromptImageReducer.value
+  );
+  const synthElementSelect = useSelector(
+    (state: RootState) => state.app.selectSynthElementReducer.value
   );
   const canvasPatternRef = useRef<HTMLCanvasElement>(null);
   const canvas = (canvasPatternRef as MutableRefObject<HTMLCanvasElement>)
@@ -53,8 +57,6 @@ const usePatterns = (): UsePatternsResult => {
   const [template, setTemplate] = useState<string>("");
   const [switchType, setSwitchType] = useState<boolean>(false);
   const [synthElementMove, setSynthElementMove] = useState<SvgPatternType>();
-  const [synthElementSelect, setSynthElementSelect] =
-    useState<SvgPatternType>();
   const [showPatternDrawOptions, setShowPatternDrawOptions] =
     useState<boolean>(false);
   const [elements, setElements, undo, redo] = useElements([]);
@@ -103,7 +105,7 @@ const usePatterns = (): UsePatternsResult => {
           pan,
           tool,
           synthElementMove,
-          synthElementSelect
+          synthElementSelect,
         );
       });
     }
@@ -131,51 +133,6 @@ const usePatterns = (): UsePatternsResult => {
       dispatch(setAddPromptImage(undefined));
     }
   }, [promptImage]);
-
-  const promptImageResize = (element: any) => {
-    let minX = Infinity;
-    let maxX = -Infinity;
-    let minY = Infinity;
-    let maxY = -Infinity;
-
-    synthElementSelect?.points.forEach((point: any) => {
-      if (point.x < minX) {
-        minX = point.x;
-      }
-      if (point.x > maxX) {
-        maxX = point.x;
-      }
-      if (point.y < minY) {
-        minY = point.y;
-      }
-      if (point.y > maxY) {
-        maxY = point.y;
-      }
-    });
-
-    const width = maxX - minX;
-    const height = maxY - minY;
-
-    const imageAspectRatio = element.image.width / element.image.height;
-    const pathAspectRatio = width / height;
-    let destWidth, destHeight, destX, destY;
-
-    if (imageAspectRatio >= pathAspectRatio) {
-      // image is wider than path
-      destWidth = width;
-      destHeight = width / imageAspectRatio;
-      destX = minX;
-      destY = minY + (height - destHeight) / 2;
-    } else {
-      // path is taller than image
-      destWidth = height * imageAspectRatio;
-      destHeight = height;
-      destX = minX + (width - destWidth) / 2;
-      destY = minY;
-    }
-
-    return { destX, destY, destWidth, destHeight };
-  };
 
   const handleMouseMovePattern = (e: MouseEvent): void => {
     if (!action) return;
@@ -245,7 +202,7 @@ const usePatterns = (): UsePatternsResult => {
     } else if (tool === "synth") {
       setAction("synth");
       if (synthElementMove) {
-        setSynthElementSelect(synthElementMove);
+        dispatch(setSelectSynthElement(synthElementMove));
       }
     } else if (tool === "default") {
       setAction("none");
@@ -282,13 +239,17 @@ const usePatterns = (): UsePatternsResult => {
       const imageObject = new Image();
       imageObject.src = e.target?.result as string;
       imageObject.onload = () => {
+        const matchedIndex = elements.findIndex(
+          (element: any) => element.points === synthElementSelect?.points
+        );
         setElements([
-          ...elements,
+          ...elements.slice(0, matchedIndex + 1),
           {
             clipElement: synthElementSelect,
             image: imageObject,
             type: "image",
           },
+          ...elements.slice(matchedIndex + 1),
         ]);
       };
     };
@@ -296,7 +257,22 @@ const usePatterns = (): UsePatternsResult => {
 
   const handlePatternClear = () => {};
 
-  const handlePatternSave = () => {};
+  const handlePatternSave = () => {
+    const img = canvas.toDataURL("image/png");
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = "blob";
+    xhr.onload = () => {
+      let a = document.createElement("a");
+      a.href = window.URL.createObjectURL(xhr.response);
+      a.download = "pattern_aop_template.png";
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+    xhr.open("GET", img);
+    xhr.send();
+  };
 
   return {
     template,

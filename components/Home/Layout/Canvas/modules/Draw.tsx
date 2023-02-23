@@ -97,6 +97,7 @@ const Draw: FunctionComponent<DrawProps> = ({
   canvasType,
   handlePatternClear,
   handlePatternSave,
+  synthElementSelect
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -264,6 +265,8 @@ const Draw: FunctionComponent<DrawProps> = ({
               img2img={img2img}
               setStrength={setStrength}
               handleSendImg2Img={handleSendImg2Img}
+              synthElementSelect={synthElementSelect}
+              canvasType={canvasType}
             />
           </div>
         </div>

@@ -20,6 +20,9 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   const canvasType = useSelector(
     (state: RootState) => state.app.canvasTypeReducer.value
   );
+  const synthElementSelect = useSelector(
+    (state: RootState) => state.app.selectSynthElementReducer.value
+  );
   const dispatch = useDispatch();
   const { openConnectModal } = useConnectModal();
   const {
@@ -251,6 +254,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           canvasType={canvasType}
           handlePatternClear={handlePatternClear}
           handlePatternSave={handlePatternSave}
+          synthElementSelect={synthElementSelect}
         />
       );
   }
