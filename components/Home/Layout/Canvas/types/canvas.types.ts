@@ -111,6 +111,7 @@ export type DrawProps = {
   canvasType: boolean;
   handlePatternSave: () => void;
   handlePatternClear: () => void;
+  synthElementSelect: SvgPatternType | undefined;
 };
 
 export type ColorPickerProps = {
@@ -336,6 +337,8 @@ export type PromptProps = {
   setStrength: (e: string) => void;
   strength: string;
   handleSendImg2Img: () => Promise<void>;
+  synthElementSelect: SvgPatternType | undefined;
+  canvasType: boolean;
 };
 
 export interface InputType {

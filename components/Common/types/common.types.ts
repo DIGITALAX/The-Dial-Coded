@@ -845,4 +845,6 @@ export type CassetteButton = {
   handleSend?: () => Promise<void>;
   value?: string;
   keyExists?: boolean;
+  canvasType?: boolean;
+  synthElement?: boolean;
 };

@@ -18,6 +18,8 @@ const Prompt: FunctionComponent<PromptProps> = ({
   img2img,
   setStrength,
   handleSendImg2Img,
+  synthElementSelect,
+  canvasType,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-row flex-wrap f1:flex-nowrap gap-12 py-10 px-4 f5:px-12 f5:py-20">
@@ -152,11 +154,23 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 ? "Craft prompts for what you want to create here, with words first. Add modifiers for more spectacular results…"
                 : "Use the Marquee Tool to Select the Canvas Area to Use as an Init for Img2Img Synth"
             }
-            disabled={promptLoading || !keyExists ? true : false}
+            disabled={
+              promptLoading || !keyExists || (canvasType && !synthElementSelect)
+                ? true
+                : false
+            }
           ></textarea>
           <div className="absolute w-fit h-fit bottom-2 right-2 z-1">
             <CassetteButton
-              text={keyExists ? "synth" : "add key"}
+              text={
+                keyExists
+                  ? !canvasType
+                    ? "synth"
+                    : synthElementSelect
+                    ? "synth"
+                    : "select template"
+                  : "add key"
+              }
               textSize="sm"
               right="2"
               bottom="2"
@@ -165,6 +179,8 @@ const Prompt: FunctionComponent<PromptProps> = ({
               loading={promptLoading}
               value={prompt as string}
               keyExists={keyExists}
+              canvasType={canvasType}
+              synthElement={synthElementSelect ? true : false}
             />
           </div>
         </div>

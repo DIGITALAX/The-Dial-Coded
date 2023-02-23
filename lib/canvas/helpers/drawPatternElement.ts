@@ -1,4 +1,5 @@
 import { SvgPatternType } from "../../../components/Home/Layout/Canvas/types/canvas.types";
+import promptImageResize from "./promptImageResize";
 
 const drawPatternElement = (
   element: any,
@@ -14,7 +15,7 @@ const drawPatternElement = (
   synthElementMove: SvgPatternType | undefined,
   synthElementSelect: SvgPatternType | undefined
 ) => {
-  ctx?.setLineDash(element?.type !== 0 ? [5, 5] : [0]);
+  ctx?.setLineDash(element?.type !== "0" ? [5, 5] : [0]);
   (ctx as CanvasRenderingContext2D).lineWidth = 3 * zoom;
 
   if (element.points === synthElementMove?.points && tool !== "pan") {
@@ -54,19 +55,16 @@ const drawPatternElement = (
       break;
 
     case "image":
-      // if (element.points === synthElementSelect?.points) {
-      //   const { destX, destY, destWidth, destHeight } = promptImageResize();
-      //   ctx?.save();
-      //   ctx?.clip();
-      //   ctx?.drawImage(
-      //     element.image,
-      //     destX,
-      //     destY,
-      //     destWidth,
-      //     destHeight
-      //   );
-      // }
-      // ctx?.restore();
+      ctx?.save();
+      ctx?.clip();
+      ctx?.drawImage(
+        element.image,
+        (element.clipElement.posX - pan.xOffset * 0.5 * zoom) * zoom,
+        (element.clipElement.posY - pan.yOffset * 0.5 * zoom) * zoom,
+        element.image.width * devicePixelRatio,
+        element.image.height * devicePixelRatio
+      );
+      ctx?.restore();
       break;
   }
 };

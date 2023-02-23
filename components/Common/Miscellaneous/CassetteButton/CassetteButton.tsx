@@ -15,15 +15,29 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
   handleSend,
   value,
   keyExists,
+  canvasType,
+  synthElement,
 }): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
   return (
     <div
-      className={`z-1 ${position} bottom-${bottom} right-${right} w-20 h-fit rounded-lg border-black border-2 ${
-        ((keyExists && handleSend && !loading && value && value?.length > 0) ||
-          (!keyExists && handleSend)) &&
-        "cursor-pointer active:scale-95"
+      className={`z-1 ${position} bottom-${bottom} right-${right} min-w-[5rem] w-fit h-fit rounded-lg border-black border-2 ${
+        (!canvasType &&
+          keyExists &&
+          handleSend &&
+          !loading &&
+          value &&
+          value?.length > 0) ||
+        (!keyExists && handleSend) ||
+        (canvasType &&
+          keyExists &&
+          handleSend &&
+          !loading &&
+          value &&
+          value?.length > 0 &&
+          synthElement &&
+          "cursor-pointer active:scale-95")
       } bg-black`}
     >
       <div
@@ -35,7 +49,7 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
           id="mass"
         >
           <div
-            className={`relative w-fit col-start-1 h-fit place-self-center text-white/80 font-sats px-3 py-1 text-${textSize} ${
+            className={`relative w-fit col-start-1 h-fit place-self-center text-center whitespace-nowrap text-white/80 font-sats px-3 py-1 text-${textSize} ${
               loading && "animate-spin"
             }`}
             onClick={

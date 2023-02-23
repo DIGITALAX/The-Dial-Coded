@@ -61,6 +61,7 @@ import noHotDataReducer from "./reducers/noHotDataSlice";
 import canvasTypeReducer from "./reducers/canvasTypeSlice";
 import addPromptImageReducer from "./reducers/addPromptImageSlice";
 import initImagePromptReducer from "./reducers/initImagePromptSlice";
+import selectSynthElementReducer from "./reducers/selectSynthElementSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -124,6 +125,7 @@ const reducer = combineReducers({
   canvasTypeReducer,
   addPromptImageReducer,
   initImagePromptReducer,
+  selectSynthElementReducer
 });
 
 export const store = configureStore({
