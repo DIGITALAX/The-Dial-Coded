@@ -1,6 +1,8 @@
 import { useState } from "react";
+import lodash from "lodash";
+import { SvgPatternType } from "../types/canvas.types";
 
-const useElements = (initialState: any) => {
+const useElements = (initialState: any, pattern: boolean) => {
   const [index, setIndex] = useState(0);
   const [history, setHistory] = useState([initialState]);
 
@@ -19,11 +21,32 @@ const useElements = (initialState: any) => {
   };
 
   const undo = (): boolean | void => {
-    index > 0 && setIndex((prevState) => prevState - 1);
+    if (index > 0) {
+      if (pattern) {
+        const lastElements = lodash.filter(
+          history[index],
+          (element: SvgPatternType) => {
+            return (
+              element.type !== "0" &&
+              element.type !== "1" &&
+              element.type !== "2"
+            );
+          }
+        );
+        if (lastElements?.length > 0) {
+          setIndex((prevState) => prevState - 1);
+        }
+      } else {
+        setIndex((prevState) => prevState - 1);
+      }
+    }
   };
 
-  const redo = (): boolean | void =>
-    index < history.length - 1 && setIndex((prevState) => prevState + 1);
+  const redo = (): boolean | void => {
+    if (index < history.length - 1) {
+      setIndex((prevState) => prevState + 1);
+    }
+  };
 
   return [history[index], setState, undo, redo];
 };

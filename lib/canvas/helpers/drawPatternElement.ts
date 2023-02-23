@@ -1,8 +1,7 @@
 import { SvgPatternType } from "../../../components/Home/Layout/Canvas/types/canvas.types";
-import promptImageResize from "./promptImageResize";
 
 const drawPatternElement = (
-  element: any,
+  element: SvgPatternType,
   ctx: CanvasRenderingContext2D | null,
   zoom: number,
   pan: {
@@ -62,7 +61,7 @@ const drawPatternElement = (
         (element.clipElement.posX - pan.xOffset * 0.5 * zoom) * zoom,
         (element.clipElement.posY - pan.yOffset * 0.5 * zoom) * zoom,
         element.image.width * devicePixelRatio,
-        element.image.height * devicePixelRatio
+        element.image.height * devicePixelRatio,
       );
       ctx?.restore();
       break;

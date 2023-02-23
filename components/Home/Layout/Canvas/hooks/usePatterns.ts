@@ -15,7 +15,6 @@ import safe from "./../../../../../pages/api/constants/safe.json";
 import temp from "./../../../../../pages/api/constants/temp.json";
 import useElements from "./useElements";
 import { RootState } from "../../../../../redux/store";
-import onLine from "../../../../../lib/canvas/helpers/onLine";
 import lodash from "lodash";
 import wheelLogic from "../../../../../lib/canvas/helpers/wheelLogic";
 import { setAddPromptImage } from "../../../../../redux/reducers/addPromptImageSlice";
@@ -23,6 +22,7 @@ import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFil
 import drawPatternElement from "../../../../../lib/canvas/helpers/drawPatternElement";
 import addRashToCanvas from "../../../../../lib/canvas/helpers/addRashToCanvas";
 import { setSelectSynthElement } from "../../../../../redux/reducers/selectSynthElementSlice";
+import onPatternElement from "../../../../../lib/canvas/helpers/onPatternElement";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
@@ -56,10 +56,18 @@ const usePatterns = (): UsePatternsResult => {
   const [patternType, setPatternType] = useState<string>("");
   const [template, setTemplate] = useState<string>("");
   const [switchType, setSwitchType] = useState<boolean>(false);
+  const [eraseElement, setEraseElement] = useState<SvgPatternType>();
   const [synthElementMove, setSynthElementMove] = useState<SvgPatternType>();
   const [showPatternDrawOptions, setShowPatternDrawOptions] =
     useState<boolean>(false);
-  const [elements, setElements, undo, redo] = useElements([]);
+  const [hex, setHex] = useState<string>("#000000");
+  const [colorPicker, setColorPicker] = useState<boolean>(false);
+  const [brushWidth, setBrushWidth] = useState<number>(12);
+  const [thickness, setThickness] = useState<boolean>(false);
+  const [clear, setClear] = useState<boolean>(false);
+  const [elements, setElements, undo, redo] = useElements([], true);
+
+  console.log(tool)
 
   const templateSwitch = async (template: string | undefined) => {
     if (patternType === "rash") {
@@ -97,7 +105,7 @@ const usePatterns = (): UsePatternsResult => {
       ctx.beginPath();
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
-      elements?.forEach((element: any) => {
+      elements?.forEach((element: SvgPatternType) => {
         drawPatternElement(
           element,
           ctx,
@@ -105,7 +113,7 @@ const usePatterns = (): UsePatternsResult => {
           pan,
           tool,
           synthElementMove,
-          synthElementSelect,
+          synthElementSelect
         );
       });
     }
@@ -147,41 +155,15 @@ const usePatterns = (): UsePatternsResult => {
           pan.yOffset + 0.5 * ((e.clientY - bounds.top - pan.yInitial) / zoom),
       });
     } else if (action === "synth" || action === "none") {
-      let positionArray: SvgPatternType[] = [];
-      lodash.filter(elements, (element: SvgPatternType) => {
-        const returned = element.points?.some((point, index) => {
-          const nextPoint: any = (
-            element.points as {
-              x: number;
-              y: number;
-            }[]
-          )[index + 1];
-          if (!nextPoint) return false;
-          return (
-            onLine(
-              (point.x + element.posX - pan.xOffset * 0.5 * zoom) *
-                devicePixelRatio *
-                zoom,
-              (point.y + element.posY - pan.yOffset * 0.5 * zoom) *
-                devicePixelRatio *
-                zoom,
-              (nextPoint.x + element.posX - pan.xOffset * 0.5 * zoom) *
-                devicePixelRatio *
-                zoom,
-              (nextPoint.y + element.posY - pan.yOffset * 0.5 * zoom) *
-                devicePixelRatio *
-                zoom,
-              ((e.clientX - bounds?.left) * devicePixelRatio) / zoom,
-              ((e.clientY - bounds?.top) * devicePixelRatio) / zoom,
-              2
-            ) != null
-          );
-        });
-        if (returned) {
-          positionArray.push({ ...element });
-        }
-      });
-      if (positionArray[0]) {
+      const positionArray = onPatternElement(
+        elements,
+        zoom,
+        pan,
+        e,
+        canvas,
+        true
+      );
+      if (positionArray?.[0]) {
         setSynthElementMove(positionArray[0]);
       } else {
         setSynthElementMove(undefined);
@@ -206,11 +188,32 @@ const usePatterns = (): UsePatternsResult => {
       }
     } else if (tool === "default") {
       setAction("none");
+    } else if (tool === "erase") {
+      const positionArray = onPatternElement(
+        elements,
+        zoom,
+        pan,
+        e,
+        canvas,
+        false
+      );
+      if (positionArray?.[0]) {
+        setEraseElement(positionArray[0]);
+      }
     }
   };
 
   const handleMouseUpPattern = (e: MouseEvent) => {
     setAction("none");
+    if (tool === "erase") {
+      if (eraseElement) {
+        const filteredElements = lodash.filter(
+          elements,
+          (element) => element !== eraseElement
+        );
+        setElements(filteredElements);
+      }
+    }
   };
 
   const handleWheelPattern = (e: WheelEvent) => {
@@ -240,7 +243,8 @@ const usePatterns = (): UsePatternsResult => {
       imageObject.src = e.target?.result as string;
       imageObject.onload = () => {
         const matchedIndex = elements.findIndex(
-          (element: any) => element.points === synthElementSelect?.points
+          (element: SvgPatternType) =>
+            element.points === synthElementSelect?.points
         );
         setElements([
           ...elements.slice(0, matchedIndex + 1),
@@ -251,11 +255,14 @@ const usePatterns = (): UsePatternsResult => {
           },
           ...elements.slice(matchedIndex + 1),
         ]);
+        dispatch(setSelectSynthElement(undefined));
       };
     };
   };
 
-  const handlePatternClear = () => {};
+  const handlePatternClear = () => {
+    setClear(true);
+  };
 
   const handlePatternSave = () => {
     const img = canvas.toDataURL("image/png");
@@ -273,6 +280,22 @@ const usePatterns = (): UsePatternsResult => {
     xhr.open("GET", img);
     xhr.send();
   };
+
+  useLayoutEffect(() => {
+    if (clear) {
+      const newElements = lodash.filter(elements, (element: SvgPatternType) => {
+        if (
+          element.type === "0" ||
+          element.type === "1" ||
+          element.type === "2"
+        ) {
+          return true;
+        }
+      });
+      setElements(newElements);
+      setClear(false);
+    }
+  }, [clear]);
 
   return {
     template,
@@ -296,6 +319,16 @@ const usePatterns = (): UsePatternsResult => {
     handleMouseUpPattern,
     handlePatternClear,
     handlePatternSave,
+    hex,
+    setHex,
+    colorPicker,
+    setColorPicker,
+    thickness,
+    setThickness,
+    brushWidth,
+    setBrushWidth,
+    undo,
+    redo,
   };
 };
 

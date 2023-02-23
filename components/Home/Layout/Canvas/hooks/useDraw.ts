@@ -81,7 +81,7 @@ const useDraw = () => {
   const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
   const ctx = canvas?.getContext("2d");
   const dosis = new FontFace("dosis", "url(fonts/DosisRegular.ttf)");
-  const [elements, setElements, undo, redo] = useElements([]);
+  const [elements, setElements, undo, redo] = useElements([], false);
 
   const handleTitle = (e: any) => {
     dispatch(setDraftTitle(e.target.value));

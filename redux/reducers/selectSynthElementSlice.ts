@@ -15,7 +15,7 @@ export const selectSynthElementSlice = createSlice({
   reducers: {
     setSelectSynthElement: (
       state: SelectSynthElementState,
-      action: PayloadAction<SvgPatternType>
+      action: PayloadAction<SvgPatternType | undefined>
     ) => {
       state.value = action.payload;
     },
