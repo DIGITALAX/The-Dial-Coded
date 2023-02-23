@@ -19,7 +19,15 @@ const BottomMenu: FunctionComponent<BottomMenuProps> = ({
   shapes,
   setShapes,
   canvasType,
-  setPatternTool
+  setPatternTool,
+  patternBrushWidth,
+  setPatternBrushWidth,
+  patternColorPicker,
+  setPatternColorPicker,
+  patternHex,
+  setPatternHex,
+  patternThickness,
+  setPatternThickness,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit col-start-1 grid grid-flow-col auto-cols-auto justify-self-start self-end pb-3 px-3 gap-2 row-start-2">
@@ -47,6 +55,14 @@ const BottomMenu: FunctionComponent<BottomMenuProps> = ({
           setShapes={setShapes}
           canvasType={canvasType}
           setPatternTool={setPatternTool}
+          patternHex={patternHex}
+          setPatternHex={setPatternHex}
+          patternColorPicker={patternColorPicker}
+          setPatternColorPicker={setPatternColorPicker}
+          patternThickness={patternThickness}
+          setPatternThickness={setPatternThickness}
+          patternBrushWidth={patternBrushWidth}
+          setPatternBrushWidth={setPatternBrushWidth}
         />
       )}
     </div>

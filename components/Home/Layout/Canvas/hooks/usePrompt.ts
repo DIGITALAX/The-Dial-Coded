@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getReplicateKey } from "../../../../../lib/replicate/utils";
 import { setAddPromptImage } from "../../../../../redux/reducers/addPromptImageSlice";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
+import { setSynthLoading } from "../../../../../redux/reducers/synthLoadingSlice";
 import { RootState } from "../../../../../redux/store";
 import { InputType, UsePromptResults } from "../types/canvas.types";
 
@@ -12,7 +13,6 @@ const usePrompt = (): UsePromptResults => {
   );
   const [cfg, setCfg] = useState<string>("10");
   const [steps, setSteps] = useState<string>("60");
-  const [promptLoading, setPromptLoading] = useState<boolean>(false);
   const [strength, setStrength] = useState<string>("50");
   const [prompt, setPrompt] = useState<string>("");
   const [keyExists, setKeyExists] = useState<boolean>(false);
@@ -20,7 +20,7 @@ const usePrompt = (): UsePromptResults => {
   const dispatch = useDispatch();
 
   const handleSendPrompt = async (): Promise<void> => {
-    setPromptLoading(true);
+    dispatch(setSynthLoading(true));
     const input: InputType = {
       prompt: prompt,
       width: 768,
@@ -34,7 +34,7 @@ const usePrompt = (): UsePromptResults => {
     } catch (err: any) {
       console.error(err.message);
     }
-    setPromptLoading(false);
+    dispatch(setSynthLoading(false));
   };
 
   const handleSendImg2Img = async () => {
@@ -42,7 +42,7 @@ const usePrompt = (): UsePromptResults => {
       dispatch(setInsufficientFunds("marquee"));
       return;
     }
-    setPromptLoading(true);
+    dispatch(setSynthLoading(true));
     const input: InputType = {
       prompt: prompt,
       width: 768,
@@ -58,7 +58,7 @@ const usePrompt = (): UsePromptResults => {
     } catch (err: any) {
       console.error(err.message);
     }
-    setPromptLoading(false);
+    dispatch(setSynthLoading(false));
   };
 
   const promptToReplicate = async (input: InputType, model: string) => {
@@ -99,7 +99,6 @@ const usePrompt = (): UsePromptResults => {
     steps,
     setSteps,
     handleSendPrompt,
-    promptLoading,
     prompt,
     setPrompt,
     keyExists,

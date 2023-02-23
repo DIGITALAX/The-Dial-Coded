@@ -23,6 +23,9 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   const synthElementSelect = useSelector(
     (state: RootState) => state.app.selectSynthElementReducer.value
   );
+  const promptLoading = useSelector(
+    (state: RootState) => state.app.synthLoadingReducer.value
+  );
   const dispatch = useDispatch();
   const { openConnectModal } = useConnectModal();
   const {
@@ -49,6 +52,14 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handlePatternSave,
     undo: patternUndo,
     redo: patternRedo,
+    hex: patternHex,
+    setHex: setPatternHex,
+    colorPicker: patternColorPicker,
+    setColorPicker: setPatternColorPicker,
+    thickness: patternThickness,
+    setThickness: setPatternThickness,
+    brushWidth: patternBrushWidth,
+    setBrushWidth: setPatternBrushWidth,
   } = usePatterns();
   const {
     steps,
@@ -56,7 +67,6 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     cfg,
     setCfg,
     handleSendPrompt,
-    promptLoading,
     prompt,
     setPrompt,
     keyExists,
@@ -259,6 +269,14 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           synthElementSelect={synthElementSelect}
           patternUndo={patternUndo}
           patternRedo={patternRedo}
+          patternHex={patternHex}
+          setPatternHex={setPatternHex}
+          patternColorPicker={patternColorPicker}
+          setPatternColorPicker={setPatternColorPicker}
+          patternThickness={patternThickness}
+          setPatternThickness={setPatternThickness}
+          patternBrushWidth={patternBrushWidth}
+          setPatternBrushWidth={setPatternBrushWidth}
         />
       );
   }

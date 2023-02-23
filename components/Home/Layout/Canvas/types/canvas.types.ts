@@ -114,6 +114,14 @@ export type DrawProps = {
   synthElementSelect: SvgPatternType | undefined;
   patternUndo: () => boolean | void;
   patternRedo: () => boolean | void;
+  patternHex: string;
+  setPatternHex: (e: string) => void;
+  patternColorPicker: boolean;
+  setPatternColorPicker: (e: boolean) => void;
+  patternThickness: boolean;
+  setPatternThickness: (e: boolean) => void;
+  patternBrushWidth: number;
+  setPatternBrushWidth: (e: number) => void;
 };
 
 export type ColorPickerProps = {
@@ -174,6 +182,14 @@ export type BottomMenuProps = {
   setTool: (e: string) => void;
   canvasType: boolean;
   setPatternTool: (e: string) => void;
+  patternHex: string;
+  setPatternHex: (e: string) => void;
+  patternColorPicker: boolean;
+  setPatternColorPicker: (e: boolean) => void;
+  patternThickness: boolean;
+  setPatternThickness: (e: boolean) => void;
+  patternBrushWidth: number;
+  setPatternBrushWidth: (e: number) => void;
 };
 
 export type BoardProps = {
@@ -239,6 +255,14 @@ export type BottomOptionsProps = {
   setTool: (e: string) => void;
   canvasType: boolean;
   setPatternTool: (e: string) => void;
+  patternHex: string;
+  setPatternHex: (e: string) => void;
+  patternColorPicker: boolean;
+  setPatternColorPicker: (e: boolean) => void;
+  patternThickness: boolean;
+  setPatternThickness: (e: boolean) => void;
+  patternBrushWidth: number;
+  setPatternBrushWidth: (e: number) => void;
 };
 
 export interface ElementInterface {
@@ -319,7 +343,6 @@ export type UsePromptResults = {
   steps: string;
   setSteps: (e: string) => void;
   handleSendPrompt: () => Promise<void>;
-  promptLoading: boolean;
   setPrompt: (e: string) => void;
   prompt: string;
   keyExists: boolean;

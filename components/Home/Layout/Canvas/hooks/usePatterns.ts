@@ -32,6 +32,9 @@ const usePatterns = (): UsePatternsResult => {
   const synthElementSelect = useSelector(
     (state: RootState) => state.app.selectSynthElementReducer.value
   );
+  const promptLoading = useSelector(
+    (state: RootState) => state.app.synthLoadingReducer.value
+  );
   const canvasPatternRef = useRef<HTMLCanvasElement>(null);
   const canvas = (canvasPatternRef as MutableRefObject<HTMLCanvasElement>)
     ?.current;
@@ -66,8 +69,6 @@ const usePatterns = (): UsePatternsResult => {
   const [thickness, setThickness] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(false);
   const [elements, setElements, undo, redo] = useElements([], true);
-
-  console.log(tool)
 
   const templateSwitch = async (template: string | undefined) => {
     if (patternType === "rash") {
@@ -113,7 +114,8 @@ const usePatterns = (): UsePatternsResult => {
           pan,
           tool,
           synthElementMove,
-          synthElementSelect
+          synthElementSelect,
+          promptLoading
         );
       });
     }
@@ -154,7 +156,7 @@ const usePatterns = (): UsePatternsResult => {
         yOffset:
           pan.yOffset + 0.5 * ((e.clientY - bounds.top - pan.yInitial) / zoom),
       });
-    } else if (action === "synth" || action === "none") {
+    } else if ((action === "synth" || action === "none") && !promptLoading) {
       const positionArray = onPatternElement(
         elements,
         zoom,
@@ -181,7 +183,7 @@ const usePatterns = (): UsePatternsResult => {
         yOffset: pan.yOffset,
       });
       setAction("panning");
-    } else if (tool === "synth") {
+    } else if (tool === "synth" && !promptLoading) {
       setAction("synth");
       if (synthElementMove) {
         dispatch(setSelectSynthElement(synthElementMove));
@@ -246,15 +248,25 @@ const usePatterns = (): UsePatternsResult => {
           (element: SvgPatternType) =>
             element.points === synthElementSelect?.points
         );
+
         setElements([
-          ...elements.slice(0, matchedIndex + 1),
+          ...elements.slice(
+            0,
+
+            matchedIndex + 1
+          ),
           {
             clipElement: synthElementSelect,
             image: imageObject,
             type: "image",
           },
-          ...elements.slice(matchedIndex + 1),
+          ...elements.slice(
+            elements[matchedIndex + 1].type === "image"
+              ? matchedIndex + 2
+              : matchedIndex + 1
+          ),
         ]);
+
         dispatch(setSelectSynthElement(undefined));
       };
     };
