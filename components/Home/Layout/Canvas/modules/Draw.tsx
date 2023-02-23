@@ -97,7 +97,9 @@ const Draw: FunctionComponent<DrawProps> = ({
   canvasType,
   handlePatternClear,
   handlePatternSave,
-  synthElementSelect
+  synthElementSelect,
+  patternUndo,
+  patternRedo,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -187,6 +189,8 @@ const Draw: FunctionComponent<DrawProps> = ({
                     canvasType={canvasType}
                     handlePatternClear={handlePatternClear}
                     handlePatternSave={handlePatternSave}
+                    patternUndo={patternUndo}
+                    patternRedo={patternRedo}
                   />
                   <div className="absolute w-fit h-fit grid grid-flow-row auto-rows-auto z-10 bottom-14 left-4">
                     <PatternMenu
@@ -215,6 +219,7 @@ const Draw: FunctionComponent<DrawProps> = ({
                       shapes={shapes}
                       setShapes={setShapes}
                       canvasType={canvasType}
+                      setPatternTool={setPatternTool}
                     />
                   </div>
 

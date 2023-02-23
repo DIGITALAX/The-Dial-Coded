@@ -22,7 +22,9 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   setPatternTool,
   canvasType,
   handlePatternSave,
-  handlePatternClear
+  handlePatternClear,
+  patternRedo,
+  patternUndo,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-cols-3 f9:grid-cols-none f9:grid-flow-row auto-rows-auto gap-4">
@@ -148,7 +150,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
         <div
           className="relative row-start-1 w-fit h-fit"
-          onClick={() => redo()}
+          onClick={canvasType ? () => patternRedo() : () => redo()}
         >
           <CanvasOption
             image="QmeNcEGW5pAFjPsgLsTDPgUsEm9sy2b1F1WteotshzcKvW"
@@ -159,7 +161,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
         </div>
         <div
           className="relative row-start-2 w-fit h-fit"
-          onClick={() => undo()}
+          onClick={canvasType ? () => patternUndo() : () => undo()}
         >
           <CanvasOption
             image="QmZJQePuwQBP8vsa86vrPSVwsqwzam3PRbEbNxdgH7bBe9"

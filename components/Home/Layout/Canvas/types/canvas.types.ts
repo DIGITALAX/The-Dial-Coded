@@ -112,6 +112,8 @@ export type DrawProps = {
   handlePatternSave: () => void;
   handlePatternClear: () => void;
   synthElementSelect: SvgPatternType | undefined;
+  patternUndo: () => boolean | void;
+  patternRedo: () => boolean | void;
 };
 
 export type ColorPickerProps = {
@@ -151,6 +153,8 @@ export type SideMenuProps = {
   setPatternTool: (e: string) => void;
   handlePatternSave: () => void;
   handlePatternClear: () => void;
+  patternUndo: () => boolean | void;
+  patternRedo: () => boolean | void;
 };
 
 export type BottomMenuProps = {
@@ -169,6 +173,7 @@ export type BottomMenuProps = {
   brushWidth: number;
   setTool: (e: string) => void;
   canvasType: boolean;
+  setPatternTool: (e: string) => void;
 };
 
 export type BoardProps = {
@@ -215,6 +220,8 @@ export type SideOptionsProps = {
   canvasType: boolean;
   handlePatternSave: () => void;
   handlePatternClear: () => void;
+  patternUndo: () => boolean | void;
+  patternRedo: () => boolean | void;
 };
 
 export type BottomOptionsProps = {
@@ -231,6 +238,7 @@ export type BottomOptionsProps = {
   brushWidth: number;
   setTool: (e: string) => void;
   canvasType: boolean;
+  setPatternTool: (e: string) => void;
 };
 
 export interface ElementInterface {
@@ -399,6 +407,16 @@ export type UsePatternsResult = {
   setTool: (e: string) => void;
   handlePatternSave: () => void;
   handlePatternClear: () => void;
+  hex: string;
+  setHex: (e: string) => void;
+  colorPicker: boolean;
+  setColorPicker: (e: boolean) => void;
+  setThickness: (e: boolean) => void;
+  thickness: boolean;
+  setBrushWidth: (e: number) => void;
+  brushWidth: number;
+  undo: () => boolean | void;
+  redo: () => boolean | void;
 };
 
 export interface SafeImage {
@@ -424,4 +442,6 @@ export interface SvgPatternType {
   posX: number;
   posY: number;
   stroke: string;
+  clipElement: SvgPatternType;
+  image: HTMLImageElement;
 }

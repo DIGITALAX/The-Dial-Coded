@@ -17,6 +17,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
   brushWidth,
   setTool,
   canvasType,
+  setPatternTool,
 }): JSX.Element => {
   return (
     <div className="absolute w-fit h-fit flex flex-row f9:flex-nowrap flex-wrap gap-6 left-20 bottom-3 f9:bottom-auto f9:-top-1">
@@ -42,7 +43,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               image="QmPvfTS6brNvnTN6e6L2Btp8eAMxC8XhErrtQEjYF1nB8o"
               width={20}
               height={20}
-              setShowString={setTool}
+              setShowString={canvasType ? setPatternTool : setTool}
               string_option={"selection"}
             />
           </div>
@@ -54,7 +55,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               image="QmPVmyozQu3DwX2f5dQnv6MgRtmDckrnKNje2A4ettN9qS"
               width={40}
               height={40}
-              setShowString={setTool}
+              setShowString={canvasType ? setPatternTool : setTool}
               string_option={"resize"}
             />
           </div>
@@ -68,7 +69,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               bgColor="black"
               width={25}
               height={20}
-              setShowString={setTool}
+              setShowString={canvasType ? setPatternTool : setTool}
               string_option={"pencil"}
             />
           </div>
@@ -211,7 +212,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               bgColor="black"
               width={35}
               height={35}
-              setShowString={setTool}
+              setShowString={canvasType ? setPatternTool : setTool}
               string_option={"erase"}
             />
           </div>
