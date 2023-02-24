@@ -81,8 +81,6 @@ const usePatterns = (): UsePatternsResult => {
     }
   };
 
-  console.log({ elements });
-
   useEffect(() => {
     dispatch(setCanvasType(switchType));
     if (switchType && template !== "") {
@@ -199,6 +197,7 @@ const usePatterns = (): UsePatternsResult => {
         canvas,
         false
       );
+      console.log(positionArray);
       if (positionArray?.[0]) {
         setEraseElement(positionArray[0]);
       }
@@ -211,9 +210,13 @@ const usePatterns = (): UsePatternsResult => {
       if (eraseElement) {
         const filteredElements = lodash.filter(
           elements,
-          (element) => element !== eraseElement
+          (element) => element.id !== eraseElement.id
         );
-        setElements(filteredElements);
+        const updatedElements = filteredElements.map((element, index) => ({
+          ...element,
+          id: index,
+        }));
+        setElements(updatedElements);
       }
     }
   };
@@ -249,28 +252,33 @@ const usePatterns = (): UsePatternsResult => {
             element.points === synthElementSelect?.points
         );
 
-        setElements([
-          ...elements.slice(
-            0,
-
-            matchedIndex + 1
-          ),
-          {
+        setElements((prevElements: SvgPatternType[]) => {
+          const newElement = {
             clipElement: synthElementSelect,
             image: imageObject,
             type: "image",
-          },
-          ...elements.slice(
-            elements[matchedIndex + 1].type === "image"
-              ? matchedIndex + 2
-              : matchedIndex + 1
-          ),
-        ]);
+          };
+          const newElements = [
+            ...prevElements.slice(0, matchedIndex + 1),
+            newElement,
+            ...prevElements.slice(
+              prevElements[matchedIndex + 1].type === "image"
+                ? matchedIndex + 2
+                : matchedIndex + 1
+            ),
+          ];
+          return newElements.map((element, index) => ({
+            ...element,
+            id: index,
+          }));
+        });
 
         dispatch(setSelectSynthElement(undefined));
       };
     };
   };
+
+  console.log({ elements });
 
   const handlePatternClear = () => {
     setClear(true);

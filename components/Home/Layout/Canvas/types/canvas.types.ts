@@ -457,6 +457,7 @@ export enum TemplateTypes {
 }
 
 export interface SvgPatternType {
+  id: number,
   points: {
     x: number;
     y: number;
@@ -465,6 +466,6 @@ export interface SvgPatternType {
   posX: number;
   posY: number;
   stroke: string;
-  clipElement: SvgPatternType;
-  image: HTMLImageElement;
+  clipElement?: SvgPatternType;
+  image?: HTMLImageElement;
 }
