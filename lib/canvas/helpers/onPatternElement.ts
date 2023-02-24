@@ -15,27 +15,37 @@ const onPatternElement = (
   e: MouseEvent,
   canvas: HTMLCanvasElement,
   template: boolean
-): SvgPatternType[] => {
+) => {
   let positionArray: SvgPatternType[] = [];
   const bounds = canvas?.getBoundingClientRect();
+  const ctx = canvas?.getContext("2d");
   if (!template) {
     lodash.filter(elements, (element: SvgPatternType) => {
       if (element.type === "image") {
-        const insideImage =
-          ((e.clientX - bounds?.left) * devicePixelRatio) / zoom >=
-            (element.clipElement.posX - pan.xOffset * 0.5 * zoom) * zoom &&
-          ((e.clientX - bounds?.left) * devicePixelRatio) / zoom <=
-            (element.image.width as number) * zoom * zoom &&
-          ((e.clientY - bounds?.top) * devicePixelRatio) / zoom >=
-            (element.clipElement.posY - pan.yOffset * 0.5 * zoom) * zoom &&
-          ((e.clientY - bounds?.top) * devicePixelRatio) / zoom <=
-            (element.image.height as number) * zoom
-            ? "inside"
-            : null;
-        console.log(insideImage);
-        if (insideImage) {
-          positionArray.push({ ...element });
-          return;
+        console.log(
+          (e.clientX - bounds?.left) * devicePixelRatio,
+          (e.clientX - bounds?.top) * devicePixelRatio
+        );
+
+        const x = e.clientX - bounds.left;
+        const y = e.clientY - bounds.top;
+
+        for (
+          let i = 0;
+          i < (element.clipElement as SvgPatternType).points.length;
+          i++
+        ) {
+          const inside = isPointInsidePath(
+            x,
+            y,
+            element?.clipElement as SvgPatternType,
+            ctx as CanvasRenderingContext2D
+          );
+
+          if (inside) {
+            positionArray.push({ ...element });
+            return;
+          }
         }
       }
     });
@@ -86,3 +96,30 @@ const onPatternElement = (
 };
 
 export default onPatternElement;
+
+function isPointInsidePath(
+  x: any,
+  y: any,
+  path: SvgPatternType,
+  ctx: CanvasRenderingContext2D
+) {
+  ctx.save();
+  ctx.beginPath();
+  path.points.forEach(function (point: any, index: number) {
+    if (index === 0) {
+      ctx.moveTo(
+        (point.x + path.posX) * devicePixelRatio,
+        (point.y + path.posY) * devicePixelRatio
+      );
+    } else {
+      ctx.lineTo(
+        (point.x + path.posX) * devicePixelRatio,
+        (point.y + path.posY) * devicePixelRatio
+      );
+    }
+  });
+  ctx.closePath();
+  var isInside = ctx.isPointInPath(x * devicePixelRatio, y * devicePixelRatio);
+  ctx.restore();
+  return isInside;
+}

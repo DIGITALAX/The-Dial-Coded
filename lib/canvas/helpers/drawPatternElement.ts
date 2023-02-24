@@ -19,7 +19,12 @@ const drawPatternElement = (
   (ctx as CanvasRenderingContext2D).lineWidth = 3 * zoom;
 
   if (!promptLoading) {
-    if (element.points === synthElementMove?.points && tool !== "pan") {
+    if (
+      element.points === synthElementMove?.points &&
+      tool !== "pan" &&
+      tool !== "erase" &&
+      tool !== "default"
+    ) {
       (ctx as CanvasRenderingContext2D).strokeStyle = "#f1d2ef";
     } else if (element.points === synthElementSelect?.points) {
       (ctx as CanvasRenderingContext2D).strokeStyle = "#aeeccf";
@@ -62,11 +67,15 @@ const drawPatternElement = (
       ctx?.save();
       ctx?.clip();
       ctx?.drawImage(
-        element.image,
-        (element.clipElement.posX - pan.xOffset * 0.5 * zoom) * zoom,
-        (element.clipElement.posY - pan.yOffset * 0.5 * zoom) * zoom,
-        element.image.width * devicePixelRatio,
-        element.image.height * devicePixelRatio
+        element.image as HTMLImageElement,
+        ((element.clipElement as SvgPatternType).posX -
+          pan.xOffset * 0.5 * zoom) *
+          zoom,
+        ((element.clipElement as SvgPatternType).posY -
+          pan.yOffset * 0.5 * zoom) *
+          zoom,
+        (element.image as HTMLImageElement).width * devicePixelRatio,
+        (element.image as HTMLImageElement).height * devicePixelRatio
       );
       ctx?.restore();
       break;
