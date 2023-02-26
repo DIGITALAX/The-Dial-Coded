@@ -122,6 +122,9 @@ export type DrawProps = {
   setPatternThickness: (e: boolean) => void;
   patternBrushWidth: number;
   setPatternBrushWidth: (e: number) => void;
+  writingPatternRef: Ref<HTMLTextAreaElement>;
+  handlePatternBlur: (e: FormEvent) => void;
+  selectedPatternElement: SvgPatternType | undefined;
 };
 
 export type ColorPickerProps = {
@@ -440,6 +443,9 @@ export type UsePatternsResult = {
   brushWidth: number;
   undo: () => boolean | void;
   redo: () => boolean | void;
+  writingRef: Ref<HTMLTextAreaElement>;
+  handleBlur: (e: FormEvent) => void;
+  selectedElement: SvgPatternType | undefined;
 };
 
 export interface SafeImage {
@@ -457,15 +463,24 @@ export enum TemplateTypes {
 }
 
 export interface SvgPatternType {
-  id: number,
-  points: {
+  id: number;
+  points?: {
     x: number;
     y: number;
   }[];
   type: string;
-  posX: number;
-  posY: number;
-  stroke: string;
+  posX?: number;
+  posY?: number;
+  stroke?: string;
   clipElement?: SvgPatternType;
   image?: HTMLImageElement;
+  fill?: string;
+  strokeWidth?: number;
+  x1?: number;
+  y1?: number;
+  x2?: number;
+  y2?: number;
+  text?: string;
+  offsetY?: number;
+  offsetX?: number;
 }

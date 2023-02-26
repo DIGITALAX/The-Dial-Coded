@@ -781,13 +781,11 @@ const useDraw = () => {
         return;
       }
       if (tool === "erase") {
-        if (selectedElement) {
-          const filteredElements = lodash.filter(
-            elements,
-            (element) => element.id !== selectedElement.id
-          );
-          setElements(filteredElements);
-        }
+        const filteredElements = lodash.filter(
+          elements,
+          (element) => element.id !== selectedElement.id
+        );
+        setElements(filteredElements);
       }
     }
     if (action === "marquee") {

@@ -67,17 +67,17 @@ const createElement = (
               devicePixelRatio,
           },
         ],
-        fill: fill,
+        fill,
         strokeWidth,
       };
     case "text":
       return {
         id,
         type,
-        x1: x1 - bounds?.left ,
-        y1: y1 - bounds?.top ,
-        x2: x2 - bounds?.left ,
-        y2: y2 - bounds?.top ,
+        x1: x1 - bounds?.left,
+        y1: y1 - bounds?.top,
+        x2: x2 - bounds?.left,
+        y2: y2 - bounds?.top,
         fill,
         strokeWidth,
         text: "",

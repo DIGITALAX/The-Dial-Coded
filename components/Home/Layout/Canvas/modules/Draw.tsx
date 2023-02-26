@@ -108,6 +108,9 @@ const Draw: FunctionComponent<DrawProps> = ({
   setPatternHex,
   patternThickness,
   setPatternThickness,
+  writingPatternRef,
+  handlePatternBlur,
+  selectedPatternElement,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -131,13 +134,20 @@ const Draw: FunctionComponent<DrawProps> = ({
                       ? "bg-smokes bg-tileSize"
                       : "bg-spots"
                   } ${
-                    tool === "selection"
+                    canvasType && patternTool === "pencil"
+                      ? "cursor-default"
+                      : (!canvasType && tool === "selection") ||
+                        (canvasType && patternTool === "selection")
                       ? "cursor-move"
-                      : tool === "text"
+                      : (!canvasType && tool === "text") ||
+                        (canvasType && patternTool === "text")
                       ? "cursor-text"
-                      : tool === "erase"
+                      : (!canvasType && tool === "erase") ||
+                        (canvasType && patternTool === "erase")
                       ? "cursor-cell"
-                      : (tool === "pan" && action !== "panning") ||
+                      : (!canvasType &&
+                          tool === "pan" &&
+                          action !== "panning") ||
                         (patternTool === "pan" &&
                           patternAction !== "panning" &&
                           canvasType)
@@ -147,7 +157,7 @@ const Draw: FunctionComponent<DrawProps> = ({
                           patternAction === "panning" &&
                           canvasType)
                       ? "cursor-grabbing"
-                      : tool === "marquee" ||
+                      : (!canvasType && tool === "marquee") ||
                         canvasType ||
                         (canvasType && patternTool === "default")
                       ? "cursor-crosshair"
@@ -239,17 +249,26 @@ const Draw: FunctionComponent<DrawProps> = ({
                     />
                   </div>
 
-                  {action === "writing" && (
+                  {((!canvasType && action === "writing") ||
+                    (canvasType && patternAction === "writing")) && (
                     <textarea
-                      ref={writingRef}
+                      ref={canvasType ? writingPatternRef : writingRef}
                       autoFocus
                       className={`w-40 h-16 p-1.5 bg-black/50 border border-white rounded-md text-white font-dosis text-sm z-10 caret-white`}
-                      onKeyDown={(e: FormEvent) => handleBlur(e)}
+                      onKeyDown={
+                        canvasType
+                          ? (e: FormEvent) => handlePatternBlur(e)
+                          : (e: FormEvent) => handleBlur(e)
+                      }
                       style={{
                         resize: "none",
                         position: "absolute",
-                        top: selectedElement?.y1,
-                        left: selectedElement?.x1,
+                        top: canvasType
+                          ? selectedPatternElement?.y1
+                          : selectedElement?.y1,
+                        left: canvasType
+                          ? selectedPatternElement?.x1
+                          : selectedElement?.x1,
                       }}
                     ></textarea>
                   )}

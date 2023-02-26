@@ -33,6 +33,7 @@ const useElements = (initialState: any, pattern: boolean) => {
             );
           }
         );
+        console.log({lastElements})
         if (lastElements?.length > 0) {
           setIndex((prevState) => prevState - 1);
         }

@@ -60,6 +60,9 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     setThickness: setPatternThickness,
     brushWidth: patternBrushWidth,
     setBrushWidth: setPatternBrushWidth,
+    writingRef: writingPatternRef,
+    handleBlur: handlePatternBlur,
+    selectedElement: selectedPatternElement
   } = usePatterns();
   const {
     steps,
@@ -277,6 +280,9 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           setPatternThickness={setPatternThickness}
           patternBrushWidth={patternBrushWidth}
           setPatternBrushWidth={setPatternBrushWidth}
+          writingPatternRef={writingPatternRef}
+          handlePatternBlur={handlePatternBlur}
+          selectedPatternElement={selectedPatternElement}
         />
       );
   }

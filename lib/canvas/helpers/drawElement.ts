@@ -105,7 +105,7 @@ const drawElement = (
       }px dosis`;
       (ctx as CanvasRenderingContext2D).fillStyle = element.fill as string;
       (ctx as CanvasRenderingContext2D).fillText(
-        element.text as string,
+        (element.text as string) !== undefined ? (element.text as string) : "",
         element.x1 as number,
         element.y1 as number
       );
