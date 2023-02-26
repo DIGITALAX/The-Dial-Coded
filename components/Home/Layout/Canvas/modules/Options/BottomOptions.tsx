@@ -211,7 +211,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
               bgColor="black"
               width={30}
               height={30}
-              setShowString={setTool}
+              setShowString={canvasType ? setPatternTool : setTool}
               string_option={"text"}
             />
           </div>
@@ -257,7 +257,7 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
         </div> */}
       </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
-        {colorPicker && (
+        {(!canvasType ? colorPicker : patternColorPicker) && (
           <div className="absolute bottom-20 row-start-1 w-fit h-fit">
             <ColorPicker
               hex={canvasType ? patternHex : hex}

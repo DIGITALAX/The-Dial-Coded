@@ -6,6 +6,7 @@ import {
   WheelEvent,
   useRef,
   MutableRefObject,
+  FormEvent,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCanvasType } from "../../../../../redux/reducers/canvasTypeSlice";
@@ -23,6 +24,9 @@ import drawPatternElement from "../../../../../lib/canvas/helpers/drawPatternEle
 import addRashToCanvas from "../../../../../lib/canvas/helpers/addRashToCanvas";
 import { setSelectSynthElement } from "../../../../../redux/reducers/selectSynthElementSlice";
 import onPatternElement from "../../../../../lib/canvas/helpers/onPatternElement";
+import drawElement from "../../../../../lib/canvas/helpers/drawElement";
+import createElement from "../../../../../lib/canvas/helpers/createElement";
+import updateElement from "../../../../../lib/canvas/helpers/updateElement";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
@@ -35,6 +39,7 @@ const usePatterns = (): UsePatternsResult => {
   const promptLoading = useSelector(
     (state: RootState) => state.app.synthLoadingReducer.value
   );
+  const writingRef = useRef<HTMLTextAreaElement>(null);
   const canvasPatternRef = useRef<HTMLCanvasElement>(null);
   const canvas = (canvasPatternRef as MutableRefObject<HTMLCanvasElement>)
     ?.current;
@@ -59,7 +64,7 @@ const usePatterns = (): UsePatternsResult => {
   const [patternType, setPatternType] = useState<string>("");
   const [template, setTemplate] = useState<string>("");
   const [switchType, setSwitchType] = useState<boolean>(false);
-  const [eraseElement, setEraseElement] = useState<SvgPatternType>();
+  const [selectedElement, setSelectedElement] = useState<SvgPatternType>();
   const [synthElementMove, setSynthElementMove] = useState<SvgPatternType>();
   const [showPatternDrawOptions, setShowPatternDrawOptions] =
     useState<boolean>(false);
@@ -105,16 +110,28 @@ const usePatterns = (): UsePatternsResult => {
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
       elements?.forEach((element: SvgPatternType) => {
-        drawPatternElement(
-          element,
-          ctx,
-          zoom,
-          pan,
-          tool,
-          synthElementMove,
-          synthElementSelect,
-          promptLoading
-        );
+        if (action === "writing" && selectedElement?.id === element.id) {
+          return;
+        }
+        if (
+          element.type === "image" ||
+          element.type === "0" ||
+          element.type === "1" ||
+          element.type === "2"
+        ) {
+          drawPatternElement(
+            element,
+            ctx,
+            zoom,
+            pan,
+            tool,
+            synthElementMove,
+            synthElementSelect,
+            promptLoading
+          );
+        } else {
+          drawElement(element, ctx, zoom, canvas);
+        }
       });
     }
   }, [
@@ -143,7 +160,7 @@ const usePatterns = (): UsePatternsResult => {
   }, [promptImage]);
 
   const handleMouseMovePattern = (e: MouseEvent): void => {
-    if (!action) return;
+    if (!action || action === "writing") return;
     const bounds = canvas?.getBoundingClientRect();
     if (action === "panning") {
       setPan({
@@ -168,6 +185,48 @@ const usePatterns = (): UsePatternsResult => {
       } else {
         setSynthElementMove(undefined);
       }
+    } else if (action === "moving" && selectedElement) {
+      if (selectedElement?.type === "image") {
+        const newElement = {
+          clipElement: {
+            ...selectedElement.clipElement,
+            posX: e.clientX,
+            posY: e.clientY,
+          },
+          image: selectedElement.image,
+          id: selectedElement.id,
+          type: selectedElement.type,
+        };
+        const updatedElements = elements?.map((element: SvgPatternType) =>
+          element.id === selectedElement.id ? newElement : element
+        );
+        console.log({ newElement, updatedElements });
+        setElements(updatedElements);
+      }
+    } else if (action === "drawing") {
+      const index = elements?.length - 1;
+      const values = elements?.[index];
+      updateElement(
+        {
+          xOffset: pan.xOffset * 0.5,
+          yOffset: pan.yOffset * 0.5,
+        },
+        canvas,
+        zoom,
+        elements,
+        setElements,
+        ctx as CanvasRenderingContext2D,
+        values?.x1 as number,
+        values?.y1 as number,
+        e.clientX,
+        e.clientY,
+        tool,
+        index,
+        brushWidth,
+        hex,
+        null,
+        hex
+      );
     }
   };
 
@@ -188,7 +247,7 @@ const usePatterns = (): UsePatternsResult => {
       }
     } else if (tool === "default") {
       setAction("none");
-    } else if (tool === "erase") {
+    } else if (tool === "erase" || tool === "selection") {
       const positionArray = onPatternElement(
         elements,
         zoom,
@@ -197,20 +256,65 @@ const usePatterns = (): UsePatternsResult => {
         canvas,
         false
       );
-      console.log(positionArray);
+
       if (positionArray?.[0]) {
-        setEraseElement(positionArray[0]);
+        const elementsCopy = [...elements];
+
+        if (positionArray[0]?.type === "pencil") {
+          elementsCopy[positionArray[0].id] = {
+            ...elementsCopy[positionArray[0].id],
+            fill: "#078FD6",
+            stroke: "#078FD6",
+          };
+        }
+        setElements(elementsCopy);
+        setSelectedElement(positionArray[0]);
+        if (tool === "selection") {
+          setAction("moving");
+        }
       }
+    } else if (tool === "pencil" || tool === "text") {
+      console.log("here")
+      const newElement = createElement(
+        {
+          xOffset: pan.xOffset * 0.5,
+          yOffset: pan.yOffset * 0.5,
+        },
+        canvas,
+        zoom,
+        e.clientX,
+        e.clientY,
+        e.clientX,
+        e.clientY,
+        tool,
+        elements.length,
+        brushWidth,
+        hex,
+        hex
+      );
+      setAction(tool === "pencil" ? "drawing" : "writing");
+      setSelectedElement(newElement);
+      setElements([...elements, newElement]);
     }
   };
 
+  console.log({ elements });
+
   const handleMouseUpPattern = (e: MouseEvent) => {
-    setAction("none");
-    if (tool === "erase") {
-      if (eraseElement) {
+    if (selectedElement) {
+      if (
+        selectedElement.type === "text" &&
+        e.clientX - (selectedElement?.offsetX as number) ===
+          selectedElement.x1 &&
+        e.clientY - (selectedElement?.offsetY as number) === selectedElement.y1
+      ) {
+        setAction("writing");
+        return;
+      }
+      if (tool === "erase") {
         const filteredElements = lodash.filter(
           elements,
-          (element) => element.id !== eraseElement.id
+          (element) => element.id !== selectedElement.id
         );
         const updatedElements = filteredElements.map((element, index) => ({
           ...element,
@@ -219,6 +323,9 @@ const usePatterns = (): UsePatternsResult => {
         setElements(updatedElements);
       }
     }
+    if (action === "writing") return;
+    setAction("none");
+    setSelectedElement(undefined);
   };
 
   const handleWheelPattern = (e: WheelEvent) => {
@@ -301,6 +408,15 @@ const usePatterns = (): UsePatternsResult => {
     xhr.send();
   };
 
+  useEffect(() => {
+    const textAreaElement = writingRef.current;
+    if (action === "writing") {
+      textAreaElement?.focus();
+      (textAreaElement as HTMLTextAreaElement).value =
+        selectedElement?.text as string;
+    }
+  }, [tool, action, selectedElement]);
+
   useLayoutEffect(() => {
     if (clear) {
       const newElements = lodash.filter(elements, (element: SvgPatternType) => {
@@ -316,6 +432,42 @@ const usePatterns = (): UsePatternsResult => {
       setClear(false);
     }
   }, [clear]);
+
+  const handleBlur = (e: FormEvent) => {
+    if ((e as any).key === "Enter") {
+      const bounds = canvas?.getBoundingClientRect();
+      setAction("none");
+      setSelectedElement(undefined);
+      updateElement(
+        {
+          xOffset: pan.xOffset * 0.5,
+          yOffset: pan.yOffset * 0.5,
+        },
+        canvas,
+        zoom,
+        elements,
+        setElements,
+        ctx as CanvasRenderingContext2D,
+        ((selectedElement?.x1 as number) * devicePixelRatio +
+          bounds.left * zoom -
+          pan.xOffset * zoom * zoom) /
+          zoom,
+        ((selectedElement?.y1 as number) * devicePixelRatio +
+          bounds.top * zoom -
+          pan.yOffset * zoom * zoom) /
+          zoom,
+        selectedElement?.x2 as number,
+        selectedElement?.y2 as number,
+        tool,
+        selectedElement?.id as number,
+        brushWidth,
+        hex,
+        null,
+        null,
+        (e.target as HTMLFormElement)?.value
+      );
+    }
+  };
 
   return {
     template,
@@ -349,6 +501,9 @@ const usePatterns = (): UsePatternsResult => {
     setBrushWidth,
     undo,
     redo,
+    writingRef,
+    handleBlur,
+    selectedElement
   };
 };
 
