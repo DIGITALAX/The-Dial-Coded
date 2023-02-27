@@ -450,7 +450,7 @@ const useDraw = () => {
         shapeFillType,
         hex
       );
-    } else if (action === "moving") {
+    } else if (action === "moving") { 
       if (selectedElement.type === "pencil") {
         const newPoints = selectedElement.points?.map(
           (_: ElementInterface, index: number) => ({

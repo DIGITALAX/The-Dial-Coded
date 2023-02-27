@@ -27,6 +27,7 @@ import onPatternElement from "../../../../../lib/canvas/helpers/onPatternElement
 import drawElement from "../../../../../lib/canvas/helpers/drawElement";
 import createElement from "../../../../../lib/canvas/helpers/createElement";
 import updateElement from "../../../../../lib/canvas/helpers/updateElement";
+import { element } from "@rainbow-me/rainbowkit/dist/css/reset.css";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
@@ -218,13 +219,13 @@ const usePatterns = (): UsePatternsResult => {
         const newPoints = selectedElement.points?.map(
           (_: any, index: number) => ({
             x:
-            ((e.clientX - pan.xOffset * zoom * zoom * 0.5) / zoom) *
-              devicePixelRatio -
-            selectedElement?.offsetXs[index],
-          y:
-            ((e.clientY - pan.yOffset * zoom * zoom * 0.5) / zoom) *
-              devicePixelRatio -
-            selectedElement?.offsetYs[index],
+              ((e.clientX - pan.xOffset * zoom * zoom * 0.5) / zoom) *
+                devicePixelRatio -
+              selectedElement?.offsetXs[index],
+            y:
+              ((e.clientY - pan.yOffset * zoom * zoom * 0.5) / zoom) *
+                devicePixelRatio -
+              selectedElement?.offsetYs[index],
           })
         );
         const elementsCopy = [...elements];
@@ -233,6 +234,22 @@ const usePatterns = (): UsePatternsResult => {
           points: newPoints,
         };
         setElements(elementsCopy, true);
+      } else {
+        const textWidth = ctx?.measureText(selectedElement?.text as string)
+          .width as number;
+        const newElement = {
+          ...selectedElement,
+          x1: (e.clientX - bounds.left) * devicePixelRatio / zoom,
+          y1: (e.clientY - bounds.top) * devicePixelRatio / zoom,
+          x2: (e.clientX - bounds.left) * devicePixelRatio / zoom + textWidth * zoom,
+          y2:
+            (e.clientY - bounds.top) * devicePixelRatio / zoom +
+            (selectedElement?.strokeWidth as number) * zoom,
+        };
+        const updatedElements = elements?.map((element: SvgPatternType) =>
+          element.id === selectedElement?.id ? newElement : element
+        );
+        setElements(updatedElements, true);
       }
     } else if (action === "resizing" && selectedElement) {
       if (selectedElement.type === "image") {
@@ -286,6 +303,7 @@ const usePatterns = (): UsePatternsResult => {
 
   const handleMouseDownPattern = (e: MouseEvent): void => {
     const bounds = canvas?.getBoundingClientRect();
+    console.log({ elements });
     if (tool === "pan") {
       setPan({
         xInitial: e.clientX - bounds.left,
