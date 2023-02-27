@@ -202,7 +202,6 @@ const usePatterns = (): UsePatternsResult => {
         const updatedElements = elements?.map((element: SvgPatternType) =>
           element.id === selectedElement.id ? newElement : element
         );
-        console.log({ newElement, updatedElements });
         setElements(updatedElements);
       }
     } else if (action === "drawing") {
@@ -276,7 +275,6 @@ const usePatterns = (): UsePatternsResult => {
         }
       }
     } else if (tool === "pencil" || tool === "text") {
-      console.log("here");
       const newElement = createElement(
         {
           xOffset: pan.xOffset * 0.5,
@@ -299,8 +297,6 @@ const usePatterns = (): UsePatternsResult => {
       setElements([...elements, newElement]);
     }
   };
-
-  console.log({ elements });
 
   const handleMouseUpPattern = (e: MouseEvent) => {
     if (selectedElement) {
@@ -386,8 +382,6 @@ const usePatterns = (): UsePatternsResult => {
       };
     };
   };
-
-  console.log({ elements });
 
   const handlePatternClear = () => {
     setClear(true);

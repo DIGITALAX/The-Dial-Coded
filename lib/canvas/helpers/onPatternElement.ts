@@ -29,8 +29,8 @@ const onPatternElement = (
             i++
           ) {
             const inside = isPointInsidePath(
-              e.clientX - bounds.left,
-              e.clientY - bounds.top,
+              (e.clientX - bounds?.left) * devicePixelRatio,
+              (e.clientY - bounds?.top) * devicePixelRatio,
               element?.clipElement as SvgPatternType,
               ctx as CanvasRenderingContext2D
             );
@@ -145,13 +145,13 @@ function isPointInsidePath(
   ctx.beginPath();
   path.points?.forEach(function (point: any, index: number) {
     if (index === 0) {
-      ctx.moveTo(point.x * devicePixelRatio, point.y * devicePixelRatio);
+      ctx.moveTo(point.x, point.y);
     } else {
-      ctx.lineTo(point.x * devicePixelRatio, point.y * devicePixelRatio);
+      ctx.lineTo(point.x, point.y);
     }
   });
   ctx.closePath();
-  var isInside = ctx.isPointInPath(x * devicePixelRatio, y * devicePixelRatio);
+  var isInside = ctx.isPointInPath(x, y);
   ctx.restore();
   return isInside;
 }
