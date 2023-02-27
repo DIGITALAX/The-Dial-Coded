@@ -92,6 +92,7 @@ const usePatterns = (): UsePatternsResult => {
   };
 
   useEffect(() => {
+    dispatch(setInitImagePrompt(undefined));
     dispatch(setCanvasType(switchType));
     if (switchType && template !== "") {
       setTool("synth");
@@ -102,8 +103,6 @@ const usePatterns = (): UsePatternsResult => {
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
     }
   }, [patternType, template, switchType]);
-
-  console.log(elements);
 
   useLayoutEffect(() => {
     if (ctx && canvasType) {
@@ -622,6 +621,7 @@ const usePatterns = (): UsePatternsResult => {
     writingRef,
     handleBlur,
     selectedElement,
+    addImageToCanvas,
   };
 };
 

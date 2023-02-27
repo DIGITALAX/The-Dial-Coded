@@ -1,6 +1,10 @@
 import lodash from "lodash";
 
-const getCanvas = (canvas: HTMLCanvasElement, elements: any): string => {
+const getCanvas = (
+  canvas: HTMLCanvasElement,
+  elements: any,
+  synth?: boolean
+): string => {
   let img: string;
   const marquee = lodash.find(elements, { type: "marquee" });
   if (marquee) {
@@ -23,11 +27,11 @@ const getCanvas = (canvas: HTMLCanvasElement, elements: any): string => {
     );
     img = hiddenCanvas.toDataURL("image/png");
     document.body.removeChild(hiddenCanvas);
-  } else {
+  } else if (!synth) {
     img = canvas.toDataURL("image/png");
   }
 
-  return img;
+  return img!;
 };
 
 export default getCanvas;

@@ -23,21 +23,21 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
   return (
     <div
       className={`z-1 ${position} bottom-${bottom} right-${right} min-w-[5rem] w-fit h-fit rounded-lg border-black border-2 ${
-        (!canvasType &&
+        ((!canvasType &&
           keyExists &&
           handleSend &&
           !loading &&
           value &&
           value?.length > 0) ||
-        (!keyExists && handleSend) ||
-        (canvasType &&
-          keyExists &&
-          handleSend &&
-          !loading &&
-          value &&
-          value?.length > 0 &&
-          synthElement &&
-          "cursor-pointer active:scale-95")
+          (!keyExists && handleSend) ||
+          (canvasType &&
+            keyExists &&
+            handleSend &&
+            !loading &&
+            value &&
+            value?.length > 0 &&
+            synthElement)) &&
+        "cursor-pointer active:scale-95"
       } bg-black`}
     >
       <div

@@ -111,6 +111,7 @@ const Draw: FunctionComponent<DrawProps> = ({
   writingPatternRef,
   handlePatternBlur,
   selectedPatternElement,
+  addPatternImageToCanvas,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -326,6 +327,8 @@ const Draw: FunctionComponent<DrawProps> = ({
           searchLoading={searchLoading}
           quickSearchResults={quickSearchResults}
           fillImages={fillImages}
+          addPatternImageToCanvas={addPatternImageToCanvas}
+          canvasType={canvasType}
         />
       </div>
     </div>

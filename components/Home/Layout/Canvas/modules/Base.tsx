@@ -13,6 +13,8 @@ const Base: FunctionComponent<BaseProps> = ({
   quickSearchResults,
   fillImages,
   addImageToCanvas,
+  addPatternImageToCanvas,
+  canvasType,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-row">
@@ -82,12 +84,20 @@ const Base: FunctionComponent<BaseProps> = ({
                 <div
                   key={index}
                   className="relative w-40 h-44 bg-offBlue rounded-md flex cursor-pointer"
-                  onClick={() =>
-                    addImageToCanvas(
-                      quickSearchResults?.length > 0
-                        ? (result as LexicaImages)?.srcSmall
-                        : `${INFURA_GATEWAY}/ipfs/${result as string}`
-                    )
+                  onClick={
+                    canvasType
+                      ? () =>
+                          addPatternImageToCanvas(
+                            quickSearchResults?.length > 0
+                              ? (result as LexicaImages)?.srcSmall
+                              : `${INFURA_GATEWAY}/ipfs/${result as string}`
+                          )
+                      : () =>
+                          addImageToCanvas(
+                            quickSearchResults?.length > 0
+                              ? (result as LexicaImages)?.srcSmall
+                              : `${INFURA_GATEWAY}/ipfs/${result as string}`
+                          )
                   }
                 >
                   <Image
