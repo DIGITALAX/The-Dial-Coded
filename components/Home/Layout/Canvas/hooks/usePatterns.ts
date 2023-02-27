@@ -81,7 +81,9 @@ const usePatterns = (): UsePatternsResult => {
         base[0],
         safe[0],
         temp[Number(template?.split("0x0")[1]) - 1],
-        setElements
+        setElements,
+        zoom,
+        pan
       );
     }
   };
@@ -105,7 +107,7 @@ const usePatterns = (): UsePatternsResult => {
       ctx.clearRect(0, 0, canvas?.width, canvas?.height);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(zoom, zoom);
-
+      ctx.translate(pan.xOffset * zoom, pan.yOffset * zoom);
       ctx.beginPath();
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
@@ -274,7 +276,7 @@ const usePatterns = (): UsePatternsResult => {
         }
       }
     } else if (tool === "pencil" || tool === "text") {
-      console.log("here")
+      console.log("here");
       const newElement = createElement(
         {
           xOffset: pan.xOffset * 0.5,
@@ -503,7 +505,7 @@ const usePatterns = (): UsePatternsResult => {
     redo,
     writingRef,
     handleBlur,
-    selectedElement
+    selectedElement,
   };
 };
 

@@ -14,7 +14,7 @@ const createElement = (
   fill?: string,
   fillStyle?: string,
   stroke?: string,
-  image?: HTMLImageElement
+  image?: HTMLImageElement,
 ): ElementInterface | undefined => {
   const bounds = canvas?.getBoundingClientRect();
   switch (type) {

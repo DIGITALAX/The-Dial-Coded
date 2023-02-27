@@ -9,7 +9,14 @@ const addRashToCanvas = async (
   imageBase: SafeImage[],
   imageSafe: SafeImage[],
   imageTemp: SafeImage[],
-  setElements: (e: any) => void
+  setElements: (e: any) => void,
+  zoom: number,
+  pan: {
+    xOffset: number;
+    yOffset: number;
+    xInitial: number;
+    yInitial: number;
+  }
 ) => {
   try {
     let elementsArray: SvgPatternType[] = [];
@@ -20,7 +27,16 @@ const addRashToCanvas = async (
       );
       elementsArray.push({
         id: elementsArray?.length,
-        points: newElement,
+        points: newElement.map((point) => ({
+          x:
+            ((point.x + imageBase[image].x - pan.xOffset * 0.5 * zoom * zoom) /
+              zoom) *
+            devicePixelRatio,
+          y:
+            ((point.y + imageBase[image].y - pan.yOffset * 0.5 * zoom * zoom) /
+              zoom) *
+            devicePixelRatio,
+        })),
         type: String(TemplateTypes.Base),
         posX: imageBase[image].x,
         posY: imageBase[image].y,
@@ -35,7 +51,16 @@ const addRashToCanvas = async (
       );
       elementsArray.push({
         id: elementsArray?.length,
-        points: newElement,
+        points: newElement.map((point) => ({
+          x:
+            ((point.x + imageSafe[image].x - pan.xOffset * 0.5 * zoom * zoom) /
+              zoom) *
+            devicePixelRatio,
+          y:
+            ((point.y + imageSafe[image].y - pan.yOffset * 0.5 * zoom * zoom) /
+              zoom) *
+            devicePixelRatio,
+        })),
         type: String(TemplateTypes.Safe),
         posX: imageSafe[image].x,
         posY: imageSafe[image].y,
@@ -50,7 +75,16 @@ const addRashToCanvas = async (
       );
       elementsArray.push({
         id: elementsArray?.length,
-        points: newElement,
+        points: newElement.map((point) => ({
+          x:
+            ((point.x + imageTemp[image].x - pan.xOffset * 0.5 * zoom * zoom) /
+              zoom) *
+            devicePixelRatio,
+          y:
+            ((point.y + imageTemp[image].y - pan.yOffset * 0.5 * zoom * zoom) /
+              zoom) *
+            devicePixelRatio,
+        })),
         type: String(TemplateTypes.Temp),
         posX: imageTemp[image].x,
         posY: imageTemp[image].y,
