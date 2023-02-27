@@ -221,11 +221,11 @@ const usePatterns = (): UsePatternsResult => {
             x:
               ((e.clientX - pan.xOffset * zoom * zoom * 0.5) / zoom) *
                 devicePixelRatio -
-              selectedElement?.offsetXs[index],
+              (selectedElement?.offsetXs as number[])?.[index],
             y:
               ((e.clientY - pan.yOffset * zoom * zoom * 0.5) / zoom) *
                 devicePixelRatio -
-              selectedElement?.offsetYs[index],
+              (selectedElement?.offsetYs as number[])?.[index],
           })
         );
         const elementsCopy = [...elements];
@@ -480,7 +480,17 @@ const usePatterns = (): UsePatternsResult => {
 
         setElements((prevElements: SvgPatternType[]) => {
           const newElement = {
-            clipElement: synthElementSelect,
+            clipElement: {
+              ...synthElementSelect,
+              posX:
+                ((synthElementSelect?.posX as number) -
+                  pan.xOffset * 0.5 * zoom * zoom) /
+                zoom,
+              posY:
+                ((synthElementSelect?.posY as number) -
+                  pan.yOffset * 0.5 * zoom * zoom) /
+                zoom,
+            },
             image: imageObject,
             type: "image",
             width: imageObject.width,
