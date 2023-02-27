@@ -36,16 +36,16 @@ const updateElement = (
         },
         canvas,
         zoom,
-        x1 as number,
-        y1 as number,
-        x2 as number,
-        y2 as number,
+        x1!,
+        y1!,
+        x2!,
+        y2!,
         type,
         index,
-        strokeWidth as number,
-        fill as string,
-        fillStyle as string,
-        stroke as string,
+        strokeWidth!,
+        fill!,
+        fillStyle!,
+        stroke!,
         undefined
       ) as any;
       break;
@@ -58,10 +58,10 @@ const updateElement = (
         },
         canvas,
         zoom,
-        x1 as number,
-        y1 as number,
-        x2 as number,
-        y2 as number,
+        x1!,
+        y1!,
+        x2!,
+        y2!,
         type,
         index,
         undefined,
@@ -77,14 +77,14 @@ const updateElement = (
         ...(elementsCopy[index]?.points as any),
         {
           x:
-            (((x2 as number) -
+            (((x2!) -
               canvas?.offsetLeft -
               bounds?.left -
               pan.xOffset * zoom * zoom) /
               zoom) *
             devicePixelRatio,
           y:
-            (((y2 as number) -
+            (((y2!) -
               canvas?.offsetTop -
               bounds?.top -
               pan.yOffset * zoom * zoom) /
@@ -96,9 +96,9 @@ const updateElement = (
 
     case "text":
       (ctx as CanvasRenderingContext2D).font = `${
-        (strokeWidth as number) * devicePixelRatio
+        (strokeWidth!) * devicePixelRatio
       }px dosis`;
-      const textWidth = ctx?.measureText(text as string).width as number;
+      const textWidth = ctx?.measureText(text!).width!;
       elementsCopy[index] = {
         ...createElement(
           {
@@ -109,12 +109,12 @@ const updateElement = (
           zoom,
           x1,
           y1,
-          (x1 as number) + textWidth * zoom,
-          (y1 as number) + (strokeWidth as number) * zoom,
+          (x1!) + textWidth * zoom,
+          (y1!) + (strokeWidth!) * zoom,
           type,
           index,
-          strokeWidth as number,
-          fill as string,
+          strokeWidth!,
+          fill!,
           undefined,
           undefined,
           undefined
@@ -131,10 +131,10 @@ const updateElement = (
         },
         canvas,
         zoom,
-        x1 as number,
-        y1 as number,
-        x2 as number,
-        y2 as number,
+        x1!,
+        y1!,
+        x2!,
+        y2!,
         type,
         index
       ) as any;

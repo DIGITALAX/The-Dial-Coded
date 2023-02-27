@@ -23,19 +23,19 @@ const positionWithinElement = (
         updatedY2: number,
         updatedX1: number,
         updatedY1: number;
-      if ((x2 as number) < 1) {
-        updatedX1 = (x2 as number) + (x1 as number);
-        updatedX2 = x1 as number;
+      if (x2! < 1) {
+        updatedX1 = x2! + x1!;
+        updatedX2 = x1!;
       } else {
-        updatedX1 = x1 as number;
-        updatedX2 = (x2 as number) + (x1 as number);
+        updatedX1 = x1!;
+        updatedX2 = x2! + x1!;
       }
-      if ((y2 as number) < 1) {
-        updatedY1 = (y2 as number) + (y1 as number);
-        updatedY2 = y1 as number;
+      if (y2! < 1) {
+        updatedY1 = y2! + y1!;
+        updatedY2 = y1!;
       } else {
-        updatedY1 = y1 as number;
-        updatedY2 = (y2 as number) + (y1 as number);
+        updatedY1 = y1!;
+        updatedY2 = y2! + y1!;
       }
       const topLeft = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
@@ -81,20 +81,20 @@ const positionWithinElement = (
       const ellInside = insideEllipse(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        (x1 as number) * zoom,
-        (y1 as number) * zoom,
-        ((x2 as number) + (x1 as number)) * zoom,
-        ((y2 as number) + (y1 as number)) * zoom
+        x1! * zoom,
+        y1! * zoom,
+        (x2! + x1!) * zoom,
+        (y2! + y1!) * zoom
       );
       return ellInside < 0.1 && ellInside > 0.6 * 0.1
         ? "edge"
         : ellInside < 0.1 && "inside";
     case "line":
       const on = onLine(
-        (x1 as number) * zoom,
-        (y1 as number) * zoom,
-        ((x2 as number) + (x1 as number)) * zoom,
-        ((y2 as number) + (y1 as number)) * zoom,
+        x1! * zoom,
+        y1! * zoom,
+        (x2! + x1!) * zoom,
+        (y2! + y1!) * zoom,
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
         1
@@ -102,15 +102,15 @@ const positionWithinElement = (
       const start = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        (x1 as number) * zoom,
-        (y1 as number) * zoom,
+        x1! * zoom,
+        y1! * zoom,
         "start"
       );
       const end = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        ((x2 as number) + (x1 as number)) * zoom,
-        ((y2 as number) + (y1 as number)) * zoom,
+        (x2! + x1!) * zoom,
+        (y2! + y1!) * zoom,
         "end"
       );
       return start || end || on;
@@ -136,7 +136,7 @@ const positionWithinElement = (
                 devicePixelRatio,
               ((y - bounds.top - pan.yOffset * zoom * zoom) / zoom) *
                 devicePixelRatio,
-              element.strokeWidth as number
+              element.strokeWidth!
             ) != null
           );
         });
@@ -147,9 +147,9 @@ const positionWithinElement = (
             devicePixelRatio,
           ((y - bounds.top - pan.yOffset * zoom * zoom) / zoom) *
             devicePixelRatio,
-          element.points?.[0]?.x as number,
-          element.points?.[0]?.y as number,
-          element.strokeWidth as number
+          element.points?.[0]?.x!,
+          element.points?.[0]?.y!,
+          element.strokeWidth!
         );
         return onPoint ? "inside" : null;
       }
@@ -158,56 +158,56 @@ const positionWithinElement = (
       return ((x - bounds.left - pan.xOffset * zoom * zoom) *
         devicePixelRatio) /
         zoom >=
-        (x1 as number) &&
+        x1! &&
         ((x - bounds.left - pan.xOffset * zoom * zoom) * devicePixelRatio) /
           zoom <=
-          (x2 as number) &&
+          x2! &&
         ((y - bounds.top - pan.yOffset * zoom * zoom) * devicePixelRatio) /
           zoom >=
-          (y1 as number) &&
+          y1! &&
         ((y - bounds.top - pan.yOffset * zoom * zoom) * devicePixelRatio) /
           zoom <=
-          (y2 as number)
+          y2!
         ? "inside"
         : null;
     case "image":
       const topImageLeft = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        (x1 as number) * zoom,
-        (y1 as number) * zoom,
+        x1! * zoom,
+        y1! * zoom,
         "tl"
       );
       const topImageRight = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        (x2 as number) * zoom,
-        (y1 as number) * zoom,
+        x2! * zoom,
+        y1! * zoom,
         "tr"
       );
       const bottomImageLeft = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        (x1 as number) * zoom,
-        (y2 as number) * zoom,
+        x1! * zoom,
+        y2! * zoom,
         "bl"
       );
       const bottomImageRight = nearPoint(
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio,
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio,
-        (x2 as number) * zoom,
-        (y2 as number) * zoom,
+        x2! * zoom,
+        y2! * zoom,
         "br"
       );
       const insideImage =
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio >=
-          (x1 as number) * zoom &&
+          x1! * zoom &&
         (x - bounds?.left - pan.xOffset * zoom * zoom) * devicePixelRatio <=
-          (x2 as number) * zoom &&
+          x2! * zoom &&
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio >=
-          (y1 as number) * zoom &&
+          y1! * zoom &&
         (y - bounds?.top - pan.yOffset * zoom * zoom) * devicePixelRatio <=
-          (y2 as number) * zoom
+          y2! * zoom
           ? "inside"
           : null;
       return (

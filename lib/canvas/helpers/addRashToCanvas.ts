@@ -10,13 +10,6 @@ const addRashToCanvas = async (
   imageSafe: SafeImage[],
   imageTemp: SafeImage[],
   setElements: (e: any) => void,
-  zoom: number,
-  pan: {
-    xOffset: number;
-    yOffset: number;
-    xInitial: number;
-    yInitial: number;
-  }
 ) => {
   try {
     let elementsArray: SvgPatternType[] = [];
@@ -28,14 +21,8 @@ const addRashToCanvas = async (
       elementsArray.push({
         id: elementsArray?.length,
         points: newElement.map((point) => ({
-          x:
-            ((point.x + imageBase[image].x - pan.xOffset * 0.5 * zoom * zoom) /
-              zoom) *
-            devicePixelRatio,
-          y:
-            ((point.y + imageBase[image].y - pan.yOffset * 0.5 * zoom * zoom) /
-              zoom) *
-            devicePixelRatio,
+          x: (point.x + imageBase[image].x) * devicePixelRatio,
+          y: (point.y + imageBase[image].y) * devicePixelRatio,
         })),
         type: String(TemplateTypes.Base),
         posX: imageBase[image].x,
@@ -52,14 +39,8 @@ const addRashToCanvas = async (
       elementsArray.push({
         id: elementsArray?.length,
         points: newElement.map((point) => ({
-          x:
-            ((point.x + imageSafe[image].x - pan.xOffset * 0.5 * zoom * zoom) /
-              zoom) *
-            devicePixelRatio,
-          y:
-            ((point.y + imageSafe[image].y - pan.yOffset * 0.5 * zoom * zoom) /
-              zoom) *
-            devicePixelRatio,
+          x: (point.x + imageSafe[image].x) * devicePixelRatio,
+          y: (point.y + imageSafe[image].y) * devicePixelRatio,
         })),
         type: String(TemplateTypes.Safe),
         posX: imageSafe[image].x,
@@ -76,14 +57,8 @@ const addRashToCanvas = async (
       elementsArray.push({
         id: elementsArray?.length,
         points: newElement.map((point) => ({
-          x:
-            ((point.x + imageTemp[image].x - pan.xOffset * 0.5 * zoom * zoom) /
-              zoom) *
-            devicePixelRatio,
-          y:
-            ((point.y + imageTemp[image].y - pan.yOffset * 0.5 * zoom * zoom) /
-              zoom) *
-            devicePixelRatio,
+          x: (point.x + imageTemp[image].x) * devicePixelRatio,
+          y: (point.y + imageTemp[image].y) * devicePixelRatio,
         })),
         type: String(TemplateTypes.Temp),
         posX: imageTemp[image].x,

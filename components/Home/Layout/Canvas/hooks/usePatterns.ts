@@ -27,7 +27,8 @@ import onPatternElement from "../../../../../lib/canvas/helpers/onPatternElement
 import drawElement from "../../../../../lib/canvas/helpers/drawElement";
 import createElement from "../../../../../lib/canvas/helpers/createElement";
 import updateElement from "../../../../../lib/canvas/helpers/updateElement";
-import { element } from "@rainbow-me/rainbowkit/dist/css/reset.css";
+import { setInitImagePrompt } from "../../../../../redux/reducers/initImagePromptSlice";
+import createCanvasInit from "../../../../../lib/canvas/helpers/getBoundingBox";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
@@ -85,9 +86,7 @@ const usePatterns = (): UsePatternsResult => {
         base[0],
         safe[0],
         temp[Number(template?.split("0x0")[1]) - 1],
-        setElements,
-        zoom,
-        pan
+        setElements
       );
     }
   };
@@ -103,6 +102,8 @@ const usePatterns = (): UsePatternsResult => {
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
     }
   }, [patternType, template, switchType]);
+
+  console.log(elements);
 
   useLayoutEffect(() => {
     if (ctx && canvasType) {
@@ -129,10 +130,9 @@ const usePatterns = (): UsePatternsResult => {
             element,
             ctx,
             zoom,
-            pan,
             tool,
-            synthElementMove as SvgPatternType,
-            synthElementSelect as SvgPatternType,
+            synthElementMove!,
+            synthElementSelect!,
             promptLoading
           );
         } else {
@@ -197,12 +197,12 @@ const usePatterns = (): UsePatternsResult => {
           clipElement: {
             ...selectedElement.clipElement,
             posX:
-              (selectedElement.clipElement?.posX as number) -
-              ((selectedElement.offsetX as number) -
+              selectedElement.clipElement?.posX! -
+              (selectedElement.offsetX! -
                 (e.clientX - bounds.left) * devicePixelRatio),
             posY:
-              (selectedElement.clipElement?.posY as number) -
-              ((selectedElement.offsetY as number) -
+              selectedElement.clipElement?.posY! -
+              (selectedElement.offsetY! -
                 (e.clientY - bounds.top) * devicePixelRatio),
           },
           width: selectedElement.width,
@@ -221,11 +221,11 @@ const usePatterns = (): UsePatternsResult => {
             x:
               ((e.clientX - pan.xOffset * zoom * zoom * 0.5) / zoom) *
                 devicePixelRatio -
-              (selectedElement?.offsetXs as number[])?.[index],
+              selectedElement?.offsetXs!?.[index],
             y:
               ((e.clientY - pan.yOffset * zoom * zoom * 0.5) / zoom) *
                 devicePixelRatio -
-              (selectedElement?.offsetYs as number[])?.[index],
+              selectedElement?.offsetYs!?.[index],
           })
         );
         const elementsCopy = [...elements];
@@ -235,8 +235,7 @@ const usePatterns = (): UsePatternsResult => {
         };
         setElements(elementsCopy, true);
       } else {
-        const textWidth = ctx?.measureText(selectedElement?.text as string)
-          .width as number;
+        const textWidth = ctx?.measureText(selectedElement?.text!).width!;
         const newElement = {
           ...selectedElement,
           x1:
@@ -256,7 +255,7 @@ const usePatterns = (): UsePatternsResult => {
             ((e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
               devicePixelRatio) /
               zoom +
-            (selectedElement?.strokeWidth as number) * zoom,
+            selectedElement?.strokeWidth! * zoom,
         };
         const updatedElements = elements?.map((element: SvgPatternType) =>
           element.id === selectedElement?.id ? newElement : element
@@ -269,14 +268,13 @@ const usePatterns = (): UsePatternsResult => {
           clipElement: selectedElement.clipElement,
           image: selectedElement.image,
           width:
-            (selectedElement.width as number) +
-            ((selectedElement.offsetX as number) -
+            selectedElement.width! +
+            (selectedElement.offsetX! -
               (e.clientX - bounds.left) * devicePixelRatio),
           height:
-            (selectedElement.height as number) +
-            ((selectedElement.width as number) /
-              (selectedElement.height as number)) *
-              ((selectedElement.offsetX as number) -
+            selectedElement.height! +
+            (selectedElement.width! / selectedElement.height!) *
+              (selectedElement.offsetX! -
                 (e.clientX - bounds.left) * devicePixelRatio),
           id: selectedElement.id,
           type: selectedElement.type,
@@ -298,9 +296,9 @@ const usePatterns = (): UsePatternsResult => {
         zoom,
         elements,
         setElements,
-        ctx as CanvasRenderingContext2D,
-        values?.x1 as number,
-        values?.y1 as number,
+        ctx!,
+        values?.x1!,
+        values?.y1!,
         e.clientX,
         e.clientY,
         tool,
@@ -315,7 +313,6 @@ const usePatterns = (): UsePatternsResult => {
 
   const handleMouseDownPattern = (e: MouseEvent): void => {
     const bounds = canvas?.getBoundingClientRect();
-    console.log({ elements });
     if (tool === "pan") {
       setPan({
         xInitial: e.clientX - bounds.left,
@@ -328,6 +325,11 @@ const usePatterns = (): UsePatternsResult => {
       setAction("synth");
       if (synthElementMove) {
         dispatch(setSelectSynthElement(synthElementMove));
+        dispatch(
+          setInitImagePrompt(
+            createCanvasInit(synthElementMove, canvasPatternRef, canvas)
+          )
+        );
       }
     } else if (tool === "default") {
       setAction("none");
@@ -340,8 +342,6 @@ const usePatterns = (): UsePatternsResult => {
         canvas,
         false
       );
-
-      console.log(positionArray?.[0]);
 
       if (positionArray?.[0]) {
         const elementsCopy = [...elements];
@@ -377,8 +377,8 @@ const usePatterns = (): UsePatternsResult => {
             );
             setSelectedElement({
               ...positionArray[0],
-              offsetXs: offsetXs as number[],
-              offsetYs: offsetYs as number[],
+              offsetXs: offsetXs!,
+              offsetYs: offsetYs!,
             });
           } else {
             setSelectedElement({
@@ -414,7 +414,7 @@ const usePatterns = (): UsePatternsResult => {
         hex
       );
       setAction(tool === "pencil" ? "drawing" : "writing");
-      setSelectedElement(newElement as SvgPatternType);
+      setSelectedElement(newElement!);
       setElements([...elements, newElement]);
     }
   };
@@ -423,9 +423,8 @@ const usePatterns = (): UsePatternsResult => {
     if (selectedElement) {
       if (
         selectedElement.type === "text" &&
-        e.clientX - (selectedElement?.offsetX as number) ===
-          selectedElement.x1 &&
-        e.clientY - (selectedElement?.offsetY as number) === selectedElement.y1
+        e.clientX - selectedElement?.offsetX! === selectedElement.x1 &&
+        e.clientY - selectedElement?.offsetY! === selectedElement.y1
       ) {
         setAction("writing");
         return;
@@ -480,17 +479,7 @@ const usePatterns = (): UsePatternsResult => {
 
         setElements((prevElements: SvgPatternType[]) => {
           const newElement = {
-            clipElement: {
-              ...synthElementSelect,
-              posX:
-                ((synthElementSelect?.posX as number) -
-                  pan.xOffset * 0.5 * zoom * zoom) /
-                zoom,
-              posY:
-                ((synthElementSelect?.posY as number) -
-                  pan.yOffset * 0.5 * zoom * zoom) /
-                zoom,
-            },
+            clipElement: synthElementSelect,
             image: imageObject,
             type: "image",
             width: imageObject.width,
@@ -512,6 +501,7 @@ const usePatterns = (): UsePatternsResult => {
         });
 
         dispatch(setSelectSynthElement(undefined));
+        setSynthElementMove(undefined);
       };
     };
   };
@@ -541,8 +531,7 @@ const usePatterns = (): UsePatternsResult => {
     const textAreaElement = writingRef.current;
     if (action === "writing") {
       textAreaElement?.focus();
-      (textAreaElement as HTMLTextAreaElement).value =
-        selectedElement?.text as string;
+      (textAreaElement as HTMLTextAreaElement).value = selectedElement?.text!;
     }
   }, [tool, action, selectedElement]);
 
@@ -576,19 +565,19 @@ const usePatterns = (): UsePatternsResult => {
         zoom,
         elements,
         setElements,
-        ctx as CanvasRenderingContext2D,
-        ((selectedElement?.x1 as number) * devicePixelRatio +
+        ctx!,
+        (selectedElement?.x1! * devicePixelRatio +
           bounds.left * zoom -
           pan.xOffset * zoom * zoom) /
           zoom,
-        ((selectedElement?.y1 as number) * devicePixelRatio +
+        (selectedElement?.y1! * devicePixelRatio +
           bounds.top * zoom -
           pan.yOffset * zoom * zoom) /
           zoom,
-        selectedElement?.x2 as number,
-        selectedElement?.y2 as number,
+        selectedElement?.x2!,
+        selectedElement?.y2!,
         tool,
-        selectedElement?.id as number,
+        selectedElement?.id!,
         brushWidth,
         hex,
         null,

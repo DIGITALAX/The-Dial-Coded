@@ -14,7 +14,7 @@ export const initImagePromptSlice = createSlice({
   reducers: {
     setInitImagePrompt: (
       state: InitImagePromptState,
-      action: PayloadAction<string>
+      action: PayloadAction<string | undefined>
     ) => {
       state.value = action.payload;
     },

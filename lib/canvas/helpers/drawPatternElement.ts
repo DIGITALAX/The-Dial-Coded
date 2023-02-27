@@ -4,12 +4,6 @@ const drawPatternElement = (
   element: SvgPatternType,
   ctx: CanvasRenderingContext2D | null,
   zoom: number,
-  pan: {
-    xInitial: number;
-    yInitial: number;
-    xOffset: number;
-    yOffset: number;
-  },
   tool: string,
   synthElementMove: SvgPatternType | null,
   synthElementSelect: SvgPatternType | null,
