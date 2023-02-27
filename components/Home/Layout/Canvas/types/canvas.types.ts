@@ -445,7 +445,7 @@ export type UsePatternsResult = {
   redo: () => boolean | void;
   writingRef: Ref<HTMLTextAreaElement>;
   handleBlur: (e: FormEvent) => void;
-  selectedElement: SvgPatternType | undefined;
+  selectedElement: SvgPatternType | null;
 };
 
 export interface SafeImage {
