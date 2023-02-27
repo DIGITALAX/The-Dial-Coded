@@ -483,4 +483,6 @@ export interface SvgPatternType {
   text?: string;
   offsetY?: number;
   offsetX?: number;
+  width?: number;
+  height?: number;
 }

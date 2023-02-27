@@ -204,7 +204,30 @@ const usePatterns = (): UsePatternsResult => {
               ((selectedElement.offsetY as number) -
                 (e.clientY - bounds.top) * devicePixelRatio),
           },
+          width: selectedElement.width,
+          height: selectedElement.height,
           image: selectedElement.image,
+          id: selectedElement.id,
+          type: selectedElement.type,
+        };
+        const updatedElements = elements?.map((element: SvgPatternType) =>
+          element.id === selectedElement.id ? newElement : element
+        );
+        setElements(updatedElements, true);
+      }
+    } else if (action === "resizing" && selectedElement) {
+      if (selectedElement.type === "image") {
+        const newElement = {
+          clipElement: selectedElement.clipElement,
+          image: selectedElement.image,
+          width:
+            (selectedElement.width as number) +
+            ((selectedElement.offsetX as number) -
+              (e.clientX - bounds.left) * devicePixelRatio),
+          height:
+            (selectedElement.height as number) +
+            (((selectedElement.width as number) / (selectedElement.height as number)) *
+            ((selectedElement.offsetX as number) - (e.clientX - bounds.left) * devicePixelRatio)),
           id: selectedElement.id,
           type: selectedElement.type,
         };
@@ -257,7 +280,7 @@ const usePatterns = (): UsePatternsResult => {
       }
     } else if (tool === "default") {
       setAction("none");
-    } else if (tool === "erase" || tool === "selection") {
+    } else if (tool === "erase" || tool === "selection" || tool == "resize") {
       const positionArray = onPatternElement(
         elements,
         zoom,
@@ -270,7 +293,7 @@ const usePatterns = (): UsePatternsResult => {
       if (positionArray?.[0]) {
         const elementsCopy = [...elements];
 
-        if (positionArray[0]?.type === "pencil") {
+        if (positionArray[0]?.type === "pencil" && tool === "erase") {
           elementsCopy[positionArray[0].id] = {
             ...elementsCopy[positionArray[0].id],
             fill: "#078FD6",
@@ -285,6 +308,8 @@ const usePatterns = (): UsePatternsResult => {
         });
         if (tool === "selection") {
           setAction("moving");
+        } else if (tool === "resize") {
+          setAction("resizing");
         }
       }
     } else if (tool === "pencil" || tool === "text") {
@@ -375,6 +400,8 @@ const usePatterns = (): UsePatternsResult => {
             clipElement: synthElementSelect,
             image: imageObject,
             type: "image",
+            width: imageObject.width,
+            height: imageObject.height,
           };
           const newElements = [
             ...prevElements.slice(0, matchedIndex + 1),
