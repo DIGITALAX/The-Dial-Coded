@@ -92,7 +92,7 @@ const drawElement = (
       (ctx as CanvasRenderingContext2D).fillStyle = element?.fill as string;
       const pathData = getSvgPathFromStroke(
         getStroke(element?.points as { x: number; y: number }[], {
-          size: element?.strokeWidth as number,
+          size: element?.strokeWidth as number * devicePixelRatio,
         })
       );
       ctx?.fill(new Path2D(pathData));

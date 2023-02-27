@@ -108,20 +108,16 @@ const onPatternElement = (
           if (!nextPoint) return false;
           return (
             onLine(
-              (point.x + (element.posX as number) - pan.xOffset * 0.5 * zoom) *
-                devicePixelRatio *
+              point.x,
+              point.y,
+              nextPoint.x,
+              nextPoint.y,
+              ((e.clientX - bounds?.left - pan.xOffset * 0.5 * zoom * zoom) *
+                devicePixelRatio) /
                 zoom,
-              (point.y + (element.posY as number) - pan.yOffset * 0.5 * zoom) *
-                devicePixelRatio *
+              ((e.clientY - bounds?.top - pan.yOffset * 0.5 * zoom * zoom) *
+                devicePixelRatio) /
                 zoom,
-              (nextPoint.x + element.posX - pan.xOffset * 0.5 * zoom) *
-                devicePixelRatio *
-                zoom,
-              (nextPoint.y + element.posY - pan.yOffset * 0.5 * zoom) *
-                devicePixelRatio *
-                zoom,
-              ((e.clientX - bounds?.left) * devicePixelRatio) / zoom,
-              ((e.clientY - bounds?.top) * devicePixelRatio) / zoom,
               2
             ) != null
           );
@@ -149,15 +145,9 @@ function isPointInsidePath(
   ctx.beginPath();
   path.points?.forEach(function (point: any, index: number) {
     if (index === 0) {
-      ctx.moveTo(
-        (point.x + path.posX) * devicePixelRatio,
-        (point.y + path.posY) * devicePixelRatio
-      );
+      ctx.moveTo(point.x * devicePixelRatio, point.y * devicePixelRatio);
     } else {
-      ctx.lineTo(
-        (point.x + path.posX) * devicePixelRatio,
-        (point.y + path.posY) * devicePixelRatio
-      );
+      ctx.lineTo(point.x * devicePixelRatio, point.y * devicePixelRatio);
     }
   });
   ctx.closePath();

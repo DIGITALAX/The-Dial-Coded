@@ -1,6 +1,4 @@
-import getStroke from "perfect-freehand";
 import { SvgPatternType } from "../../../components/Home/Layout/Canvas/types/canvas.types";
-import getSvgPathFromStroke from "./getSvgPathFromStroke";
 
 const drawPatternElement = (
   element: SvgPatternType,
@@ -43,16 +41,8 @@ const drawPatternElement = (
     case "2":
       ctx?.beginPath();
       ctx?.moveTo(
-        ((element.points?.[0] as { x: number; y: number }).x +
-          (element.posX as number) -
-          pan.xOffset * 0.5 * zoom) *
-          zoom *
-          devicePixelRatio,
-        ((element.points?.[0] as { x: number; y: number }).y +
-          (element.posY as number) -
-          pan.yOffset * 0.5 * zoom) *
-          zoom *
-          devicePixelRatio
+        (element.points?.[0] as { x: number; y: number }).x,
+        (element.points?.[0] as { x: number; y: number }).y
       );
       for (
         let i = 1;
@@ -60,16 +50,8 @@ const drawPatternElement = (
         i++
       ) {
         ctx?.lineTo(
-          ((element?.points as { x: number; y: number }[])?.[i].x +
-            (element.posX as number) -
-            pan.xOffset * 0.5 * zoom) *
-            zoom *
-            devicePixelRatio,
-          ((element?.points as { x: number; y: number }[])?.[i].y +
-            (element.posY as number) -
-            pan.yOffset * 0.5 * zoom) *
-            zoom *
-            devicePixelRatio
+          (element?.points as { x: number; y: number }[])?.[i].x,
+          (element?.points as { x: number; y: number }[])?.[i].y
         );
       }
       ctx?.stroke();
@@ -81,12 +63,10 @@ const drawPatternElement = (
       ctx?.clip();
       ctx?.drawImage(
         element.image as HTMLImageElement,
-        (((element.clipElement as SvgPatternType).posX as number) -
-          pan.xOffset * 0.5 * zoom) *
-          zoom,
-        (((element.clipElement as SvgPatternType).posY as number) -
-          pan.yOffset * 0.5 * zoom) *
-          zoom,
+        ((element.clipElement as SvgPatternType).posX as number) *
+          devicePixelRatio,
+        ((element.clipElement as SvgPatternType).posY as number) *
+          devicePixelRatio,
         (element.image as HTMLImageElement).width * devicePixelRatio,
         (element.image as HTMLImageElement).height * devicePixelRatio
       );
