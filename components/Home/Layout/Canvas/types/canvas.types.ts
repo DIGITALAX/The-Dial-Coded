@@ -124,7 +124,8 @@ export type DrawProps = {
   setPatternBrushWidth: (e: number) => void;
   writingPatternRef: Ref<HTMLTextAreaElement>;
   handlePatternBlur: (e: FormEvent) => void;
-  selectedPatternElement: SvgPatternType | undefined;
+  selectedPatternElement: SvgPatternType | null;
+  addPatternImageToCanvas: (image: string) => Promise<void>;
 };
 
 export type ColorPickerProps = {
@@ -302,6 +303,8 @@ export type BaseProps = {
   quickSearchResults: any[];
   fillImages: string[];
   addImageToCanvas: (image: string) => Promise<void>;
+  addPatternImageToCanvas: (image: string) => Promise<void>;
+  canvasType: boolean;
 };
 
 export type Point = {
@@ -446,6 +449,7 @@ export type UsePatternsResult = {
   writingRef: Ref<HTMLTextAreaElement>;
   handleBlur: (e: FormEvent) => void;
   selectedElement: SvgPatternType | null;
+  addImageToCanvas: (image: string) => Promise<void>;
 };
 
 export interface SafeImage {
