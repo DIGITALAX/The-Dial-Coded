@@ -64,8 +64,11 @@ const usePatterns = (): UsePatternsResult => {
   const [patternType, setPatternType] = useState<string>("");
   const [template, setTemplate] = useState<string>("");
   const [switchType, setSwitchType] = useState<boolean>(false);
-  const [selectedElement, setSelectedElement] = useState<SvgPatternType>();
-  const [synthElementMove, setSynthElementMove] = useState<SvgPatternType>();
+  const [selectedElement, setSelectedElement] = useState<SvgPatternType | null>(
+    null
+  );
+  const [synthElementMove, setSynthElementMove] =
+    useState<SvgPatternType | null>();
   const [showPatternDrawOptions, setShowPatternDrawOptions] =
     useState<boolean>(false);
   const [hex, setHex] = useState<string>("#000000");
@@ -127,8 +130,8 @@ const usePatterns = (): UsePatternsResult => {
             zoom,
             pan,
             tool,
-            synthElementMove,
-            synthElementSelect,
+            synthElementMove as SvgPatternType,
+            synthElementSelect as SvgPatternType,
             promptLoading
           );
         } else {
@@ -185,15 +188,21 @@ const usePatterns = (): UsePatternsResult => {
       if (positionArray?.[0]) {
         setSynthElementMove(positionArray[0]);
       } else {
-        setSynthElementMove(undefined);
+        setSynthElementMove(null);
       }
     } else if (action === "moving" && selectedElement) {
-      if (selectedElement?.type === "image") {
+      if (selectedElement.type === "image") {
         const newElement = {
           clipElement: {
             ...selectedElement.clipElement,
-            posX: e.clientX,
-            posY: e.clientY,
+            posX:
+              (selectedElement.clipElement?.posX as number) -
+              ((selectedElement.offsetX as number) -
+                (e.clientX - bounds.left) * devicePixelRatio),
+            posY:
+              (selectedElement.clipElement?.posY as number) -
+              ((selectedElement.offsetY as number) -
+                (e.clientY - bounds.top) * devicePixelRatio),
           },
           image: selectedElement.image,
           id: selectedElement.id,
@@ -202,7 +211,7 @@ const usePatterns = (): UsePatternsResult => {
         const updatedElements = elements?.map((element: SvgPatternType) =>
           element.id === selectedElement.id ? newElement : element
         );
-        setElements(updatedElements);
+        setElements(updatedElements, true);
       }
     } else if (action === "drawing") {
       const index = elements?.length - 1;
@@ -267,9 +276,13 @@ const usePatterns = (): UsePatternsResult => {
             fill: "#078FD6",
             stroke: "#078FD6",
           };
+          setElements(elementsCopy);
         }
-        setElements(elementsCopy);
-        setSelectedElement(positionArray[0]);
+        setSelectedElement({
+          ...positionArray[0],
+          offsetX: (e.clientX - bounds.left) * devicePixelRatio,
+          offsetY: (e.clientY - bounds.top) * devicePixelRatio,
+        });
         if (tool === "selection") {
           setAction("moving");
         }
@@ -293,7 +306,7 @@ const usePatterns = (): UsePatternsResult => {
         hex
       );
       setAction(tool === "pencil" ? "drawing" : "writing");
-      setSelectedElement(newElement);
+      setSelectedElement(newElement as SvgPatternType);
       setElements([...elements, newElement]);
     }
   };
@@ -323,7 +336,7 @@ const usePatterns = (): UsePatternsResult => {
     }
     if (action === "writing") return;
     setAction("none");
-    setSelectedElement(undefined);
+    setSelectedElement(null);
   };
 
   const handleWheelPattern = (e: WheelEvent) => {
@@ -433,7 +446,7 @@ const usePatterns = (): UsePatternsResult => {
     if ((e as any).key === "Enter") {
       const bounds = canvas?.getBoundingClientRect();
       setAction("none");
-      setSelectedElement(undefined);
+      setSelectedElement(null);
       updateElement(
         {
           xOffset: pan.xOffset * 0.5,

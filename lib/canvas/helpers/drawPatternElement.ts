@@ -11,8 +11,8 @@ const drawPatternElement = (
     yOffset: number;
   },
   tool: string,
-  synthElementMove: SvgPatternType | undefined,
-  synthElementSelect: SvgPatternType | undefined,
+  synthElementMove: SvgPatternType | null,
+  synthElementSelect: SvgPatternType | null,
   promptLoading: boolean
 ) => {
   ctx?.setLineDash(element?.type !== "0" ? [5, 5] : [0]);
