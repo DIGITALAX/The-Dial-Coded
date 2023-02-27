@@ -485,6 +485,6 @@ export interface SvgPatternType {
   offsetX?: number;
   width?: number;
   height?: number;
-  offsetXs: number[];
-  offsetYs: number[];
+  offsetXs?: number[];
+  offsetYs?: number[];
 }
