@@ -46,13 +46,21 @@ const onPatternElement = (
 
         case "text":
           if (
-            ((e.clientX - bounds.left) * devicePixelRatio) / zoom >=
+            ((e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+              devicePixelRatio) /
+              zoom >=
               (element.x1 as number) &&
-            ((e.clientX - bounds.left) * devicePixelRatio) / zoom <=
+            ((e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+              devicePixelRatio) /
+              zoom <=
               (element.x2 as number) &&
-            ((e.clientY - bounds.top) * devicePixelRatio) / zoom >=
+            ((e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+              devicePixelRatio) /
+              zoom >=
               (element.y1 as number) &&
-            ((e.clientY - bounds.top) * devicePixelRatio) / zoom <=
+            ((e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+              devicePixelRatio) /
+              zoom <=
               (element.y2 as number)
           ) {
             positionArray.push({ ...element });

@@ -239,11 +239,23 @@ const usePatterns = (): UsePatternsResult => {
           .width as number;
         const newElement = {
           ...selectedElement,
-          x1: (e.clientX - bounds.left) * devicePixelRatio / zoom,
-          y1: (e.clientY - bounds.top) * devicePixelRatio / zoom,
-          x2: (e.clientX - bounds.left) * devicePixelRatio / zoom + textWidth * zoom,
+          x1:
+            ((e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+              devicePixelRatio) /
+            zoom,
+          y1:
+            ((e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+              devicePixelRatio) /
+            zoom,
+          x2:
+            ((e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+              devicePixelRatio) /
+              zoom +
+            textWidth * zoom,
           y2:
-            (e.clientY - bounds.top) * devicePixelRatio / zoom +
+            ((e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+              devicePixelRatio) /
+              zoom +
             (selectedElement?.strokeWidth as number) * zoom,
         };
         const updatedElements = elements?.map((element: SvgPatternType) =>
