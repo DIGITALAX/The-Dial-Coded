@@ -136,6 +136,8 @@ const Draw: FunctionComponent<DrawProps> = ({
                   } ${
                     canvasType && patternTool === "pencil"
                       ? "cursor-default"
+                      : canvasType && patternTool === "resize"
+                      ? "cursor-nesw-resize"
                       : (!canvasType && tool === "selection") ||
                         (canvasType && patternTool === "selection")
                       ? "cursor-move"
@@ -161,18 +163,21 @@ const Draw: FunctionComponent<DrawProps> = ({
                         canvasType ||
                         (canvasType && patternTool === "default")
                       ? "cursor-crosshair"
-                      : tool === "resize" &&
+                      : !canvasType &&
+                        tool === "resize" &&
                         (selectedElement?.position === "start" ||
                           selectedElement?.position === "end") &&
                         selectedElement?.type !== "text" &&
                         selectedElement?.position !== "inside"
                       ? "cursor-ew-resize"
-                      : tool === "resize" &&
+                      : !canvasType &&
+                        tool === "resize" &&
                         selectedElement?.type !== "text" &&
                         (selectedElement?.position === "tr" ||
                         selectedElement?.position === "bl"
                           ? "cursor-nesw-resize"
-                          : (selectedElement?.position === "br" ||
+                          : !canvasType &&
+                            (selectedElement?.position === "br" ||
                               selectedElement?.position === "tl" ||
                               selectedElement?.position === "edge") &&
                             "cursor-nwse-resize")

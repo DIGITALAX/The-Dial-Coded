@@ -67,8 +67,8 @@ const drawPatternElement = (
           devicePixelRatio,
         ((element.clipElement as SvgPatternType).posY as number) *
           devicePixelRatio,
-        (element.image as HTMLImageElement).width * devicePixelRatio,
-        (element.image as HTMLImageElement).height * devicePixelRatio
+        (element?.width as number) * devicePixelRatio,
+        (element?.height as number) * devicePixelRatio
       );
       ctx?.restore();
       break;
