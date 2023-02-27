@@ -190,8 +190,8 @@ const usePatterns = (): UsePatternsResult => {
       } else {
         setSynthElementMove(null);
       }
-    } else if (action === "moving" && selectedElement) {
-      if (selectedElement.type === "image") {
+    } else if (action === "moving") {
+      if (selectedElement?.type === "image") {
         const newElement = {
           clipElement: {
             ...selectedElement.clipElement,
@@ -214,6 +214,25 @@ const usePatterns = (): UsePatternsResult => {
           element.id === selectedElement.id ? newElement : element
         );
         setElements(updatedElements, true);
+      } else if (selectedElement?.type === "pencil") {
+        const newPoints = selectedElement.points?.map(
+          (_: any, index: number) => ({
+            x:
+            ((e.clientX - pan.xOffset * zoom * zoom * 0.5) / zoom) *
+              devicePixelRatio -
+            selectedElement?.offsetXs[index],
+          y:
+            ((e.clientY - pan.yOffset * zoom * zoom * 0.5) / zoom) *
+              devicePixelRatio -
+            selectedElement?.offsetYs[index],
+          })
+        );
+        const elementsCopy = [...elements];
+        elementsCopy[selectedElement.id] = {
+          ...elementsCopy[selectedElement.id],
+          points: newPoints,
+        };
+        setElements(elementsCopy, true);
       }
     } else if (action === "resizing" && selectedElement) {
       if (selectedElement.type === "image") {
@@ -226,8 +245,10 @@ const usePatterns = (): UsePatternsResult => {
               (e.clientX - bounds.left) * devicePixelRatio),
           height:
             (selectedElement.height as number) +
-            (((selectedElement.width as number) / (selectedElement.height as number)) *
-            ((selectedElement.offsetX as number) - (e.clientX - bounds.left) * devicePixelRatio)),
+            ((selectedElement.width as number) /
+              (selectedElement.height as number)) *
+              ((selectedElement.offsetX as number) -
+                (e.clientX - bounds.left) * devicePixelRatio),
           id: selectedElement.id,
           type: selectedElement.type,
         };
@@ -290,26 +311,58 @@ const usePatterns = (): UsePatternsResult => {
         false
       );
 
+      console.log(positionArray?.[0]);
+
       if (positionArray?.[0]) {
         const elementsCopy = [...elements];
 
-        if (positionArray[0]?.type === "pencil" && tool === "erase") {
-          elementsCopy[positionArray[0].id] = {
-            ...elementsCopy[positionArray[0].id],
-            fill: "#078FD6",
-            stroke: "#078FD6",
-          };
-          setElements(elementsCopy);
-        }
-        setSelectedElement({
-          ...positionArray[0],
-          offsetX: (e.clientX - bounds.left) * devicePixelRatio,
-          offsetY: (e.clientY - bounds.top) * devicePixelRatio,
-        });
-        if (tool === "selection") {
-          setAction("moving");
-        } else if (tool === "resize") {
-          setAction("resizing");
+        if (tool === "erase") {
+          if (
+            positionArray[0]?.type === "pencil" ||
+            positionArray[0]?.type === "text"
+          ) {
+            elementsCopy[positionArray[0].id] = {
+              ...elementsCopy[positionArray[0].id],
+              fill: "#078FD6",
+              stroke: "#078FD6",
+            };
+            setElements(elementsCopy);
+          }
+          setSelectedElement(positionArray[0]);
+        } else {
+          if (positionArray[0]?.type === "pencil") {
+            const offsetXs = positionArray[0]?.points?.map(
+              (point) =>
+                ((e.clientX - pan.xOffset * zoom * zoom * 0.5) *
+                  devicePixelRatio) /
+                  zoom -
+                point.x
+            );
+            const offsetYs = positionArray[0]?.points?.map(
+              (point) =>
+                ((e.clientY - pan.yOffset * zoom * zoom * 0.5) *
+                  devicePixelRatio) /
+                  zoom -
+                point.y
+            );
+            setSelectedElement({
+              ...positionArray[0],
+              offsetXs: offsetXs as number[],
+              offsetYs: offsetYs as number[],
+            });
+          } else {
+            setSelectedElement({
+              ...positionArray[0],
+              offsetX: (e.clientX - bounds.left) * devicePixelRatio,
+              offsetY: (e.clientY - bounds.top) * devicePixelRatio,
+            });
+          }
+
+          if (tool === "selection") {
+            setAction("moving");
+          } else if (tool === "resize") {
+            setAction("resizing");
+          }
         }
       }
     } else if (tool === "pencil" || tool === "text") {
