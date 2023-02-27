@@ -22,6 +22,7 @@ const getCanvas = (canvas: HTMLCanvasElement, elements: any): string => {
       hiddenCanvas.height
     );
     img = hiddenCanvas.toDataURL("image/png");
+    document.body.removeChild(hiddenCanvas);
   } else {
     img = canvas.toDataURL("image/png");
   }

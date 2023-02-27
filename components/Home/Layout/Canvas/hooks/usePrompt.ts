@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getReplicateKey } from "../../../../../lib/replicate/utils";
 import { setAddPromptImage } from "../../../../../redux/reducers/addPromptImageSlice";
+import { setInitImagePrompt } from "../../../../../redux/reducers/initImagePromptSlice";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 import { setSynthLoading } from "../../../../../redux/reducers/synthLoadingSlice";
 import { RootState } from "../../../../../redux/store";
@@ -42,6 +43,7 @@ const usePrompt = (): UsePromptResults => {
       dispatch(setInsufficientFunds("marquee"));
       return;
     }
+    // convert init from base64 & compress
     dispatch(setSynthLoading(true));
     const input: InputType = {
       prompt: prompt,
@@ -59,6 +61,7 @@ const usePrompt = (): UsePromptResults => {
       console.error(err.message);
     }
     dispatch(setSynthLoading(false));
+    dispatch(setInitImagePrompt(undefined));
   };
 
   const promptToReplicate = async (input: InputType, model: string) => {
