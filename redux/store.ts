@@ -63,6 +63,7 @@ import addPromptImageReducer from "./reducers/addPromptImageSlice";
 import initImagePromptReducer from "./reducers/initImagePromptSlice";
 import selectSynthElementReducer from "./reducers/selectSynthElementSlice";
 import synthLoadingReducer from "./reducers/synthLoadingSlice";
+import litClientReducer from "./reducers/litClientSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -127,7 +128,8 @@ const reducer = combineReducers({
   addPromptImageReducer,
   initImagePromptReducer,
   selectSynthElementReducer,
-  synthLoadingReducer
+  synthLoadingReducer,
+  litClientReducer,
 });
 
 export const store = configureStore({
