@@ -9,6 +9,7 @@ const SynthAPI: FunctionComponent<SynthAPIProps> = ({
   setKeyStorage,
   keyValue,
   setKeyValue,
+  decryptedKey,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row flex-wrap gap-6 border-2 border-black bg-white">
@@ -88,11 +89,7 @@ const SynthAPI: FunctionComponent<SynthAPIProps> = ({
             <input
               onChange={(e) => handleKeyAdd(e)}
               type={keyValue ? "password" : "text"}
-              defaultValue={
-                (getReplicateKey() as string)
-                  ? (getReplicateKey() as string)
-                  : ""
-              }
+              defaultValue={decryptedKey ? decryptedKey : ""}
               className="h-full w-full rounded-md font-sats p-1"
             />
           </div>

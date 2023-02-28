@@ -256,6 +256,7 @@ export type SynthAPIProps = {
   setKeyStorage: () => void;
   keyValue: boolean;
   setKeyValue: (e: boolean) => void;
+  decryptedKey: string | undefined;
 };
 
 export type UseSynthAPIResults = {

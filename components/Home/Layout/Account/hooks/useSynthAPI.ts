@@ -5,6 +5,7 @@ import LitJsSdk from "@lit-protocol/sdk-browser";
 import { useDispatch, useSelector } from "react-redux";
 import { setLitClient } from "../../../../../redux/reducers/litClientSlice";
 import { RootState } from "../../../../../redux/store";
+import decryptLitKey from "../../../../../lib/canvas/helpers/decryptLitKey";
 
 const useSynthAPI = (): UseSynthAPIResults => {
   const [keyValue, setKeyValue] = useState<boolean>(true);
@@ -73,6 +74,7 @@ const useSynthAPI = (): UseSynthAPIResults => {
       })
     );
     setKeyValue(true);
+    await decryptLitKey(dispatch, lit);
   };
 
   return {
