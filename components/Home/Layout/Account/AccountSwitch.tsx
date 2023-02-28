@@ -33,6 +33,9 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
   const xmtpSearch = useSelector(
     (state: RootState) => state.app.xmtpSearchReducer.value
   );
+  const decryptedKey = useSelector(
+    (state: RootState) => state.app.litClientReducer.decrypt
+  );
   const {
     profileImage,
     coverImage,
@@ -257,6 +260,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           keyValue={keyValue}
           setKeyStorage={setKeyStorage}
           setKeyValue={setKeyValue}
+          decryptedKey={decryptedKey}
         />
       );
 
