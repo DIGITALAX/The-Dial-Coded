@@ -10,7 +10,11 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCanvasType } from "../../../../../redux/reducers/canvasTypeSlice";
-import { UsePatternsResult, SvgPatternType } from "../types/canvas.types";
+import {
+  UsePatternsResult,
+  SvgPatternType,
+  ElementInterface,
+} from "../types/canvas.types";
 import base from "./../../../../../pages/api/constants/base.json";
 import safe from "./../../../../../pages/api/constants/safe.json";
 import temp from "./../../../../../pages/api/constants/temp.json";

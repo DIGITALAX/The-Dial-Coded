@@ -80,14 +80,14 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
                   });
                 }
               : () => {
-                  setZoom(1);
-                  setPan({
-                    xInitial: 0,
-                    yInitial: 0,
-                    xOffset: 0,
-                    yOffset: 0,
-                  });
-                }
+                setZoom(1);
+                setPan({
+                  xInitial: 0,
+                  yInitial: 0,
+                  xOffset: 0,
+                  yOffset: 0,
+                });
+              }
           }
         >
           <CanvasOption
