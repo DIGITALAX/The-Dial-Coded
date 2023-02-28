@@ -7,11 +7,14 @@ import { setInsufficientFunds } from "../../../../../redux/reducers/insufficient
 import { setSynthLoading } from "../../../../../redux/reducers/synthLoadingSlice";
 import { RootState } from "../../../../../redux/store";
 import { InputType, UsePromptResults } from "../types/canvas.types";
+import LitJsSdk from "@lit-protocol/sdk-browser";
+import { setLitClient } from "../../../../../redux/reducers/litClientSlice";
 
 const usePrompt = (): UsePromptResults => {
   const init = useSelector(
     (state: RootState) => state.app.initImagePromptReducer.value
   );
+  const lit = useSelector((state: RootState) => state.app.litClientReducer);
   const [cfg, setCfg] = useState<string>("10");
   const [steps, setSteps] = useState<string>("60");
   const [strength, setStrength] = useState<string>("50");
@@ -64,13 +67,71 @@ const usePrompt = (): UsePromptResults => {
     dispatch(setInitImagePrompt(undefined));
   };
 
+  const decryptKey = async (): Promise<string | undefined> => {
+    try {
+      let client;
+      if (!lit.client) {
+        client = new LitJsSdk.LitNodeClient({ debug: false });
+        await client.connect();
+        dispatch(
+          setLitClient({
+            actionClient: client,
+            actionDecrypt: lit.decrypt,
+          })
+        );
+      }
+      const authSig = await LitJsSdk.checkAndSignAuthMessage({
+        chain: "mumbai",
+      });
+      const symmetricKey = await (client
+        ? client
+        : lit.client
+      ).getEncryptionKey({
+        accessControlConditions: [
+          {
+            contractAddress: "",
+            standardContractType: "",
+            chain: "mumbai",
+            method: "eth_getBalance",
+            parameters: [":userAddress"],
+            returnValueTest: {
+              comparator: ">=",
+              value: "0",
+            },
+          },
+        ],
+        toDecrypt: JSON.parse(getReplicateKey()!)?.encryptedSymmetricKey,
+        chain: "mumbai",
+        authSig,
+      });
+      const uintString = new Uint8Array(
+        JSON.parse(JSON.parse(getReplicateKey()!)?.encryptedString)
+      ).buffer;
+      const blob = new Blob([uintString], { type: "text/plain" });
+      const decryptString = await LitJsSdk.decryptString(blob, symmetricKey);
+      dispatch(
+        setLitClient({
+          actionClient: client ? client : lit.client,
+          actionDecrypt: decryptString,
+        })
+      );
+      return decryptString;
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   const promptToReplicate = async (input: InputType, model: string) => {
+    let decrypt: string;
+    if (!lit.decrypt) {
+      decrypt = (await decryptKey()) as string;
+    }
     try {
       const response = await fetch("/api/replicate", {
         method: "POST",
         body: JSON.stringify({
           input,
-          token: getReplicateKey() as string,
+          token: lit.decrypt ? lit.decrypt : decrypt!,
           model,
         }),
       });
