@@ -28,5 +28,72 @@
       "scale": 12,
       "stroke": "#0091FF"
     }
+  ],
+  [
+    {
+      "image": "QmXFzwV9gmpPdUgHM7TXYpkB1dh51j727Y172shbBWkW6c",
+      "x": 40,
+      "y": 80,
+      "scale": 11.5,
+      "stroke": "#0091FF"
+    },
+    {
+      "image": "QmS52wAknzmwJhVYaFDxC16ZtNS8kZVcKfK5teMWPd2B3Q",
+      "x": 400,
+      "y": 100,
+      "scale": 11,
+      "stroke": "#0091FF"
+    },
+    {
+      "image": "QmQ66YVJbtmcqwL1UMZitC8K7178qg5vP2cD7eV631doa1",
+      "x": 100,
+      "y": 600,
+      "scale": 12,
+      "stroke": "#0091FF"
+    },
+    {
+      "image": "QmQ66YVJbtmcqwL1UMZitC8K7178qg5vP2cD7eV631doa1",
+      "x": 440,
+      "y": 600,
+      "scale": 12,
+      "stroke": "#0091FF"
+    }
+  ],
+  [
+    {
+      "image": "Qma13MW9PaW7vwMtMGzEjJ6bmzoD4tUGsDceEP2f5GcEjq",
+      "x": 35,
+      "y": 660,
+      "scale": 4.5,
+      "stroke": "#0091FF"
+    },
+    {
+      "image": "Qma13MW9PaW7vwMtMGzEjJ6bmzoD4tUGsDceEP2f5GcEjq",
+      "x": 315,
+      "y": 660,
+      "scale": 4.5,
+      "stroke": "#0091FF"
+    },
+    {
+      "image": "QmaQ8iHB6gafyAKUSKiy5pTnJ4muhJQE8kCLHV7gZtxC64",
+      "x": 35,
+      "y": 200,
+      "scale": 4.5,
+      "stroke": "#0091FF"
+    },
+    {
+      "image": "QmXPNR8ucbHZdnN45riXsNXuhS8hBt34rHFiePQ25EqhyW",
+      "x": 455,
+      "y": 250,
+      "scale": 4.5,
+      "stroke": "#0091FF"
+    },
+    {
+      "image": "QmPnakBcpXRG588jRGmwT3HaVMS5sKfoJxrhwLZ8vNp4tm",
+      "x": 425,
+      "y": 250,
+      "scale": 4.5,
+      "stroke": "#0091FF"
+    }
   ]
 ]
