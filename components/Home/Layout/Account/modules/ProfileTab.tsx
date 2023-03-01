@@ -25,14 +25,13 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
   firstPostLoad,
   mixtapeLength,
   hasMore,
+  reactionLoaded,
 }): JSX.Element => {
   if (publicationsLoading && firstPostLoad) {
     return <ProfileFeedLoading />;
   }
   return (
-    <div
-      className={`relative w-full h-full grid grid-flow-row auto-rows-auto`}
-    >
+    <div className={`relative w-full h-full grid grid-flow-row auto-rows-auto`}>
       {!profileDataLoading ? (
         <div
           className="relative w-full h-full row-start-1 grid grid-flow-row auto-rows-auto gap-5"
@@ -74,6 +73,7 @@ const ProfileTab: FunctionComponent<ProfileTabProps> = ({
                       followerOnly={
                         followerOnly?.length > 0 && followerOnly[index]
                       }
+                      reactionLoaded={reactionLoaded?.[index]}
                     />
                   );
                 }

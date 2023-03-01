@@ -21,6 +21,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
   hasMirrored,
   hasReacted,
   mixtape,
+  reactionLoaded
 }): JSX.Element => {
   const router = useRouter();
   const profileImage = createProfilePicture(publication, true);
@@ -184,6 +185,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
             handleHidePost={handleHidePost}
             followerOnly={followerOnly as boolean}
             isMixtape={mixtapeMirror as boolean}
+            reactionLoaded={reactionLoaded}
           />
         </div>
       </div>

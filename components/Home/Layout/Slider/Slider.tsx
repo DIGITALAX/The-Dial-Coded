@@ -78,6 +78,7 @@ const Slider: FunctionComponent = (): JSX.Element => {
           mixtapeMirror={publicationsSearch?.mixtapeMirrors}
           handleHidePost={handleHidePost}
           followerOnly={publicationsSearch?.follower}
+          reactionLoaded={publicationsSearch?.reactionLoaded}
         />
       )}
       <Samples />

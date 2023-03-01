@@ -9,6 +9,7 @@ export interface PreSearchState {
   mirrored: boolean[];
   reacted: boolean[];
   follower: boolean[];
+  reactionLoaded: boolean[];
 }
 
 const initialPreSearchState: PreSearchState = {
@@ -20,6 +21,7 @@ const initialPreSearchState: PreSearchState = {
   mirrored: [],
   reacted: [],
   follower: [],
+  reactionLoaded: [],
 };
 
 export const preSearchSlice = createSlice({
@@ -38,6 +40,7 @@ export const preSearchSlice = createSlice({
           actionMirrored,
           actionReacted,
           actionFollower,
+          actionReactionLoaded,
         },
       }
     ) => {
@@ -49,6 +52,7 @@ export const preSearchSlice = createSlice({
       state.mirrored = actionMirrored;
       state.reacted = actionReacted;
       state.follower = actionFollower;
+      state.reactionLoaded = actionReactionLoaded;
     },
   },
 });

@@ -80,6 +80,7 @@ const Post: NextPage = (): JSX.Element => {
     setHasMirrored,
     setHasCommented,
     setHasReacted,
+    reactionLoaded
   } = useMainFeed();
 
   const dispatch = useDispatch();
@@ -335,6 +336,7 @@ const Post: NextPage = (): JSX.Element => {
                 reactionsPostFeed={reactionsPostFeed}
                 handleHidePost={handleHidePost}
                 followerOnly={followerOnly}
+                reactionLoaded={reactionLoaded}
               />
               <Comments
                 followerOnly={followerOnly}
@@ -368,6 +370,7 @@ const Post: NextPage = (): JSX.Element => {
                 profilesOpen={profilesOpen}
                 handleMentionClick={handleMentionClick}
                 textElement={textElement}
+                reactionLoaded={reactionLoaded}
               />
             </div>
           </>

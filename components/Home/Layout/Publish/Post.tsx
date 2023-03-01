@@ -35,6 +35,7 @@ const Post: FunctionComponent = (): JSX.Element => {
     publicationsLoading,
     firstPubLoad,
     hasMore,
+    reactionLoaded
   } = useMainFeed();
   const {
     hotFeed,
@@ -47,6 +48,7 @@ const Post: FunctionComponent = (): JSX.Element => {
     firstMixLoad,
     followerOnly: hotFollowerOnly,
     hasMoreHot,
+    reactionLoaded: reactionLoadedHot
   } = useHot();
   return (
     <div className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto bg-shame gap-10">
@@ -88,6 +90,8 @@ const Post: FunctionComponent = (): JSX.Element => {
         hotFollowerOnly={hotFollowerOnly}
         hasMore={hasMore}
         hasMoreHot={hasMoreHot}
+        reactionLoaded={reactionLoaded}
+        reactionLoadedHot={reactionLoadedHot}
       />
     </div>
   );

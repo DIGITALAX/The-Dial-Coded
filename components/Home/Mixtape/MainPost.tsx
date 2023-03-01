@@ -11,6 +11,7 @@ const MainPost: FunctionComponent<MainPostMixtapeProps> = ({
   reactionsPostFeed,
   handleHidePost,
   followerOnly,
+  reactionLoaded
 }): JSX.Element => {
   const dispatch = useDispatch();
   return (
@@ -34,6 +35,7 @@ const MainPost: FunctionComponent<MainPostMixtapeProps> = ({
           }
           handleHidePost={handleHidePost}
           followerOnly={followerOnly}
+          reactionLoaded={reactionLoaded?.[0]}
         />
       </div>
     </div>

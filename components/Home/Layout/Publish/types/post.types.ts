@@ -36,8 +36,10 @@ export type FeedProps = {
   publicationsLoading: boolean;
   firstPubLoad: boolean;
   firstMixLoad: boolean;
-  hotFollowerOnly: boolean[]
+  hotFollowerOnly: boolean[];
   noHotData: boolean;
   hasMore: boolean;
   hasMoreHot: boolean;
+  reactionLoaded: boolean[];
+  reactionLoadedHot: boolean[];
 };

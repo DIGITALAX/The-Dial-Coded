@@ -79,6 +79,7 @@ const useMainFeed = () => {
   const [commentors, setCommentors] = useState<PublicationSearchResult[]>([]);
   const [commentPageInfo, setCommentPageInfo] = useState<PaginatedResultInfo>();
   const [reactionsFeed, setReactionsFeed] = useState<any[]>([]);
+  const [reactionLoaded, setReactionLoaded] = useState<boolean[]>([]);
   const [hasReacted, setHasReacted] = useState<boolean[]>([]);
   const [hasMirrored, setHasMirrored] = useState<boolean[]>([]);
   const [hasCommented, setHasCommented] = useState<boolean[]>([]);
@@ -159,6 +160,7 @@ const useMainFeed = () => {
       setMixtapeMirror(mixtapeMirrors);
       const response = await checkPostReactions(filteredArr, lensProfile);
       setReactionsFeed(response?.reactionsFeedArr);
+      setReactionLoaded(Array(filteredArr?.length).fill(true));
       if (lensProfile) {
         setHasMirrored(mixtapeMirrors);
         const hasCommentedArr = await checkIfCommented(
@@ -249,6 +251,7 @@ const useMainFeed = () => {
       setPaginatedResults(pageData);
       const response = await checkPostReactions(orderedArr, lensProfile);
       setReactionsFeed(response?.reactionsFeedArr);
+      setReactionLoaded(Array(orderedArr?.length).fill(true));
       const isOnlyFollowers = await checkIfFollowerOnly(
         orderedArr,
         lensProfile
@@ -317,6 +320,7 @@ const useMainFeed = () => {
         const response = await checkPostReactions(orderedArr, lensProfile);
         setHasReacted(response?.hasReactedArr);
         setReactionsFeed(response?.reactionsFeedArr);
+        setReactionLoaded(Array(orderedArr?.length).fill(true));
         const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
         setHasMirrored(hasMirroredArr);
         const hasCommentedArr = await checkIfCommented(orderedArr, lensProfile);
@@ -377,8 +381,35 @@ const useMainFeed = () => {
       setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
-      const response = await checkPostReactions(filteredArr, lensProfile);
-      setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
+
+      let reactionsResponse: any[];
+      let hasReactedResponse: boolean[];
+      if (reactionsFeed?.length !== publicationsFeed?.length) {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          [
+            ...publicationsFeed?.slice(
+              -(publicationsFeed?.length - reactionsFeed?.length)
+            ),
+            ...filteredArr,
+          ],
+          lensProfile
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      } else {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          filteredArr,
+          lensProfile
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      }
+      setReactionsFeed([...reactionsFeed, ...reactionsResponse]);
+      setHasReacted([...hasReacted, ...(hasReactedResponse as boolean[])]);
+      setReactionLoaded((prevReactionsLoaded) => [
+        ...prevReactionsLoaded,
+        ...Array(filteredArr?.length).fill(true),
+      ]);
     } catch (err: any) {
       console.error(err);
     }
@@ -435,9 +466,35 @@ const useMainFeed = () => {
           setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
           setPublicationsFeed([...publicationsFeed, ...orderedArr]);
           setPaginatedResults(morePublications?.data.feed.pageInfo);
-          const response = await checkPostReactions(orderedArr, lensProfile);
-          setHasReacted([...hasReacted, ...response?.hasReactedArr]);
-          setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
+
+          let reactionsResponse: any[];
+          let hasReactedResponse: boolean[];
+          if (reactionsFeed?.length !== publicationsFeed?.length) {
+            const { hasReactedArr, reactionsFeedArr } =
+              await checkPostReactions(
+                [
+                  ...publicationsFeed?.slice(
+                    -(publicationsFeed?.length - reactionsFeed?.length)
+                  ),
+                  ...orderedArr,
+                ],
+                lensProfile
+              );
+            reactionsResponse = reactionsFeedArr;
+            hasReactedResponse = hasReactedArr;
+          } else {
+            const { hasReactedArr, reactionsFeedArr } =
+              await checkPostReactions(orderedArr, lensProfile);
+            reactionsResponse = reactionsFeedArr;
+            hasReactedResponse = hasReactedArr;
+          }
+          setReactionsFeed([...reactionsFeed, ...reactionsResponse]);
+          setHasReacted([...hasReacted, ...(hasReactedResponse as boolean[])]);
+          setReactionLoaded((prevReactionsLoaded) => [
+            ...prevReactionsLoaded,
+            ...Array(orderedArr?.length).fill(true),
+          ]);
+
           const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
           setHasMirrored([...hasMirrored, ...hasMirroredArr]);
           const hasCommentedArr = await checkIfCommented(
@@ -526,14 +583,41 @@ const useMainFeed = () => {
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       setPublicationsFeed([...publicationsFeed, ...orderedArr]);
       setPaginatedResults(pageData);
-      const response = await checkPostReactions(orderedArr, lensProfile);
-      setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
+
+      let reactionsResponse: any[];
+      let hasReactedResponse: boolean[];
+      if (reactionsFeed?.length !== publicationsFeed?.length) {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          [
+            ...publicationsFeed?.slice(
+              -(publicationsFeed?.length - reactionsFeed?.length)
+            ),
+            ...orderedArr,
+          ],
+          lensProfile
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      } else {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          orderedArr,
+          lensProfile
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      }
+      setReactionsFeed([...reactionsFeed, ...reactionsResponse]);
+      setReactionLoaded((prevReactionsLoaded) => [
+        ...prevReactionsLoaded,
+        ...Array(orderedArr?.length).fill(true),
+      ]);
+
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(orderedArr, lensProfile);
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
         const hasCommentedArr = await checkIfCommented(orderedArr, lensProfile);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
-        setHasReacted([...hasReacted, ...response?.hasReactedArr]);
+        setHasReacted([...hasReacted, ...(hasReactedResponse as boolean[])]);
       }
     } catch (err: any) {
       console.error(err.message);
@@ -578,14 +662,41 @@ const useMainFeed = () => {
       );
       setCommentors([...commentors, ...sortedArr]);
       setCommentPageInfo(comments.data.publications.pageInfo);
-      const response = await checkPostReactions(sortedArr, lensProfile);
-      setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
+
+      let reactionsResponse: any[];
+      let hasReactedResponse: boolean[];
+      if (reactionsFeed?.length !== publicationsFeed?.length) {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          [
+            ...publicationsFeed?.slice(
+              -(publicationsFeed?.length - reactionsFeed?.length)
+            ),
+            ...sortedArr,
+          ],
+          lensProfile
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      } else {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          sortedArr,
+          lensProfile
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      }
+      setReactionsFeed([...reactionsFeed, ...reactionsResponse]);
+      setReactionLoaded((prevReactionsLoaded) => [
+        ...prevReactionsLoaded,
+        ...Array(sortedArr?.length).fill(true),
+      ]);
+
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
         setHasMirrored([...hasMirrored, ...hasMirroredArr]);
         const hasCommentedArr = await checkIfCommented(sortedArr, lensProfile);
         setHasCommented([...hasCommented, ...hasCommentedArr]);
-        setHasReacted([...hasReacted, ...response?.hasReactedArr]);
+        setHasReacted([...hasReacted, ...hasReactedResponse]);
       }
     } catch (err: any) {
       console.error(err.message);
@@ -648,6 +759,7 @@ const useMainFeed = () => {
     fetchMoreFeed,
     hasReacted,
     reactionsFeed,
+    reactionLoaded,
     hasMirrored,
     hasCommented,
     commentors,

@@ -48,6 +48,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
   profilesOpen,
   handleMentionClick,
   textElement,
+  reactionLoaded
 }): JSX.Element => {
   const { openConnectModal } = useConnectModal();
   const collectOptionsModal = useSelector(
@@ -333,6 +334,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                   hasCommented={hasCommented?.length > 0 && hasCommented[index]}
                   handleHidePost={handleHidePost}
                   followerOnly={followerOnly}
+                  reactionLoaded={reactionLoaded?.[index]}
                 />
               );
             })}

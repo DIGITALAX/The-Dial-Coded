@@ -24,6 +24,7 @@ const Main: FunctionComponent<MainProps> = ({
   mixtapeLength,
   noHotData,
   hasMore,
+  reactionLoaded,
 }): JSX.Element => {
   const dispatch = useDispatch();
   if (publicationsLoading && firstPubLoad) {
@@ -69,6 +70,7 @@ const Main: FunctionComponent<MainProps> = ({
                       followerOnly?.length > 0 && followerOnly[index]
                     }
                     handleHidePost={handleHidePost}
+                    reactionLoaded={reactionLoaded?.[index]}
                   />
                 );
               }

@@ -22,6 +22,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
   hasCommented,
   handleHidePost,
   followerOnly,
+  reactionLoaded,
 }): JSX.Element => {
   const router = useRouter();
   const viewerOpen = useSelector(
@@ -85,6 +86,7 @@ const HotPublication: FunctionComponent<HotPublicationProps> = ({
           hasMirrored={hasMirrored}
           hasReacted={hasReacted}
           mixtape={true}
+          reactionLoaded={reactionLoaded}
         />
       </div>
     </div>

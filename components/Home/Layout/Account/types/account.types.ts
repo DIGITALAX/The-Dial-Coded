@@ -80,6 +80,7 @@ export type ProfileTabProps = {
   firstPostLoad?: boolean;
   mixtapeLength: number;
   hasMore: boolean;
+  reactionLoaded: boolean[]
 };
 
 export type StatsTabProps = {

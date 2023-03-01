@@ -25,6 +25,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   handleHidePost,
   followerOnly,
   height,
+  reactionLoaded
 }): JSX.Element => {
   const router = useRouter();
   const viewerOpen = useSelector(
@@ -68,6 +69,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         hasMirrored={hasMirrored}
         hasReacted={hasReacted}
         mixtape={false}
+        reactionLoaded={reactionLoaded}
       />
       <div
         className={`relative w-full h-auto grow rounded-md grid grid-flow-row auto-rows-auto p-3 galaxy:p-6 gap-6 border-2 border-black ${

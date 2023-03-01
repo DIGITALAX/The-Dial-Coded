@@ -141,6 +141,7 @@ const useScan = (): UseScanResult => {
           hasCommented,
           hasMirrored,
           hasReacted,
+          reactionLoaded,
         } = await getPublicationReactions(publicationSearchValues, lensProfile);
         const followerOnly = await checkIfFollowerOnly(
           publicationSearchValues,
@@ -156,6 +157,7 @@ const useScan = (): UseScanResult => {
             actionMirrored: hasMirrored,
             actionReacted: hasReacted,
             actionFollower: followerOnly,
+            actionReactionLoaded: reactionLoaded,
           })
         );
         if (e.target?.value !== "" || !e.target?.value) {
@@ -195,6 +197,7 @@ const useScan = (): UseScanResult => {
           hasCommented,
           hasMirrored,
           hasReacted,
+          reactionLoaded,
         } = await getPublicationReactions(publicationSearchValues, lensProfile);
         const followerOnly = await checkIfFollowerOnly(
           publicationSearchValues,
@@ -210,6 +213,7 @@ const useScan = (): UseScanResult => {
             actionMirrored: hasMirrored,
             actionReacted: hasReacted,
             actionFollower: followerOnly,
+            actionReactionLoaded: reactionLoaded,
           })
         );
         await callLexicaSearch(
@@ -393,7 +397,7 @@ const useScan = (): UseScanResult => {
     handleKeyDownEnter,
     scanSearchTarget,
     imagesScanLoading,
-    hasMore
+    hasMore,
   };
 };
 
