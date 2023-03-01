@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SvgPatternType } from "../../components/Home/Layout/Canvas/types/canvas.types";
 
 export interface SelectSynthElementState {
-  value?: SvgPatternType;
+  value?: any;
 }
 
 const initialSelectSynthElementState: SelectSynthElementState = {
@@ -15,7 +15,7 @@ export const selectSynthElementSlice = createSlice({
   reducers: {
     setSelectSynthElement: (
       state: SelectSynthElementState,
-      action: PayloadAction<SvgPatternType | undefined>
+      action: PayloadAction<any>
     ) => {
       state.value = action.payload;
     },
