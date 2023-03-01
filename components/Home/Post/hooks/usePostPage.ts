@@ -19,6 +19,7 @@ const usePostPage = () => {
   const [followerOnly, setFollowerOnly] = useState<boolean>(false);
   const [hasPostMirrored, setHasPostMirrored] = useState<boolean[]>([]);
   const [hasPostReacted, setHasPostReacted] = useState<boolean[]>([]);
+  const [reactionLoaded, setReactionLoaded] = useState<boolean[]>([]);
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer?.profile?.id
   );
@@ -64,6 +65,7 @@ const usePostPage = () => {
         setHasPostReacted(response?.hasReactedArr);
       }
       setReactionsFeedPost(response?.reactionsFeedArr);
+      setReactionLoaded(Array(pubData?.publication?.length).fill(true))
     } catch (err: any) {
       console.error(err.message);
     }
@@ -80,7 +82,8 @@ const usePostPage = () => {
     hasPostMirrored,
     hasPostReacted,
     followerOnly,
-    firstLoad
+    firstLoad,
+    reactionLoaded
   };
 };
 

@@ -15,6 +15,7 @@ const getPostComments = async (
   setHasMirrored: (e: boolean[]) => void,
   setHasCommented: (e: boolean[]) => void,
   setHasReacted: (e: boolean[]) => void,
+  setReactionLoaded: (e: boolean[]) => void,
   id?: string,
   commentId?: string
 ): Promise<void> => {
@@ -41,6 +42,7 @@ const getPostComments = async (
     setPaginated(comments.data.publications.pageInfo);
     const response = await checkPostReactions(sortedArr, profile);
     setReactionsFeed(response?.reactionsFeedArr);
+    setReactionLoaded(Array(sortedArr?.length).fill(true));
     if (profile) {
       const hasMirroredArr = await checkIfMirrored(sortedArr, profile);
       setHasMirrored(hasMirroredArr);
