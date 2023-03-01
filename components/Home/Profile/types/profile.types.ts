@@ -26,6 +26,7 @@ export type SideBarProps = {
   firstSideBarLoad: boolean;
   hotFollowerOnly: boolean[];
   hasMoreHot: boolean;
+  reactionLoaded: boolean[];
 };
 
 export interface FollowArgs {
@@ -83,5 +84,6 @@ export type UseProfilePageResults = {
   hotFollowerOnly: boolean[];
   hasMoreHot: boolean;
   hasMore: boolean;
-  reactionLoaded: boolean[]
+  reactionLoaded: boolean[];
+  reactionHotLoaded: boolean[];
 };

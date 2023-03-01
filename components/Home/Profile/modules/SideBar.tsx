@@ -40,7 +40,8 @@ const SideBar: FunctionComponent<SideBarProps> = ({
   mixtapesLoading,
   firstSideBarLoad,
   hotFollowerOnly,
-  hasMoreHot
+  hasMoreHot,
+  reactionLoaded
 }): JSX.Element => {
   const location = lodash.filter(
     profileData?.attributes,
@@ -271,6 +272,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({
                           hasCommented={hasHotCommented[indexOne]}
                           handleHidePost={handleHidePost}
                           followerOnly={hotFollowerOnly[indexOne]}
+                          reactionLoaded={reactionLoaded?.[indexOne]}
                         />
                       );
                     })}

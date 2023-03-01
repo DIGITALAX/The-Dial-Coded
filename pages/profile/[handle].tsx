@@ -47,7 +47,8 @@ const Profile: NextPage = (): JSX.Element => {
     hotFollowerOnly,
     hasMoreHot,
     hasMore,
-    reactionLoaded
+    reactionLoaded,
+    reactionHotLoaded
   } = useProfilePage();
   const { isConnected } = useAccount();
   const profileId = useSelector(
@@ -229,6 +230,7 @@ const Profile: NextPage = (): JSX.Element => {
               firstSideBarLoad={firstSideBarLoad}
               hotFollowerOnly={hotFollowerOnly}
               hasMoreHot={hasMoreHot}
+              reactionLoaded={reactionHotLoaded}
             />
             <div
               className={`relative w-full h-full flex px-3 fo:px-10 py-4 bg-offWhite/90 overflow-y-scroll 
