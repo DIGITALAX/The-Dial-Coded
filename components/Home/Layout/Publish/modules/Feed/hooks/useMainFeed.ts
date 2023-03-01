@@ -714,6 +714,7 @@ const useMainFeed = () => {
         setHasMirrored,
         setHasCommented,
         setHasReacted,
+        setReactionLoaded,
         undefined,
         commentId
       );
@@ -777,6 +778,7 @@ const useMainFeed = () => {
     publicationsLoading,
     firstPubLoad,
     hasMore,
+    setReactionLoaded
   };
 };
 

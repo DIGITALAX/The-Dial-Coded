@@ -20,7 +20,7 @@ import { INFURA_GATEWAY } from "../../lib/lens/constants";
 import NotFound from "../../components/Common/NotFound/NotFound";
 import PostPageLoading from "../../components/Common/Loaders/PostPageLoading";
 
-const Post: NextPage = (): JSX.Element => {
+const Mixtape: NextPage = (): JSX.Element => {
   const {
     query: { id },
     replace,
@@ -35,6 +35,7 @@ const Post: NextPage = (): JSX.Element => {
     hasPostReacted,
     followerOnly,
     firstLoad,
+    reactionLoaded: reactionPostLoaded,
   } = usePostPage();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
@@ -80,7 +81,8 @@ const Post: NextPage = (): JSX.Element => {
     setHasMirrored,
     setHasCommented,
     setHasReacted,
-    reactionLoaded
+    reactionLoaded,
+    setReactionLoaded,
   } = useMainFeed();
 
   const dispatch = useDispatch();
@@ -97,6 +99,7 @@ const Post: NextPage = (): JSX.Element => {
         setHasMirrored,
         setHasCommented,
         setHasReacted,
+        setReactionLoaded,
         id as string
       );
     }
@@ -351,7 +354,7 @@ const Post: NextPage = (): JSX.Element => {
                 reactionsPostFeed={reactionsPostFeed}
                 handleHidePost={handleHidePost}
                 followerOnly={followerOnly}
-                reactionLoaded={reactionLoaded}
+                reactionLoaded={reactionPostLoaded}
               />
               <Comments
                 commentors={commentors}
@@ -395,4 +398,4 @@ const Post: NextPage = (): JSX.Element => {
   );
 };
 
-export default Post;
+export default Mixtape;

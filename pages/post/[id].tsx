@@ -34,6 +34,7 @@ const Post: NextPage = (): JSX.Element => {
     hasPostReacted,
     followerOnly,
     firstLoad,
+    reactionLoaded: reactionPostLoaded
   } = usePostPage();
 
   const lensProfile = useSelector(
@@ -80,7 +81,8 @@ const Post: NextPage = (): JSX.Element => {
     setHasMirrored,
     setHasCommented,
     setHasReacted,
-    reactionLoaded
+    reactionLoaded,
+    setReactionLoaded
   } = useMainFeed();
 
   const dispatch = useDispatch();
@@ -96,7 +98,8 @@ const Post: NextPage = (): JSX.Element => {
         setHasMirrored,
         setHasCommented,
         setHasReacted,
-        id as string
+        setReactionLoaded,
+        id as string,
       );
     }
   }, [
@@ -336,7 +339,7 @@ const Post: NextPage = (): JSX.Element => {
                 reactionsPostFeed={reactionsPostFeed}
                 handleHidePost={handleHidePost}
                 followerOnly={followerOnly}
-                reactionLoaded={reactionLoaded}
+                reactionLoaded={reactionPostLoaded}
               />
               <Comments
                 followerOnly={followerOnly}
