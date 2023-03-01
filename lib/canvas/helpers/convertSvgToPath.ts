@@ -14,6 +14,7 @@ const convertSvgToPath = async (
 
   for (let i = 0; i < paths.length; i++) {
     const path = paths[i];
+    const transform = path.getAttribute("transform");
     const tagName = path.tagName.toLowerCase();
 
     if (tagName === "rect") {

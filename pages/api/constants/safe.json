@@ -157,16 +157,16 @@
   [
     {
       "image": "QmUUVbpPdDpobHZnTeaXZD8pgLbNUAJ86uKjUX9FTRqrXb",
-      "x": 35,
-      "y": 660,
-      "scale": 4.5,
+      "x": -345,
+      "y":30,
+      "scale": 9.5,
       "stroke": "#0091FF"
     },
     {
-      "image": "Qmbbes1igdGHJy4eSknx41RJ3Gctg5yRugfrjr9T3recE4",
-      "x": 315,
-      "y": 660,
-      "scale": 4.5,
+      "image": "QmdHJaEGfXcweNehPsXXqF7FXfPuKejRyrJKmNfwbHCJtj",
+      "x": 440,
+      "y": 210,
+      "scale": 3.1,
       "stroke": "#0091FF"
     }
   ]
