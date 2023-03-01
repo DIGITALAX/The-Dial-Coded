@@ -13,7 +13,6 @@ const addRashToCanvas = async (
 ) => {
   try {
     let elementsArray: SvgPatternType[] = [];
-    console.log(imageBase);
     if (imageBase) {
       for (const image in imageBase) {
         const newElement = await convertSvgToPath(

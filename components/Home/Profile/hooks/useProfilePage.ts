@@ -81,6 +81,7 @@ const useProfilePage = (): UseProfilePageResults => {
   const [hasMirrored, setHasMirrored] = useState<boolean[]>([]);
   const [hasCommented, setHasCommented] = useState<boolean[]>([]);
   const [hasReacted, setHasReacted] = useState<boolean[]>([]);
+  const [reactionLoaded, setReactionLoaded] = useState<boolean[]>([]);
   const [reactionsFeed, setReactionsFeed] = useState<any[]>([]);
   const [mixtapes, setMixtapes] = useState<any[]>([]);
   const [mixtapePaginated, setMixtapePaginated] = useState<any>();
@@ -469,6 +470,7 @@ const useProfilePage = (): UseProfilePageResults => {
       setPaginatedResults(pageData);
       const response = await checkPostReactions(filteredArr, lensProfile?.id);
       setHasReacted(response?.hasReactedArr);
+
       if (lensProfile?.id) {
         const hasMirroredArr = await checkIfMirrored(
           filteredArr,
@@ -482,6 +484,7 @@ const useProfilePage = (): UseProfilePageResults => {
         setHasCommented(hasCommentedArr);
       }
       setReactionsFeed(response?.reactionsFeedArr);
+      setReactionLoaded(Array(filteredArr?.length).fill(true));
     } catch (err: any) {
       console.error(err.message);
     }
@@ -549,8 +552,33 @@ const useProfilePage = (): UseProfilePageResults => {
       setPaginatedResults(pageData);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
-      const response = await checkPostReactions(filteredArr, lensProfile?.id);
-      setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
+
+      let reactionsResponse: any[];
+      let hasReactedResponse: boolean[];
+      if (reactionsFeed?.length !== userFeed?.length) {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          [
+            ...userFeed?.slice(-(userFeed?.length - reactionsFeed?.length)),
+            ...filteredArr,
+          ],
+          lensProfile?.id
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      } else {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          filteredArr,
+          lensProfile?.id
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      }
+
+      setReactionsFeed([...reactionsFeed, ...reactionsResponse]);
+      setReactionLoaded((prevReactionsLoaded) => [
+        ...prevReactionsLoaded,
+        ...Array(filteredArr?.length).fill(true),
+      ]);
       if (lensProfile?.id) {
         const hasMirroredArr = await checkIfMirrored(
           filteredArr,
@@ -562,7 +590,7 @@ const useProfilePage = (): UseProfilePageResults => {
           lensProfile?.id
         );
         setHasCommented([...hasCommented, ...hasCommentedArr]);
-        setHasReacted([...hasReacted, ...response?.hasReactedArr]);
+        setHasReacted([...hasReacted, ...hasReactedResponse]);
       }
     } catch (err: any) {
       console.error(err.message);
@@ -887,6 +915,7 @@ const useProfilePage = (): UseProfilePageResults => {
     hotFollowerOnly,
     hasMoreHot,
     hasMore,
+    reactionLoaded
   };
 };
 export default useProfilePage;
