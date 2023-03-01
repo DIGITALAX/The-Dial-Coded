@@ -33,6 +33,7 @@ import createElement from "../../../../../lib/canvas/helpers/createElement";
 import updateElement from "../../../../../lib/canvas/helpers/updateElement";
 import { setInitImagePrompt } from "../../../../../redux/reducers/initImagePromptSlice";
 import createCanvasInit from "../../../../../lib/canvas/helpers/getBoundingBox";
+import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
@@ -458,14 +459,28 @@ const usePatterns = (): UsePatternsResult => {
       const postImage = new File([blob], "thedial_drafts", {
         type: "image/png",
       });
-      await handleImageAdd(postImage);
+      await handleImageAdd(postImage, true);
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
-  const handleImageAdd = async (e: any): Promise<void> => {
-    const compressedImage = await compressImageFiles(e);
+  const handleImageAdd = async (e: any, url: boolean): Promise<void> => {
+    if (!url) {
+      if ((e as any).target.files.length < 1) {
+        return;
+      }
+      if (fileLimitAlert((e as any).target.files[0])) {
+        return;
+      }
+    }
+    let image: File;
+    if (url) {
+      image = e;
+    } else {
+      image = (e.target as HTMLFormElement).files[0];
+    }
+    const compressedImage = await compressImageFiles(image);
     const reader = new FileReader();
     reader?.readAsDataURL(compressedImage as File);
 
@@ -624,6 +639,7 @@ const usePatterns = (): UsePatternsResult => {
     handleBlur,
     selectedElement,
     addImageToCanvas,
+    handleImageAdd,
   };
 };
 

@@ -126,6 +126,7 @@ export type DrawProps = {
   handlePatternBlur: (e: FormEvent) => void;
   selectedPatternElement: SvgPatternType | null;
   addPatternImageToCanvas: (image: string) => Promise<void>;
+  handlePatternImageAdd:  (e: FormEvent, url: boolean) => Promise<void>;
 };
 
 export type ColorPickerProps = {
@@ -140,6 +141,7 @@ export type SideMenuProps = {
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
   handleImageAdd: (e: FormEvent) => Promise<void>;
+  handlePatternImageAdd:  (e: FormEvent, url: boolean) => Promise<void>;
   undo: () => boolean | void;
   redo: () => boolean | void;
   setTool: (e: string) => void;
@@ -215,6 +217,7 @@ export type SideOptionsProps = {
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
   handleImageAdd: (e: FormEvent) => Promise<void>;
+  handlePatternImageAdd:  (e: FormEvent, url: boolean) => Promise<void>;
   undo: () => boolean | void;
   redo: () => boolean | void;
   setTool: (e: string) => void;
@@ -450,6 +453,7 @@ export type UsePatternsResult = {
   handleBlur: (e: FormEvent) => void;
   selectedElement: SvgPatternType | null;
   addImageToCanvas: (image: string) => Promise<void>;
+  handleImageAdd: (e: FormEvent, url: boolean) => Promise<void>;
 };
 
 export interface SafeImage {
@@ -458,7 +462,7 @@ export interface SafeImage {
   y: number;
   scale: number;
   stroke: string;
-  flip?: boolean
+  flip?: boolean;
 }
 
 export enum TemplateTypes {
