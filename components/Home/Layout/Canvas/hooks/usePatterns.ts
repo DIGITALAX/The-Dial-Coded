@@ -85,14 +85,12 @@ const usePatterns = (): UsePatternsResult => {
   const [elements, setElements, undo, redo] = useElements([], true);
 
   const templateSwitch = async (template: string | undefined) => {
-    if (patternType === "rash") {
-      await addRashToCanvas(
-        base[0],
-        safe[0],
-        temp[Number(template?.split("0x0")[1]) - 1],
-        setElements
-      );
-    }
+    await addRashToCanvas(
+      setElements,
+      base[Number(patternType)],
+      safe[Number(patternType)],
+      temp[Number(patternType)][Number(template?.split("0x0")[1]) - 1]
+    );
   };
 
   useEffect(() => {
