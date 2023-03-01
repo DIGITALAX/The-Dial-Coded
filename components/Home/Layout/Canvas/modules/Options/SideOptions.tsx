@@ -25,6 +25,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   handlePatternClear,
   patternRedo,
   patternUndo,
+  handlePatternImageAdd
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-cols-3 f9:grid-cols-none f9:grid-flow-row auto-rows-auto gap-4">
@@ -80,14 +81,14 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
                   });
                 }
               : () => {
-                setZoom(1);
-                setPan({
-                  xInitial: 0,
-                  yInitial: 0,
-                  xOffset: 0,
-                  yOffset: 0,
-                });
-              }
+                  setZoom(1);
+                  setPan({
+                    xInitial: 0,
+                    yInitial: 0,
+                    xOffset: 0,
+                    yOffset: 0,
+                  });
+                }
           }
         >
           <CanvasOption
@@ -116,27 +117,32 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
           />
         </div>
       </div>
-      {!canvasType && (
-        <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
-          <label>
-            <CanvasOption
-              image="QmeBHHf7Ueca9bs4xWqNAj4UEgChPkwtpiG68xqPxaavSo"
-              bgColor="black"
-              width={25}
-              height={25}
-            />
-            <input
-              type="file"
-              accept="image/png"
-              hidden
-              required
-              id="files"
-              multiple={false}
-              name="images"
-              className="caret-transparent"
-              onChange={(e: FormEvent) => handleImageAdd(e)}
-            />
-          </label>
+
+      <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
+        <label>
+          <CanvasOption
+            image="QmeBHHf7Ueca9bs4xWqNAj4UEgChPkwtpiG68xqPxaavSo"
+            bgColor="black"
+            width={25}
+            height={25}
+          />
+          <input
+            type="file"
+            accept="image/png"
+            hidden
+            required
+            id="files"
+            multiple={false}
+            name="images"
+            className="caret-transparent"
+            onChange={
+              canvasType
+                ? (e: FormEvent) => handlePatternImageAdd(e, false)
+                : (e: FormEvent) => handleImageAdd(e)
+            }
+          />
+        </label>
+        {!canvasType && (
           <CanvasOption
             image="QmZZhPPzhmsicoiHGKPvqATdQ3JGakrZ2G3mK67goHA9CN"
             bgColor="black"
@@ -145,8 +151,8 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
             setShowBool={setDraftBoard}
             bool_option={draftBoard}
           />
-        </div>
-      )}
+        )}
+      </div>
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-2">
         <div
           className="relative row-start-1 w-fit h-fit"
