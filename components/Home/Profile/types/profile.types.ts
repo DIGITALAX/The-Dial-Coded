@@ -83,4 +83,5 @@ export type UseProfilePageResults = {
   hotFollowerOnly: boolean[];
   hasMoreHot: boolean;
   hasMore: boolean;
+  reactionLoaded: boolean[]
 };

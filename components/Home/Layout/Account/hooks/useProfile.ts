@@ -38,6 +38,7 @@ const useProfile = () => {
   const [hasCommented, setHasCommented] = useState<boolean[]>([]);
   const [hasReacted, setHasReacted] = useState<boolean[]>([]);
   const [reactionsFeed, setReactionsFeed] = useState<any[]>([]);
+  const [reactionLoaded, setReactionLoaded] = useState<boolean[]>([]);
   const [paginatedResults, setPaginatedResults] = useState<any>();
   const [profileDataLoading, setProfileDataLoading] = useState<boolean>(false);
   const [mixtapeMirror, setMixtapeMirror] = useState<boolean[]>([]);
@@ -124,6 +125,7 @@ const useProfile = () => {
       const hasCommentedArr = await checkIfCommented(filteredArr, profileId);
       setHasCommented(hasCommentedArr);
       setReactionsFeed(response?.reactionsFeedArr);
+      setReactionLoaded(Array(filteredArr?.length).fill(true));
     } catch (err: any) {
       console.error(err.message);
     }
@@ -166,15 +168,40 @@ const useProfile = () => {
       const isFollowedByMe = await checkIfFollowerOnly(filteredArr, profileId);
       setFollowerOnly([...followerOnly, ...(isFollowedByMe as boolean[])]);
       setPaginatedResults(data?.publications?.pageInfo);
-      const response = await checkPostReactions(filteredArr, profileId);
-      setReactionsFeed([...reactionsFeed, ...response?.reactionsFeedArr]);
+
+      let reactionsResponse: any[];
+      let hasReactedResponse: boolean[];
+      if (reactionsFeed?.length !== userFeed?.length) {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          [
+            ...userFeed?.slice(-(userFeed?.length - reactionsFeed?.length)),
+            ...filteredArr,
+          ],
+          profileId
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      } else {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          filteredArr,
+          profileId
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      }
+
+      setReactionsFeed([...reactionsFeed, ...reactionsResponse]);
+      setReactionLoaded((prevReactionsLoaded) => [
+        ...prevReactionsLoaded,
+        ...Array(sortedArr?.length).fill(true),
+      ]);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror([...mixtapeMirror, ...mixtapeMirrors]);
       const hasMirroredArr = await checkIfMirrored(filteredArr, profileId);
       setHasMirrored([...hasMirrored, ...hasMirroredArr]);
       const hasCommentedArr = await checkIfCommented(filteredArr, profileId);
       setHasCommented([...hasCommented, ...hasCommentedArr]);
-      setHasReacted([...hasReacted, ...response?.hasReactedArr]);
+      setHasReacted([...hasReacted, ...hasReactedResponse]);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -217,6 +244,7 @@ const useProfile = () => {
     mixtapeMirror,
     followerOnly,
     hasMore,
+    reactionLoaded
   };
 };
 

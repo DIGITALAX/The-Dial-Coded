@@ -14,7 +14,6 @@ import { setWalletConnected } from "../../redux/reducers/walletConnectedSlice";
 import { RootState } from "../../redux/store";
 import ProfileTab from "./../../components/Home/Layout/Account/modules/ProfileTab";
 import Head from "next/head";
-import PostFeedLoading from "../../components/Common/Loaders/PostFeedLoading";
 
 const Profile: NextPage = (): JSX.Element => {
   const {
@@ -48,6 +47,7 @@ const Profile: NextPage = (): JSX.Element => {
     hotFollowerOnly,
     hasMoreHot,
     hasMore,
+    reactionLoaded
   } = useProfilePage();
   const { isConnected } = useAccount();
   const profileId = useSelector(
@@ -255,6 +255,7 @@ const Profile: NextPage = (): JSX.Element => {
                 publicationsLoading={publicationsLoading}
                 firstPostLoad={firstPostLoad}
                 hasMore={hasMore}
+                reactionLoaded={reactionLoaded}
               />
             </div>
           </div>
