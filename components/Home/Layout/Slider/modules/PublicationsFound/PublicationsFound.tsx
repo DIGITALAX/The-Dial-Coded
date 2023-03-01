@@ -12,6 +12,7 @@ const PublicationsFound: FunctionComponent<PublicationsFoundProps> = ({
   mixtapeMirror,
   handleHidePost,
   followerOnly,
+  reactionLoaded
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-row overflow-x-scroll">
@@ -38,6 +39,7 @@ const PublicationsFound: FunctionComponent<PublicationsFoundProps> = ({
                 followerOnly={followerOnly?.length > 0 && followerOnly[index]}
                 handleHidePost={handleHidePost}
                 height={"full"}
+                reactionLoaded={reactionLoaded?.[index]}
               />
             </div>
           );

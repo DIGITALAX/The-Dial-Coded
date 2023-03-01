@@ -81,6 +81,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
         hasCommented,
         hasMirrored,
         hasReacted,
+        reactionLoaded
       } = await getPublicationReactions(
         publicationsSearchNotDispatch,
         lensProfile
@@ -99,6 +100,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
           actionMirrored: hasMirrored,
           actionReacted: hasReacted,
           actionFollower: followerOnly,
+          actionReactionLoaded: reactionLoaded
         })
       );
       if (searchTarget !== "" || !searchTarget) {
@@ -122,6 +124,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
         hasCommented,
         hasMirrored,
         hasReacted,
+        reactionLoaded
       } = await getPublicationReactions(
         publicationsSearchNotDispatch,
         lensProfile
@@ -140,6 +143,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
           actionMirrored: hasMirrored,
           actionReacted: hasReacted,
           actionFollower: followerOnly,
+          actionReactionLoaded: reactionLoaded
         })
       );
       await callLexicaSearch(prompt ? prompt : searchTarget, dispatch, setImagesLoading);
@@ -180,6 +184,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
         hasCommented,
         hasMirrored,
         hasReacted,
+        reactionLoaded
       } = await getPublicationReactions(sortedPublicationArr, lensProfile);
       const followerOnly = await checkIfFollowerOnly(
         sortedPublicationArr,
@@ -195,6 +200,7 @@ const useSliderSearch = (): UseSliderSearchResults => {
           actionMirrored: hasMirrored,
           actionReacted: hasReacted,
           actionFollower: followerOnly,
+          actionReactionLoaded: reactionLoaded
         })
       );
       if (

@@ -43,6 +43,7 @@ export type ReactionProps = {
   canDelete: boolean;
   followerOnly: boolean;
   isMixtape: boolean;
+  reactionLoaded: boolean;
 };
 
 export type InterfaceProps = {
@@ -144,6 +145,7 @@ export type FeedPublicationProps = {
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   followerOnly: boolean;
   height?: string;
+  reactionLoaded: boolean;
 };
 
 export type OptionMenuProps = {
@@ -625,6 +627,7 @@ export type CommentsModalProps = {
   reactionsFeed: any[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   isMixtape: boolean;
+  reactionLoaded: boolean[]
 };
 
 export type ReactionModalProps = {
@@ -727,6 +730,7 @@ export type HotPublicationProps = {
   dispatch: Dispatch<AnyAction>;
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   followerOnly: boolean;
+  reactionLoaded: boolean;
 };
 
 export type MixtapePublicationProps = {
@@ -739,6 +743,7 @@ export type MixtapePublicationProps = {
   hasCommented?: boolean | undefined;
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   followerOnly: boolean;
+  reactionLoaded: boolean;
 };
 
 export type TagsProps = {
@@ -833,6 +838,7 @@ export type ProfileSideBarProps = {
   hasMirrored: boolean | undefined;
   hasReacted: boolean | undefined;
   mixtape: boolean;
+  reactionLoaded: boolean;
 };
 
 export type CassetteButton = {

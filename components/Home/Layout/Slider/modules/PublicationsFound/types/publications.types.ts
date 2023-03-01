@@ -10,4 +10,5 @@ export type PublicationsFoundProps = {
   mixtapeMirror: boolean[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   followerOnly: boolean[];
+  reactionLoaded: boolean[]
 };

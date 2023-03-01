@@ -29,7 +29,9 @@ const Feed: FunctionComponent<FeedProps> = ({
   hotFollowerOnly,
   noHotData,
   hasMore,
-  hasMoreHot
+  hasMoreHot,
+  reactionLoaded,
+  reactionLoadedHot
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -59,6 +61,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           mixtapeLength={hotFeed?.length}
           noHotData={noHotData}
           hasMore={hasMore}
+          reactionLoaded={reactionLoaded}
         />
         <Hot
           isOpen={isOpen}
@@ -75,6 +78,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           hotFollowerOnly={hotFollowerOnly}
           noHotData={noHotData}
           hasMoreHot={hasMoreHot}
+          reactionLoaded={reactionLoadedHot}
         />
       </div>
       {/* <div

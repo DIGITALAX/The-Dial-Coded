@@ -6,7 +6,11 @@ import {
   BsFillCollectionFill,
 } from "react-icons/bs";
 import { FaRegCommentDots, FaCommentDots } from "react-icons/fa";
-import { AiOutlineMinusCircle, AiOutlineRetweet } from "react-icons/ai";
+import {
+  AiOutlineLoading,
+  AiOutlineMinusCircle,
+  AiOutlineRetweet,
+} from "react-icons/ai";
 import { ReactionProps } from "../../types/common.types";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -41,6 +45,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   canDelete,
   followerOnly,
   isMixtape,
+  reactionLoaded,
 }): JSX.Element => {
   const inCommentBox = useSelector(
     (state: RootState) => state.app.commentShowReducer
@@ -84,11 +89,19 @@ const Reactions: FunctionComponent<ReactionProps> = ({
               }
         }
       >
-        <div className="relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95">
-          {heartAmount && heartAmount > 0 && hasReacted ? (
-            <BsSuitHeartFill size={15} color={heartColor} />
+        <div
+          className={`relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95 ${
+            !reactionLoaded && "animate-spin"
+          }`}
+        >
+          {reactionLoaded ? (
+            heartAmount && heartAmount > 0 && hasReacted ? (
+              <BsSuitHeartFill size={15} color={heartColor} />
+            ) : (
+              <BsSuitHeart color={heartColor} size={15} />
+            )
           ) : (
-            <BsSuitHeart color={heartColor} size={15} />
+            <AiOutlineLoading color="black" size={10} />
           )}
         </div>
         <div

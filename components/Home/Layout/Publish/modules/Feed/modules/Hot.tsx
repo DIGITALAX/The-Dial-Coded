@@ -20,7 +20,8 @@ const Hot: FunctionComponent<HotProps> = ({
   firstMixLoad,
   hotFollowerOnly,
   noHotData,
-  hasMoreHot
+  hasMoreHot,
+  reactionLoaded,
 }): JSX.Element => {
   if (mixtapesLoading && firstMixLoad) {
     return <HotFeedLoading />;
@@ -49,6 +50,7 @@ const Hot: FunctionComponent<HotProps> = ({
                   hasCommented={hasHotCommented?.[0]}
                   handleHidePost={handleHidePost}
                   followerOnly={hotFollowerOnly?.[0]}
+                  reactionLoaded={reactionLoaded?.[0]}
                 />
               );
             })}
@@ -82,6 +84,7 @@ const Hot: FunctionComponent<HotProps> = ({
                     hasCommented={hasHotCommented?.[1]}
                     handleHidePost={handleHidePost}
                     followerOnly={hotFollowerOnly?.[1]}
+                    reactionLoaded={reactionLoaded?.[1]}
                   />
                 );
               })}
@@ -124,6 +127,7 @@ const Hot: FunctionComponent<HotProps> = ({
                               hasCommented={hasHotCommented[indexOne + 2]}
                               handleHidePost={handleHidePost}
                               followerOnly={hotFollowerOnly?.[indexOne + 2]}
+                              reactionLoaded={reactionLoaded?.[indexOne + 2]}
                             />
                           );
                         })}

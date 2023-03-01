@@ -1,10 +1,14 @@
 import { INFURA_GATEWAY } from "../../lens/constants";
 
-const convertSvgToPath = async (image: string, scale: number) => {
+const convertSvgToPath = async (
+  image: string,
+  scale: number,
+) => {
   const base: Response = await fetch(`${INFURA_GATEWAY}/ipfs/${image}`);
   const text = await base.text();
   const parser = new DOMParser();
   const svgDoc = parser.parseFromString(text, "image/svg+xml");
+
   let pathData: string[] = [];
   const paths = svgDoc.querySelectorAll("path, polygon, rect");
 
@@ -25,25 +29,17 @@ const convertSvgToPath = async (image: string, scale: number) => {
     } else if (tagName === "polygon") {
       const points = path.getAttribute("points")?.split(/\s+/);
 
-      let lastPoint = points![points!.length - 1];
-      pathData.push(`M ${lastPoint}`);
-
-      for (const point of points!) {
-        if (point === lastPoint) {
-          continue;
+      let pathString = "";
+      for (let j = 0; j < points!.length; j++) {
+        const [x, y] = points![j].split(",");
+        if (j === 0) {
+          pathString += `M ${x},${y} `;
+        } else {
+          pathString += `L ${x},${y} `;
         }
-
-        const [x, y] = point.split(",");
-        const [lastX, lastY] = lastPoint.split(",");
-        pathData.push(
-          `Q ${lastX},${lastY} ${(Number(x) + Number(lastX)) / 2},${
-            (Number(y) + Number(lastY)) / 2
-          }`
-        );
-        lastPoint = point;
       }
-
-      pathData.push(`Q ${lastPoint} Z`);
+      pathString += "Z";
+      pathData.push(pathString);
     } else {
       const pathString = path.getAttribute("d");
       const pathStringWithMoveTo = pathString!.replace(/([mM])/g, "M $1");
@@ -57,6 +53,8 @@ const convertSvgToPath = async (image: string, scale: number) => {
   const extractedPoints = [];
   let x = 0;
   let y = 0;
+  let lastSubpathStartX = 0;
+  let lastSubpathStartY = 0;
   let lastSubpath = false;
 
   for (let i = 0; i < commands.length; i++) {
@@ -69,7 +67,7 @@ const convertSvgToPath = async (image: string, scale: number) => {
       .map(parseFloat);
 
     if (type === "M") {
-      if (i !== 0 && lastSubpath) {
+      if (i !== 0 && lastSubpathStartX !== x && lastSubpathStartY !== y) {
         extractedPoints.push({
           x: Number(x) / scale,
           y: Number(y) / scale,
@@ -77,22 +75,65 @@ const convertSvgToPath = async (image: string, scale: number) => {
       }
       x = args[0];
       y = args[1];
+      lastSubpathStartX = x;
+      lastSubpathStartY = y;
       extractedPoints.push({
         x: Number(x) / scale,
         y: Number(y) / scale,
       });
       lastSubpath = false;
     } else if (type === "Z") {
+      x = lastSubpathStartX;
+      y = lastSubpathStartY;
+      extractedPoints.push({
+        x: Number(x) / scale,
+        y: Number(y) / scale,
+      });
       lastSubpath = true;
     } else {
-      lastSubpath = false;
       switch (type) {
+        case "M":
+          if (lastSubpath) {
+            extractedPoints.push({
+              x: Number(lastSubpathStartX) / scale,
+              y: Number(lastSubpathStartY) / scale,
+            });
+          }
+          x = args[0];
+          y = args[1];
+          extractedPoints.push({
+            x: Number(x) / scale,
+            y: Number(y) / scale,
+          });
+          lastSubpathStartX = x;
+          lastSubpathStartY = y;
+          lastSubpath = false;
+          break;
         case "L":
           x = args[0];
           y = args[1];
-          extractedPoints.push({ x: Number(x) / scale, y: Number(y) / scale });
+          extractedPoints.push({
+            x: Number(x) / scale,
+            y: Number(y) / scale,
+          });
+          lastSubpath = false;
           break;
-
+        case "H":
+          x = args[0];
+          extractedPoints.push({
+            x: Number(x) / scale,
+            y: Number(y) / scale,
+          });
+          lastSubpath = false;
+          break;
+        case "V":
+          y = args[0];
+          extractedPoints.push({
+            x: Number(x) / scale,
+            y: Number(y) / scale,
+          });
+          lastSubpath = false;
+          break;
         case "C":
           for (let j = 0; j < args.length; j += 6) {
             let x1 = args[j];
@@ -123,25 +164,43 @@ const convertSvgToPath = async (image: string, scale: number) => {
             y = y3;
           }
           break;
-        default:
-          if (!isNaN(parseFloat(command[0]))) {
-            extractedPoints.push({
-              x: Number(command.split(",")[0]) / scale,
-              y: Number(command.split(",")[1]) / scale,
-            });
-          }
+        case "Q":
+          x = args[2];
+          y = args[3];
+          extractedPoints.push({
+            x: Number(x) / scale,
+            y: Number(y) / scale,
+          });
+          lastSubpath = false;
+          break;
+        case "T":
+          x = args[0];
+          y = args[1];
+          extractedPoints.push({
+            x: Number(x) / scale,
+            y: Number(y) / scale,
+          });
+          lastSubpath = false;
+          break;
+        case "A":
+          x = args[5];
+          y = args[6];
+          extractedPoints.push({
+            x: Number(x) / scale,
+            y: Number(y) / scale,
+          });
+          lastSubpath = false;
+          break;
+        case "Z":
+          extractedPoints.push({
+            x: Number(lastSubpathStartX) / scale,
+            y: Number(lastSubpathStartY) / scale,
+          });
+          lastSubpath = true;
           break;
       }
     }
   }
-
-  if (lastSubpath) {
-    extractedPoints.push({
-      x: Number(x) / scale,
-      y: Number(y) / scale,
-    });
-  }
-
   return extractedPoints;
 };
 

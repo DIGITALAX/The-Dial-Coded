@@ -41,6 +41,7 @@ const useHot = (): UseHotResults => {
   const [paginatedHotResults, setPaginatedHotResults] = useState<any>();
   const [hotReactionsFeed, setHotReactionsFeed] = useState<any[]>([]);
   const [hasHotReacted, setHotHasReacted] = useState<boolean[]>([]);
+  const [reactionLoaded, setReactionLoaded] = useState<boolean[]>([]);
   const [hasHotMirrored, setHotHasMirrored] = useState<boolean[]>([]);
   const [hasHotCommented, setHotHasCommented] = useState<boolean[]>([]);
   const [mixtapesLoading, setMixtapesLoading] = useState<boolean>(false);
@@ -103,6 +104,7 @@ const useHot = (): UseHotResults => {
       setFirstMixLoad(false);
       const response = await checkPostReactions(sortedArr, lensProfile);
       setHotReactionsFeed(response?.reactionsFeedArr);
+      setReactionLoaded(Array(sortedArr?.length).fill(true));
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
         setHotHasMirrored(hasMirroredArr);
@@ -172,14 +174,38 @@ const useHot = (): UseHotResults => {
       const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, lensProfile);
       setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
       setPaginatedHotResults(pageData);
-      const response = await checkPostReactions(sortedArr, lensProfile);
-      setHotReactionsFeed([...hotReactionsFeed, ...response?.reactionsFeedArr]);
+      
+      let reactionsResponse: any[];
+      let hasReactedResponse: boolean[];
+      if (hotReactionsFeed?.length !== hotFeed?.length) {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          [
+            ...hotFeed?.slice(-(hotFeed?.length - hotReactionsFeed?.length)),
+            ...sortedArr,
+          ],
+          lensProfile
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      } else {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          sortedArr,
+          lensProfile
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      }
+      setHotReactionsFeed([...hotReactionsFeed, ...reactionsResponse]);
+      setReactionLoaded((prevReactionsLoaded) => [
+        ...prevReactionsLoaded,
+        ...Array(sortedArr?.length).fill(true),
+      ]);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
         setHotHasMirrored([...hasHotMirrored, ...hasMirroredArr]);
         const hasCommentedArr = await checkIfCommented(sortedArr, lensProfile);
         setHotHasCommented([...hasHotCommented, ...hasCommentedArr]);
-        setHotHasReacted([...hasHotReacted, ...response?.hasReactedArr]);
+        setHotHasReacted([...hasHotReacted, ...hasReactedResponse]);
       }
     } catch (err: any) {
       console.error(err);
@@ -247,6 +273,7 @@ const useHot = (): UseHotResults => {
       setFirstMixLoad(false);
       const response = await checkPostReactions(sortedArr, lensProfile);
       setHotReactionsFeed(response?.reactionsFeedArr);
+      setReactionLoaded(Array(sortedArr?.length).fill(true));
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
         setHotHasMirrored(hasMirroredArr);
@@ -324,14 +351,38 @@ const useHot = (): UseHotResults => {
       const isOnlyFollowers = await checkIfFollowerOnly(sortedArr, lensProfile);
       setFollowerOnly([...followerOnly, ...(isOnlyFollowers as boolean[])]);
       setPaginatedHotResults(pageData);
-      const response = await checkPostReactions(sortedArr, lensProfile);
-      setHotReactionsFeed([...hotReactionsFeed, ...response?.reactionsFeedArr]);
+
+      let reactionsResponse: any[];
+      let hasReactedResponse: boolean[];
+      if (hotReactionsFeed?.length !== hotFeed?.length) {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          [
+            ...hotFeed?.slice(-(hotFeed?.length - hotReactionsFeed?.length)),
+            ...sortedArr,
+          ],
+          lensProfile
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      } else {
+        const { hasReactedArr, reactionsFeedArr } = await checkPostReactions(
+          sortedArr,
+          lensProfile
+        );
+        reactionsResponse = reactionsFeedArr;
+        hasReactedResponse = hasReactedArr;
+      }
+      setHotReactionsFeed([...hotReactionsFeed, ...reactionsResponse]);
+      setReactionLoaded((prevReactionsLoaded) => [
+        ...prevReactionsLoaded,
+        ...Array(sortedArr?.length).fill(true),
+      ]);
       if (lensProfile) {
         const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
         setHotHasMirrored([...hasHotMirrored, ...hasMirroredArr]);
         const hasCommentedArr = await checkIfCommented(sortedArr, lensProfile);
         setHotHasCommented([...hasHotCommented, ...hasCommentedArr]);
-        setHotHasReacted([...hasHotReacted, ...response?.hasReactedArr]);
+        setHotHasReacted([...hasHotReacted, ...hasReactedResponse]);
       }
     } catch (err: any) {
       console.error(err);
@@ -373,6 +424,7 @@ const useHot = (): UseHotResults => {
     firstMixLoad,
     followerOnly,
     hasMoreHot,
+    reactionLoaded,
   };
 };
 

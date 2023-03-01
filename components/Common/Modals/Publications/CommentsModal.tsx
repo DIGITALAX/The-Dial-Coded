@@ -19,6 +19,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
   reactionsFeed,
   handleHidePost,
   isMixtape,
+  reactionLoaded
 }): JSX.Element | null => {
   const dispatch = useDispatch();
   const pubId = useSelector((state: RootState) => state.app.commentShowReducer);
@@ -79,6 +80,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
                             }
                             handleHidePost={handleHidePost}
                             followerOnly={pubId?.follower as boolean}
+                            reactionLoaded={reactionLoaded?.[index]}
                           />
                         );
                       })}

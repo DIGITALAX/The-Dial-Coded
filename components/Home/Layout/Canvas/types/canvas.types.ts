@@ -458,6 +458,7 @@ export interface SafeImage {
   y: number;
   scale: number;
   stroke: string;
+  flip?: boolean
 }
 
 export enum TemplateTypes {
