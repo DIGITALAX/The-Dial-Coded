@@ -100,7 +100,7 @@ const PatternOptions: FunctionComponent<PatternOptionsProps> = ({
         {patternType === "2" && (
           <div className="relative w-fit h-fit row-start-1 place-self-center bottom-14 right-5">
             <div className="absolute w-fit h-fit grid grid-flow-col auto-cols-auto gap-1">
-              {Array.from({ length: 4 }, (_, index) => index + 1).map(
+              {Array.from({ length: 5 }, (_, index) => index + 1).map(
                 (index) => {
                   return (
                     <div
