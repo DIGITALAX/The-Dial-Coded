@@ -16,8 +16,10 @@ const useSynthAPI = (): UseSynthAPIResults => {
   useEffect(() => {
     if (!lit.client) {
       connectLit();
+    } else {
+      decryptLitKey(dispatch, lit)
     }
-  }, []);
+  }, [lit]);
 
   const connectLit = async () => {
     try {
@@ -77,11 +79,19 @@ const useSynthAPI = (): UseSynthAPIResults => {
     await decryptLitKey(dispatch, lit);
   };
 
+  const handleDecryptKey = async (): Promise<void> => {
+    let decrypt: string;
+    if (!lit.decrypt) {
+      decrypt = (await decryptLitKey(dispatch, lit)) as string;
+    }
+  };
+
   return {
     handleKeyAdd,
     keyValue,
     setKeyStorage,
     setKeyValue,
+    handleDecryptKey
   };
 };
 

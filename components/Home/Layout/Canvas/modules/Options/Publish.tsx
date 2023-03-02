@@ -11,6 +11,9 @@ const Publish: FunctionComponent<PublishProps> = ({
   postLoading,
   handleCanvasSave,
   saveLoading,
+  handleCanvasPatternPost,
+  patternPostLoading,
+  canvasType,
 }): JSX.Element => {
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
@@ -43,12 +46,18 @@ const Publish: FunctionComponent<PublishProps> = ({
       <div
         className="relative row-start-2 w-fit h-fit"
         onClick={
-          lensProfile && !postLoading && !saveLoading
-            ? () => handleCanvasPost()
+          lensProfile
+            ? canvasType
+              ? !patternPostLoading
+                ? () => handleCanvasPatternPost()
+                : () => {}
+              : !postLoading
+              ? () => handleCanvasPost()
+              : () => {}
             : () => {}
         }
       >
-        {!postLoading ? (
+        {!postLoading && !patternPostLoading ? (
           <CanvasOption
             bgColor="black"
             image="QmUBtNtbovXo6iXuRofDyg1JvzHND8YwvVr2x9TvyjPv82"

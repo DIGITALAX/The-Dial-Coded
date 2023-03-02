@@ -76,7 +76,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     mixtapeMirror,
     followerOnly,
     hasMore,
-    reactionLoaded
+    reactionLoaded,
   } = useProfile();
   const {
     createClient,
@@ -118,7 +118,13 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
     notificationsLoading,
     hasMoreNotifications,
   } = useNotifications();
-  const { handleKeyAdd, keyValue, setKeyStorage, setKeyValue } = useSynthAPI();
+  const {
+    handleKeyAdd,
+    keyValue,
+    setKeyStorage,
+    setKeyValue,
+    handleDecryptKey,
+  } = useSynthAPI();
   const router = useRouter();
   const { dispatcherLoading, setDispatcherEnabled } = useParameters();
   const profile = useSelector(
@@ -263,6 +269,7 @@ const AccountSwitch: FunctionComponent = (): JSX.Element => {
           setKeyStorage={setKeyStorage}
           setKeyValue={setKeyValue}
           decryptedKey={decryptedKey}
+          handleDecryptKey={handleDecryptKey}
         />
       );
 

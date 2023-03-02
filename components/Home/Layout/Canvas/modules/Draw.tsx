@@ -112,7 +112,20 @@ const Draw: FunctionComponent<DrawProps> = ({
   handlePatternBlur,
   selectedPatternElement,
   addPatternImageToCanvas,
-  handlePatternImageAdd
+  handlePatternImageAdd,
+  apiType,
+  setApiType,
+  localRunning,
+  handleCanvasPatternPost,
+  patternPostLoading,
+  saveImagesLocal,
+  setSaveImagesLocal,
+  batchSize,
+  setBatchSize,
+  setNegativePrompt,
+  savePatternImagesLocal,
+  setSavePatternImagesLocal,
+  synthProgress,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -190,6 +203,9 @@ const Draw: FunctionComponent<DrawProps> = ({
                     postLoading={postLoading}
                     handleCanvasSave={handleCanvasSave}
                     saveLoading={saveLoading}
+                    handleCanvasPatternPost={handleCanvasPatternPost}
+                    patternPostLoading={patternPostLoading}
+                    canvasType={canvasType}
                   />
                   <Title title={title} handleTitle={handleTitle} />
                   <SideMenu
@@ -315,6 +331,17 @@ const Draw: FunctionComponent<DrawProps> = ({
               handleSendImg2Img={handleSendImg2Img}
               synthElementSelect={synthElementSelect}
               canvasType={canvasType}
+              apiType={apiType}
+              setApiType={setApiType}
+              localRunning={localRunning}
+              saveImagesLocal={saveImagesLocal}
+              setSaveImagesLocal={setSaveImagesLocal}
+              setNegativePrompt={setNegativePrompt}
+              batchSize={batchSize}
+              setBatchSize={setBatchSize}
+              savePatternImagesLocal={savePatternImagesLocal}
+              setSavePatternImagesLocal={setSavePatternImagesLocal}
+              synthProgress={synthProgress}
             />
           </div>
         </div>

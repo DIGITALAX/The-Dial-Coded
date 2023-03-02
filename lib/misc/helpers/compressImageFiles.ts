@@ -23,7 +23,8 @@ const compressImageFiles = async (
     );
     return compressedImage;
   } catch (err: any) {
-    console.error(err.message);
+    console.error(err);
+    return file;
   }
 };
 

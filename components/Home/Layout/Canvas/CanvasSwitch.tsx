@@ -64,7 +64,11 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handleBlur: handlePatternBlur,
     selectedElement: selectedPatternElement,
     addImageToCanvas: addPatternImageToCanvas,
-    handleImageAdd: handlePatternImageAdd
+    handleImageAdd: handlePatternImageAdd,
+    handleCanvasPatternPost,
+    postLoading: patternPostLoading,
+    saveImagesLocal: savePatternImagesLocal,
+    setSaveImagesLocal: setSavePatternImagesLocal,
   } = usePatterns();
   const {
     steps,
@@ -80,6 +84,13 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     img2img,
     setStrength,
     handleSendImg2Img,
+    apiType,
+    setApiType,
+    localRunning,
+    setNegativePrompt,
+    batchSize,
+    setBatchSize,
+    synthProgress
   } = usePrompt();
   const {
     hex,
@@ -126,6 +137,8 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     handleWheel,
     canvasRef,
     setPan,
+    setSaveImagesLocal,
+    saveImagesLocal
   } = useDraw();
   const {
     quickSearchResults,
@@ -287,6 +300,19 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           selectedPatternElement={selectedPatternElement}
           addPatternImageToCanvas={addPatternImageToCanvas}
           handlePatternImageAdd={handlePatternImageAdd}
+          apiType={apiType}
+          setApiType={setApiType}
+          localRunning={localRunning}
+          handleCanvasPatternPost={handleCanvasPatternPost}
+          patternPostLoading={patternPostLoading}
+          saveImagesLocal={saveImagesLocal}
+          setSaveImagesLocal={setSaveImagesLocal}
+          batchSize={batchSize}
+          setBatchSize={setBatchSize}
+          setNegativePrompt={setNegativePrompt}
+          setSavePatternImagesLocal={setSavePatternImagesLocal}
+          savePatternImagesLocal={savePatternImagesLocal}
+          synthProgress={synthProgress}
         />
       );
   }
