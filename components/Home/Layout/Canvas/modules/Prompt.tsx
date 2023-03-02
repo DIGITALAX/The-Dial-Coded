@@ -301,11 +301,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 className="relative w-full h-full bg-weed rounded-xl p-1 text-litnus font-sats text-base caret-white"
                 style={{ resize: "none" }}
                 placeholder={
-                  !localRunning
-                    ? "The  DIAL operates a HUMAN IN THE LOOP + AI paradigm. You must complete the circuit to activate STABLE DIFFUSION."
-                    : !img2img
-                    ? "Negative Prompt"
-                    : "Use the Marquee Tool to Select the Canvas Area to Use as an Init for Img2Img Synth"
+                  "Negative Prompt"
                 }
                 disabled={
                   promptLoading ||
