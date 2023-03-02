@@ -44,13 +44,14 @@ const useDraw = () => {
     (state: RootState) => state.app.canvasTypeReducer.value
   );
   const promptImage = useSelector(
-    (state: RootState) => state.app.addPromptImageReducer.value
+    (state: RootState) => state.app.addPromptImageReducer
   );
   const writingRef = useRef<HTMLTextAreaElement>(null);
   const [showSideDrawOptions, setShowSideDrawOptions] =
     useState<boolean>(false);
   const [showBottomDrawOptions, setShowBottomDrawOptions] =
     useState<boolean>(false);
+  const [saveImagesLocal, setSaveImagesLocal] = useState<boolean>(false);
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [shapeFillType, setShapeFillType] = useState<string>("solid");
@@ -144,18 +145,26 @@ const useDraw = () => {
   };
 
   const handleCanvasPost = async (): Promise<void> => {
-    setPostLoading(true);
-    await dispatchPostCanvas(canvas, elements, uploadImage);
-    dispatch(
-      setPublication({
-        actionOpen: true,
-        actionCanvas: true,
-      })
-    );
-    setPostLoading(false);
+    try {
+      setPostLoading(true);
+      await dispatchPostCanvas(canvas, elements, uploadImage, setPostLoading);
+      dispatch(
+        setPublication({
+          actionOpen: true,
+          actionCanvas: true,
+        })
+      );
+      setPostLoading(false);
+    } catch (err: any) {
+      console.error(err.message);
+    }
   };
 
-  const handleImageAdd = async (e: any, url?: boolean): Promise<void> => {
+  const handleImageAdd = async (
+    e: any,
+    url?: boolean,
+    local?: boolean
+  ): Promise<void> => {
     if (!url) {
       if ((e as any).target.files.length < 1) {
         return;
@@ -164,53 +173,107 @@ const useDraw = () => {
         return;
       }
     }
-    let image: File;
-    if (url) {
-      image = e;
-    } else {
-      image = (e.target as HTMLFormElement).files[0];
+    try {
+      if (!local) {
+        let image: File;
+        if (url) {
+          image = e;
+        } else {
+          image = (e.target as HTMLFormElement).files[0];
+        }
+        const compressedImage = await compressImageFiles(image);
+        const reader = new FileReader();
+        reader?.readAsDataURL(compressedImage!);
+        reader.onloadend = (e) => {
+          const imageObject = new Image();
+          imageObject.src = e.target?.result as string;
+          imageObject.onload = () => {
+            const newElement = createElement(
+              {
+                xOffset: pan.xOffset * 0.5,
+                yOffset: pan.yOffset * 0.5,
+              },
+              canvas,
+              zoom,
+              50,
+              50,
+              50 + imageObject.width,
+              50 + imageObject.height,
+              "image",
+              elements?.length,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              imageObject
+            );
+            setElements((prevState: any) => [...prevState, newElement]);
+          };
+        };
+      } else {
+        const imageObject = new Image();
+        imageObject.src = e;
+        imageObject.onload = () => {
+          const newElement = createElement(
+            {
+              xOffset: pan.xOffset * 0.5,
+              yOffset: pan.yOffset * 0.5,
+            },
+            canvas,
+            zoom,
+            50,
+            50,
+            50 + imageObject.width,
+            50 + imageObject.height,
+            "image",
+            elements?.length,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            imageObject
+          );
+          setElements((prevState: any) => [...prevState, newElement]);
+        };
+      }
+    } catch (err: any) {
+      console.error(err.message);
     }
-    const compressedImage = await compressImageFiles(image);
-    const reader = new FileReader();
-    reader?.readAsDataURL(compressedImage as File);
-
-    reader.onloadend = (e) => {
-      const imageObject = new Image();
-      imageObject.src = e.target?.result as string;
-      imageObject.onload = () => {
-        const newElement = createElement(
-          {
-            xOffset: pan.xOffset * 0.5,
-            yOffset: pan.yOffset * 0.5,
-          },
-          canvas,
-          zoom,
-          50,
-          50,
-          50 + imageObject.width,
-          50 + imageObject.height,
-          "image",
-          elements?.length,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          imageObject
-        );
-
-        setElements((prevState: any) => [...prevState, newElement]);
-      };
-    };
   };
 
-  const addImageToCanvas = async (imgURL: string): Promise<void> => {
+  const addImageToCanvas = async (
+    imgURL: any,
+    local?: boolean
+  ): Promise<void> => {
     try {
-      const res: Response = await fetch(imgURL);
-      const blob: Blob = await res.blob();
-      const postImage = new File([blob], "thedial_drafts", {
-        type: "image/png",
-      });
-      await handleImageAdd(postImage, true);
+      let postImage;
+      let blob: Blob;
+      if (local) {
+        postImage = "data:image/png;base64," + imgURL;
+      } else {
+        const res: Response = await fetch(imgURL);
+        blob = await res.blob();
+        postImage = new File([blob], "thedial_drafts", {
+          type: "image/png",
+        });
+      }
+      if (saveImagesLocal) {
+        if (local) {
+          const binary = window.atob(imgURL);
+          const buffer = new ArrayBuffer(binary.length);
+          const view = new Uint8Array(buffer);
+          for (let i = 0; i < binary.length; i++) {
+            view[i] = binary.charCodeAt(i);
+          }
+          blob = new Blob([buffer], { type: "image/png" });
+        }
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob!);
+        link.download = "the_dial_synth";
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }
+      await handleImageAdd(postImage, true, local);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -798,11 +861,16 @@ const useDraw = () => {
   };
 
   useEffect(() => {
-    if (promptImage && !canvasType) {
-      addImageToCanvas(promptImage);
-      dispatch(setAddPromptImage(undefined));
+    if (promptImage.url && !canvasType) {
+      addImageToCanvas(promptImage.url, promptImage.local);
+      dispatch(
+        setAddPromptImage({
+          actionURL: undefined,
+          actionLocal: false,
+        })
+      );
     }
-  }, [promptImage]);
+  }, [promptImage.url, promptImage.local]);
 
   useEffect(() => {
     const textAreaElement = writingRef.current;
@@ -901,6 +969,8 @@ const useDraw = () => {
     handleWheel,
     canvasRef,
     setPan,
+    setSaveImagesLocal,
+    saveImagesLocal,
   };
 };
 

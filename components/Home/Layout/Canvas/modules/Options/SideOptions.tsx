@@ -25,7 +25,7 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
   handlePatternClear,
   patternRedo,
   patternUndo,
-  handlePatternImageAdd
+  handlePatternImageAdd,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit grid grid-cols-3 f9:grid-cols-none f9:grid-flow-row auto-rows-auto gap-4">
@@ -137,8 +137,8 @@ const SideOptions: FunctionComponent<SideOptionsProps> = ({
             className="caret-transparent"
             onChange={
               canvasType
-                ? (e: FormEvent) => handlePatternImageAdd(e, false)
-                : (e: FormEvent) => handleImageAdd(e)
+                ? (e: FormEvent) => handlePatternImageAdd(e)
+                : (e: FormEvent) => handleImageAdd(e, false, false)
             }
           />
         </label>

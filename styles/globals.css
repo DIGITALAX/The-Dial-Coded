@@ -978,3 +978,76 @@ code::-webkit-scrollbar {
     #2e2e2e
   );
 }
+
+.modal {
+  font-family: Digi Reg !important;
+}
+
+.lcm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 12;
+}
+
+.lcm-modal-container {
+  border: black !important;
+  background-color: #FCDB8F !important;
+  padding: 0 1.5rem;
+  max-width: 500px;
+  max-height: 100vh;
+  border-radius: 0.25rem;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.lcm-modal-content {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  color: #B9B9B9 !important;
+}
+
+.lcm-wallet-container {
+  display: flex;
+  align-items: center;
+  margin: 2rem 0.5rem;
+  transition-duration: 0.2s;
+  border-radius: 0.25rem;
+  padding: 2rem;
+  cursor: pointer;
+}
+
+.lcm-wallet-container:hover {
+  background-color: #aeeccf !important;
+}
+
+.lcm-wallet-logo {
+  height: 2.5rem;
+  width: 3.75rem;
+  margin-right: 1.5rem;
+}
+
+.lcm-text-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.lcm-wallet-name {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.lcm-wallet-synopsis {
+  color: #777;
+  font-size: 0.9rem;
+  margin: 0;
+}

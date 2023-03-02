@@ -27,8 +27,10 @@ const useImageUpload = (): ImageUploadResults => {
     e: FormEvent | File,
     canvas?: boolean
   ): Promise<void> => {
-    if ((e as any).target.files.length < 1) {
-      return;
+    if (!canvas) {
+      if ((e as any)?.target?.files?.length < 1) {
+        return;
+      }
     }
     let finalImages: UploadedMedia[] = [];
     setImageUploading(true);

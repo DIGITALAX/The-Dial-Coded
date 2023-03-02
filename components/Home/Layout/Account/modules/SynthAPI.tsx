@@ -10,6 +10,7 @@ const SynthAPI: FunctionComponent<SynthAPIProps> = ({
   keyValue,
   setKeyValue,
   decryptedKey,
+  handleDecryptKey,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row flex-wrap gap-6 border-2 border-black bg-white">
@@ -59,54 +60,106 @@ const SynthAPI: FunctionComponent<SynthAPIProps> = ({
             className="flex"
           />
         </div>
-        <div className="relative w-5/6 h-full grid grid-flow-row auto-rows-auto place-self-center gap-4 pb-2">
-          <div className="relative w-full h-full font-sats text-deep break-word text-sm f10:text-lg place-self-center">
-            The DIAL operates a HUMAN IN THE LOOP + AI paradigm. You must
-            complete the circuit to activate STABLE DIFFUSION.
-            <br />
-            <br />
-            1) CREATE a{" "}
-            <a
-              className="underline"
-              href="https://replicate.com/"
-              target={"_blank"}
-              rel="noreferrer"
+        <div className="relative w-full h-full flex flex-col gap-10">
+          <div className="relative w-5/6 h-full grid grid-flow-row auto-rows-auto place-self-center gap-4 pb-2">
+            <div className="relative w-full h-full font-sats text-deep break-word text-sm f10:text-lg place-self-center">
+              The DIAL operates a HUMAN IN THE LOOP + AI paradigm. You must
+              complete the circuit to activate STABLE DIFFUSION. Go Local with
+              Automatic1111 or Connect Via Web API.
+              <br />
+              <br />
+              <a className="underline"> CONNECT ONLINE VIA REPLICATE:</a>
+              <br />
+              <br />
+              1) CREATE a{" "}
+              <a
+                className="underline"
+                href="https://replicate.com/"
+                target={"_blank"}
+                rel="noreferrer"
+              >
+                REPLICATE
+              </a>{" "}
+              account
+              <br />
+              <br />
+              2) CONFIRM all required information in order to receive your API
+              key
+              <br />
+              <br />
+              3) COPY your API key and ENTER below:
+            </div>
+            <div
+              className="relative h-10 rounded-md w-full border-2 border-deep"
+              onClick={
+                decryptedKey
+                  ? () => setKeyValue(!keyValue)
+                  : () => handleDecryptKey()
+              }
             >
-              REPLICATE
-            </a>{" "}
-            account
-            <br />
-            <br />
-            2) CONFIRM all required information in order to receive your API key
-            <br />
-            <br />
-            3) COPY your API key and ENTER below:
+              <input
+                onChange={(e) => handleKeyAdd(e)}
+                type={keyValue && decryptedKey ? "password" : "text"}
+                defaultValue={decryptedKey ? decryptedKey : ""}
+                className="h-full w-full rounded-md font-sats p-1"
+              />
+            </div>
+            <div
+              className="relative w-full rounded-md h-8 f10:h-14 cursor-pointer active:scale-95 grid grid-flow-col auto-cols-auto"
+              id="set"
+              onClick={() => setKeyStorage()}
+            >
+              <Image
+                src={`${INFURA_GATEWAY}/ipfs/QmTLN24oXMbEj3QgHX7dD3GWnYwL2GqsP16yvLzm29bk5X`}
+                objectFit="cover"
+                layout="fill"
+                className="absolute rounded-md flex"
+                draggable={false}
+              />
+              <div className="relative w-fit h-fit place-self-center text-white font-earl text-sm galaxy:text-xl f10:text-4xl word-break">
+                ALL SET REPLICATE!
+              </div>
+            </div>
           </div>
-          <div
-            className="relative h-10 rounded-md w-full border-2 border-deep"
-            onClick={() => setKeyValue(!keyValue)}
-          >
-            <input
-              onChange={(e) => handleKeyAdd(e)}
-              type={keyValue ? "password" : "text"}
-              defaultValue={decryptedKey ? decryptedKey : ""}
-              className="h-full w-full rounded-md font-sats p-1"
-            />
-          </div>
-          <div
-            className="relative w-full rounded-md h-8 f10:h-14 cursor-pointer active:scale-95 grid grid-flow-col auto-cols-auto"
-            id="set"
-            onClick={() => setKeyStorage()}
-          >
-            <Image
-              src={`${INFURA_GATEWAY}/ipfs/QmTLN24oXMbEj3QgHX7dD3GWnYwL2GqsP16yvLzm29bk5X`}
-              objectFit="cover"
-              layout="fill"
-              className="absolute rounded-md flex"
-              draggable={false}
-            />
-            <div className="relative w-fit h-fit place-self-center text-white font-earl text-xl f10:text-4xl">
-              ALL SET!
+          <div className="relative w-5/6 h-full grid grid-flow-row auto-rows-auto place-self-center gap-4 pb-2">
+            <div className="relative w-full h-full font-sats text-deep break-word text-sm f10:text-lg place-self-center">
+              <a className="underline"> CONNECT LOCAL VIA AUTOMATIC:</a>
+              <br />
+              <br />
+              1) Get the Automatic repo{" "}
+              <a
+                className="underline"
+                href="https://github.com/AUTOMATIC1111/stable-diffusion-webui"
+                target={"_blank"}
+                rel="noreferrer"
+              >
+                here
+              </a>
+              <br />
+              <br />
+              2) After install, run the web app with ./webui.sh --api
+              --cors-allow-origins=https://www.thedial.xyz, make sure to INCLUDE
+              the{" "}
+              <a className="underline">
+                {" "}
+                --api --cors-allow-origins=https://www.thedial.xyz
+              </a>{" "}
+              flags
+              <br />
+              <br />
+              3) If you want more help head to{" "}
+              <a
+                className="underline"
+                href="https://www.diysynth.xyz/"
+                target={"_blank"}
+                rel="noreferrer"
+              >
+                DIY SYNTH
+              </a>
+              <br />
+              <br />
+              <br />
+              <br />
             </div>
           </div>
         </div>

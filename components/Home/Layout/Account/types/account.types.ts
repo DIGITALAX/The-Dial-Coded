@@ -258,6 +258,7 @@ export type SynthAPIProps = {
   keyValue: boolean;
   setKeyValue: (e: boolean) => void;
   decryptedKey: string | undefined;
+  handleDecryptKey: () => Promise<void>
 };
 
 export type UseSynthAPIResults = {
@@ -265,4 +266,5 @@ export type UseSynthAPIResults = {
   setKeyStorage: () => void;
   keyValue: boolean;
   setKeyValue: (e: boolean) => void;
+  handleDecryptKey: () => Promise<void>
 };

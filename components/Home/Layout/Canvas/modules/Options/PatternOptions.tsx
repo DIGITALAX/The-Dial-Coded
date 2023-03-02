@@ -154,7 +154,7 @@ const PatternOptions: FunctionComponent<PatternOptionsProps> = ({
                         height={20}
                         setShowString={setTemplate}
                         string_option={"0x0" + String(index)}
-                        text={"BomberJacket"}
+                        text={"Bomber"}
                       />
                     </div>
                   );

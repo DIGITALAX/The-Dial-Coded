@@ -43,7 +43,11 @@ export type DrawProps = {
   handleSave: () => Promise<void>;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
-  handleImageAdd: (e: FormEvent) => Promise<void>;
+  handleImageAdd: (
+    e: FormEvent,
+    url?: boolean,
+    local?: boolean
+  ) => Promise<void>;
   setTool: (e: string) => void;
   tool: string;
   undo: () => boolean | void;
@@ -67,7 +71,7 @@ export type DrawProps = {
   setCfg: (e: string) => void;
   steps: string;
   setSteps: (e: string) => void;
-  handleSendPrompt: () => Promise<void>;
+  handleSendPrompt: (replicate: boolean) => Promise<void>;
   promptLoading: boolean;
   setPrompt: (e: string) => void;
   prompt: string;
@@ -104,7 +108,7 @@ export type DrawProps = {
   setImg2img: (e: boolean) => void;
   setStrength: (e: string) => void;
   strength: string;
-  handleSendImg2Img: () => Promise<void>;
+  handleSendImg2Img: (replicate: boolean) => Promise<void>;
   patternTool: string;
   setPatternTool: (e: string) => void;
   patternAction: string;
@@ -126,7 +130,20 @@ export type DrawProps = {
   handlePatternBlur: (e: FormEvent) => void;
   selectedPatternElement: SvgPatternType | null;
   addPatternImageToCanvas: (image: string) => Promise<void>;
-  handlePatternImageAdd:  (e: FormEvent, url: boolean) => Promise<void>;
+  handlePatternImageAdd: (e: FormEvent, url?: boolean) => Promise<void>;
+  apiType: boolean;
+  setApiType: (e: boolean) => void;
+  localRunning: boolean;
+  patternPostLoading: boolean;
+  handleCanvasPatternPost: () => Promise<void>;
+  saveImagesLocal: boolean;
+  setSaveImagesLocal: (e: boolean) => void;
+  setNegativePrompt: (e: string) => void;
+  batchSize: string;
+  setBatchSize: (e: string) => void;
+  savePatternImagesLocal: boolean;
+  setSavePatternImagesLocal: (e: boolean) => void;
+  synthProgress: number;
 };
 
 export type ColorPickerProps = {
@@ -140,8 +157,12 @@ export type SideMenuProps = {
   handleSave: () => Promise<void>;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
-  handleImageAdd: (e: FormEvent) => Promise<void>;
-  handlePatternImageAdd:  (e: FormEvent, url: boolean) => Promise<void>;
+  handleImageAdd: (
+    e: FormEvent,
+    url?: boolean,
+    local?: boolean
+  ) => Promise<void>;
+  handlePatternImageAdd: (e: FormEvent, url?: boolean) => Promise<void>;
   undo: () => boolean | void;
   redo: () => boolean | void;
   setTool: (e: string) => void;
@@ -216,8 +237,12 @@ export type SideOptionsProps = {
   handleSave: () => Promise<void>;
   draftBoard: boolean;
   setDraftBoard: (e: boolean) => void;
-  handleImageAdd: (e: FormEvent) => Promise<void>;
-  handlePatternImageAdd:  (e: FormEvent, url: boolean) => Promise<void>;
+  handleImageAdd: (
+    e: FormEvent,
+    url?: boolean,
+    local?: boolean
+  ) => Promise<void>;
+  handlePatternImageAdd: (e: FormEvent, url?: boolean) => Promise<void>;
   undo: () => boolean | void;
   redo: () => boolean | void;
   setTool: (e: string) => void;
@@ -320,6 +345,9 @@ export type PublishProps = {
   postLoading: boolean;
   handleCanvasSave: () => Promise<void>;
   saveLoading: boolean;
+  patternPostLoading: boolean;
+  handleCanvasPatternPost: () => Promise<void>;
+  canvasType: boolean;
 };
 
 export type TitleProps = {
@@ -351,7 +379,7 @@ export type UsePromptResults = {
   setCfg: (e: string) => void;
   steps: string;
   setSteps: (e: string) => void;
-  handleSendPrompt: () => Promise<void>;
+  handleSendPrompt: (replicate: boolean) => Promise<void>;
   setPrompt: (e: string) => void;
   prompt: string;
   keyExists: boolean;
@@ -359,7 +387,14 @@ export type UsePromptResults = {
   setImg2img: (e: boolean) => void;
   setStrength: (e: string) => void;
   strength: string;
-  handleSendImg2Img: () => Promise<void>;
+  handleSendImg2Img: (replicate: boolean) => Promise<void>;
+  apiType: boolean;
+  setApiType: (e: boolean) => void;
+  localRunning: boolean;
+  setNegativePrompt: (e: string) => void;
+  setBatchSize: (e: string) => void;
+  batchSize: string;
+  synthProgress: number;
 };
 
 export type PromptProps = {
@@ -367,7 +402,7 @@ export type PromptProps = {
   setCfg: (e: string) => void;
   steps: string;
   setSteps: (e: string) => void;
-  handleSendPrompt: () => Promise<void>;
+  handleSendPrompt: (replicate: boolean) => Promise<void>;
   promptLoading: boolean;
   setPrompt: (e: string) => void;
   prompt: string;
@@ -376,12 +411,23 @@ export type PromptProps = {
   setImg2img: (e: boolean) => void;
   setStrength: (e: string) => void;
   strength: string;
-  handleSendImg2Img: () => Promise<void>;
+  handleSendImg2Img: (replicate: boolean) => Promise<void>;
   synthElementSelect: SvgPatternType | undefined;
   canvasType: boolean;
+  apiType: boolean;
+  setApiType: (e: boolean) => void;
+  localRunning: boolean;
+  saveImagesLocal: boolean;
+  setSaveImagesLocal: (e: boolean) => void;
+  setNegativePrompt: (e: string) => void;
+  setBatchSize: (e: string) => void;
+  batchSize: string;
+  savePatternImagesLocal: boolean;
+  setSavePatternImagesLocal: (e: boolean) => void;
+  synthProgress: number;
 };
 
-export interface InputType {
+export interface InputTypeReplicate {
   prompt: string;
   width: number;
   height: number;
@@ -390,6 +436,16 @@ export interface InputType {
   guidance_scale: number;
   image?: string;
   prompt_strength?: number;
+}
+
+export interface InputTypeAutomatic {
+  prompt: string;
+  steps: number;
+  cfg_scale: number;
+  negative_prompt?: string;
+  batch_size: number;
+  init_images?: string[];
+  image_cfg_scale?: number;
 }
 
 export type PatternMenuProps = {
@@ -453,7 +509,15 @@ export type UsePatternsResult = {
   handleBlur: (e: FormEvent) => void;
   selectedElement: SvgPatternType | null;
   addImageToCanvas: (image: string) => Promise<void>;
-  handleImageAdd: (e: FormEvent, url: boolean) => Promise<void>;
+  handleImageAdd: (
+    e: FormEvent,
+    url?: boolean,
+    local?: boolean
+  ) => Promise<void>;
+  handleCanvasPatternPost: () => Promise<void>;
+  postLoading: boolean;
+  saveImagesLocal: boolean;
+  setSaveImagesLocal: (e: boolean) => void;
 };
 
 export interface SafeImage {

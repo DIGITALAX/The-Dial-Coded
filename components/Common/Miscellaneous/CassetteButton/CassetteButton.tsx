@@ -17,6 +17,8 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
   keyExists,
   canvasType,
   synthElement,
+  localRunning,
+  apiType,
 }): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -53,8 +55,18 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
               loading && "animate-spin"
             }`}
             onClick={
-              keyExists
-                ? () => handleSend && value && value?.length > 0 && handleSend()
+              apiType
+                ? keyExists
+                  ? () =>
+                      handleSend && value && value?.length > 0 && handleSend(apiType!)
+                  : handleSend
+                  ? () => {
+                      router.push("/#Account");
+                      dispatch(setAccountPage("synth api"));
+                    }
+                  : () => {}
+                : localRunning
+                ? () => handleSend && value && value?.length > 0 && handleSend(apiType!)
                 : handleSend
                 ? () => {
                     router.push("/#Account");

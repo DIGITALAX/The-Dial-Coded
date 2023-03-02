@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface AddPromptImageState {
-  value?: any;
+  url?: any;
+  local: boolean;
 }
 
 const initialAddPromptImageState: AddPromptImageState = {
-  value: undefined,
+  url: undefined,
+  local: false,
 };
 
 export const addPromptImageSlice = createSlice({
@@ -14,9 +16,10 @@ export const addPromptImageSlice = createSlice({
   reducers: {
     setAddPromptImage: (
       state: AddPromptImageState,
-      action: PayloadAction<any>
+      { payload: { actionURL, actionLocal } }
     ) => {
-      state.value = action.payload;
+      state.url = actionURL;
+      state.local = actionLocal;
     },
   },
 });

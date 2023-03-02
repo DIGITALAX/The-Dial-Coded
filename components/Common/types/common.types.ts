@@ -848,9 +848,11 @@ export type CassetteButton = {
   bottom: string;
   position: string;
   loading?: boolean;
-  handleSend?: () => Promise<void>;
+  handleSend?: (e: boolean) => Promise<void>;
   value?: string;
   keyExists?: boolean;
   canvasType?: boolean;
   synthElement?: boolean;
+  localRunning?: boolean;
+  apiType?: boolean;
 };

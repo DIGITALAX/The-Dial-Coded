@@ -10,11 +10,7 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCanvasType } from "../../../../../redux/reducers/canvasTypeSlice";
-import {
-  UsePatternsResult,
-  SvgPatternType,
-  ElementInterface,
-} from "../types/canvas.types";
+import { UsePatternsResult, SvgPatternType } from "../types/canvas.types";
 import base from "./../../../../../pages/api/constants/base.json";
 import safe from "./../../../../../pages/api/constants/safe.json";
 import temp from "./../../../../../pages/api/constants/temp.json";
@@ -34,11 +30,15 @@ import updateElement from "../../../../../lib/canvas/helpers/updateElement";
 import { setInitImagePrompt } from "../../../../../redux/reducers/initImagePromptSlice";
 import createCanvasInit from "../../../../../lib/canvas/helpers/getBoundingBox";
 import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
+import dispatchPostCanvas from "../../../../../lib/canvas/helpers/dispatchPostCanvas";
+import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImageUpload";
+import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
+  const { uploadImage } = useImageUpload();
   const promptImage = useSelector(
-    (state: RootState) => state.app.addPromptImageReducer.value
+    (state: RootState) => state.app.addPromptImageReducer
   );
   const synthElementSelect = useSelector(
     (state: RootState) => state.app.selectSynthElementReducer.value
@@ -54,6 +54,7 @@ const usePatterns = (): UsePatternsResult => {
   const canvasType = useSelector(
     (state: RootState) => state.app.canvasTypeReducer.value
   );
+  const [saveImagesLocal, setSaveImagesLocal] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(1);
   const [tool, setTool] = useState<string>("default");
   const [action, setAction] = useState<string>("none");
@@ -84,6 +85,7 @@ const usePatterns = (): UsePatternsResult => {
   const [thickness, setThickness] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(false);
   const [elements, setElements, undo, redo] = useElements([], true);
+  const [postLoading, setPostLoading] = useState<boolean>(false);
 
   const templateSwitch = async (template: string | undefined) => {
     await addRashToCanvas(
@@ -155,17 +157,11 @@ const usePatterns = (): UsePatternsResult => {
   ]);
 
   useEffect(() => {
-    if (!showPatternDrawOptions) {
-      setPatternType("");
+    if (promptImage.url && canvasType) {
+      addImageToCanvas(promptImage.url, promptImage.local);
+      dispatch(setAddPromptImage({ actionURL: undefined, actionLocal: false }));
     }
-  }, [showPatternDrawOptions]);
-
-  useEffect(() => {
-    if (promptImage && canvasType) {
-      addImageToCanvas(promptImage);
-      dispatch(setAddPromptImage(undefined));
-    }
-  }, [promptImage]);
+  }, [promptImage.url, promptImage.local]);
 
   const handleMouseMovePattern = (e: MouseEvent): void => {
     if (!action || action === "writing") return;
@@ -448,24 +444,69 @@ const usePatterns = (): UsePatternsResult => {
     setSelectedElement(null);
   };
 
-  const handleWheelPattern = (e: WheelEvent) => {
-    wheelLogic(e, zoom, setZoom, 7);
-  };
-
-  const addImageToCanvas = async (imgURL: string): Promise<void> => {
+  const handleCanvasPatternPost = async (): Promise<void> => {
     try {
-      const res: Response = await fetch(imgURL);
-      const blob: Blob = await res.blob();
-      const postImage = new File([blob], "thedial_drafts", {
-        type: "image/png",
-      });
-      await handleImageAdd(postImage, true);
+      setPostLoading(true);
+      await dispatchPostCanvas(canvas, elements, uploadImage, setPostLoading);
+      dispatch(
+        setPublication({
+          actionOpen: true,
+          actionCanvas: true,
+        })
+      );
+      setPostLoading(false);
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
-  const handleImageAdd = async (e: any, url: boolean): Promise<void> => {
+  const handleWheelPattern = (e: WheelEvent) => {
+    wheelLogic(e, zoom, setZoom, 7);
+  };
+
+  const addImageToCanvas = async (
+    imgURL: any,
+    local?: boolean
+  ): Promise<void> => {
+    try {
+      let postImage;
+      let blob: Blob;
+      if (local) {
+        postImage = "data:image/png;base64," + imgURL;
+      } else {
+        const res: Response = await fetch(imgURL);
+        blob = await res.blob();
+        postImage = new File([blob], "thedial_drafts", {
+          type: "image/png",
+        });
+      }
+      if (saveImagesLocal) {
+        if (local) {
+          const binary = window.atob(imgURL);
+          const buffer = new ArrayBuffer(binary.length);
+          const view = new Uint8Array(buffer);
+          for (let i = 0; i < binary.length; i++) {
+            view[i] = binary.charCodeAt(i);
+          }
+          blob = new Blob([buffer], { type: "image/png" });
+        }
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob!);
+        link.download = "the_dial_synth";
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }
+      await handleImageAdd(postImage, true, local);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const handleImageAdd = async (
+    e: any,
+    url?: boolean,
+    local?: boolean
+  ): Promise<void> => {
     if (!url) {
       if ((e as any).target.files.length < 1) {
         return;
@@ -474,19 +515,56 @@ const usePatterns = (): UsePatternsResult => {
         return;
       }
     }
-    let image: File;
-    if (url) {
-      image = e;
-    } else {
-      image = (e.target as HTMLFormElement).files[0];
-    }
-    const compressedImage = await compressImageFiles(image);
-    const reader = new FileReader();
-    reader?.readAsDataURL(compressedImage as File);
+    if (!local) {
+      let image: File;
+      if (url) {
+        image = e;
+      } else {
+        image = (e.target as HTMLFormElement).files[0];
+      }
+      const compressedImage = await compressImageFiles(image);
+      const reader = new FileReader();
+      reader?.readAsDataURL(compressedImage as File);
 
-    reader.onloadend = (e) => {
+      reader.onloadend = (e) => {
+        const imageObject = new Image();
+        imageObject.src = e.target?.result as string;
+        imageObject.onload = () => {
+          const matchedIndex = elements.findIndex(
+            (element: SvgPatternType) =>
+              element.points === synthElementSelect?.points
+          );
+
+          setElements((prevElements: SvgPatternType[]) => {
+            const newElement = {
+              clipElement: synthElementSelect,
+              image: imageObject,
+              type: "image",
+              width: imageObject.width,
+              height: imageObject.height,
+            };
+            const newElements = [
+              ...prevElements.slice(0, matchedIndex + 1),
+              newElement,
+              ...prevElements.slice(
+                prevElements[matchedIndex + 1].type === "image"
+                  ? matchedIndex + 2
+                  : matchedIndex + 1
+              ),
+            ];
+            return newElements.map((element, index) => ({
+              ...element,
+              id: index,
+            }));
+          });
+
+          dispatch(setSelectSynthElement(undefined));
+          setSynthElementMove(undefined);
+        };
+      };
+    } else {
       const imageObject = new Image();
-      imageObject.src = e.target?.result as string;
+      imageObject.src = e;
       imageObject.onload = () => {
         const matchedIndex = elements.findIndex(
           (element: SvgPatternType) =>
@@ -519,7 +597,7 @@ const usePatterns = (): UsePatternsResult => {
         dispatch(setSelectSynthElement(undefined));
         setSynthElementMove(undefined);
       };
-    };
+    }
   };
 
   const handlePatternClear = () => {
@@ -640,6 +718,10 @@ const usePatterns = (): UsePatternsResult => {
     selectedElement,
     addImageToCanvas,
     handleImageAdd,
+    handleCanvasPatternPost,
+    postLoading,
+    saveImagesLocal,
+    setSaveImagesLocal,
   };
 };
 
