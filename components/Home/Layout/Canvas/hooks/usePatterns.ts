@@ -547,7 +547,7 @@ const usePatterns = (): UsePatternsResult => {
               ...prevElements.slice(0, matchedIndex + 1),
               newElement,
               ...prevElements.slice(
-                prevElements[matchedIndex + 1].type === "image"
+                prevElements[matchedIndex + 1]?.type === "image"
                   ? matchedIndex + 2
                   : matchedIndex + 1
               ),
@@ -583,7 +583,7 @@ const usePatterns = (): UsePatternsResult => {
             ...prevElements.slice(0, matchedIndex + 1),
             newElement,
             ...prevElements.slice(
-              prevElements[matchedIndex + 1].type === "image"
+              prevElements[matchedIndex + 1]?.type === "image"
                 ? matchedIndex + 2
                 : matchedIndex + 1
             ),
