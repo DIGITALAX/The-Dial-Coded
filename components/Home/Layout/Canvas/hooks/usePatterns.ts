@@ -33,6 +33,7 @@ import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 import dispatchPostCanvas from "../../../../../lib/canvas/helpers/dispatchPostCanvas";
 import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImageUpload";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
+import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
@@ -159,7 +160,13 @@ const usePatterns = (): UsePatternsResult => {
   useEffect(() => {
     if (promptImage.url && canvasType) {
       addImageToCanvas(promptImage.url, promptImage.local);
-      dispatch(setAddPromptImage({ actionURL: undefined, actionLocal: false }));
+      dispatch(
+        setAddPromptImage({
+          actionURL: undefined,
+          actionLocal: false,
+          actionBatch: undefined,
+        })
+      );
     }
   }, [promptImage.url, promptImage.local]);
 
@@ -466,7 +473,8 @@ const usePatterns = (): UsePatternsResult => {
 
   const addImageToCanvas = async (
     imgURL: any,
-    local?: boolean
+    local?: boolean,
+    lexica?: boolean
   ): Promise<void> => {
     try {
       let postImage;
@@ -474,13 +482,17 @@ const usePatterns = (): UsePatternsResult => {
       if (local) {
         postImage = "data:image/png;base64," + imgURL;
       } else {
+        if (!synthElementSelect) {
+          dispatch(setInsufficientFunds("add template image"));
+          return;
+        }
         const res: Response = await fetch(imgURL);
         blob = await res.blob();
         postImage = new File([blob], "thedial_drafts", {
           type: "image/png",
         });
       }
-      if (saveImagesLocal) {
+      if (saveImagesLocal && !lexica) {
         if (local) {
           const binary = window.atob(imgURL);
           const buffer = new ArrayBuffer(binary.length);
@@ -508,6 +520,9 @@ const usePatterns = (): UsePatternsResult => {
     local?: boolean
   ): Promise<void> => {
     if (!url) {
+      if (!synthElementSelect) {
+        dispatch(setInsufficientFunds("add template image"));
+      }
       if ((e as any).target.files.length < 1) {
         return;
       }

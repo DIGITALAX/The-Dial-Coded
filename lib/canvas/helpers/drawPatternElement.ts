@@ -57,9 +57,9 @@ const drawPatternElement = (
       ctx?.clip();
       ctx?.drawImage(
         element.image as HTMLImageElement,
-        ((element.clipElement as SvgPatternType).posX as number) *
+        ((element.clipElement as SvgPatternType)?.posX as number) *
           devicePixelRatio,
-        ((element.clipElement as SvgPatternType).posY as number) *
+        ((element.clipElement as SvgPatternType)?.posY as number) *
           devicePixelRatio,
         (element?.width as number) * devicePixelRatio,
         (element?.height as number) * devicePixelRatio

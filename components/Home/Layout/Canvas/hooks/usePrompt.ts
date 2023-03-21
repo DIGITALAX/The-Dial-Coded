@@ -22,7 +22,7 @@ const usePrompt = (): UsePromptResults => {
   );
   const lit = useSelector((state: RootState) => state.app.litClientReducer);
   const [cfg, setCfg] = useState<string>("10");
-  const [steps, setSteps] = useState<string>("60");
+  const [steps, setSteps] = useState<string>("20");
   const [strength, setStrength] = useState<string>("50");
   const [prompt, setPrompt] = useState<string>("");
   const [negativePrompt, setNegativePrompt] = useState<string>("");
@@ -65,7 +65,7 @@ const usePrompt = (): UsePromptResults => {
           batch_size: Number(batchSize),
           restore_faces: restoreFaces,
           sampler_name: sampler,
-          seed,
+          seed: Number(seed),
           width: Number(width),
           height: Number(height),
         };
@@ -108,7 +108,7 @@ const usePrompt = (): UsePromptResults => {
           image_cfg_scale: (100 - Number(strength)) / 100,
           restore_faces: restoreFaces,
           sampler_name: sampler,
-          seed,
+          seed: Number(seed),
           width: Number(width),
           height: Number(height),
         };
@@ -170,14 +170,16 @@ const usePrompt = (): UsePromptResults => {
       if (responseJSON === null || !responseJSON) {
         dispatch(setInsufficientFunds("automatic"));
       } else {
-        for (const i of responseJSON.json.images) {
-          dispatch(
-            setAddPromptImage({
-              actionURL: i,
-              actionLocal: true,
-            })
-          );
-        }
+        dispatch(
+          setAddPromptImage({
+            actionURL: responseJSON.json.images[0],
+            actionLocal: true,
+            actionBatch:
+              responseJSON.json.images.length > 1
+                ? responseJSON.json.images.slice(1)
+                : undefined,
+          })
+        );
       }
     } catch (err: any) {
       console.error(err.message);

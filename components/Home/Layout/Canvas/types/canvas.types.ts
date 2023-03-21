@@ -160,7 +160,7 @@ export type DrawProps = {
   openWidth: boolean;
   setOpenHeight: (e: boolean) => void;
   openHeight: boolean;
-  samplers: any[]
+  samplers: any[];
 };
 
 export type ColorPickerProps = {
@@ -347,8 +347,16 @@ export type BaseProps = {
   searchLoading: boolean;
   quickSearchResults: any[];
   fillImages: string[];
-  addImageToCanvas: (image: string) => Promise<void>;
-  addPatternImageToCanvas: (image: string) => Promise<void>;
+  addImageToCanvas: (
+    image: string,
+    local?: boolean,
+    lexica?: boolean
+  ) => Promise<void>;
+  addPatternImageToCanvas: (
+    image: string,
+    local?: boolean,
+    lexica?: boolean
+  ) => Promise<void>;
   canvasType: boolean;
 };
 
@@ -428,7 +436,7 @@ export type UsePromptResults = {
   openWidth: boolean;
   setOpenHeight: (e: boolean) => void;
   openHeight: boolean;
-  samplers: any[]
+  samplers: any[];
 };
 
 export type PromptProps = {
