@@ -627,7 +627,7 @@ export type CommentsModalProps = {
   reactionsFeed: any[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   isMixtape: boolean;
-  reactionLoaded: boolean[]
+  reactionLoaded: boolean[];
 };
 
 export type ReactionModalProps = {
@@ -855,4 +855,13 @@ export type CassetteButton = {
   synthElement?: boolean;
   localRunning?: boolean;
   apiType?: boolean;
+  clickable?: boolean;
+  clickChange?: (e: any) => void;
+  max?: number;
+  min?: number;
+  dropDown?: boolean;
+  setDropOpen?: (e: boolean) => void;
+  dropOpen?: boolean;
+  scroll?: boolean;
+  width?: string;
 };

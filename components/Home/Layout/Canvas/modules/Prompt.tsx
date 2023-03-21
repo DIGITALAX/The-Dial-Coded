@@ -31,6 +31,23 @@ const Prompt: FunctionComponent<PromptProps> = ({
   setSavePatternImagesLocal,
   savePatternImagesLocal,
   synthProgress,
+  restoreFaces,
+  setRestoreFaces,
+  sampler,
+  setSampler,
+  seed,
+  setSeed,
+  openSampler,
+  setOpenSampler,
+  width,
+  setWidth,
+  height,
+  setHeight,
+  setOpenWidth,
+  openWidth,
+  setOpenHeight,
+  openHeight,
+  samplers,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-row flex-wrap f1:flex-nowrap gap-12 py-10 px-4 f5:px-12 f5:py-20">
@@ -123,6 +140,10 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 position="relative"
                 text={batchSize}
                 textSize="xs"
+                clickable
+                clickChange={setBatchSize}
+                max={10}
+                min={1}
               />
             </div>
           </div>
@@ -133,6 +154,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
               step={"1"}
               max={10}
               min={1}
+              value={batchSize}
               defaultValue={batchSize}
               className="w-full"
               onChange={(e) => setBatchSize(e.target.value)}
@@ -154,6 +176,10 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 position="relative"
                 text={steps}
                 textSize="xs"
+                clickable
+                clickChange={setSteps}
+                max={100}
+                min={1}
               />
             </div>
           </div>
@@ -164,6 +190,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
               step={"0.5"}
               min={1}
               id="promptRange"
+              value={steps}
               defaultValue={steps}
               className="w-full"
               onChange={(e) => setSteps(e.target.value)}
@@ -185,6 +212,10 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 position="relative"
                 text={cfg}
                 textSize="xs"
+                clickable
+                clickChange={setCfg}
+                max={100}
+                min={1}
               />
             </div>
           </div>
@@ -194,10 +225,111 @@ const Prompt: FunctionComponent<PromptProps> = ({
               id="promptRange"
               step={"0.5"}
               min={1}
+              value={cfg}
               defaultValue={cfg}
               className="w-full"
               onChange={(e) => setCfg(e.target.value)}
             />
+          </div>
+        </div>
+        <div className="relative w-full h-fit flex flex-row">
+          <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-2">
+            <div
+              className="relative w-fit h-fit self-center justify-self-start"
+              id="guide"
+            >
+              Width:
+            </div>
+            <div className="relative w-fit h-fit self-center justify-self-start">
+              <CassetteButton
+                right="0"
+                bottom="0"
+                position="relative"
+                text={String(width)}
+                textSize="xs"
+                clickable={apiType ? false : true}
+                clickChange={apiType ? undefined : setWidth}
+                dropDown={!apiType ? false : true}
+                dropOpen={!apiType ? undefined : openWidth}
+                setDropOpen={!apiType ? undefined : setOpenWidth}
+                max={1100}
+              />
+            </div>
+            {apiType && openWidth && (
+              <div className="absolute w-fit h-fit top-16">
+                {Array.from(["256", "512", "768"])
+                  .filter((option) => option !== String(width))
+                  .map((value: string, index: number) => {
+                    return (
+                      <div
+                        className="relative w-full h-fit self-center justify-self-start cursor-pointer"
+                        key={index}
+                        onClick={() => {
+                          setWidth(Number(value));
+                          setOpenWidth(false);
+                        }}
+                      >
+                        <CassetteButton
+                          right="0"
+                          bottom="0"
+                          position="relative"
+                          text={value}
+                          textSize="xs"
+                        />
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
+          </div>
+          <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-2">
+            <div
+              className="relative w-fit h-fit self-center justify-self-start"
+              id="guide"
+            >
+              Height:
+            </div>
+            <div className="relative w-fit h-fit self-center justify-self-start">
+              <CassetteButton
+                right="0"
+                bottom="0"
+                position="relative"
+                text={String(height)}
+                textSize="xs"
+                dropDown={!apiType ? false : true}
+                clickable={apiType ? false : true}
+                clickChange={apiType ? undefined : setHeight}
+                dropOpen={!apiType ? undefined : openHeight}
+                setDropOpen={!apiType ? undefined : setOpenHeight}
+                max={1100}
+              />
+            </div>
+            {apiType && openHeight && (
+              <div className="absolute w-fit h-fit top-16">
+                {Array.from(["256", "512", "768"])
+                  .filter((option) => option !== String(height))
+                  .map((value: string, index: number) => {
+                    return (
+                      <div
+                        className="relative w-full h-fit self-center justify-self-start cursor-pointer"
+                        key={index}
+                        onClick={() => {
+                          setHeight(Number(value));
+                          setOpenHeight(false);
+                        }}
+                      >
+                        <CassetteButton
+                          right="0"
+                          bottom="0"
+                          position="relative"
+                          text={value}
+                          textSize="xs"
+                        />
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
           </div>
         </div>
         {img2img && (
@@ -216,6 +348,9 @@ const Prompt: FunctionComponent<PromptProps> = ({
                   position="relative"
                   text={strength}
                   textSize="xs"
+                  clickable
+                  clickChange={setStrength}
+                  max={100}
                 />
               </div>
             </div>
@@ -226,6 +361,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 step={"0.5"}
                 defaultValue={strength}
                 className="w-full"
+                value={strength}
                 onChange={(e) => setStrength(e.target.value)}
               />
             </div>
@@ -300,9 +436,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 id="mass"
                 className="relative w-full h-full bg-weed rounded-xl p-1 text-litnus font-sats text-base caret-white"
                 style={{ resize: "none" }}
-                placeholder={
-                  "Negative Prompt"
-                }
+                placeholder={"Negative Prompt"}
                 disabled={
                   promptLoading ||
                   (!keyExists && apiType) ||
@@ -325,6 +459,100 @@ const Prompt: FunctionComponent<PromptProps> = ({
                     : "100%",
               }}
             ></div>
+          </div>
+        )}
+        {!apiType && (
+          <div className="relative w-full h-fit flex gap-6 flex-wrap">
+            <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto">
+              <div className="relative w-full h-full grid grid-flow-col auto-cols-auto gap-3">
+                <div
+                  className="relative w-fit h-fit self-center justify-self-start whitespace-nowrap break-word"
+                  id="guide"
+                >
+                  Restore Faces
+                </div>
+                <div
+                  className="relative w-fit h-fit self-center justify-self-end cursor-pointer"
+                  onClick={() => setRestoreFaces(!restoreFaces)}
+                >
+                  {restoreFaces ? (
+                    <BsToggleOff color="black" size={30} />
+                  ) : (
+                    <BsToggleOn color="#06cf0b" size={30} />
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto">
+              <div className="relative w-full h-full grid grid-flow-col auto-cols-auto gap-2">
+                <div
+                  className="relative w-fit h-fit self-center justify-self-start"
+                  id="guide"
+                >
+                  Seed:
+                </div>
+                <div className="relative w-fit h-fit self-center justify-self-end">
+                  <CassetteButton
+                    right="0"
+                    bottom="0"
+                    position="relative"
+                    text={String(seed)}
+                    textSize="xs"
+                    clickable
+                    clickChange={setSeed}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto gap-3">
+              <div
+                className="relative w-fit h-fit self-center justify-self-start"
+                id="guide"
+              >
+                Samplers:
+              </div>
+              <div className="relative w-fit h-fit self-center justify-self-start">
+                <CassetteButton
+                  right="0"
+                  bottom="0"
+                  position="relative"
+                  text={sampler}
+                  dropDown
+                  textSize="xs"
+                  dropOpen={openSampler}
+                  setDropOpen={setOpenSampler}
+                  width={"36"}
+                />
+              </div>
+              {openSampler && (
+                <div className="absolute w-fit h-32 overflow-y-scroll top-7 right-0">
+                  {samplers
+                    ?.filter((option) => option.name !== sampler)
+                    ?.map((value: any, index: number) => {
+                      return (
+                        <div
+                          className="relative w-full h-fit self-center justify-self-start cursor-pointer"
+                          key={index}
+                          onClick={() => {
+                            setSampler(value.name);
+                            setOpenSampler(false);
+                          }}
+                        >
+                          <CassetteButton
+                            right="0"
+                            bottom="0"
+                            position="relative"
+                            text={value.name}
+                            textSize="xs"
+                            scroll
+                            width={"36"}
+                          />
+                        </div>
+                      );
+                    })}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

@@ -32,6 +32,15 @@ const usePrompt = (): UsePromptResults => {
   const [img2img, setImg2img] = useState<boolean>(false);
   const [apiType, setApiType] = useState<boolean>(false);
   const [synthProgress, setSynthProgress] = useState<number>(0);
+  const [restoreFaces, setRestoreFaces] = useState<boolean>(false);
+  const [samplers, setSamplers] = useState<any[]>([]);
+  const [sampler, setSampler] = useState<string>("Euler a");
+  const [openSampler, setOpenSampler] = useState<boolean>(false);
+  const [seed, setSeed] = useState<number>(-1);
+  const [width, setWidth] = useState<number>(512);
+  const [height, setHeight] = useState<number>(512);
+  const [openWidth, setOpenWidth] = useState<boolean>(false);
+  const [openHeight, setOpenHeight] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const handleSendPrompt = async (replicate: boolean): Promise<void> => {
@@ -40,8 +49,8 @@ const usePrompt = (): UsePromptResults => {
       if (replicate) {
         const input: InputTypeReplicate = {
           prompt: prompt,
-          width: 768,
-          height: 768,
+          width: Number(width),
+          height: Number(height),
           num_outputs: 1,
           num_inference_steps: Number(steps),
           guidance_scale: (Number(cfg) / 100) * 20,
@@ -54,6 +63,11 @@ const usePrompt = (): UsePromptResults => {
           cfg_scale: (Number(cfg) / 100) * 20,
           negative_prompt: negativePrompt,
           batch_size: Number(batchSize),
+          restore_faces: restoreFaces,
+          sampler_name: sampler,
+          seed,
+          width: Number(width),
+          height: Number(height),
         };
         await promptToAutomatic(input, "sdapi/v1/txt2img");
       }
@@ -74,8 +88,8 @@ const usePrompt = (): UsePromptResults => {
       if (replicate) {
         const input: InputTypeReplicate = {
           prompt: prompt,
-          width: 768,
-          height: 768,
+          width: Number(width),
+          height: Number(height),
           num_outputs: 1,
           num_inference_steps: Number(steps),
           guidance_scale: (Number(cfg) / 100) * 20,
@@ -92,6 +106,11 @@ const usePrompt = (): UsePromptResults => {
           negative_prompt: negativePrompt,
           batch_size: Number(batchSize),
           image_cfg_scale: (100 - Number(strength)) / 100,
+          restore_faces: restoreFaces,
+          sampler_name: sampler,
+          seed,
+          width: Number(width),
+          height: Number(height),
         };
         await promptToAutomatic(input, "sdapi/v1/img2img");
       }
@@ -167,21 +186,21 @@ const usePrompt = (): UsePromptResults => {
 
   const checkSynthProgress = async (): Promise<void> => {
     try {
-     if (synthLoading) {
-      while (true) {
-        const response = await fetch(
-          "http://127.0.0.1:7860/sdapi/v1/progress",
-          {
-            method: "GET",
+      if (synthLoading) {
+        while (true) {
+          const response = await fetch(
+            "http://127.0.0.1:7860/sdapi/v1/progress",
+            {
+              method: "GET",
+            }
+          );
+          const responseJSON = await response.json();
+          setSynthProgress(responseJSON.progress);
+          if (responseJSON.progress.toFixed(1) === "0.9") {
+            return;
           }
-        );
-        const responseJSON = await response.json();
-        setSynthProgress(responseJSON.progress);
-        if (responseJSON.progress.toFixed(1) === "0.9") {
-          return;
         }
       }
-     }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -209,6 +228,43 @@ const usePrompt = (): UsePromptResults => {
     }
   };
 
+  const getSamplers = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:7860/sdapi/v1/samplers", {
+        method: "GET",
+      });
+      const responseJSON = await response.json();
+      setSamplers(responseJSON);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (!apiType && samplers.length <= 0) {
+      getSamplers();
+    }
+  }, [apiType, samplers]);
+
+  useEffect(() => {
+    if (apiType) {
+      if (
+        Number(width) !== 256 &&
+        Number(width) !== 512 &&
+        Number(width) !== 768
+      ) {
+        setWidth(512);
+      }
+      if (
+        Number(height) !== 256 &&
+        Number(height) !== 512 &&
+        Number(height) !== 768
+      ) {
+        setHeight(512);
+      }
+    }
+  }, [apiType]);
+
   useEffect(() => {
     checkApi();
     checkLocal();
@@ -234,7 +290,24 @@ const usePrompt = (): UsePromptResults => {
     setNegativePrompt,
     setBatchSize,
     batchSize,
-    synthProgress
+    synthProgress,
+    restoreFaces,
+    sampler,
+    setSampler,
+    setRestoreFaces,
+    openSampler,
+    setOpenSampler,
+    seed,
+    setSeed,
+    width,
+    setWidth,
+    height,
+    setHeight,
+    setOpenHeight,
+    openHeight,
+    openWidth,
+    setOpenWidth,
+    samplers,
   };
 };
 
