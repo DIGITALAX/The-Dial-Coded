@@ -142,7 +142,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 textSize="xs"
                 clickable
                 clickChange={setBatchSize}
-                max={10}
+                max={4}
                 min={1}
               />
             </div>
@@ -152,7 +152,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
               type={"range"}
               id="promptRange"
               step={"1"}
-              max={10}
+              max={4}
               min={1}
               value={batchSize}
               defaultValue={batchSize}
@@ -232,6 +232,41 @@ const Prompt: FunctionComponent<PromptProps> = ({
             />
           </div>
         </div>
+        {img2img && (
+          <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
+            <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
+              <div
+                className="relative w-fit h-fit self-center justify-self-start"
+                id="guide"
+              >
+                Strength:
+              </div>
+              <div className="relative w-fit h-fit self-center justify-self-end">
+                <CassetteButton
+                  right="0"
+                  bottom="0"
+                  position="relative"
+                  text={strength}
+                  textSize="xs"
+                  clickable
+                  clickChange={setStrength}
+                  max={100}
+                />
+              </div>
+            </div>
+            <div className="relative w-full h-full">
+              <input
+                type={"range"}
+                id="promptRange"
+                step={"0.5"}
+                defaultValue={strength}
+                className="w-full"
+                value={strength}
+                onChange={(e) => setStrength(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
         <div className="relative w-full h-fit flex flex-row">
           <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-2">
             <div
@@ -252,7 +287,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 dropDown={!apiType ? false : true}
                 dropOpen={!apiType ? undefined : openWidth}
                 setDropOpen={!apiType ? undefined : setOpenWidth}
-                max={1100}
+                max={900}
               />
             </div>
             {apiType && openWidth && (
@@ -301,7 +336,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 clickChange={apiType ? undefined : setHeight}
                 dropOpen={!apiType ? undefined : openHeight}
                 setDropOpen={!apiType ? undefined : setOpenHeight}
-                max={1100}
+                max={900}
               />
             </div>
             {apiType && openHeight && (
@@ -332,41 +367,6 @@ const Prompt: FunctionComponent<PromptProps> = ({
             )}
           </div>
         </div>
-        {img2img && (
-          <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
-            <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
-              <div
-                className="relative w-fit h-fit self-center justify-self-start"
-                id="guide"
-              >
-                Strength:
-              </div>
-              <div className="relative w-fit h-fit self-center justify-self-end">
-                <CassetteButton
-                  right="0"
-                  bottom="0"
-                  position="relative"
-                  text={strength}
-                  textSize="xs"
-                  clickable
-                  clickChange={setStrength}
-                  max={100}
-                />
-              </div>
-            </div>
-            <div className="relative w-full h-full">
-              <input
-                type={"range"}
-                id="promptRange"
-                step={"0.5"}
-                defaultValue={strength}
-                className="w-full"
-                value={strength}
-                onChange={(e) => setStrength(e.target.value)}
-              />
-            </div>
-          </div>
-        )}
       </div>
       <div className="relative w-full h-full flex flex-col gap-6">
         <div className="relative w-full h-44 f5:h-36 flex border-b-4 border-x-2 border-black rounded-md bg-weed place-self-center">
@@ -401,16 +401,20 @@ const Prompt: FunctionComponent<PromptProps> = ({
               <CassetteButton
                 text={
                   apiType
-                    ? keyExists
-                      ? !canvasType
-                        ? "synth"
-                        : synthElementSelect
-                        ? "synth"
-                        : "select template"
-                      : "add key"
-                    : localRunning
+                  ? keyExists
+                    ? !canvasType
+                      ? "synth"
+                      : synthElementSelect
+                      ? "synth"
+                      : "select template"
+                    : "add key"
+                  : localRunning
+                  ? !canvasType
                     ? "synth"
-                    : "activate local"
+                    : synthElementSelect
+                    ? "synth"
+                    : "select template"
+                  : "activate local"
                 }
                 textSize="sm"
                 right="2"

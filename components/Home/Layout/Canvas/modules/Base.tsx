@@ -90,13 +90,17 @@ const Base: FunctionComponent<BaseProps> = ({
                           addPatternImageToCanvas(
                             quickSearchResults?.length > 0
                               ? (result as LexicaImages)?.srcSmall
-                              : `${INFURA_GATEWAY}/ipfs/${result as string}`
+                              : `${INFURA_GATEWAY}/ipfs/${result as string}`,
+                              false,
+                              true
                           )
                       : () =>
                           addImageToCanvas(
                             quickSearchResults?.length > 0
                               ? (result as LexicaImages)?.srcSmall
-                              : `${INFURA_GATEWAY}/ipfs/${result as string}`
+                              : `${INFURA_GATEWAY}/ipfs/${result as string}`,
+                              false,
+                              true
                           )
                   }
                 >

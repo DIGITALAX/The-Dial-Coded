@@ -243,7 +243,8 @@ const useDraw = () => {
 
   const addImageToCanvas = async (
     imgURL: any,
-    local?: boolean
+    local?: boolean,
+    lexica?: boolean
   ): Promise<void> => {
     try {
       let postImage;
@@ -257,7 +258,7 @@ const useDraw = () => {
           type: "image/png",
         });
       }
-      if (saveImagesLocal) {
+      if (saveImagesLocal && !lexica) {
         if (local) {
           const binary = window.atob(imgURL);
           const buffer = new ArrayBuffer(binary.length);
@@ -863,10 +864,12 @@ const useDraw = () => {
   useEffect(() => {
     if (promptImage.url && !canvasType) {
       addImageToCanvas(promptImage.url, promptImage.local);
+
       dispatch(
         setAddPromptImage({
           actionURL: undefined,
           actionLocal: false,
+          actionBatch: undefined,
         })
       );
     }

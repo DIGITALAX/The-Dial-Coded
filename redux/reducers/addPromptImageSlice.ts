@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface AddPromptImageState {
   url?: any;
   local: boolean;
+  batch?: any[];
 }
 
 const initialAddPromptImageState: AddPromptImageState = {
@@ -16,10 +17,11 @@ export const addPromptImageSlice = createSlice({
   reducers: {
     setAddPromptImage: (
       state: AddPromptImageState,
-      { payload: { actionURL, actionLocal } }
+      { payload: { actionURL, actionLocal, actionBatch } }
     ) => {
       state.url = actionURL;
       state.local = actionLocal;
+      state.batch = actionBatch;
     },
   },
 });

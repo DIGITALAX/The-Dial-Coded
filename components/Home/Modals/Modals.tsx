@@ -94,7 +94,7 @@ const Modals = () => {
     hasMirrored,
     hasReacted,
     reactionsFeed,
-    reactionLoaded
+    reactionLoaded,
   } = useMainFeed();
 
   const {
@@ -208,8 +208,12 @@ const Modals = () => {
               ? " The NSFW filter is a bit overzealous with the current API. Can’t wait for a custom API? DIY Synth is on its way."
               : failed === "marquee"
               ? "Use the Marquee Tool to Select the Canvas Area to Use as an Init for Img2Img Synth."
-              : failed === "automatic" ?
-              "Something went wrong with your local synth machine, try again?"
+              : failed === "automatic"
+              ? "Something went wrong with your local synth machine, try again?"
+              : failed === "add template image"
+              ? "Select a Template to Add Image"
+              : failed === "add template synth"
+              ? "Select a Template to Add Synth"
               : "Unsuccessful. Please Try Again."
           }
         />

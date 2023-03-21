@@ -32,23 +32,49 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
 }): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
+  console.log(
+    canvasType &&
+      apiType &&
+      keyExists &&
+      handleSend &&
+      !loading &&
+      value &&
+      value?.length > 0 &&
+      synthElement
+  );
   return (
     <div
       className={`z-1 ${position} bottom-${bottom} right-${right} h-fit rounded-lg border-black border-2 ${
         ((!canvasType &&
           keyExists &&
+          apiType &&
           handleSend &&
           !loading &&
           value &&
           value?.length > 0) ||
-          (!keyExists && handleSend) ||
           (canvasType &&
+            apiType &&
             keyExists &&
             handleSend &&
             !loading &&
             value &&
             value?.length > 0 &&
-            synthElement)) &&
+            synthElement) ||
+          (canvasType &&
+            !apiType &&
+            localRunning &&
+            handleSend &&
+            !loading &&
+            value &&
+            value?.length > 0 &&
+            synthElement) ||
+          (!canvasType &&
+            !apiType &&
+            localRunning &&
+            handleSend &&
+            !loading &&
+            value &&
+            value?.length > 0)) &&
         "cursor-pointer active:scale-95"
       } bg-black min-w-[5rem] ${clickable && !scroll && "max-w-[5rem]"} ${
         !width ? (scroll ? "w-full" : "w-fit") : `w-${width}`
@@ -72,24 +98,28 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
                     setDropOpen && setDropOpen(!dropOpen);
                   }
                 : apiType
-                ? keyExists
+                ? keyExists && value
                   ? () =>
                       handleSend &&
                       value &&
                       value?.length > 0 &&
                       handleSend(apiType!)
+                  : !value
+                  ? () => {}
                   : handleSend
                   ? () => {
                       router.push("/#Account");
                       dispatch(setAccountPage("synth api"));
                     }
                   : () => {}
-                : localRunning
+                : localRunning && value
                 ? () =>
                     handleSend &&
                     value &&
                     value?.length > 0 &&
                     handleSend(apiType!)
+                : !value
+                ? () => {}
                 : handleSend
                 ? () => {
                     router.push("/#Account");
