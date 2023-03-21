@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
-import { FunctionComponent } from "react";
+import { FormEvent, FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
+import { IoMdArrowDropdown } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { setAccountPage } from "../../../../redux/reducers/accountPageSlice";
 import { CassetteButton } from "../../types/common.types";
@@ -19,12 +20,21 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
   synthElement,
   localRunning,
   apiType,
+  clickable,
+  clickChange,
+  max,
+  min,
+  dropDown,
+  setDropOpen,
+  dropOpen,
+  scroll,
+  width,
 }): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
   return (
     <div
-      className={`z-1 ${position} bottom-${bottom} right-${right} min-w-[5rem] w-fit h-fit rounded-lg border-black border-2 ${
+      className={`z-1 ${position} bottom-${bottom} right-${right} h-fit rounded-lg border-black border-2 ${
         ((!canvasType &&
           keyExists &&
           handleSend &&
@@ -40,7 +50,9 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
             value?.length > 0 &&
             synthElement)) &&
         "cursor-pointer active:scale-95"
-      } bg-black`}
+      } bg-black min-w-[5rem] ${clickable && !scroll && "max-w-[5rem]"} ${
+        !width ? (scroll ? "w-full" : "w-fit") : `w-${width}`
+      }`}
     >
       <div
         className="relative w-full h-full p-px rounded-md backdrop-opacity-10"
@@ -51,14 +63,21 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
           id="mass"
         >
           <div
-            className={`relative w-fit col-start-1 h-fit place-self-center text-center whitespace-nowrap text-white/80 font-sats px-3 py-1 text-${textSize} ${
+            className={`relative w-fit col-start-1 h-fit place-self-center grid grid-flow-cols auto-cols-auto text-center whitespace-nowrap text-white/80 font-sats px-3 py-1 text-${textSize} bg-transparent ${
               loading && "animate-spin"
-            }`}
+            } ${dropDown && "cursor-pointer"}`}
             onClick={
-              apiType
+              dropDown
+                ? () => {
+                    setDropOpen && setDropOpen(!dropOpen);
+                  }
+                : apiType
                 ? keyExists
                   ? () =>
-                      handleSend && value && value?.length > 0 && handleSend(apiType!)
+                      handleSend &&
+                      value &&
+                      value?.length > 0 &&
+                      handleSend(apiType!)
                   : handleSend
                   ? () => {
                       router.push("/#Account");
@@ -66,7 +85,11 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
                     }
                   : () => {}
                 : localRunning
-                ? () => handleSend && value && value?.length > 0 && handleSend(apiType!)
+                ? () =>
+                    handleSend &&
+                    value &&
+                    value?.length > 0 &&
+                    handleSend(apiType!)
                 : handleSend
                 ? () => {
                     router.push("/#Account");
@@ -75,7 +98,37 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
                 : () => {}
             }
           >
-            {loading ? <AiOutlineLoading color="white" size={15} /> : text}
+            {loading ? (
+              <AiOutlineLoading color="white" size={15} />
+            ) : clickable ? (
+              <input
+                value={text}
+                disabled={!clickable}
+                placeholder={text}
+                type={"number"}
+                className={`relative w-full h-fit text-center whitespace-nowrap text-white/80 font-sats text-${textSize} bg-transparent`}
+                onChange={
+                  clickChange && clickable
+                    ? (e: FormEvent) =>
+                        clickChange(
+                          max && Number((e.target as any).value) > Number(max)
+                            ? max
+                            : min &&
+                              Number((e.target as any).value) < Number(min)
+                            ? min
+                            : (e.target as any).value
+                        )
+                    : () => {}
+                }
+              />
+            ) : (
+              text
+            )}
+            {dropDown && (
+              <div className="relative w-fit h-fit col-start-2 self-center pl-1">
+                <IoMdArrowDropdown color="#FFDE90" size={15} />
+              </div>
+            )}
           </div>
         </div>
       </div>

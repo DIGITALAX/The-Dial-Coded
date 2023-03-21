@@ -90,7 +90,24 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     setNegativePrompt,
     batchSize,
     setBatchSize,
-    synthProgress
+    synthProgress,
+    sampler,
+    setSampler,
+    restoreFaces,
+    setRestoreFaces,
+    seed,
+    setSeed,
+    openSampler,
+    setOpenSampler,
+    width,
+    setWidth,
+    height,
+    setHeight,
+    openHeight,
+    openWidth,
+    setOpenHeight,
+    setOpenWidth,
+    samplers,
   } = usePrompt();
   const {
     hex,
@@ -138,7 +155,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     canvasRef,
     setPan,
     setSaveImagesLocal,
-    saveImagesLocal
+    saveImagesLocal,
   } = useDraw();
   const {
     quickSearchResults,
@@ -313,6 +330,23 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           setSavePatternImagesLocal={setSavePatternImagesLocal}
           savePatternImagesLocal={savePatternImagesLocal}
           synthProgress={synthProgress}
+          setRestoreFaces={setRestoreFaces}
+          restoreFaces={restoreFaces}
+          sampler={sampler}
+          setSampler={setSampler}
+          seed={seed}
+          setSeed={setSeed}
+          openSampler={openSampler}
+          setOpenSampler={setOpenSampler}
+          width={width}
+          setWidth={setWidth}
+          height={height}
+          setHeight={setHeight}
+          openHeight={openHeight}
+          openWidth={openWidth}
+          setOpenHeight={setOpenHeight}
+          setOpenWidth={setOpenWidth}
+          samplers={samplers}
         />
       );
   }

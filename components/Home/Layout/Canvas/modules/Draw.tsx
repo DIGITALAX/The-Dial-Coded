@@ -126,6 +126,23 @@ const Draw: FunctionComponent<DrawProps> = ({
   savePatternImagesLocal,
   setSavePatternImagesLocal,
   synthProgress,
+  setRestoreFaces,
+  restoreFaces,
+  sampler,
+  setSampler,
+  seed,
+  setSeed,
+  openSampler,
+  setOpenSampler,
+  width,
+  setWidth,
+  height,
+  setHeight,
+  openHeight,
+  openWidth,
+  setOpenHeight,
+  setOpenWidth,
+  samplers,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -342,6 +359,23 @@ const Draw: FunctionComponent<DrawProps> = ({
               savePatternImagesLocal={savePatternImagesLocal}
               setSavePatternImagesLocal={setSavePatternImagesLocal}
               synthProgress={synthProgress}
+              restoreFaces={restoreFaces}
+              sampler={sampler}
+              setSampler={setSampler}
+              setRestoreFaces={setRestoreFaces}
+              seed={seed}
+              setSeed={setSeed}
+              openSampler={openSampler}
+              setOpenSampler={setOpenSampler}
+              width={width}
+              setWidth={setWidth}
+              height={height}
+              setHeight={setHeight}
+              openHeight={openHeight}
+              openWidth={openWidth}
+              setOpenHeight={setOpenHeight}
+              setOpenWidth={setOpenWidth}
+              samplers={samplers}
             />
           </div>
         </div>

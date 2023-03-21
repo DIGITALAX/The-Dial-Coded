@@ -144,6 +144,23 @@ export type DrawProps = {
   savePatternImagesLocal: boolean;
   setSavePatternImagesLocal: (e: boolean) => void;
   synthProgress: number;
+  restoreFaces: boolean;
+  sampler: string;
+  setSampler: (e: string) => void;
+  setRestoreFaces: (e: boolean) => void;
+  openSampler: boolean;
+  setOpenSampler: (e: boolean) => void;
+  seed: number;
+  setSeed: (e: number) => void;
+  width: number;
+  setWidth: (e: number) => void;
+  height: number;
+  setHeight: (e: number) => void;
+  setOpenWidth: (e: boolean) => void;
+  openWidth: boolean;
+  setOpenHeight: (e: boolean) => void;
+  openHeight: boolean;
+  samplers: any[]
 };
 
 export type ColorPickerProps = {
@@ -395,6 +412,23 @@ export type UsePromptResults = {
   setBatchSize: (e: string) => void;
   batchSize: string;
   synthProgress: number;
+  restoreFaces: boolean;
+  sampler: string;
+  setSampler: (e: string) => void;
+  setRestoreFaces: (e: boolean) => void;
+  openSampler: boolean;
+  setOpenSampler: (e: boolean) => void;
+  seed: number;
+  setSeed: (e: number) => void;
+  width: number;
+  setWidth: (e: number) => void;
+  height: number;
+  setHeight: (e: number) => void;
+  setOpenWidth: (e: boolean) => void;
+  openWidth: boolean;
+  setOpenHeight: (e: boolean) => void;
+  openHeight: boolean;
+  samplers: any[]
 };
 
 export type PromptProps = {
@@ -425,6 +459,23 @@ export type PromptProps = {
   savePatternImagesLocal: boolean;
   setSavePatternImagesLocal: (e: boolean) => void;
   synthProgress: number;
+  restoreFaces: boolean;
+  sampler: string;
+  setSampler: (e: string) => void;
+  setRestoreFaces: (e: boolean) => void;
+  openSampler: boolean;
+  setOpenSampler: (e: boolean) => void;
+  seed: number;
+  setSeed: (e: number) => void;
+  width: number;
+  setWidth: (e: number) => void;
+  height: number;
+  setHeight: (e: number) => void;
+  setOpenWidth: (e: boolean) => void;
+  openWidth: boolean;
+  setOpenHeight: (e: boolean) => void;
+  openHeight: boolean;
+  samplers: any[];
 };
 
 export interface InputTypeReplicate {
@@ -446,6 +497,11 @@ export interface InputTypeAutomatic {
   batch_size: number;
   init_images?: string[];
   image_cfg_scale?: number;
+  restore_faces: boolean;
+  sampler_name: string;
+  seed: number;
+  width: number;
+  height: number;
 }
 
 export type PatternMenuProps = {
