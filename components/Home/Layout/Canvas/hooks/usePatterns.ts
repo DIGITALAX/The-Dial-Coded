@@ -34,6 +34,10 @@ import dispatchPostCanvas from "../../../../../lib/canvas/helpers/dispatchPostCa
 import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImageUpload";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
+import {
+  getCanvasStorage,
+  setCanvasStorage,
+} from "../../../../../lib/replicate/utils";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
@@ -85,15 +89,18 @@ const usePatterns = (): UsePatternsResult => {
   const [brushWidth, setBrushWidth] = useState<number>(12);
   const [thickness, setThickness] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(false);
-  const [elements, setElements, undo, redo] = useElements([], true);
+  const [elements, setElements, undo, redo] = useElements(
+    JSON.parse(getCanvasStorage() || "{}")?.[patternType]?.[template] || [],
+    true
+  );
   const [postLoading, setPostLoading] = useState<boolean>(false);
-
-  const templateSwitch = async (template: string | undefined) => {
+  const templateSwitch = async (value: string | undefined) => {
     await addRashToCanvas(
       setElements,
+      JSON.parse(getCanvasStorage() || "{}")?.[patternType]?.[template] || [],
       base[Number(patternType)],
       safe[Number(patternType)],
-      temp[Number(patternType)][Number(template?.split("0x0")[1]) - 1]
+      temp[Number(patternType)][Number(value?.split("0x0")[1]) - 1]
     );
   };
 
@@ -144,6 +151,37 @@ const usePatterns = (): UsePatternsResult => {
           drawElement(element, ctx, zoom, canvas);
         }
       });
+      ctx.save();
+      console.log(
+        elements.filter(
+          (elem: any) =>
+            elem.type !== "0" && elem.type !== "1" && elem.type !== "2"
+        )
+      );
+      const canvasStorage = JSON.parse(getCanvasStorage() || "{}");
+      setCanvasStorage(
+        JSON.stringify({
+          ...canvasStorage,
+          [patternType]: {
+            ...canvasStorage[patternType],
+            [template]: elements
+              .map((elem: any) => {
+                if (
+                  elem.type === "image" &&
+                  elem.image instanceof HTMLImageElement
+                ) {
+                  return { ...elem, image: elem.image.src };
+                } else {
+                  return elem;
+                }
+              })
+              .filter(
+                (elem: any) =>
+                  elem.type !== "0" && elem.type !== "1" && elem.type !== "2"
+              ),
+          },
+        })
+      );
     }
   }, [
     elements,
@@ -580,7 +618,6 @@ const usePatterns = (): UsePatternsResult => {
         const compressedImage = await compressImageFiles(image);
         const reader = new FileReader();
         reader?.readAsDataURL(compressedImage as File);
-
         reader.onloadend = async (e) => {
           const imagePromises = synthElementSelect.map((selectedTemplate) => {
             return new Promise((resolve, reject) => {
