@@ -404,14 +404,14 @@ const Prompt: FunctionComponent<PromptProps> = ({
                   ? keyExists
                     ? !canvasType
                       ? "synth"
-                      : synthElementSelect
+                      : synthElementSelect?.length as number > 0
                       ? "synth"
                       : "select template"
                     : "add key"
                   : localRunning
                   ? !canvasType
                     ? "synth"
-                    : synthElementSelect
+                    : synthElementSelect?.length as number > 0
                     ? "synth"
                     : "select template"
                   : "activate local"
@@ -425,7 +425,7 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 value={prompt as string}
                 keyExists={keyExists}
                 canvasType={canvasType}
-                synthElement={synthElementSelect ? true : false}
+                synthElement={synthElementSelect?.length as number > 0 ? true : false}
                 localRunning={localRunning}
                 apiType={apiType}
               />

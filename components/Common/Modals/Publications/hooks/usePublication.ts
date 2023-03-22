@@ -59,6 +59,9 @@ const usePublication = () => {
   const dispatcher = useSelector(
     (state: RootState) => state.app.dispatcherReducer.value
   );
+  const postBox = useSelector(
+    (state: RootState) => state.app.publicationReducer.open
+  );
   const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [contentURI, setContentURI] = useState<string | undefined>();
@@ -98,7 +101,7 @@ const usePublication = () => {
 
   useEffect(() => {
     const savedData = getPostData();
-    if (savedData) {
+    if (savedData && postBox) {
       setPostDescription(JSON.parse(savedData).post);
       let resultElement = document.querySelector("#highlighted-content");
       if (
@@ -127,6 +130,13 @@ const usePublication = () => {
   const { writeAsync: commentWriteAsync } = useContractWrite(commentConfig);
 
   const commentPost = async (e: FormEvent): Promise<void> => {
+    if (
+      !postDescription ||
+      postDescription === "" ||
+      postDescription.trim().length < 0
+    ) {
+      return;
+    }
     setCommentLoading(true);
     let result: any;
     try {
@@ -257,6 +267,13 @@ const usePublication = () => {
   };
 
   const handlePost = async (): Promise<void> => {
+    if (
+      !postDescription ||
+      postDescription === "" ||
+      postDescription.trim().length < 0
+    ) {
+      return;
+    }
     setPostLoading(true);
     let result: any;
     try {
