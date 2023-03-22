@@ -160,7 +160,7 @@ const useProfilePage = (): UseProfilePageResults => {
       await getFollowInfo();
     } catch (err: any) {
       console.error(err.message);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
   };
 
@@ -305,7 +305,7 @@ const useProfilePage = (): UseProfilePageResults => {
     } catch (err: any) {
       setFollowLoading(false);
       if (err.message.includes("You do not have enough")) {
-        dispatch(setInsufficientFunds("insufficient"));
+        dispatch(setInsufficientFunds("Insufficient Funds."));
       }
       console.error(err.message);
     }
@@ -800,7 +800,7 @@ const useProfilePage = (): UseProfilePageResults => {
       await refetchProfile();
     } catch (err: any) {
       console.error(err.message);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
     setFollowLoading(false);
   };

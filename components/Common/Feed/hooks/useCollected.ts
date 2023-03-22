@@ -194,7 +194,7 @@ const useCollected = () => {
       await getCollectInfo();
     } catch (err: any) {
       console.error(err.message);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
   };
 
@@ -264,7 +264,7 @@ const useCollected = () => {
     } catch (err: any) {
       console.error(err.message);
       if (err.message.includes("You do not have enough")) {
-        dispatch(setInsufficientFunds("insufficient"));
+        dispatch(setInsufficientFunds("Insufficient Funds."));
       }
     }
     setCollectLoading(false);
@@ -297,7 +297,7 @@ const useCollected = () => {
     } catch (err: any) {
       console.error(err.message);
       setCollectLoading(false);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
   };
 

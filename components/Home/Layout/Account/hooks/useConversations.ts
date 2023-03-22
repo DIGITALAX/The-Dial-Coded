@@ -200,7 +200,7 @@ const useConversations = (): UseConversationResults => {
         setConversationLoading(false);
         dispatch(setXmtpSearch(""));
         dispatch(setChosenDMProfile(undefined));
-        dispatch(setInsufficientFunds("xmtp"));
+        dispatch(setInsufficientFunds("This user isn't on the XMTP Network."));
         return;
       }
     }

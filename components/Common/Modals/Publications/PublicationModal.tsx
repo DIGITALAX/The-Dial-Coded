@@ -245,14 +245,16 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 )}
               </div>
             </div>
-            <div className="relative w-full hit row-start-3 z-0">
+            <div className={`relative w-full h-fit z-0 row-start-3`}>
               <Tags
                 handleRemoveTag={handleRemoveTag}
                 tags={tags}
                 handleTags={handleTags}
               />
             </div>
-            <div className="relative w-full h-fit row-start-4 grid grid-flow-col auto-cols-auto">
+            <div
+              className={`relative w-full h-fit grid grid-flow-col auto-cols-auto row-start-4`}
+            >
               <div className="relative w-full h-fit col-start-1 pl-2 self-center fo:pb-0 pb-2">
                 <PostOptions
                   dispatch={dispatch}

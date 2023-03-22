@@ -347,7 +347,7 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
     } catch (err) {
       console.error(err);
       setMixtapeLoading(false);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
   };
 

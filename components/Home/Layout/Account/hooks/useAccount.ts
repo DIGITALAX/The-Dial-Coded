@@ -410,7 +410,7 @@ const useAccount = (): UseAccountResult => {
     try {
       const tx = await writeAsync?.();
       if (error) {
-        dispatch(setInsufficientFunds("failed"));
+        dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
         setAccountLoading(false);
         return;
       }
@@ -420,7 +420,7 @@ const useAccount = (): UseAccountResult => {
     } catch (err) {
       console.error(err);
       setAccountLoading(false);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
     setAccountLoading(false);
     setFinished(true);
@@ -431,7 +431,7 @@ const useAccount = (): UseAccountResult => {
     try {
       const tx = await profilewriteAsync?.();
       if (writeErrorImage) {
-        dispatch(setInsufficientFunds("failed"));
+        dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
         setProfileLoading(false);
         return;
       }
@@ -441,7 +441,7 @@ const useAccount = (): UseAccountResult => {
     } catch (err) {
       console.error(err);
       setProfileLoading(false);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
     setProfileLoading(false);
     setFinished(true);
@@ -517,7 +517,7 @@ const useAccount = (): UseAccountResult => {
     try {
       const tx = await followWriteAsync?.();
       if (error) {
-        dispatch(setInsufficientFunds("failed"));
+        dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
         setFollowLoading(false);
         return;
       }
@@ -527,7 +527,7 @@ const useAccount = (): UseAccountResult => {
     } catch (err) {
       console.error(err);
       setFollowLoading(false);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
     setFollowLoading(false);
     setFinished(true);

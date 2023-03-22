@@ -6,13 +6,11 @@ import {
 } from "wagmi";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../../lib/lens/constants";
 import LensHubProxy from "../../../../../abis/LensHubProxy.json";
-import { v4 as uuidv4 } from "uuid";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import {
   MediaType,
   PostArgsType,
-  PostImage,
   UploadedMedia,
 } from "../../../types/common.types";
 import {
@@ -38,6 +36,12 @@ import getCaretPos from "../../../../../lib/lens/helpers/getCaretPos";
 import handleIndexCheck from "../../../../../lib/lens/helpers/handleIndexCheck";
 import { setPostImages } from "../../../../../redux/reducers/postImagesSlice";
 import broadcast from "../../../../../graphql/mutations/broadcast";
+import {
+  getPostData,
+  removePostData,
+  setPostData,
+} from "../../../../../lib/lens/utils";
+import uploadPostContent from "../../../../../lib/lens/helpers/uploadPostContent";
 
 const usePublication = () => {
   const {
@@ -92,6 +96,23 @@ const usePublication = () => {
     args: [args],
   });
 
+  useEffect(() => {
+    const savedData = getPostData();
+    if (savedData) {
+      setPostDescription(JSON.parse(savedData).post);
+      let resultElement = document.querySelector("#highlighted-content");
+      if (
+        JSON.parse(savedData).post[JSON.parse(savedData).post.length - 1] ==
+        "\n"
+      ) {
+        JSON.parse(savedData).post += " ";
+      }
+      setPostHTML(
+        getPostHTML(JSON.parse(savedData).post, resultElement as Element, true)
+      );
+    }
+  }, []);
+
   const { writeAsync } = useContractWrite(config);
 
   const { config: commentConfig, isSuccess: commentSuccess } =
@@ -109,12 +130,19 @@ const usePublication = () => {
     setCommentLoading(true);
     let result: any;
     try {
-      const contentURI = await uploadContent();
+      const contentURIValue = await uploadPostContent(
+        postImages,
+        tags,
+        postDescription,
+        isCanvas,
+        setContentURI,
+        contentURI
+      );
       if (dispatcher) {
         result = await createDispatcherCommentData({
           profileId: defaultProfile,
           publicationId: pubId ? pubId : id,
-          contentURI: "ipfs://" + contentURI,
+          contentURI: "ipfs://" + contentURIValue,
           collectModule: collectModuleType,
           referenceModule: {
             followerOnlyReferenceModule: followersOnly ? followersOnly : false,
@@ -132,7 +160,7 @@ const usePublication = () => {
         result = await createCommentTypedData({
           profileId: defaultProfile,
           publicationId: pubId ? pubId : id,
-          contentURI: "ipfs://" + contentURI,
+          contentURI: "ipfs://" + contentURIValue,
           collectModule: collectModuleType,
           referenceModule: {
             followerOnlyReferenceModule: followersOnly ? followersOnly : false,
@@ -186,7 +214,7 @@ const usePublication = () => {
       }
     } catch (err: any) {
       console.error(err.message);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
     setCommentLoading(false);
   };
@@ -196,6 +224,11 @@ const usePublication = () => {
     (resultElement as any).innerHTML = postHTML + e.emoji;
     setPostHTML(postHTML + e.emoji);
     setPostDescription(postDescription + e.emoji);
+    setPostData(
+      JSON.stringify({
+        post: postDescription + e.emoji,
+      })
+    );
   };
 
   const handleGif = (e: FormEvent): void => {
@@ -223,105 +256,23 @@ const usePublication = () => {
     }
   };
 
-  const uploadContent = async (): Promise<string | undefined> => {
-    let newImages: PostImage[] = [];
-    let formattedTags: string[] = [];
-    postImages?.forEach((image) => {
-      newImages.push({
-        item: image.type !== 2 ? "ipfs://" + image.cid : image.cid,
-        type:
-          image.type === 1
-            ? "image/png"
-            : image.type === 2
-            ? "image/gif"
-            : "video/mp4",
-        altTag: image.cid,
-      });
-    });
-
-    if (tags?.length > 0) {
-      lodash.filter(tags, (tag) => {
-        if (tag.length > 50) {
-          formattedTags.push(tag?.substring(0, 49));
-        } else {
-          formattedTags.push(tag);
-        }
-      });
-    }
-
-    if (isCanvas) {
-      if (formattedTags.length < 5) {
-        formattedTags.push("dialCanvasDraft");
-      } else {
-        formattedTags.pop();
-        formattedTags.push("dialCanvasDraft");
-      }
-    }
-
-    const coverImage = lodash.filter(newImages, (image: PostImage) => {
-      if (image.type === "image/png" || image.type === "image/gif") return true;
-    });
-    const videos = lodash.filter(newImages, (image: PostImage) => {
-      if (image.type === "video/mp4") return true;
-    });
-
-    const data = {
-      version: "2.0.0",
-      metadata_id: uuidv4(),
-      description: postDescription ? postDescription : "",
-      content: postDescription ? postDescription : "",
-      external_url: "https://www.thedial.xyz/",
-      image: coverImage.length > 0 ? (coverImage[0] as any).item : null,
-      imageMimeType: "image/png",
-      name: postDescription ? postDescription?.slice(0, 20) : "The Dial",
-      mainContentFocus:
-        videos.length > 0
-          ? "VIDEO"
-          : newImages.length > 0
-          ? "IMAGE"
-          : "TEXT_ONLY",
-      contentWarning: null,
-      attributes: [
-        {
-          traitType: "string",
-          key: "date",
-          date: Date.now(),
-        },
-      ],
-      media: newImages,
-      locale: "en",
-      tags: formattedTags?.length > 0 ? formattedTags : null,
-      createdOn: new Date(),
-      appId: "thedial",
-    };
-
-    try {
-      const response = await fetch("/api/ipfs", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
-      if (response.status !== 200) {
-      } else {
-        let responseJSON = await response.json();
-        setContentURI(responseJSON.cid);
-        return responseJSON.cid;
-      }
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    return contentURI;
-  };
-
   const handlePost = async (): Promise<void> => {
     setPostLoading(true);
     let result: any;
     try {
-      const contentURI = await uploadContent();
+      const contentURIValue = await uploadPostContent(
+        postImages,
+        tags,
+        postDescription,
+        isCanvas,
+        setContentURI,
+        contentURI
+      );
 
       if (dispatcher) {
         result = await createDispatcherPostData({
           profileId: defaultProfile,
-          contentURI: "ipfs://" + contentURI,
+          contentURI: "ipfs://" + contentURIValue,
           collectModule: collectModuleType,
           referenceModule: {
             followerOnlyReferenceModule: followersOnly ? followersOnly : false,
@@ -338,7 +289,7 @@ const usePublication = () => {
       } else {
         result = await createPostTypedData({
           profileId: defaultProfile,
-          contentURI: "ipfs://" + contentURI,
+          contentURI: "ipfs://" + contentURIValue,
           collectModule: collectModuleType,
           referenceModule: {
             followerOnlyReferenceModule: followersOnly ? followersOnly : false,
@@ -390,6 +341,7 @@ const usePublication = () => {
     } catch (err: any) {
       console.error(err.message);
     }
+    removePostData();
     setPostLoading(false);
   };
 
@@ -443,7 +395,7 @@ const usePublication = () => {
     } catch (err) {
       console.error(err);
       setPostLoading(false);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
   };
 
@@ -457,7 +409,7 @@ const usePublication = () => {
     } catch (err) {
       console.error(err);
       setCommentLoading(false);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
   };
 
@@ -471,6 +423,11 @@ const usePublication = () => {
       postDescription?.substring(0, postDescription.lastIndexOf("@")) +
       `@${user?.handle}`;
     setPostDescription(newElementPost);
+    setPostData(
+      JSON.stringify({
+        post: newElementPost,
+      })
+    );
     (resultElement as any).innerHTML = newHTMLPost;
     setPostHTML(newHTMLPost);
   };
@@ -482,6 +439,11 @@ const usePublication = () => {
     }
     setPostHTML(getPostHTML(e, resultElement as Element));
     setPostDescription(e.target.value);
+    setPostData(
+      JSON.stringify({
+        post: e.target.value,
+      })
+    );
     if (
       e.target.value.split(" ")[e.target.value.split(" ").length - 1][0] ===
         "@" &&

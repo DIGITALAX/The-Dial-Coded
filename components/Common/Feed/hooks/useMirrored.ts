@@ -168,7 +168,7 @@ const useMirrored = () => {
       }
     } catch (err: any) {
       console.error(err.message);
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
     }
     setMirrorLoading(false);
   };
@@ -198,7 +198,7 @@ const useMirrored = () => {
       const res = await tx?.wait();
       await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err: any) {
-      dispatch(setInsufficientFunds("failed"));
+      dispatch(setInsufficientFunds("Unsuccessful. Please Try Again."));
       setMirrorLoading(false);
       console.error(err.message);
     }

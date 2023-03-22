@@ -2,6 +2,7 @@ import refresh from "../../graphql/mutations/refresh";
 
 const AUTH_STORAGE_KEY = "LH_STORAGE_KEY";
 const NOTIF_STORAGE_KEY = "LH_NOTIFICATIONS";
+const POST_STORAGE_KEY = "POST_STORAGE";
 
 interface authToken {
   token: {
@@ -39,6 +40,27 @@ export const getAuthenticationToken = () => {
 export const removeAuthenticationToken = () => {
   if (typeof window !== "undefined") {
     localStorage.removeItem(AUTH_STORAGE_KEY);
+  }
+};
+
+export const setPostData = (post: string) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(POST_STORAGE_KEY, post);
+    return;
+  }
+};
+
+export const getPostData = () => {
+  if (typeof window !== "undefined") {
+    const data = localStorage.getItem(POST_STORAGE_KEY);
+    if (!data) return null;
+    return data;
+  }
+};
+
+export const removePostData = () => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(POST_STORAGE_KEY);
   }
 };
 
