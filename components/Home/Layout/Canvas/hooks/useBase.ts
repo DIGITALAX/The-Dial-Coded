@@ -20,7 +20,7 @@ const useBase = () => {
           const { json } = await getLexicaImages.json();
           setQuickSearchResults(json?.images);
         } else {
-          dispatch(setInsufficientFunds("images"));
+          dispatch(setInsufficientFunds("Couldn't Fetch Images. Please Try Again."));
           setSearchLoading(false);
         }
       }

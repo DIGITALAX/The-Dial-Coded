@@ -100,15 +100,15 @@ const usePatterns = (): UsePatternsResult => {
   useEffect(() => {
     dispatch(setInitImagePrompt(undefined));
     dispatch(setCanvasType(switchType));
-    if (switchType && template !== "") {
+    if (switchType && template !== "" && canvasType) {
       setTool("synth");
       templateSwitch(template);
-    } else if (!switchType) {
+    } else if (!switchType && canvasType) {
       setTool("default");
-    } else if (ctx && switchType && template === "") {
+    } else if (ctx && switchType && template === "" && canvasType) {
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
     }
-  }, [patternType, template, switchType]);
+  }, [patternType, template, switchType, canvasType]);
 
   useLayoutEffect(() => {
     if (ctx && canvasType) {
@@ -329,12 +329,20 @@ const usePatterns = (): UsePatternsResult => {
     } else if (tool === "synth" && !promptLoading) {
       setAction("synth");
       if (synthElementMove) {
-        dispatch(setSelectSynthElement(synthElementMove));
-        dispatch(
-          setInitImagePrompt(
-            createCanvasInit(synthElementMove, canvasPatternRef, canvas)
-          )
-        );
+        const elementsArray =
+          synthElementSelect.findIndex(
+            (elem) => elem.id === synthElementMove.id
+          ) !== -1
+            ? synthElementSelect.filter((elem) => {
+                return elem.id !== synthElementMove.id;
+              })
+            : [...synthElementSelect, synthElementMove];
+        dispatch(setSelectSynthElement(elementsArray));
+        const canvasInit: string[] = [];
+        elementsArray.forEach((element) => {
+          canvasInit.push(createCanvasInit(element, canvasPatternRef, canvas));
+        });
+        dispatch(setInitImagePrompt(canvasInit[0]));
       }
     } else if (tool === "default") {
       setAction("none");
@@ -513,8 +521,8 @@ const usePatterns = (): UsePatternsResult => {
       if (local) {
         postImage = "data:image/png;base64," + imgURL;
       } else {
-        if (!synthElementSelect) {
-          dispatch(setInsufficientFunds("add template image"));
+        if (synthElementSelect.length < 1) {
+          dispatch(setInsufficientFunds("Select a Template to Add Image"));
           return;
         }
         const res: Response = await fetch(imgURL);
@@ -551,8 +559,8 @@ const usePatterns = (): UsePatternsResult => {
     local?: boolean
   ): Promise<void> => {
     if (!url) {
-      if (!synthElementSelect) {
-        dispatch(setInsufficientFunds("add template image"));
+      if (synthElementSelect.length < 1) {
+        dispatch(setInsufficientFunds("Select a Template to Add Image"));
       }
       if ((e as any).target.files.length < 1) {
         return;
@@ -561,88 +569,121 @@ const usePatterns = (): UsePatternsResult => {
         return;
       }
     }
-    if (!local) {
-      let image: File;
-      if (url) {
-        image = e;
-      } else {
-        image = (e.target as HTMLFormElement).files[0];
-      }
-      const compressedImage = await compressImageFiles(image);
-      const reader = new FileReader();
-      reader?.readAsDataURL(compressedImage as File);
+    try {
+      if (!local) {
+        let image: File;
+        if (url) {
+          image = e;
+        } else {
+          image = (e.target as HTMLFormElement).files[0];
+        }
+        const compressedImage = await compressImageFiles(image);
+        const reader = new FileReader();
+        reader?.readAsDataURL(compressedImage as File);
 
-      reader.onloadend = (e) => {
-        const imageObject = new Image();
-        imageObject.src = e.target?.result as string;
-        imageObject.onload = () => {
-          const matchedIndex = elements.findIndex(
-            (element: SvgPatternType) =>
-              element.points === synthElementSelect?.points
-          );
-
-          setElements((prevElements: SvgPatternType[]) => {
-            const newElement = {
-              clipElement: synthElementSelect,
-              image: imageObject,
-              type: "image",
-              width: imageObject.width,
-              height: imageObject.height,
-            };
-            const newElements = [
-              ...prevElements.slice(0, matchedIndex + 1),
-              newElement,
-              ...prevElements.slice(
-                prevElements[matchedIndex + 1]?.type === "image"
-                  ? matchedIndex + 2
-                  : matchedIndex + 1
-              ),
-            ];
-            return newElements.map((element, index) => ({
-              ...element,
-              id: index,
-            }));
+        reader.onloadend = async (e) => {
+          const imagePromises = synthElementSelect.map((selectedTemplate) => {
+            return new Promise((resolve, reject) => {
+              const imageObject = new Image();
+              imageObject.src = e.target?.result as string;
+              imageObject.onload = () => {
+                const matchedIndex = elements.findIndex(
+                  (element: SvgPatternType) =>
+                    selectedTemplate?.points === element.points
+                );
+                resolve({ selectedTemplate, imageObject, matchedIndex });
+              };
+              imageObject.onerror = reject;
+            });
+          });
+          await Promise.all(imagePromises).then((loadedImages: any) => {
+            loadedImages.sort(
+              (a: any, b: any) => a.matchedIndex - b.matchedIndex
+            );
+            let newElements = [...elements];
+            let numImagesAdded = 0;
+            loadedImages.forEach(
+              ({ selectedTemplate, imageObject, matchedIndex }: any) => {
+                const newElement = {
+                  clipElement: selectedTemplate,
+                  image: imageObject,
+                  type: "image",
+                  width: imageObject.width,
+                  height: imageObject.height,
+                };
+                newElements = [
+                  ...newElements.slice(0, matchedIndex + numImagesAdded + 1),
+                  newElement,
+                  ...newElements.slice(
+                    newElements[matchedIndex + numImagesAdded + 1]?.type ===
+                      "image"
+                      ? matchedIndex + numImagesAdded + 2
+                      : matchedIndex + numImagesAdded + 1
+                  ),
+                ];
+                numImagesAdded++;
+              }
+            );
+            setElements(
+              newElements.map((element, index) => ({ ...element, id: index }))
+            );
           });
 
-          dispatch(setSelectSynthElement(undefined));
+          dispatch(setSelectSynthElement([]));
           setSynthElementMove(undefined);
         };
-      };
-    } else {
-      const imageObject = new Image();
-      imageObject.src = e;
-      imageObject.onload = () => {
-        const matchedIndex = elements.findIndex(
-          (element: SvgPatternType) =>
-            element.points === synthElementSelect?.points
-        );
-
-        setElements((prevElements: SvgPatternType[]) => {
-          const newElement = {
-            clipElement: synthElementSelect,
-            image: imageObject,
-            type: "image",
-            width: imageObject.width,
-            height: imageObject.height,
-          };
-          const newElements = [
-            ...prevElements.slice(0, matchedIndex + 1),
-            newElement,
-            ...prevElements.slice(
-              prevElements[matchedIndex + 1]?.type === "image"
-                ? matchedIndex + 2
-                : matchedIndex + 1
-            ),
-          ];
-          return newElements.map((element, index) => ({
-            ...element,
-            id: index,
-          }));
+      } else {
+        const imagePromises = synthElementSelect.map((selectedTemplate) => {
+          return new Promise((resolve, reject) => {
+            const imageObject = new Image();
+            imageObject.src = e;
+            imageObject.onload = () => {
+              const matchedIndex = elements.findIndex(
+                (element: SvgPatternType) =>
+                  selectedTemplate?.points === element.points
+              );
+              resolve({ selectedTemplate, imageObject, matchedIndex });
+            };
+            imageObject.onerror = reject;
+          });
         });
-
-        dispatch(setSelectSynthElement(undefined));
+        await Promise.all(imagePromises).then((loadedImages: any) => {
+          loadedImages.sort(
+            (a: any, b: any) => a.matchedIndex - b.matchedIndex
+          );
+          let newElements = [...elements];
+          let numImagesAdded = 0;
+          loadedImages.forEach(
+            ({ selectedTemplate, imageObject, matchedIndex }: any) => {
+              const newElement = {
+                clipElement: selectedTemplate,
+                image: imageObject,
+                type: "image",
+                width: imageObject.width,
+                height: imageObject.height,
+              };
+              newElements = [
+                ...newElements.slice(0, matchedIndex + numImagesAdded + 1),
+                newElement,
+                ...newElements.slice(
+                  newElements[matchedIndex + numImagesAdded + 1]?.type ===
+                    "image"
+                    ? matchedIndex + numImagesAdded + 2
+                    : matchedIndex + numImagesAdded + 1
+                ),
+              ];
+              numImagesAdded++;
+            }
+          );
+          setElements(
+            newElements.map((element, index) => ({ ...element, id: index }))
+          );
+        });
+        dispatch(setSelectSynthElement([]));
         setSynthElementMove(undefined);
-      };
+      }
+    } catch (err: any) {
+      console.error(err.message);
     }
   };
 

@@ -7,6 +7,7 @@ import { ImCross } from "react-icons/im";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
+import { setPublication } from "../../../../redux/reducers/publicationSlice";
 import { setReactionState } from "../../../../redux/reducers/reactionStateSlice";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
 import { RootState } from "../../../../redux/store";
@@ -140,38 +141,40 @@ const MirrorsModal: FunctionComponent<MirrorsModalProps> = ({
                       ? "Mirror this post?"
                       : `This post hasn't been mirrored. Will you be first?`}
                   </div>
-                  <div
-                    className={`relative ${
-                      followerOnly
-                        ? "w-fit px-1"
-                        : "w-20 px-0 cursor-pointer hover:opacity-70 active:scale-95"
-                    } h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center `}
-                    onClick={
-                      isConnected
-                        ? () => {
-                            lensProfile
-                              ? followerOnly
-                                ? {}
-                                : mirrorPost()
-                              : dispatch(setSignIn(true));
-                          }
-                        : openConnectModal
-                    }
-                  >
+                  <div className="relative w-full h-fit flex flex-row flex-wrap justify-center gap-4">
                     <div
-                      className={`relative w-fit h-fit col-start-1 place-self-center ${
-                        mirrorLoading && "animate-spin"
-                      }`}
+                      className={`relative ${
+                        followerOnly
+                          ? "w-fit px-1"
+                          : "w-20 px-0 cursor-pointer hover:opacity-70 active:scale-95"
+                      } h-10 rounded-md bg-offBlue grid grid-flow-col auto-cols-auto text-white font-dosis text-sm place-self-center `}
+                      onClick={
+                        isConnected
+                          ? () => {
+                              lensProfile
+                                ? followerOnly
+                                  ? {}
+                                  : mirrorPost()
+                                : dispatch(setSignIn(true));
+                            }
+                          : openConnectModal
+                      }
                     >
-                      {mirrorLoading ? (
-                        <AiOutlineLoading color="white" size={20} />
-                      ) : hasMirrored ? (
-                        "Mirror again?"
-                      ) : followerOnly ? (
-                        "Only Followers Can Mirror"
-                      ) : (
-                        "Mirror"
-                      )}
+                      <div
+                        className={`relative w-fit h-fit col-start-1 place-self-center ${
+                          mirrorLoading && "animate-spin"
+                        }`}
+                      >
+                        {mirrorLoading ? (
+                          <AiOutlineLoading color="white" size={20} />
+                        ) : hasMirrored ? (
+                          "Mirror again?"
+                        ) : followerOnly ? (
+                          "Only Followers Can Mirror"
+                        ) : (
+                          "Mirror"
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -128,9 +128,9 @@ const useDraw = () => {
         }
       }
       await saveCanvasNetwork(postImage, stringElements);
-      // dispatch(setInsufficientFunds("saved"));
+      // dispatch(setInsufficientFunds("Draft Saved."));
     } catch (err: any) {
-      // dispatch(setInsufficientFunds("unsaved"));
+      // dispatch(setInsufficientFunds("Could Not Save Draft, Try Again."));
       console.error(err.message);
     }
     setSaveLoading(false);

@@ -52,6 +52,7 @@ const createCanvasInit = (
     bounds.width,
     bounds.height
   );
+
   return clippedCanvas.toDataURL("image/png");
 };
 

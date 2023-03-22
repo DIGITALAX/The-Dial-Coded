@@ -20,6 +20,12 @@ const usePrompt = (): UsePromptResults => {
   const synthLoading = useSelector(
     (state: RootState) => state.app.synthLoadingReducer.value
   );
+  const synthTemplate = useSelector(
+    (state: RootState) => state.app.selectSynthElementReducer.value
+  );
+  const canvasType = useSelector(
+    (state: RootState) => state.app.canvasTypeReducer.value
+  );
   const lit = useSelector((state: RootState) => state.app.litClientReducer);
   const [cfg, setCfg] = useState<string>("10");
   const [steps, setSteps] = useState<string>("20");
@@ -78,8 +84,16 @@ const usePrompt = (): UsePromptResults => {
   };
 
   const handleSendImg2Img = async (replicate: boolean) => {
+    if (canvasType && synthTemplate?.length > 1) {
+      dispatch(setInsufficientFunds("Only Select One Template for Img2Img."));
+      return;
+    }
     if (!init) {
-      dispatch(setInsufficientFunds("marquee"));
+      dispatch(
+        setInsufficientFunds(
+          "Use the Marquee Tool to Select the Canvas Area to Use as an Init for Img2Img Synth."
+        )
+      );
       return;
     }
     // convert init from base64 & compress
@@ -140,7 +154,11 @@ const usePrompt = (): UsePromptResults => {
       });
       let responseJSON = await response.json();
       if (responseJSON === null || !responseJSON) {
-        dispatch(setInsufficientFunds("prompt"));
+        dispatch(
+          setInsufficientFunds(
+            "The NSFW filter is a bit overzealous with the current API. Can’t wait for a custom API? DIY Synth is on its way."
+          )
+        );
       } else {
         dispatch(
           setAddPromptImage({
@@ -168,7 +186,11 @@ const usePrompt = (): UsePromptResults => {
       });
       const responseJSON = await response.json();
       if (responseJSON === null || !responseJSON) {
-        dispatch(setInsufficientFunds("automatic"));
+        dispatch(
+          setInsufficientFunds(
+            "Something went wrong with your local synth machine, try again?"
+          )
+        );
       } else {
         dispatch(
           setAddPromptImage({

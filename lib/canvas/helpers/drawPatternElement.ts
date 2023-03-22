@@ -6,7 +6,7 @@ const drawPatternElement = (
   zoom: number,
   tool: string,
   synthElementMove: SvgPatternType | null,
-  synthElementSelect: SvgPatternType | null,
+  synthElementSelect: SvgPatternType[] | null,
   promptLoading: boolean,
   filter?: boolean
 ) => {
@@ -16,14 +16,14 @@ const drawPatternElement = (
     if (!promptLoading) {
       if (element.points === synthElementMove?.points && tool === "synth") {
         (ctx as CanvasRenderingContext2D).strokeStyle = "#f1d2ef";
-      } else if (element.points === synthElementSelect?.points) {
+      } else if (synthElementSelect?.some(selectedElement => selectedElement.points === element.points)) {
         (ctx as CanvasRenderingContext2D).strokeStyle = "#aeeccf";
       } else {
         (ctx as CanvasRenderingContext2D).strokeStyle =
           element.stroke as string;
       }
     } else {
-      if (element.points === synthElementSelect?.points) {
+      if (synthElementSelect?.some(selectedElement => selectedElement.points === element.points)) {
         (ctx as CanvasRenderingContext2D).strokeStyle = "#aeeccf";
       } else {
         (ctx as CanvasRenderingContext2D).strokeStyle =

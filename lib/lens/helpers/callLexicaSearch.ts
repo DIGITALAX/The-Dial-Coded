@@ -33,7 +33,7 @@ const callLexicaSearch = async (
       dispatch(setSearchCategories(trimArray));
     } else {
       setLoading(false);
-      dispatch(setInsufficientFunds("images"));
+      dispatch(setInsufficientFunds("Couldn't Fetch Images. Please Try Again."));
     }
   } catch (err: any) {
     console.error(err.message);

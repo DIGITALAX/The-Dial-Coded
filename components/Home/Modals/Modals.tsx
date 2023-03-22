@@ -41,7 +41,7 @@ const Modals = () => {
   const commentShow = useSelector(
     (state: RootState) => state.app.commentShowReducer
   );
-  const failed = useSelector(
+  const text = useSelector(
     (state: RootState) => state.app.insufficientFundsReducer.value
   );
   const reactionModal = useSelector(
@@ -189,35 +189,7 @@ const Modals = () => {
       {indexingModal?.value && (
         <IndexingModal message={indexingModal?.message} />
       )}
-      {failed !== "" && failed !== undefined && (
-        <Transaction
-          inputText={
-            failed === "insufficient"
-              ? "Insufficient Funds."
-              : failed === "Transaction Failed. Please try again."
-              ? "Transaction Failed. Please try again."
-              : failed === "saved"
-              ? "Draft Saved."
-              : failed === "unsaved"
-              ? "Could Not Save Draft, Try Again."
-              : failed === "images"
-              ? "Couldn't Fetch Images. Please Try Again."
-              : failed === "xmtp"
-              ? "This user isn't on the XMTP Network."
-              : failed === "prompt"
-              ? " The NSFW filter is a bit overzealous with the current API. Can’t wait for a custom API? DIY Synth is on its way."
-              : failed === "marquee"
-              ? "Use the Marquee Tool to Select the Canvas Area to Use as an Init for Img2Img Synth."
-              : failed === "automatic"
-              ? "Something went wrong with your local synth machine, try again?"
-              : failed === "add template image"
-              ? "Select a Template to Add Image"
-              : failed === "add template synth"
-              ? "Select a Template to Add Synth"
-              : "Unsuccessful. Please Try Again."
-          }
-        />
-      )}
+      {text !== "" && text !== undefined && <Transaction inputText={text} />}
     </>
   );
 };
