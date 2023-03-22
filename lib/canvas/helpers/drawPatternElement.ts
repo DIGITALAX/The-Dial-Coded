@@ -64,15 +64,27 @@ const drawPatternElement = (
     case "image":
       ctx?.save();
       ctx?.clip();
-      ctx?.drawImage(
-        element.image as HTMLImageElement,
-        ((element.clipElement as SvgPatternType)?.posX as number) *
-          devicePixelRatio,
-        ((element.clipElement as SvgPatternType)?.posY as number) *
-          devicePixelRatio,
-        (element?.width as number) * devicePixelRatio,
-        (element?.height as number) * devicePixelRatio
-      );
+      if (typeof element.image === "string") {
+        const img = new Image();
+        img.src = element.image;
+        img.onload = () => {
+          ctx?.drawImage(
+            img,
+            ((element.clipElement as SvgPatternType)?.posX as number) * devicePixelRatio,
+            ((element.clipElement as SvgPatternType)?.posY as number) * devicePixelRatio,
+            (element?.width as number) * devicePixelRatio,
+            (element?.height as number) * devicePixelRatio
+          );
+        };
+      } else if (element.image instanceof HTMLImageElement) {
+        ctx?.drawImage(
+          element.image,
+          ((element.clipElement as SvgPatternType)?.posX as number) * devicePixelRatio,
+          ((element.clipElement as SvgPatternType)?.posY as number) * devicePixelRatio,
+          (element?.width as number) * devicePixelRatio,
+          (element?.height as number) * devicePixelRatio
+        );
+      }
       ctx?.restore();
       break;
   }
