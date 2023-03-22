@@ -32,16 +32,6 @@ const CassetteButton: FunctionComponent<CassetteButton> = ({
 }): JSX.Element => {
   const router = useRouter();
   const dispatch = useDispatch();
-  console.log(
-    canvasType &&
-      apiType &&
-      keyExists &&
-      handleSend &&
-      !loading &&
-      value &&
-      value?.length > 0 &&
-      synthElement
-  );
   return (
     <div
       className={`z-1 ${position} bottom-${bottom} right-${right} h-fit rounded-lg border-black border-2 ${

@@ -454,7 +454,38 @@ const usePatterns = (): UsePatternsResult => {
   const handleCanvasPatternPost = async (): Promise<void> => {
     try {
       setPostLoading(true);
-      await dispatchPostCanvas(canvas, elements, uploadImage, setPostLoading);
+      const filteredCanvas = document.createElement("canvas");
+      const context = filteredCanvas.getContext("2d");
+      filteredCanvas.width = canvas.width;
+      filteredCanvas.height = canvas.height;
+      elements.forEach((element: any) => {
+        if (
+          element.type === "image" ||
+          element.type === "0" ||
+          element.type === "1" ||
+          element.type === "2"
+        ) {
+          drawPatternElement(
+            element,
+            context,
+            zoom,
+            tool,
+            synthElementMove!,
+            synthElementSelect!,
+            promptLoading,
+            true
+          );
+        } else {
+          drawElement(element, context, zoom, filteredCanvas);
+        }
+      });
+      await dispatchPostCanvas(
+        filteredCanvas,
+        elements,
+        uploadImage,
+        setPostLoading
+      );
+      filteredCanvas.remove();
       dispatch(
         setPublication({
           actionOpen: true,
