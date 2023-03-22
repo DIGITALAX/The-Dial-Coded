@@ -7,24 +7,33 @@ const drawPatternElement = (
   tool: string,
   synthElementMove: SvgPatternType | null,
   synthElementSelect: SvgPatternType | null,
-  promptLoading: boolean
+  promptLoading: boolean,
+  filter?: boolean
 ) => {
-  ctx?.setLineDash(element?.type !== "0" ? [5, 5] : [0]);
-  (ctx as CanvasRenderingContext2D).lineWidth = 3 * zoom;
-
-  if (!promptLoading) {
-    if (element.points === synthElementMove?.points && tool === "synth") {
-      (ctx as CanvasRenderingContext2D).strokeStyle = "#f1d2ef";
-    } else if (element.points === synthElementSelect?.points) {
-      (ctx as CanvasRenderingContext2D).strokeStyle = "#aeeccf";
+  if (!filter) {
+    ctx?.setLineDash(element?.type !== "0" ? [5, 5] : [0]);
+    (ctx as CanvasRenderingContext2D).lineWidth = 3 * zoom;
+    if (!promptLoading) {
+      if (element.points === synthElementMove?.points && tool === "synth") {
+        (ctx as CanvasRenderingContext2D).strokeStyle = "#f1d2ef";
+      } else if (element.points === synthElementSelect?.points) {
+        (ctx as CanvasRenderingContext2D).strokeStyle = "#aeeccf";
+      } else {
+        (ctx as CanvasRenderingContext2D).strokeStyle =
+          element.stroke as string;
+      }
     } else {
-      (ctx as CanvasRenderingContext2D).strokeStyle = element.stroke as string;
+      if (element.points === synthElementSelect?.points) {
+        (ctx as CanvasRenderingContext2D).strokeStyle = "#aeeccf";
+      } else {
+        (ctx as CanvasRenderingContext2D).strokeStyle =
+          element.stroke as string;
+      }
     }
   } else {
-    if (element.points === synthElementSelect?.points) {
-      (ctx as CanvasRenderingContext2D).strokeStyle = "#aeeccf";
-    } else {
-      (ctx as CanvasRenderingContext2D).strokeStyle = element.stroke as string;
+    (ctx as CanvasRenderingContext2D).lineWidth = 3 * zoom;
+    if (element.type === "2" || element.type === "1") {
+      (ctx as CanvasRenderingContext2D).strokeStyle = "rgba(0, 0, 0, 0)";
     }
   }
 

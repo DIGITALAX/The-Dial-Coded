@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import lodash from "lodash";
 import { SvgPatternType } from "../types/canvas.types";
 

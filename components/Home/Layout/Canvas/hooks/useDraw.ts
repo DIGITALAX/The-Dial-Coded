@@ -1,12 +1,12 @@
 import {
   useRef,
   useState,
-  MutableRefObject,
   useLayoutEffect,
   MouseEvent,
   FormEvent,
   useEffect,
   WheelEvent,
+  useCallback,
 } from "react";
 import { ElementInterface } from "../types/canvas.types";
 import lodash from "lodash";
@@ -32,8 +32,21 @@ import createElement from "../../../../../lib/canvas/helpers/createElement";
 import wheelLogic from "../../../../../lib/canvas/helpers/wheelLogic";
 import { setAddPromptImage } from "../../../../../redux/reducers/addPromptImageSlice";
 import { setInitImagePrompt } from "../../../../../redux/reducers/initImagePromptSlice";
+import {
+  getCanvasStorage,
+  setCanvasStorage,
+} from "../../../../../lib/replicate/utils";
 
 const useDraw = () => {
+  const [canvasState, setCanvasState] = useState<any>(null);
+  const canvasRef = useCallback((canvas: HTMLCanvasElement) => {
+    setCanvasState(canvas);
+  }, []);
+  const ctx = canvasState?.getContext("2d") as any;
+  const [elements, setElements, undo, redo] = useElements(
+    JSON.parse(getCanvasStorage() || "{}").draw || [],
+    false
+  );
   const { saveCanvasNetwork } = useDrafts();
   const { uploadImage } = useImageUpload();
   const dispatch = useDispatch();
@@ -78,11 +91,7 @@ const useDraw = () => {
   const [brushWidth, setBrushWidth] = useState<number>(12);
   const [thickness, setThickness] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const canvas = (canvasRef as MutableRefObject<HTMLCanvasElement>)?.current;
-  const ctx = canvas?.getContext("2d");
   const dosis = new FontFace("dosis", "url(fonts/DosisRegular.ttf)");
-  const [elements, setElements, undo, redo] = useElements([], false);
 
   const handleTitle = (e: any) => {
     dispatch(setDraftTitle(e.target.value));
@@ -95,7 +104,7 @@ const useDraw = () => {
     }
     setSaveLoading(true);
     try {
-      const imgURL = getCanvas(canvas, elements);
+      const imgURL = getCanvas(canvasState, elements);
       const res: Response = await fetch(imgURL);
       const blob: Blob = await res.blob();
       const postImage = new File([blob], "thedial_drafts", {
@@ -128,7 +137,7 @@ const useDraw = () => {
   };
 
   const handleSave = async (): Promise<void> => {
-    const img = getCanvas(canvas, elements);
+    const img = getCanvas(canvasState, elements);
     let xhr = new XMLHttpRequest();
     xhr.responseType = "blob";
     xhr.onload = () => {
@@ -147,7 +156,12 @@ const useDraw = () => {
   const handleCanvasPost = async (): Promise<void> => {
     try {
       setPostLoading(true);
-      await dispatchPostCanvas(canvas, elements, uploadImage, setPostLoading);
+      await dispatchPostCanvas(
+        canvasState,
+        elements,
+        uploadImage,
+        setPostLoading
+      );
       dispatch(
         setPublication({
           actionOpen: true,
@@ -193,7 +207,7 @@ const useDraw = () => {
                 xOffset: pan.xOffset * 0.5,
                 yOffset: pan.yOffset * 0.5,
               },
-              canvas,
+              canvasState,
               zoom,
               50,
               50,
@@ -219,7 +233,7 @@ const useDraw = () => {
               xOffset: pan.xOffset * 0.5,
               yOffset: pan.yOffset * 0.5,
             },
-            canvas,
+            canvasState,
             zoom,
             50,
             50,
@@ -282,33 +296,52 @@ const useDraw = () => {
 
   useLayoutEffect(() => {
     if (ctx && !canvasType) {
-      canvas.width = canvas?.offsetWidth * devicePixelRatio;
-      canvas.height = canvas?.offsetHeight * devicePixelRatio;
-      ctx.clearRect(0, 0, canvas?.width, canvas?.height);
+      canvasState.width = canvasState?.offsetWidth * devicePixelRatio;
+      canvasState.height = canvasState?.offsetHeight * devicePixelRatio;
+      ctx.clearRect(0, 0, canvasState?.width, canvasState?.height);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(zoom, zoom);
       ctx.translate(pan.xOffset * zoom, pan.yOffset * zoom);
-
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
+
       elements?.forEach((element: ElementInterface) => {
         if (action === "writing" && selectedElement.id === element.id) {
           return;
         }
-        drawElement(element, ctx, zoom, canvas);
+        drawElement(element, ctx, zoom, canvasState);
       });
+
       ctx.save();
+      const canvasStorage = JSON.parse(getCanvasStorage() || "{}");
+      setCanvasStorage(
+        JSON.stringify({
+          ...canvasStorage,
+          draw: elements,
+        })
+      );
     }
-  }, [elements, action, selectedElement, tool, ctx, zoom, canvasType, pan]);
+  }, [
+    elements,
+    action,
+    selectedElement,
+    tool,
+    zoom,
+    canvasType,
+    pan,
+    ctx,
+    canvasState,
+    canvasState,
+  ]);
 
   const handleMouseDown = (e: MouseEvent): void => {
-    const bounds = canvas?.getBoundingClientRect();
+    const bounds = canvasState?.getBoundingClientRect();
     if (tool === "selection" || tool === "resize") {
       const element = getElementPosition(
         e.clientX,
         e.clientY,
         elements,
-        canvas,
+        canvasState,
         zoom,
         {
           xOffset: pan.xOffset * 0.5,
@@ -376,7 +409,7 @@ const useDraw = () => {
           xOffset: pan.xOffset * 0.5,
           yOffset: pan.yOffset * 0.5,
         },
-        canvas,
+        canvasState,
         zoom,
         tool === "pencil" || tool === "text"
           ? e.clientX
@@ -415,14 +448,14 @@ const useDraw = () => {
     } else if (tool === "marquee") {
       // remove any previous marquee
       const filteredMarqueeElements = removeMarquee(elements);
-      const bounds = canvas?.getBoundingClientRect();
+      const bounds = canvasState?.getBoundingClientRect();
       const id = filteredMarqueeElements?.length;
       const newElement = createElement(
         {
           xOffset: pan.xOffset * 0.5,
           yOffset: pan.yOffset * 0.5,
         },
-        canvas,
+        canvasState,
         zoom,
 
         (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
@@ -444,7 +477,7 @@ const useDraw = () => {
         e.clientX,
         e.clientY,
         elements,
-        canvas,
+        canvasState,
         zoom,
         {
           xOffset: pan.xOffset * 0.5,
@@ -481,7 +514,7 @@ const useDraw = () => {
   };
 
   const handleMouseMove = (e: MouseEvent): void => {
-    const bounds = canvas?.getBoundingClientRect();
+    const bounds = canvasState?.getBoundingClientRect();
     if (!action || action === "writing") return;
     if (action === "drawing") {
       const index = elements?.length - 1;
@@ -491,7 +524,7 @@ const useDraw = () => {
           xOffset: pan.xOffset * 0.5,
           yOffset: pan.yOffset * 0.5,
         },
-        canvas,
+        canvasState,
         zoom,
         elements,
         setElements,
@@ -552,7 +585,7 @@ const useDraw = () => {
             xOffset: pan.xOffset * 0.5,
             yOffset: pan.yOffset * 0.5,
           },
-          canvas,
+          canvasState,
           zoom,
           elements,
           setElements,
@@ -599,7 +632,7 @@ const useDraw = () => {
             xOffset: pan.xOffset * 0.5,
             yOffset: pan.yOffset * 0.5,
           },
-          canvas,
+          canvasState,
           zoom,
           elements,
           setElements,
@@ -658,7 +691,7 @@ const useDraw = () => {
           xOffset: pan.xOffset * 0.5,
           yOffset: pan.yOffset * 0.5,
         },
-        canvas,
+        canvasState,
         zoom,
         elements,
         setElements,
@@ -720,7 +753,7 @@ const useDraw = () => {
             xOffset: pan.xOffset * 0.5,
             yOffset: pan.yOffset * 0.5,
           },
-          canvas,
+          canvasState,
           zoom,
           elements,
           setElements,
@@ -751,7 +784,7 @@ const useDraw = () => {
             xOffset: pan.xOffset * 0.5,
             yOffset: pan.yOffset * 0.5,
           },
-          canvas,
+          canvasState,
           zoom,
           elements,
           setElements,
@@ -775,7 +808,7 @@ const useDraw = () => {
             xOffset: pan.xOffset * 0.5,
             yOffset: pan.yOffset * 0.5,
           },
-          canvas,
+          canvasState,
           zoom,
           elements,
           setElements,
@@ -800,7 +833,7 @@ const useDraw = () => {
   const handleBlur = (e: FormEvent) => {
     if ((e as any).key === "Enter") {
       const { id, x1, y1, x2, y2, type } = selectedElement;
-      const bounds = canvas?.getBoundingClientRect();
+      const bounds = canvasState?.getBoundingClientRect();
       setAction("none");
       setSelectedElement(null);
       updateElement(
@@ -808,7 +841,7 @@ const useDraw = () => {
           xOffset: pan.xOffset * 0.5,
           yOffset: pan.yOffset * 0.5,
         },
-        canvas,
+        canvasState,
         zoom,
         elements,
         setElements,
@@ -854,7 +887,7 @@ const useDraw = () => {
     }
     if (action === "marquee") {
       // send marquee for img2img
-      dispatch(setInitImagePrompt(getCanvas(canvas, elements)));
+      dispatch(setInitImagePrompt(getCanvas(canvasState, elements)));
     }
     if (action === "writing") return;
     setAction("none");
@@ -904,7 +937,7 @@ const useDraw = () => {
 
   useLayoutEffect(() => {
     if (clear) {
-      ctx?.clearRect(0, 0, canvas?.width, canvas?.height);
+      ctx?.clearRect(0, 0, canvasState?.width, canvasState?.height);
       setElements([]);
       setClear(false);
     }
