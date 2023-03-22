@@ -115,7 +115,7 @@ export type DrawProps = {
   canvasType: boolean;
   handlePatternSave: () => void;
   handlePatternClear: () => void;
-  synthElementSelect: SvgPatternType | undefined;
+  synthElementSelect: SvgPatternType[] | undefined;
   patternUndo: () => boolean | void;
   patternRedo: () => boolean | void;
   patternHex: string;
@@ -454,7 +454,7 @@ export type PromptProps = {
   setStrength: (e: string) => void;
   strength: string;
   handleSendImg2Img: (replicate: boolean) => Promise<void>;
-  synthElementSelect: SvgPatternType | undefined;
+  synthElementSelect: SvgPatternType[] | undefined;
   canvasType: boolean;
   apiType: boolean;
   setApiType: (e: boolean) => void;

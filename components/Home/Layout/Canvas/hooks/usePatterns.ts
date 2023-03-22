@@ -152,12 +152,6 @@ const usePatterns = (): UsePatternsResult => {
         }
       });
       ctx.save();
-      console.log(
-        elements.filter(
-          (elem: any) =>
-            elem.type !== "0" && elem.type !== "1" && elem.type !== "2"
-        )
-      );
       const canvasStorage = JSON.parse(getCanvasStorage() || "{}");
       setCanvasStorage(
         JSON.stringify({

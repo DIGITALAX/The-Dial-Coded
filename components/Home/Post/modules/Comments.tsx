@@ -48,7 +48,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
   profilesOpen,
   handleMentionClick,
   textElement,
-  reactionLoaded
+  reactionLoaded,
 }): JSX.Element => {
   const { openConnectModal } = useConnectModal();
   const collectOptionsModal = useSelector(
@@ -104,7 +104,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
     <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto pt-4 gap-4">
       {collectOptionsModal && (
         <CollectOptionsModal
-        handleCollectValues={handleCollectValues}
+          handleCollectValues={handleCollectValues}
           chargeCollect={chargeCollect}
           setChargeCollect={setChargeCollect}
           enabledCurrencies={enabledCurrencies}
@@ -288,6 +288,10 @@ const Comments: FunctionComponent<CommentsProps> = ({
               <div
                 className={`relative w-32 h-10 px-3 py-1 justify-self-end self-center grid grid-flow-col auto-cols-auto bg-white/95 rounded-md col-start-1 row-start-2 fo:row-start-1 fo:col-start-2 ${
                   !followerOnly &&
+                  commentDescription !== "" &&
+                  !imageUploading &&
+                  !commentLoading &&
+                  commentDescription.trim().length > 0 &&
                   "cursor-pointer hover:opacity-70 active:scale-95"
                 }`}
                 onClick={

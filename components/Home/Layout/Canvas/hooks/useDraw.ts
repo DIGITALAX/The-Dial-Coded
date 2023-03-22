@@ -309,6 +309,11 @@ const useDraw = () => {
         if (action === "writing" && selectedElement.id === element.id) {
           return;
         }
+        if (element.type === "image" && typeof element.image === "string") {
+          const img = new Image();
+          img.src = element.image;
+          element.image = img;
+        }
         drawElement(element, ctx, zoom, canvasState);
       });
 
@@ -317,7 +322,16 @@ const useDraw = () => {
       setCanvasStorage(
         JSON.stringify({
           ...canvasStorage,
-          draw: elements,
+          draw: elements.map((elem: any) => {
+            if (
+              elem.type === "image" &&
+              elem.image instanceof HTMLImageElement
+            ) {
+              return { ...elem, image: elem.image.src };
+            } else {
+              return elem;
+            }
+          }),
         })
       );
     }
@@ -333,6 +347,8 @@ const useDraw = () => {
     canvasState,
     canvasState,
   ]);
+
+  console.log({elements})
 
   const handleMouseDown = (e: MouseEvent): void => {
     const bounds = canvasState?.getBoundingClientRect();

@@ -268,7 +268,10 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
               </div>
               <div
                 className={`row-start-2 fo:row-start-1 col-start-2 relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis justify-self-end self-center ${
-                  postDescription !== "" || !imageUploading || !postLoading
+                  postDescription !== "" &&
+                  !imageUploading &&
+                  !postLoading &&
+                  postDescription.trim().length > 0
                     ? "active:scale-95 cursor-pointer"
                     : "opacity-60"
                 }`}
