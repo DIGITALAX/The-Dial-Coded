@@ -1,5 +1,4 @@
 const getPostHTML = (e: any, resultElement: Element, saved?:boolean): string => {
-  console.log(saved)
   const regexLinks = /\b(https?:\/\/)?(www\.)?\w+\.\b(com|xyz)\b/gi;
   const regexMentions = /(?:^|\s)(@|#)\w+/g;
   const linkHighlight = (saved ? e : e.target.value).replace(regexLinks, (match: string) => {
@@ -14,7 +13,6 @@ const getPostHTML = (e: any, resultElement: Element, saved?:boolean): string => 
   const finalHTML = mentionHighlight
     .replace(new RegExp("&", "g"), "&")
     .replace(new RegExp("<", "g"), "<");
-  console.log({finalHTML});
   (resultElement as any).innerHTML = finalHTML;
   return finalHTML;
 };

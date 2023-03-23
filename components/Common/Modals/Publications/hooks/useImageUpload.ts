@@ -11,17 +11,26 @@ import {
 import compressImageFiles from "../../../../../lib/misc/helpers/compressImageFiles";
 import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
 import videoLimitAlert from "../../../../../lib/misc/helpers/videoLimitAlert";
+import { getPostData, setPostData } from "../../../../../lib/lens/utils";
+import { useRouter } from "next/router";
 
 const useImageUpload = (): ImageUploadResults => {
+  const router = useRouter();
   const [imageUploading, setImageUploading] = useState<boolean>(false);
   const [videoUploading, setVideoUploading] = useState<boolean>(false);
   const [mappedFeaturedFiles, setMappedFeaturedFiles] = useState<
     UploadedMedia[]
-  >([]);
+  >(
+    router.asPath.includes("/post/")
+      ? []
+      : JSON.parse(getPostData() || "{}").images || []
+  );
   const dispatch = useDispatch();
   const imagesUploaded = useSelector(
     (state: RootState) => state.app.postImageReducer.value
   );
+
+  console.log({ mappedFeaturedFiles });
 
   const uploadImage = async (
     e: FormEvent | File,
@@ -47,6 +56,15 @@ const useImageUpload = (): ImageUploadResults => {
           type: MediaType.Image,
         });
         setMappedFeaturedFiles([...finalImages]);
+        if (!router.asPath.includes("/post/")) {
+          const postStorage = JSON.parse(getPostData() || "{}");
+          setPostData(
+            JSON.stringify({
+              ...postStorage,
+              images: [...finalImages],
+            })
+          );
+        }
       } catch (err: any) {
         console.error(err.message);
       }
@@ -80,6 +98,16 @@ const useImageUpload = (): ImageUploadResults => {
               ) {
                 let newArr = [...(imagesUploaded as any), ...finalImages];
                 setMappedFeaturedFiles(newArr);
+                console.log({ newArr });
+                if (!router.asPath.includes("/post/")) {
+                  const postStorage = JSON.parse(getPostData() || "{}");
+                  setPostData(
+                    JSON.stringify({
+                      ...postStorage,
+                      images: newArr,
+                    })
+                  );
+                }
                 setImageUploading(false);
               }
             }
@@ -110,6 +138,15 @@ const useImageUpload = (): ImageUploadResults => {
         { cid: String(cid?.cid), type: MediaType.Video },
       ];
       setMappedFeaturedFiles(newArr);
+      if (!router.asPath.includes("/post/")) {
+        const postStorage = JSON.parse(getPostData() || "{}");
+        setPostData(
+          JSON.stringify({
+            ...postStorage,
+            images: newArr,
+          })
+        );
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -122,6 +159,15 @@ const useImageUpload = (): ImageUploadResults => {
       (uploaded) => uploaded.cid !== image.cid
     );
     setMappedFeaturedFiles(cleanedArray);
+    if (!router.asPath.includes("/post/")) {
+      const postStorage = JSON.parse(getPostData() || "{}");
+      setPostData(
+        JSON.stringify({
+          ...postStorage,
+          images: cleanedArray,
+        })
+      );
+    }
   };
 
   useEffect(() => {

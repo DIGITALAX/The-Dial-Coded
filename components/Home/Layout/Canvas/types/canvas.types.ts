@@ -1,6 +1,6 @@
 import { HsvaColor, ColorResult } from "@uiw/color-convert";
 import { SwatchPresetColor } from "@uiw/react-color-swatch";
-import { Ref, MouseEvent, FormEvent, WheelEvent } from "react";
+import { Ref, MouseEvent, FormEvent, WheelEvent, TouchEvent } from "react";
 
 export interface SketchProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "color"> {

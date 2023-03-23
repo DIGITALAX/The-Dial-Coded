@@ -14,7 +14,7 @@ const createElement = (
   fill?: string,
   fillStyle?: string,
   stroke?: string,
-  image?: HTMLImageElement,
+  image?: HTMLImageElement
 ): ElementInterface | undefined => {
   const bounds = canvas?.getBoundingClientRect();
   switch (type) {
@@ -52,18 +52,10 @@ const createElement = (
         points: [
           {
             x:
-              ((x1 -
-                canvas?.offsetLeft -
-                bounds?.left -
-                pan.xOffset * zoom * zoom) /
-                zoom) *
+              ((x1 - canvas?.offsetLeft - bounds?.left)*zoom - pan.xOffset*zoom) *
               devicePixelRatio,
             y:
-              ((y1 -
-                canvas?.offsetTop -
-                bounds?.top -
-                pan.yOffset * zoom * zoom) /
-                zoom) *
+              ((y1 - canvas?.offsetTop - bounds?.top)*zoom - pan.yOffset*zoom) *
               devicePixelRatio,
           },
         ],

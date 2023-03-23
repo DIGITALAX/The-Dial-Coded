@@ -392,7 +392,6 @@ export type PostOptionsProps = {
 };
 
 export type ImageUploadProps = {
-  mappedFeaturedFiles: UploadedMedia[] | undefined;
   handleRemoveImage: (e: UploadedMedia) => void;
   postLoading: boolean;
   postImagesDispatched?: UploadedMedia[];

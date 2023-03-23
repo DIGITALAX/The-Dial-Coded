@@ -1,4 +1,4 @@
-import { FunctionComponent, MouseEvent, WheelEvent } from "react";
+import { FunctionComponent, MouseEvent, WheelEvent, TouchEvent } from "react";
 import { BoardProps } from "../types/canvas.types";
 
 const Board: FunctionComponent<BoardProps> = ({
