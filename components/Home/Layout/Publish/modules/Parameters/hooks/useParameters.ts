@@ -18,7 +18,6 @@ import omit from "../../../../../../../lib/lens/helpers/omit";
 import { splitSignature } from "ethers/lib/utils.js";
 import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../../../../lib/lens/constants";
 import { setDispatcher } from "../../../../../../../redux/reducers/dispatcherSlice";
-import broadcast from "../../../../../../../graphql/mutations/broadcast";
 import { setNoHotData } from "../../../../../../../redux/reducers/noHotDataSlice";
 
 const useParameters = (): UseParametersResult => {
@@ -28,7 +27,14 @@ const useParameters = (): UseParametersResult => {
   const [userTypeOpen, setUserTypeOpen] = useState<boolean>(false);
   const feedOrder: string[] = ["chrono", "algo"];
   const feedType: string[] = ["saves", "reflex", "drafts", "canvas"];
-  const feedPriority: string[] = ["interests", "reactions"];
+  const feedPriority: string[] = [
+    "interests",
+    "reactions",
+    "images",
+    "video",
+    "text",
+    "audio",
+  ];
   const [profileSearch, setProfileSearch] = useState<any[]>([]);
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [searchTarget, setSearchTarget] = useState<string>("");
