@@ -479,7 +479,7 @@ const usePatterns = (): UsePatternsResult => {
           elements,
           (element) => element.id !== selectedElement.id
         );
-        const updatedElements = filteredElements.map((element, index) => ({
+        const updatedElements = filteredElements?.map((element, index) => ({
           ...element,
           id: index,
         }));
@@ -656,7 +656,7 @@ const usePatterns = (): UsePatternsResult => {
               }
             );
             setElements(
-              newElements.map((element, index) => ({ ...element, id: index }))
+              newElements?.map((element, index) => ({ ...element, id: index }))
             );
           });
 
@@ -707,7 +707,7 @@ const usePatterns = (): UsePatternsResult => {
             }
           );
           setElements(
-            newElements.map((element, index) => ({ ...element, id: index }))
+            newElements?.map((element, index) => ({ ...element, id: index }))
           );
         });
         dispatch(setSelectSynthElement([]));

@@ -75,6 +75,8 @@ const useDraw = () => {
   const [tool, setTool] = useState<string>("pencil");
   const [action, setAction] = useState<string>("none");
   const [draftBoard, setDraftBoard] = useState<boolean>(false);
+  const [mouseX, setMouseX] = useState<number>(0);
+  const [mouseY, setMouseY] = useState<number>(0);
   const [pan, setPan] = useState<{
     xInitial: number;
     yInitial: number;
@@ -300,8 +302,17 @@ const useDraw = () => {
       canvasState.height = canvasState?.offsetHeight * devicePixelRatio;
       ctx.clearRect(0, 0, canvasState?.width, canvasState?.height);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.translate(pan.xOffset, pan.yOffset);
+      ctx.translate(
+        canvasState?.width / 2 - pan.xOffset / zoom,
+        canvasState?.height / 2 - pan.yOffset / zoom
+      );
       ctx.scale(zoom, zoom);
-      ctx.translate(pan.xOffset * zoom, pan.yOffset * zoom);
+      ctx.translate(
+        -canvasState?.width / 2 + pan.xOffset / zoom,
+        -canvasState?.height / 2 + pan.yOffset / zoom
+      );
+
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
 
@@ -322,7 +333,7 @@ const useDraw = () => {
       setCanvasStorage(
         JSON.stringify({
           ...canvasStorage,
-          draw: elements.map((elem: any) => {
+          draw: elements?.map((elem: any) => {
             if (
               elem.type === "image" &&
               elem.image instanceof HTMLImageElement
@@ -345,10 +356,21 @@ const useDraw = () => {
     pan,
     ctx,
     canvasState,
-    canvasState,
   ]);
 
-  console.log({elements})
+  const handleWheel = (e: WheelEvent) => {
+    const zoomFactor = 1 + e.deltaY / 100;
+    const bounds = canvasState?.getBoundingClientRect();
+    const mouseX = e.clientX - bounds?.left!;
+    const mouseY = e.clientY - bounds?.top!;
+    wheelLogic(e, zoom, setZoom, 5);
+    setPan({
+      xInitial: pan.xInitial,
+      yInitial: pan.yInitial,
+      xOffset: pan.xOffset - (mouseX / zoom) * (zoomFactor - 1),
+      yOffset: pan.yOffset - (mouseY / zoom) * (zoomFactor - 1),
+    });
+  };
 
   const handleMouseDown = (e: MouseEvent): void => {
     const bounds = canvasState?.getBoundingClientRect();
@@ -531,6 +553,8 @@ const useDraw = () => {
 
   const handleMouseMove = (e: MouseEvent): void => {
     const bounds = canvasState?.getBoundingClientRect();
+    setMouseX(e.clientX);
+    setMouseY(e.clientY);
     if (!action || action === "writing") return;
     if (action === "drawing") {
       const index = elements?.length - 1;
@@ -945,10 +969,6 @@ const useDraw = () => {
     dispatch(setDraftElements([]));
     setClear(true);
     dispatch(setDraftTitle("untitled draft"));
-  };
-
-  const handleWheel = (e: WheelEvent) => {
-    wheelLogic(e, zoom, setZoom, 5);
   };
 
   useLayoutEffect(() => {

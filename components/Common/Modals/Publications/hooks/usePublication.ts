@@ -46,6 +46,7 @@ import uploadPostContent from "../../../../../lib/lens/helpers/uploadPostContent
 const usePublication = () => {
   const {
     query: { id },
+    route,
   } = useRouter();
   const [postDescription, setPostDescription] = useState<string>("");
   const [postHTML, setPostHTML] = useState<string>("");
@@ -76,7 +77,9 @@ const usePublication = () => {
   const defaultProfile = useSelector(
     (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
   );
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>(
+    route.includes("/post/") ? [] : JSON.parse(getPostData() || "{}").tags || []
+  );
   const pubId = useSelector(
     (state: RootState) => state.app.reactionStateReducer.value
   );
@@ -90,7 +93,11 @@ const usePublication = () => {
   const collectModuleType = useSelector(
     (state: RootState) => state?.app?.collectValueTypeReducer?.type
   );
-  const [gifs, setGifs] = useState<UploadedMedia[]>([]);
+  const [gifs, setGifs] = useState<UploadedMedia[]>(
+    route.includes("/post/")
+      ? []
+      : JSON.parse(getPostData() || "{}").images || []
+  );
   const { config, isSuccess: postSuccess } = usePrepareContractWrite({
     address: LENS_HUB_PROXY_ADDRESS_MUMBAI,
     abi: LensHubProxy,
@@ -131,9 +138,10 @@ const usePublication = () => {
 
   const commentPost = async (e: FormEvent): Promise<void> => {
     if (
-      !postDescription ||
-      postDescription === "" ||
-      postDescription.trim().length < 0
+      (!postDescription ||
+        postDescription === "" ||
+        postDescription.trim().length < 0) &&
+      (!postImages?.length || postImages.length < 1)
     ) {
       return;
     }
@@ -234,11 +242,15 @@ const usePublication = () => {
     (resultElement as any).innerHTML = postHTML + e.emoji;
     setPostHTML(postHTML + e.emoji);
     setPostDescription(postDescription + e.emoji);
-    setPostData(
-      JSON.stringify({
-        post: postDescription + e.emoji,
-      })
-    );
+    if (!route.includes("/post/")) {
+      const postStorage = JSON.parse(getPostData() || "{}");
+      setPostData(
+        JSON.stringify({
+          ...postStorage,
+          post: postDescription + e.emoji,
+        })
+      );
+    }
   };
 
   const handleGif = (e: FormEvent): void => {
@@ -263,14 +275,30 @@ const usePublication = () => {
           type: MediaType.Gif,
         },
       ]);
+      if (!route.includes("/post/")) {
+        const postStorage = JSON.parse(getPostData() || "{}");
+        setPostData(
+          JSON.stringify({
+            ...postStorage,
+            images: [
+              ...(postImages as any),
+              {
+                cid: result,
+                type: MediaType.Gif,
+              },
+            ],
+          })
+        );
+      }
     }
   };
 
   const handlePost = async (): Promise<void> => {
     if (
-      !postDescription ||
-      postDescription === "" ||
-      postDescription.trim().length < 0
+      (!postDescription ||
+        postDescription === "" ||
+        postDescription.trim().length < 0) &&
+      (!postImages?.length || postImages.length < 1)
     ) {
       return;
     }
@@ -358,7 +386,6 @@ const usePublication = () => {
     } catch (err: any) {
       console.error(err.message);
     }
-    removePostData();
     setPostLoading(false);
   };
 
@@ -398,6 +425,7 @@ const usePublication = () => {
     setPostHTML("");
     setGifs([]);
     setTags([]);
+    removePostData();
     (document as any).getElementById("tagSearch").value = "";
     (document as any).querySelector("#highlighted-content").innerHTML = "";
   };
@@ -440,11 +468,15 @@ const usePublication = () => {
       postDescription?.substring(0, postDescription.lastIndexOf("@")) +
       `@${user?.handle}`;
     setPostDescription(newElementPost);
-    setPostData(
-      JSON.stringify({
-        post: newElementPost,
-      })
-    );
+    if (!route.includes("/post/")) {
+      const postStorage = JSON.parse(getPostData() || "{}");
+      setPostData(
+        JSON.stringify({
+          ...postStorage,
+          post: newElementPost,
+        })
+      );
+    }
     (resultElement as any).innerHTML = newHTMLPost;
     setPostHTML(newHTMLPost);
   };
@@ -456,11 +488,15 @@ const usePublication = () => {
     }
     setPostHTML(getPostHTML(e, resultElement as Element));
     setPostDescription(e.target.value);
-    setPostData(
-      JSON.stringify({
-        post: e.target.value,
-      })
-    );
+    if (!route.includes("/post/")) {
+      const postStorage = JSON.parse(getPostData() || "{}");
+      setPostData(
+        JSON.stringify({
+          ...postStorage,
+          post: e.target.value,
+        })
+      );
+    }
     if (
       e.target.value.split(" ")[e.target.value.split(" ").length - 1][0] ===
         "@" &&
@@ -490,11 +526,29 @@ const usePublication = () => {
     let newTags: string[] = [...(tags as string[])];
     newTags.push((e.target as HTMLFormElement).tag?.value);
     setTags(newTags);
+    if (!route.includes("/post/")) {
+      const postStorage = JSON.parse(getPostData() || "{}");
+      setPostData(
+        JSON.stringify({
+          ...postStorage,
+          tags: newTags,
+        })
+      );
+    }
   };
 
   const handleRemoveTag = (removeTag: string) => {
     const newArr = lodash.filter(tags, (tag: string) => tag !== removeTag);
     setTags(newArr);
+    const postStorage = JSON.parse(getPostData() || "{}");
+    if (!route.includes("/post/")) {
+      setPostData(
+        JSON.stringify({
+          ...postStorage,
+          tags: newArr,
+        })
+      );
+    }
   };
 
   useEffect(() => {

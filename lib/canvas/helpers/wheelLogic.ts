@@ -8,7 +8,6 @@ const wheelLogic = (
 ) => {
   const zoomDelta = e.deltaY * -0.01;
   const newZoom = Math.min(Math.max(zoom + zoomDelta, 0.1), maxZoom);
-
   setZoom(newZoom);
 };
 

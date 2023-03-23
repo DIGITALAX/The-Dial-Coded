@@ -5,7 +5,6 @@ import { ImageUploadProps, UploadedMedia } from "../../../types/common.types";
 import { RiCloseCircleFill } from "react-icons/ri";
 
 const ImageUploads: FunctionComponent<ImageUploadProps> = ({
-  mappedFeaturedFiles,
   handleRemoveImage,
   postLoading,
   postImagesDispatched,

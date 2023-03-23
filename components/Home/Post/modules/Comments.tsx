@@ -57,6 +57,9 @@ const Comments: FunctionComponent<CommentsProps> = ({
   const imagePickerModal = useSelector(
     (state: RootState) => state.app.emojiPickerReducer.value
   );
+  const postImagesDispatched = useSelector(
+    (state: RootState) => state.app.postImageReducer.value
+  );
   const {
     enabledCurrencies,
     audienceTypes,
@@ -142,9 +145,9 @@ const Comments: FunctionComponent<CommentsProps> = ({
       )}
       {mappedFeaturedFiles?.length !== 0 && (
         <ImageUploads
-          mappedFeaturedFiles={mappedFeaturedFiles}
           handleRemoveImage={handleRemoveImage}
           postLoading={commentLoading}
+          postImagesDispatched={postImagesDispatched}
         />
       )}
       {imagePickerModal !== "" && (

@@ -57,8 +57,14 @@ const uploadPostContent = async (
   const data = {
     version: "2.0.0",
     metadata_id: uuidv4(),
-    description: postDescription ? postDescription : "",
-    content: postDescription ? postDescription : "",
+    description:
+      postDescription.length < 0 || postDescription.trim().length < 0
+        ? null
+        : postDescription,
+    content:
+      postDescription.length < 0 || postDescription.trim().length < 0
+        ? null
+        : postDescription,
     external_url: "https://www.thedial.xyz/",
     image: coverImage.length > 0 ? (coverImage[0] as any).item : null,
     imageMimeType: "image/png",
