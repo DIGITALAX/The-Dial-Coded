@@ -28,9 +28,9 @@ const useParameters = (): UseParametersResult => {
   const feedOrder: string[] = ["chrono", "algo"];
   const feedType: string[] = ["saves", "reflex", "drafts", "canvas"];
   const feedPriority: string[] = [
-    "interests",
-    "reactions",
     "images",
+    "reactions",
+    "interests",
     "video",
     "text",
     "audio",

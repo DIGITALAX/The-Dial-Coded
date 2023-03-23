@@ -123,8 +123,8 @@ const usePatterns = (): UsePatternsResult => {
       canvas.height = canvas?.offsetHeight * devicePixelRatio;
       ctx.clearRect(0, 0, canvas?.width, canvas?.height);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(zoom, zoom);
       ctx.translate(pan.xOffset * zoom, pan.yOffset * zoom);
+      ctx.scale(zoom, zoom);
       ctx.beginPath();
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
@@ -539,7 +539,7 @@ const usePatterns = (): UsePatternsResult => {
   };
 
   const handleWheelPattern = (e: WheelEvent) => {
-    wheelLogic(e, zoom, setZoom, 7);
+    wheelLogic(e, zoom, setZoom, canvas, pan, setPan, 5);
   };
 
   const addImageToCanvas = async (

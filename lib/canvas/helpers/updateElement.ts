@@ -76,27 +76,15 @@ const updateElement = (
       elementsCopy[index].points = [
         ...(elementsCopy[index]?.points as any),
         {
-          x:
-            (((x2!) -
-              canvas?.offsetLeft -
-              bounds?.left -
-              pan.xOffset * zoom * zoom) /
-              zoom) *
-            devicePixelRatio,
-          y:
-            (((y2!) -
-              canvas?.offsetTop -
-              bounds?.top -
-              pan.yOffset * zoom * zoom) /
-              zoom) *
-            devicePixelRatio,
+          x: ((x2! - bounds?.left - pan.xOffset) / zoom) * devicePixelRatio,
+          y: ((y2! - bounds?.top - pan.yOffset) / zoom) * devicePixelRatio,
         },
       ];
       break;
 
     case "text":
       (ctx as CanvasRenderingContext2D).font = `${
-        (strokeWidth!) * devicePixelRatio
+        strokeWidth! * devicePixelRatio
       }px dosis`;
       const textWidth = ctx?.measureText(text!).width!;
       elementsCopy[index] = {
@@ -109,8 +97,8 @@ const updateElement = (
           zoom,
           x1,
           y1,
-          (x1!) + textWidth * zoom,
-          (y1!) + (strokeWidth!) * zoom,
+          x1! + textWidth * zoom,
+          y1! + strokeWidth! * zoom,
           type,
           index,
           strokeWidth!,

@@ -75,8 +75,6 @@ const useDraw = () => {
   const [tool, setTool] = useState<string>("pencil");
   const [action, setAction] = useState<string>("none");
   const [draftBoard, setDraftBoard] = useState<boolean>(false);
-  const [mouseX, setMouseX] = useState<number>(0);
-  const [mouseY, setMouseY] = useState<number>(0);
   const [pan, setPan] = useState<{
     xInitial: number;
     yInitial: number;
@@ -303,15 +301,7 @@ const useDraw = () => {
       ctx.clearRect(0, 0, canvasState?.width, canvasState?.height);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.translate(pan.xOffset, pan.yOffset);
-      ctx.translate(
-        canvasState?.width / 2 - pan.xOffset / zoom,
-        canvasState?.height / 2 - pan.yOffset / zoom
-      );
       ctx.scale(zoom, zoom);
-      ctx.translate(
-        -canvasState?.width / 2 + pan.xOffset / zoom,
-        -canvasState?.height / 2 + pan.yOffset / zoom
-      );
 
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
         "source-over";
@@ -359,17 +349,7 @@ const useDraw = () => {
   ]);
 
   const handleWheel = (e: WheelEvent) => {
-    const zoomFactor = 1 + e.deltaY / 100;
-    const bounds = canvasState?.getBoundingClientRect();
-    const mouseX = e.clientX - bounds?.left!;
-    const mouseY = e.clientY - bounds?.top!;
-    wheelLogic(e, zoom, setZoom, 5);
-    setPan({
-      xInitial: pan.xInitial,
-      yInitial: pan.yInitial,
-      xOffset: pan.xOffset - (mouseX / zoom) * (zoomFactor - 1),
-      yOffset: pan.yOffset - (mouseY / zoom) * (zoomFactor - 1),
-    });
+    wheelLogic(e, zoom, setZoom, canvasState, pan, setPan, 8);
   };
 
   const handleMouseDown = (e: MouseEvent): void => {
@@ -388,16 +368,17 @@ const useDraw = () => {
       );
       if (element?.length > 0) {
         if (element[element?.length - 1].type === "pencil") {
+          console.log("pen")
           const offsetXs = element[element?.length - 1].points?.map(
             (point) =>
-              ((e.clientX - pan.xOffset * zoom * zoom * 0.5) *
+              ((e.clientX - pan.xOffset * 0.5) *
                 devicePixelRatio) /
                 zoom -
               point.x
           );
           const offsetYs = element[element?.length - 1].points?.map(
             (point) =>
-              ((e.clientY - pan.yOffset * zoom * zoom * 0.5) *
+              ((e.clientY - pan.yOffset * 0.5) *
                 devicePixelRatio) /
                 zoom -
               point.y
@@ -553,8 +534,6 @@ const useDraw = () => {
 
   const handleMouseMove = (e: MouseEvent): void => {
     const bounds = canvasState?.getBoundingClientRect();
-    setMouseX(e.clientX);
-    setMouseY(e.clientY);
     if (!action || action === "writing") return;
     if (action === "drawing") {
       const index = elements?.length - 1;
@@ -592,11 +571,11 @@ const useDraw = () => {
         const newPoints = selectedElement.points?.map(
           (_: ElementInterface, index: number) => ({
             x:
-              ((e.clientX - pan.xOffset * zoom * zoom * 0.5) / zoom) *
+              ((e.clientX - pan.xOffset * 0.5) / zoom) *
                 devicePixelRatio -
               selectedElement?.offsetXs[index],
             y:
-              ((e.clientY - pan.yOffset * zoom * zoom * 0.5) / zoom) *
+              ((e.clientY - pan.yOffset * 0.5) / zoom) *
                 devicePixelRatio -
               selectedElement?.offsetYs[index],
           })
@@ -715,14 +694,15 @@ const useDraw = () => {
         );
       }
     } else if (action === "panning") {
-      setPan({
-        xInitial: pan.xInitial,
-        yInitial: pan.yInitial,
-        xOffset:
-          pan.xOffset + 0.5 * ((e.clientX - bounds.left - pan.xInitial) / zoom),
-        yOffset:
-          pan.yOffset + 0.5 * ((e.clientY - bounds.top - pan.yInitial) / zoom),
-      });
+      const bounds = canvasState?.getBoundingClientRect();
+      const xDiff = (e.clientX - bounds.left - pan.xInitial) / zoom;
+      const yDiff = (e.clientY - bounds.top - pan.yInitial) / zoom;
+
+      setPan((prevPan) => ({
+        ...prevPan,
+        xOffset: prevPan.xOffset + xDiff * 0.5,
+        yOffset: prevPan.yOffset + yDiff * 0.5,
+      }));
     } else if (action === "marquee") {
       const index = elements?.length - 1;
       const { x1, y1 } = elements[index];
