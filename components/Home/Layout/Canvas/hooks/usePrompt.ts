@@ -248,6 +248,7 @@ const usePrompt = (): UsePromptResults => {
         setLocalRunning(true);
       }
     } catch (error) {
+      setLocalRunning(false);
       console.error(error);
     }
   };
@@ -257,18 +258,23 @@ const usePrompt = (): UsePromptResults => {
       const response = await fetch("http://127.0.0.1:7860/sdapi/v1/samplers", {
         method: "GET",
       });
-      const responseJSON = await response.json();
-      setSamplers(responseJSON);
+      if (response?.status === 200) {
+        const responseJSON = await response.json();
+        setSamplers(responseJSON);
+      } else {
+        setSampler("Connect Local");
+      }
     } catch (err: any) {
+      setSampler("Connect Local");
       console.error(err.message);
     }
   };
 
   useEffect(() => {
-    if (!apiType && samplers.length <= 0) {
+    if (!apiType && samplers.length <= 0 && localRunning) {
       getSamplers();
     }
-  }, [apiType, samplers]);
+  }, [apiType, samplers, localRunning]);
 
   useEffect(() => {
     if (apiType) {

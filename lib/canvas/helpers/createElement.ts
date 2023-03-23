@@ -51,12 +51,8 @@ const createElement = (
         type,
         points: [
           {
-            x:
-              ((x1 - canvas?.offsetLeft - bounds?.left)*zoom - pan.xOffset*zoom) *
-              devicePixelRatio,
-            y:
-              ((y1 - canvas?.offsetTop - bounds?.top)*zoom - pan.yOffset*zoom) *
-              devicePixelRatio,
+            x: ((x1 - bounds?.left - pan.xOffset) / zoom) * devicePixelRatio,
+            y: ((y1 - bounds?.top - pan.yOffset) / zoom) * devicePixelRatio,
           },
         ],
         fill,

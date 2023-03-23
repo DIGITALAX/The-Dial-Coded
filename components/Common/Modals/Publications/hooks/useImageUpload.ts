@@ -30,8 +30,6 @@ const useImageUpload = (): ImageUploadResults => {
     (state: RootState) => state.app.postImageReducer.value
   );
 
-  console.log({ mappedFeaturedFiles });
-
   const uploadImage = async (
     e: FormEvent | File,
     canvas?: boolean
@@ -98,7 +96,6 @@ const useImageUpload = (): ImageUploadResults => {
               ) {
                 let newArr = [...(imagesUploaded as any), ...finalImages];
                 setMappedFeaturedFiles(newArr);
-                console.log({ newArr });
                 if (!router.asPath.includes("/post/")) {
                   const postStorage = JSON.parse(getPostData() || "{}");
                   setPostData(

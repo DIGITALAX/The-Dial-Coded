@@ -132,10 +132,8 @@ const positionWithinElement = (
               point.y,
               nextPoint.x,
               nextPoint.y,
-              ((x - bounds?.left - pan.xOffset * zoom * zoom) / zoom) *
-                devicePixelRatio,
-              ((y - bounds.top - pan.yOffset * zoom * zoom) / zoom) *
-                devicePixelRatio,
+              ((x - bounds?.left - pan.xOffset) / zoom) * devicePixelRatio,
+              ((y - bounds.top - pan.yOffset) / zoom) * devicePixelRatio,
               element.strokeWidth!
             ) != null
           );
