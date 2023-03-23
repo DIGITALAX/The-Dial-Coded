@@ -94,7 +94,10 @@ const useMainFeed = () => {
   const fetchPublications = async (profileExists?: boolean): Promise<void> => {
     setPublicationsLoading(true);
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
-    const feedType = checkFeedTypes(feedTypeState as string);
+    const feedType = checkFeedTypes(
+      feedTypeState as string,
+      feedPriorityState as string
+    );
     try {
       let publicationsList;
       if (profileExists) {
@@ -179,7 +182,10 @@ const useMainFeed = () => {
   const getUserSelectFeed = async (): Promise<void> => {
     setPublicationsLoading(true);
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
-    const feedType = checkFeedTypes(feedTypeState as string);
+    const feedType = checkFeedTypes(
+      feedTypeState as string,
+      feedPriorityState as string
+    );
     let sortedArr: any[];
     let pageData: any;
     try {
@@ -338,7 +344,10 @@ const useMainFeed = () => {
   // fetch more
   const fetchMorePublications = async (): Promise<void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
-    const feedType = checkFeedTypes(feedTypeState as string);
+    const feedType = checkFeedTypes(
+      feedTypeState as string,
+      feedPriorityState as string
+    );
     try {
       if (!paginatedResults?.next) {
         // fix apollo duplications on null next
@@ -513,7 +522,10 @@ const useMainFeed = () => {
 
   const getMoreUserSelectFeed = async (): Promise<void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
-    const feedType = checkFeedTypes(feedTypeState as string);
+    const feedType = checkFeedTypes(
+      feedTypeState as string,
+      feedPriorityState as string
+    );
     let sortedArr: any[];
     let pageData: any;
     try {
@@ -778,7 +790,7 @@ const useMainFeed = () => {
     publicationsLoading,
     firstPubLoad,
     hasMore,
-    setReactionLoaded
+    setReactionLoaded,
   };
 };
 
