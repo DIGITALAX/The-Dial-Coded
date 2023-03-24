@@ -63,6 +63,7 @@ const usePublication = () => {
   const postBox = useSelector(
     (state: RootState) => state.app.publicationReducer.open
   );
+  const [textCount, setTextCount] = useState<number>(0);
   const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const [contentURI, setContentURI] = useState<string | undefined>();
@@ -238,6 +239,11 @@ const usePublication = () => {
   };
 
   const handleEmoji = (e: any): void => {
+    setTextCount(e.target.value.length);
+    if (e.target.value.length > 270) {
+      setPostDescription(e.target.value.slice(0, 270));
+      return;
+    }
     let resultElement = document.querySelector("#highlighted-content");
     (resultElement as any).innerHTML = postHTML + e.emoji;
     setPostHTML(postHTML + e.emoji);
@@ -395,6 +401,7 @@ const usePublication = () => {
     setPostHTML("");
     setGifs([]);
     setTags([]);
+    setTextCount(0);
     (document as any).getElementById("tagSearch").value = "";
     (document as any).querySelector("#highlighted-content").innerHTML = "";
     dispatch(setFollowerOnly(false));
@@ -426,6 +433,7 @@ const usePublication = () => {
     setGifs([]);
     setTags([]);
     removePostData();
+    setTextCount(0);
     (document as any).getElementById("tagSearch").value = "";
     (document as any).querySelector("#highlighted-content").innerHTML = "";
   };
@@ -467,6 +475,11 @@ const usePublication = () => {
     const newElementPost =
       postDescription?.substring(0, postDescription.lastIndexOf("@")) +
       `@${user?.handle}`;
+    setTextCount(newElementPost.length);
+    if (newElementPost.length > 270) {
+      setPostDescription(newElementPost.slice(0, 270));
+      return;
+    }
     setPostDescription(newElementPost);
     if (!route.includes("/post/")) {
       const postStorage = JSON.parse(getPostData() || "{}");
@@ -485,6 +498,11 @@ const usePublication = () => {
     let resultElement = document.querySelector("#highlighted-content");
     if (e.target.value[e.target.value.length - 1] == "\n") {
       e.target.value += " ";
+    }
+    setTextCount(e.target.value.length);
+    if (e.target.value.length > 270) {
+      setPostDescription(e.target.value.slice(0, 270));
+      return;
     }
     setPostHTML(getPostHTML(e, resultElement as Element));
     setPostDescription(e.target.value);
@@ -588,6 +606,7 @@ const usePublication = () => {
     handleMentionClick,
     caretCoord,
     profilesOpen,
+    textCount,
   };
 };
 
