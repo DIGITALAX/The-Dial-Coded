@@ -156,9 +156,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     setPan,
     setSaveImagesLocal,
     saveImagesLocal,
-    onTouchStart,
-    onTouchMove,
-    onTouchEnd
+    handleReset
   } = useDraw();
   const {
     quickSearchResults,
@@ -350,9 +348,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           setOpenHeight={setOpenHeight}
           setOpenWidth={setOpenWidth}
           samplers={samplers}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
+          handleReset={handleReset}
         />
       );
   }

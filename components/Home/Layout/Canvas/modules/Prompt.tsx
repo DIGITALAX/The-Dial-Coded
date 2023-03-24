@@ -401,20 +401,20 @@ const Prompt: FunctionComponent<PromptProps> = ({
               <CassetteButton
                 text={
                   apiType
-                  ? keyExists
+                    ? keyExists
+                      ? !canvasType
+                        ? "synth"
+                        : (synthElementSelect?.length as number) > 0
+                        ? "synth"
+                        : "select template"
+                      : "add key"
+                    : localRunning
                     ? !canvasType
                       ? "synth"
-                      : synthElementSelect?.length as number > 0
+                      : (synthElementSelect?.length as number) > 0
                       ? "synth"
                       : "select template"
-                    : "add key"
-                  : localRunning
-                  ? !canvasType
-                    ? "synth"
-                    : synthElementSelect?.length as number > 0
-                    ? "synth"
-                    : "select template"
-                  : "activate local"
+                    : "activate local"
                 }
                 textSize="sm"
                 right="2"
@@ -425,7 +425,9 @@ const Prompt: FunctionComponent<PromptProps> = ({
                 value={prompt as string}
                 keyExists={keyExists}
                 canvasType={canvasType}
-                synthElement={synthElementSelect?.length as number > 0 ? true : false}
+                synthElement={
+                  (synthElementSelect?.length as number) > 0 ? true : false
+                }
                 localRunning={localRunning}
                 apiType={apiType}
               />

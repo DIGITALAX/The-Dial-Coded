@@ -143,6 +143,7 @@ const Draw: FunctionComponent<DrawProps> = ({
   setOpenHeight,
   setOpenWidth,
   samplers,
+  handleReset
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -250,6 +251,7 @@ const Draw: FunctionComponent<DrawProps> = ({
                     patternUndo={patternUndo}
                     patternRedo={patternRedo}
                     handlePatternImageAdd={handlePatternImageAdd}
+                    handleReset={handleReset}
                   />
                   <div className="absolute w-fit h-fit grid grid-flow-row auto-rows-auto z-10 bottom-14 left-4">
                     <PatternMenu
