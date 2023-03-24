@@ -123,7 +123,7 @@ const usePatterns = (): UsePatternsResult => {
       canvas.height = canvas?.offsetHeight * devicePixelRatio;
       ctx.clearRect(0, 0, canvas?.width, canvas?.height);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.translate(pan.xOffset * zoom, pan.yOffset * zoom);
+      ctx.translate(pan.xOffset, pan.yOffset);
       ctx.scale(zoom, zoom);
       ctx.beginPath();
       (ctx as CanvasRenderingContext2D).globalCompositeOperation =
@@ -273,26 +273,23 @@ const usePatterns = (): UsePatternsResult => {
         setElements(elementsCopy, true);
       } else {
         const textWidth = ctx?.measureText(selectedElement?.text!).width!;
+        const textHeight = ctx?.measureText("M").width! / 2;
         const newElement = {
           ...selectedElement,
           x1:
-            ((e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
-              devicePixelRatio) /
+            ((e.clientX - bounds.left - pan.xOffset * 0.5) * devicePixelRatio) /
             zoom,
           y1:
-            ((e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
-              devicePixelRatio) /
+            ((e.clientY - bounds.top - pan.yOffset * 0.5) * devicePixelRatio) /
             zoom,
           x2:
-            ((e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
-              devicePixelRatio) /
+            ((e.clientX - bounds.left - pan.xOffset * 0.5) * devicePixelRatio) /
               zoom +
             textWidth * zoom,
           y2:
-            ((e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
-              devicePixelRatio) /
+            ((e.clientY - bounds.top - pan.yOffset * 0.5) * devicePixelRatio) /
               zoom +
-            selectedElement?.strokeWidth! * zoom,
+            textHeight * zoom,
         };
         const updatedElements = elements?.map((element: SvgPatternType) =>
           element.id === selectedElement?.id ? newElement : element
@@ -780,11 +777,11 @@ const usePatterns = (): UsePatternsResult => {
         ctx!,
         (selectedElement?.x1! * devicePixelRatio +
           bounds.left * zoom -
-          pan.xOffset * zoom * zoom) /
+          pan.xOffset) /
           zoom,
         (selectedElement?.y1! * devicePixelRatio +
           bounds.top * zoom -
-          pan.yOffset * zoom * zoom) /
+          pan.yOffset) /
           zoom,
         selectedElement?.x2!,
         selectedElement?.y2!,

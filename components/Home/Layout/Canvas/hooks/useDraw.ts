@@ -9,7 +9,7 @@ import {
   useCallback,
 } from "react";
 import { ElementInterface } from "../types/canvas.types";
-import lodash from "lodash";
+import lodash, { after } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import fileLimitAlert from "../../../../../lib/misc/helpers/fileLimitAlert";
@@ -443,18 +443,14 @@ const useDraw = () => {
           ? e.clientY
           : (e.clientY - bounds.top - pan.yOffset * 0.5) *
               (devicePixelRatio / zoom),
-        tool === "pencil"
+        tool === "pencil" || tool === "text"
           ? e.clientX
-          : tool === "text"
-          ? e.clientX + ctx?.measureText(selectedElement?.text!).width!
           : (e.clientX - bounds.left - pan.xOffset * 0.5) *
-            (devicePixelRatio / zoom),
-        tool === "pencil"
+              (devicePixelRatio / zoom),
+        tool === "pencil" || tool === "text"
           ? e.clientY
-          : tool === "text"
-          ? e.clientY + ctx?.measureText("M").width! / 2
           : (e.clientY - bounds.top - pan.yOffset * 0.5) *
-            (devicePixelRatio / zoom),
+              (devicePixelRatio / zoom),
         tool,
         id,
         brushWidth,
@@ -629,6 +625,30 @@ const useDraw = () => {
           undefined,
           image
         );
+      } else if (selectedElement?.type === "text") {
+        const textWidth = ctx?.measureText(selectedElement?.text!).width!;
+        const textHeight = ctx?.measureText("M").width! / 2;
+        const newElement = {
+          ...selectedElement,
+          x1:
+            ((e.clientX - bounds.left - pan.xOffset * 0.5) * devicePixelRatio) /
+            zoom,
+          y1:
+            ((e.clientY - bounds.top - pan.yOffset * 0.5) * devicePixelRatio) /
+            zoom,
+          x2:
+            ((e.clientX - bounds.left - pan.xOffset * 0.5) * devicePixelRatio) /
+              zoom +
+            textWidth * zoom,
+          y2:
+            ((e.clientY - bounds.top - pan.yOffset * 0.5) * devicePixelRatio) /
+              zoom +
+            textHeight * zoom,
+        };
+        const updatedElements = elements?.map((element: ElementInterface) =>
+          element.id === selectedElement?.id ? newElement : element
+        );
+        setElements(updatedElements, true);
       } else {
         const {
           x2,
@@ -645,21 +665,13 @@ const useDraw = () => {
           offsetY,
         } = selectedElement;
         const afterOffsetX =
-          type === "text"
-            ? ((e.clientX - bounds?.left - pan.xOffset * 0.5) *
-                devicePixelRatio) /
-              zoom
-            : ((e.clientX - bounds?.left - pan.xOffset * 0.5) / zoom) *
-                devicePixelRatio -
-              offsetX;
+          ((e.clientX - bounds?.left - pan.xOffset * 0.5) / zoom) *
+            devicePixelRatio -
+          offsetX;
         const afterOffsetY =
-          type === "text"
-            ? ((e.clientY - bounds?.top - pan.yOffset * 0.5) *
-                devicePixelRatio) /
-              zoom
-            : ((e.clientY - bounds?.top - pan.yOffset * 0.5) / zoom) *
-                devicePixelRatio -
-              offsetY;
+          ((e.clientY - bounds?.top - pan.yOffset * 0.5) / zoom) *
+            devicePixelRatio -
+          offsetY;
         updateElement(
           {
             xOffset: pan.xOffset * 0.5,
@@ -673,7 +685,7 @@ const useDraw = () => {
           afterOffsetX,
           afterOffsetY,
           afterOffsetX + x2,
-          afterOffsetY + y2,
+          afterOffsetY + x2,
           type,
           id,
           strokeWidth,

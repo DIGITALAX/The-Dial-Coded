@@ -45,20 +45,18 @@ const onPatternElement = (
           break;
 
         case "text":
+          const baselineOffset = ctx?.measureText("M").width! / 2;
           if (
-            ((e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
-              devicePixelRatio) /
+            ((e.clientX - bounds.left - pan.xOffset * 0.5) * devicePixelRatio) /
               zoom >=
               (element.x1 as number) &&
-            ((e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
-              devicePixelRatio) /
+            ((e.clientX - bounds.left - pan.xOffset * 0.5) * devicePixelRatio) /
               zoom <=
               (element.x2 as number) &&
-            ((e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
-              devicePixelRatio) /
+            ((e.clientY - bounds.top - pan.yOffset * 0.5) * devicePixelRatio) /
               zoom >=
               (element.y1 as number) &&
-            ((e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+            ((e.clientY - bounds.top - pan.yOffset * 0.5 - baselineOffset) *
               devicePixelRatio) /
               zoom <=
               (element.y2 as number)
@@ -84,10 +82,10 @@ const onPatternElement = (
                 point.y,
                 nextPoint.x,
                 nextPoint.y,
-                ((e.clientX - bounds?.left - pan.xOffset * 0.5 * zoom * zoom) *
+                ((e.clientX - bounds?.left - pan.xOffset * 0.5) *
                   devicePixelRatio) /
                   zoom,
-                ((e.clientY - bounds?.top - pan.yOffset * 0.5 * zoom * zoom) *
+                ((e.clientY - bounds?.top - pan.yOffset * 0.5) *
                   devicePixelRatio) /
                   zoom,
                 element.strokeWidth as number
@@ -121,10 +119,10 @@ const onPatternElement = (
                 point.y,
                 nextPoint.x,
                 nextPoint.y,
-                ((e.clientX - bounds?.left - pan.xOffset * 0.5 * zoom * zoom) *
+                ((e.clientX - bounds?.left - pan.xOffset * 0.5) *
                   devicePixelRatio) /
                   zoom,
-                ((e.clientY - bounds?.top - pan.yOffset * 0.5 * zoom * zoom) *
+                ((e.clientY - bounds?.top - pan.yOffset * 0.5) *
                   devicePixelRatio) /
                   zoom,
                 2
