@@ -49,6 +49,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
   handleMentionClick,
   textElement,
   reactionLoaded,
+  textCount,
 }): JSX.Element => {
   const { openConnectModal } = useConnectModal();
   const collectOptionsModal = useSelector(
@@ -185,14 +186,6 @@ const Comments: FunctionComponent<CommentsProps> = ({
         ) : (
           <div className="relative w-full h-full place-self-center col-start-1 grid grid-flow-row auto-rows-auto gap-2">
             {!followerOnly ? (
-              // <textarea
-              //   onChange={(e: FormEvent) => handleCommentDescription(e)}
-              //   style={{ resize: "none" }}
-              //   value={commentDescription}
-              //   placeholder="Have something to share..."
-              //   className={`relative w-full h-48 overflow-y-scroll row-start-1 bg-white/80 rounded-xl grid grid-flow-col auto-cols-auto cursor-text active:opacity-80 text-offBlack font-dosis text-base p-4 place-self-center drop-shadow-lg caret-transparent`}
-              //   disabled={commentLoading || followerOnly ? true : false}
-              // ></textarea>
               <div className="relative w-full h-full grid grid-flow-col auto-cols-auto p-1.5 rounded-xl">
                 <textarea
                   id="post"
@@ -220,7 +213,15 @@ const Comments: FunctionComponent<CommentsProps> = ({
                     Have something to share...
                   </code>
                 </pre>
-                
+                <div className="absolute w-fit h-fit grid grid-flow-col auto-cols-auto bottom-3 right-2">
+                  <div
+                    className={`relative w-fit h-fit col-start-1 text-sm font-sats ${
+                      textCount >= 270 ? "text-offBlue" : "text-offBlack"
+                    }`}
+                  >
+                    {`${textCount}/270`}
+                  </div>
+                </div>
                 {mentionProfiles?.length > 0 && profilesOpen && (
                   <div
                     className={`absolute w-44 max-h-28 h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll z-2`}

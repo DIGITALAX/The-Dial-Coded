@@ -34,7 +34,7 @@ const Post: NextPage = (): JSX.Element => {
     hasPostReacted,
     followerOnly,
     firstLoad,
-    reactionLoaded: reactionPostLoaded
+    reactionLoaded: reactionPostLoaded,
   } = usePostPage();
 
   const lensProfile = useSelector(
@@ -66,6 +66,7 @@ const Post: NextPage = (): JSX.Element => {
     profilesOpen,
     handleMentionClick,
     textElement,
+    textCount,
   } = usePublication();
   const {
     commentors,
@@ -82,7 +83,7 @@ const Post: NextPage = (): JSX.Element => {
     setHasCommented,
     setHasReacted,
     reactionLoaded,
-    setReactionLoaded
+    setReactionLoaded,
   } = useMainFeed();
 
   const dispatch = useDispatch();
@@ -99,7 +100,7 @@ const Post: NextPage = (): JSX.Element => {
         setHasCommented,
         setHasReacted,
         setReactionLoaded,
-        id as string,
+        id as string
       );
     }
   }, [
@@ -374,6 +375,7 @@ const Post: NextPage = (): JSX.Element => {
                 handleMentionClick={handleMentionClick}
                 textElement={textElement}
                 reactionLoaded={reactionLoaded}
+                textCount={textCount}
               />
             </div>
           </>

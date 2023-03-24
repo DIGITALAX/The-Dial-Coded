@@ -35,9 +35,9 @@ const checkFeedTypes = (
       mainContentFocus: ["VIDEO"],
       ...metadata,
     };
-  } else if (feedPriorityState === "text") {
+  } else if (feedPriorityState === "long form") {
     metadata = {
-      mainContentFocus: ["TEXT_ONLY"],
+      mainContentFocus: ["ARTICLE"],
       ...metadata,
     };
   }

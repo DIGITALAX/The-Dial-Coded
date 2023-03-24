@@ -74,6 +74,8 @@ const uploadPostContent = async (
         ? "VIDEO"
         : newImages.length > 0
         ? "IMAGE"
+        : postDescription?.length > 270
+        ? "ARTICLE"
         : "TEXT_ONLY",
     contentWarning: null,
     attributes: [

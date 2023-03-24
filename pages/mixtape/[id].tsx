@@ -66,6 +66,7 @@ const Mixtape: NextPage = (): JSX.Element => {
     profilesOpen,
     handleMentionClick,
     textElement,
+    textCount
   } = usePublication();
   const {
     commentors,
@@ -389,6 +390,7 @@ const Mixtape: NextPage = (): JSX.Element => {
                 handleMentionClick={handleMentionClick}
                 textElement={textElement}
                 reactionLoaded={reactionLoaded}
+                textCount={textCount}
               />
             </div>
           </>
