@@ -161,6 +161,7 @@ export type DrawProps = {
   setOpenHeight: (e: boolean) => void;
   openHeight: boolean;
   samplers: any[];
+  handleReset: () => void
 };
 
 export type ColorPickerProps = {
@@ -234,6 +235,7 @@ export type BottomMenuProps = {
   setPatternThickness: (e: boolean) => void;
   patternBrushWidth: number;
   setPatternBrushWidth: (e: number) => void;
+  handleReset: () => void
 };
 
 export type BoardProps = {
@@ -287,6 +289,7 @@ export type SideOptionsProps = {
   handlePatternClear: () => void;
   patternUndo: () => boolean | void;
   patternRedo: () => boolean | void;
+  handleReset: () => void
 };
 
 export type BottomOptionsProps = {

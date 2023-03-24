@@ -36,6 +36,7 @@ import {
   getCanvasStorage,
   setCanvasStorage,
 } from "../../../../../lib/replicate/utils";
+import { resetCanvas } from "../../../../../lib/canvas/helpers/resetCanvas";
 
 const useDraw = () => {
   const [canvasState, setCanvasState] = useState<any>(null);
@@ -352,6 +353,17 @@ const useDraw = () => {
     wheelLogic(e, zoom, setZoom, canvasState, pan, setPan, 8);
   };
 
+  const handleReset = () => {
+    const { zoom, xOffset, yOffset } = resetCanvas(elements, canvasState);
+    setZoom(zoom <= 0.03 ? 0.03 : zoom);
+    setPan({
+      xInitial: pan.xInitial,
+      yInitial: pan.yInitial,
+      xOffset,
+      yOffset,
+    });
+  };
+
   const handleMouseDown = (e: MouseEvent): void => {
     const bounds = canvasState?.getBoundingClientRect();
     if (tool === "selection" || tool === "resize") {
@@ -384,7 +396,6 @@ const useDraw = () => {
             offsetYs,
           });
         } else {
-          console.log("sel");
           const offsetX =
             ((e.clientX - bounds.left - pan.xOffset * 0.5) * devicePixelRatio) /
               zoom -
@@ -635,14 +646,16 @@ const useDraw = () => {
         } = selectedElement;
         const afterOffsetX =
           type === "text"
-            ? ((e.clientX - bounds?.left - pan.xOffset * 0.5) * devicePixelRatio) /
+            ? ((e.clientX - bounds?.left - pan.xOffset * 0.5) *
+                devicePixelRatio) /
               zoom
             : ((e.clientX - bounds?.left - pan.xOffset * 0.5) / zoom) *
                 devicePixelRatio -
               offsetX;
         const afterOffsetY =
           type === "text"
-            ? ((e.clientY - bounds?.top - pan.yOffset * 0.5) * devicePixelRatio) /
+            ? ((e.clientY - bounds?.top - pan.yOffset * 0.5) *
+                devicePixelRatio) /
               zoom
             : ((e.clientY - bounds?.top - pan.yOffset * 0.5) / zoom) *
                 devicePixelRatio -
@@ -992,6 +1005,7 @@ const useDraw = () => {
     setPan,
     setSaveImagesLocal,
     saveImagesLocal,
+    handleReset,
   };
 };
 
