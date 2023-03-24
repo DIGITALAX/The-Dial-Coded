@@ -220,6 +220,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                     Have something to share...
                   </code>
                 </pre>
+                
                 {mentionProfiles?.length > 0 && profilesOpen && (
                   <div
                     className={`absolute w-44 max-h-28 h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll z-2`}

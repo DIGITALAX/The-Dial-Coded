@@ -90,6 +90,7 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
     textElement,
     caretCoord,
     profilesOpen,
+    textCount,
   } = usePublication();
 
   return (
@@ -199,6 +200,11 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                     Have something to share...
                   </code>
                 </pre>
+                <div className="absolute w-fit h-fit grid grid-flow-col auto-cols-auto bottom-3 right-2">
+                  <div className="relative w-fit h-fit col-start-1 text-offBlack text-sm font-sats">
+                    {`${textCount}/270`}
+                  </div>
+                </div>
                 {mentionProfiles?.length > 0 && profilesOpen && (
                   <div
                     className={`absolute w-44 max-h-28 h-fit grid grid-flow-row auto-rows-auto overflow-y-scroll z-2`}
@@ -269,7 +275,9 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                 className={`row-start-2 fo:row-start-1 col-start-2 relative h-8 grid grid-flow-col auto-cols-auto w-20 rounded-md px-2 py-1 bg-white text-black font-dosis justify-self-end self-center ${
                   ((postDescription !== "" &&
                     postDescription.trim().length > 0) ||
-                    (mappedFeaturedFiles && mappedFeaturedFiles?.length > 0) || (postImagesDispatched && postImagesDispatched?.length > 0)) &&
+                    (mappedFeaturedFiles && mappedFeaturedFiles?.length > 0) ||
+                    (postImagesDispatched &&
+                      postImagesDispatched?.length > 0)) &&
                   !imageUploading &&
                   !postLoading
                     ? "active:scale-95 cursor-pointer"
