@@ -87,6 +87,7 @@ const updateElement = (
         strokeWidth! * devicePixelRatio
       }px dosis`;
       const textWidth = ctx?.measureText(text!).width!;
+      const textHeight = ctx?.measureText("M").width! / 2;
       elementsCopy[index] = {
         ...createElement(
           {
@@ -97,8 +98,8 @@ const updateElement = (
           zoom,
           x1,
           y1,
-          x1! + textWidth * zoom,
-          y1! + strokeWidth! * zoom,
+          x1! + textWidth ,
+          y1! + textHeight! * zoom,
           type,
           index,
           strokeWidth!,

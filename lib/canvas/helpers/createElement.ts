@@ -74,10 +74,10 @@ const createElement = (
       return {
         id,
         type,
-        x1: ((x1 - pan.xOffset * zoom * zoom) / zoom) * devicePixelRatio,
-        y1: ((y1 - pan.yOffset * zoom * zoom) / zoom) * devicePixelRatio,
-        x2: ((x2 - pan.xOffset * zoom * zoom) / zoom) * devicePixelRatio,
-        y2: ((y2 - pan.yOffset * zoom * zoom) / zoom) * devicePixelRatio,
+        x1: ((x1 - pan.xOffset) / zoom) * devicePixelRatio,
+        y1: ((y1 - pan.yOffset) / zoom) * devicePixelRatio,
+        x2: ((x2 - pan.xOffset) / zoom) * devicePixelRatio,
+        y2: ((y2 - pan.yOffset) / zoom) * devicePixelRatio,
         image,
       };
     case "marquee":
