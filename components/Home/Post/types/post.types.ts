@@ -13,7 +13,7 @@ export type MainPostProps = {
   reactionsPostFeed: any[];
   handleHidePost: (id: string, dispatch: Dispatch<AnyAction>) => Promise<void>;
   followerOnly: boolean;
-  reactionLoaded: boolean[]
+  reactionLoaded: boolean[];
 };
 
 export type CommentsProps = {
@@ -48,5 +48,6 @@ export type CommentsProps = {
   profilesOpen: boolean;
   handleMentionClick: (user: any) => void;
   textElement: Ref<HTMLTextAreaElement>;
-  reactionLoaded: boolean[]
+  reactionLoaded: boolean[];
+  textCount: number;
 };

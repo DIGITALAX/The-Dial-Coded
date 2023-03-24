@@ -111,6 +111,7 @@ const usePublication = () => {
     const savedData = getPostData();
     if (savedData && postBox) {
       setPostDescription(JSON.parse(savedData).post);
+      setTextCount(JSON.parse(savedData).post.length);
       let resultElement = document.querySelector("#highlighted-content");
       if (
         JSON.parse(savedData).post[JSON.parse(savedData).post.length - 1] ==
@@ -239,11 +240,10 @@ const usePublication = () => {
   };
 
   const handleEmoji = (e: any): void => {
-    setTextCount(e.target.value.length);
     if (e.target.value.length > 270) {
-      setPostDescription(e.target.value.slice(0, 270));
-      return;
+      setPostDescription(e.target.value.slice(0, 269));
     }
+    setTextCount(e.target.value.length);
     let resultElement = document.querySelector("#highlighted-content");
     (resultElement as any).innerHTML = postHTML + e.emoji;
     setPostHTML(postHTML + e.emoji);
@@ -475,11 +475,10 @@ const usePublication = () => {
     const newElementPost =
       postDescription?.substring(0, postDescription.lastIndexOf("@")) +
       `@${user?.handle}`;
-    setTextCount(newElementPost.length);
     if (newElementPost.length > 270) {
-      setPostDescription(newElementPost.slice(0, 270));
-      return;
+      setPostDescription(newElementPost.slice(0, 269));
     }
+    setTextCount(newElementPost.length);
     setPostDescription(newElementPost);
     if (!route.includes("/post/")) {
       const postStorage = JSON.parse(getPostData() || "{}");
@@ -499,11 +498,10 @@ const usePublication = () => {
     if (e.target.value[e.target.value.length - 1] == "\n") {
       e.target.value += " ";
     }
-    setTextCount(e.target.value.length);
     if (e.target.value.length > 270) {
-      setPostDescription(e.target.value.slice(0, 270));
-      return;
+      setPostDescription(e.target.value.slice(0, 269));
     }
+    setTextCount(e.target.value.length);
     setPostHTML(getPostHTML(e, resultElement as Element));
     setPostDescription(e.target.value);
     if (!route.includes("/post/")) {

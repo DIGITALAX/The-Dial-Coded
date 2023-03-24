@@ -201,7 +201,11 @@ const PublicationModal: FunctionComponent = (): JSX.Element => {
                   </code>
                 </pre>
                 <div className="absolute w-fit h-fit grid grid-flow-col auto-cols-auto bottom-3 right-2">
-                  <div className="relative w-fit h-fit col-start-1 text-offBlack text-sm font-sats">
+                  <div
+                    className={`relative w-fit h-fit col-start-1 text-sm font-sats ${
+                      textCount >= 270 ? "text-offBlue" : "text-offBlack"
+                    }`}
+                  >
                     {`${textCount}/270`}
                   </div>
                 </div>
