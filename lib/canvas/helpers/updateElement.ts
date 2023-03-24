@@ -98,7 +98,7 @@ const updateElement = (
           zoom,
           x1,
           y1,
-          x1! + textWidth ,
+          x1! + textWidth * zoom,
           y1! + textHeight! * zoom,
           type,
           index,

@@ -62,38 +62,6 @@ const useDrafts = (): UseDraftsResult => {
           }
           parsedElements.push(JSON.parse(elements[elem]))
         }
-
-        // elements.forEach(async (elem: any) => {
-        //   if (JSON.parse(elem).type === "image") {
-        //     const res: Response = await fetch(
-        //       `${INFURA_GATEWAY}/ipfs/${JSON.parse(elem).cid}`
-        //     );
-        //     const blob: Blob = await res.blob();
-        //     const postImage = new File([blob], "thedial_drafts", {
-        //       type: "image/png",
-        //     });
-        //     const reader = new FileReader();
-        //     reader?.readAsDataURL(postImage as File);
-        //     reader.onloadend = (e) => {
-        //       const imageObject = new Image();
-        //       imageObject.src = e.target?.result as string;
-        //       const data = {
-        //         id: JSON.parse(elem).id,
-        //         type: JSON.parse(elem).type,
-        //         x1: JSON.parse(elem).x1,
-        //         y1: JSON.parse(elem).y1,
-        //         x2: JSON.parse(elem).x2,
-        //         y2: JSON.parse(elem).y2,
-        //         image: imageObject,
-        //       };
-
-        //     };
-        //     parsedElements.push(JSON.stringify("")) ;
-        //   } else {
-        //     parsedElements.push("");
-        //   }
-        // });
-        // console.log(parsedElements, "here parsed")
         dispatch(setDraftElements(parsedElements));
       } else {
         alert("Not a valid Dial Canvas Draft.");
