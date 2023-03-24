@@ -151,7 +151,6 @@ const positionWithinElement = (
 
     case "text":
       const baselineOffset = ctx?.measureText("M").width! / 2;
-      console.log({ baselineOffset });
       return ((x - bounds.left - pan.xOffset) * devicePixelRatio) / zoom >=
         element.x1! &&
         ((x - bounds.left - pan.xOffset) * devicePixelRatio) / zoom <=
