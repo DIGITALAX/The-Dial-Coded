@@ -83,21 +83,20 @@ const BottomOptions: FunctionComponent<BottomOptionsProps> = ({
           </div>
         </div>
         <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
-          {thickness ||
-            (patternThickness && (
-              <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-1 bottom-6">
-                <input
-                  type="range"
-                  className="f11:right-10 right-auto f5:right-auto absolute w-[7rem] galaxy:w-[9rem] fo:w-[7rem] sm:w-[10rem] md:w-[15rem]"
-                  value={canvasType ? patternBrushWidth : brushWidth}
-                  onChange={
-                    canvasType
-                      ? (e) => setPatternBrushWidth(Number(e.target.value))
-                      : (e) => setBrushWidth(Number(e.target.value))
-                  }
-                />
-              </div>
-            ))}
+          {(thickness || patternThickness) && (
+            <div className="relative w-fit h-fit grid grid-flow-col auto-cols-auto row-start-1 bottom-6">
+              <input
+                type="range"
+                className="f11:right-10 right-auto f5:right-auto absolute w-[7rem] galaxy:w-[9rem] fo:w-[7rem] sm:w-[10rem] md:w-[15rem]"
+                value={canvasType ? patternBrushWidth : brushWidth}
+                onChange={
+                  canvasType
+                    ? (e) => setPatternBrushWidth(Number(e.target.value))
+                    : (e) => setBrushWidth(Number(e.target.value))
+                }
+              />
+            </div>
+          )}
           <div className="relative w-fit h-fit row-start-2 self-end">
             <CanvasOption
               image="QmXsWSdgvoieTtWYFskRmZCUnTN7WHvffxd3kSZMTcBjxm"

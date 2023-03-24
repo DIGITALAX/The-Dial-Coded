@@ -307,10 +307,10 @@ const useDraw = () => {
         "source-over";
 
       elements?.forEach((element: ElementInterface) => {
-        if (action === "writing" && selectedElement.id === element.id) {
+        if (action === "writing" && selectedElement?.id === element?.id) {
           return;
         }
-        if (element.type === "image" && typeof element.image === "string") {
+        if (element?.type === "image" && typeof element?.image === "string") {
           const img = new Image();
           img.src = element.image;
           element.image = img;
@@ -325,8 +325,8 @@ const useDraw = () => {
           ...canvasStorage,
           draw: elements?.map((elem: any) => {
             if (
-              elem.type === "image" &&
-              elem.image instanceof HTMLImageElement
+              elem?.type === "image" &&
+              elem?.image instanceof HTMLImageElement
             ) {
               return { ...elem, image: elem.image.src };
             } else {
@@ -368,19 +368,14 @@ const useDraw = () => {
       );
       if (element?.length > 0) {
         if (element[element?.length - 1].type === "pencil") {
-          console.log("pen")
           const offsetXs = element[element?.length - 1].points?.map(
             (point) =>
-              ((e.clientX - pan.xOffset * 0.5) *
-                devicePixelRatio) /
-                zoom -
+              ((e.clientX - pan.xOffset * 0.5) * devicePixelRatio) / zoom -
               point.x
           );
           const offsetYs = element[element?.length - 1].points?.map(
             (point) =>
-              ((e.clientY - pan.yOffset * 0.5) *
-                devicePixelRatio) /
-                zoom -
+              ((e.clientY - pan.yOffset * 0.5) * devicePixelRatio) / zoom -
               point.y
           );
           setSelectedElement({
@@ -389,14 +384,13 @@ const useDraw = () => {
             offsetYs,
           });
         } else {
+          console.log("sel");
           const offsetX =
-            ((e.clientX - bounds.left - pan.xOffset * zoom * zoom * 0.5) *
-              devicePixelRatio) /
+            ((e.clientX - bounds.left - pan.xOffset * 0.5) * devicePixelRatio) /
               zoom -
             (element[element?.length - 1]?.x1 as number);
           const offsetY =
-            ((e.clientY - bounds.top - pan.yOffset * zoom * zoom * 0.5) *
-              devicePixelRatio) /
+            ((e.clientY - bounds.top - pan.yOffset * 0.5) * devicePixelRatio) /
               zoom -
             (element[element?.length - 1]?.y1 as number);
           setSelectedElement({
@@ -432,20 +426,24 @@ const useDraw = () => {
         zoom,
         tool === "pencil" || tool === "text"
           ? e.clientX
-          : (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+          : (e.clientX - bounds.left - pan.xOffset * 0.5) *
               (devicePixelRatio / zoom),
         tool === "pencil" || tool === "text"
           ? e.clientY
-          : (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+          : (e.clientY - bounds.top - pan.yOffset * 0.5) *
               (devicePixelRatio / zoom),
-        tool === "pencil" || tool === "text"
+        tool === "pencil"
           ? e.clientX
-          : (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
-              (devicePixelRatio / zoom),
-        tool === "pencil" || tool === "text"
+          : tool === "text"
+          ? e.clientX + ctx?.measureText(selectedElement?.text!).width!
+          : (e.clientX - bounds.left - pan.xOffset * 0.5) *
+            (devicePixelRatio / zoom),
+        tool === "pencil"
           ? e.clientY
-          : (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
-              (devicePixelRatio / zoom),
+          : tool === "text"
+          ? e.clientY + ctx?.measureText("M").width! / 2
+          : (e.clientY - bounds.top - pan.yOffset * 0.5) *
+            (devicePixelRatio / zoom),
         tool,
         id,
         brushWidth,
@@ -477,13 +475,13 @@ const useDraw = () => {
         canvasState,
         zoom,
 
-        (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+        (e.clientX - bounds.left - pan.xOffset * 0.5) *
           (devicePixelRatio / zoom),
-        (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+        (e.clientY - bounds.top - pan.yOffset * 0.5) *
           (devicePixelRatio / zoom),
-        (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+        (e.clientX - bounds.left - pan.xOffset * 0.5) *
           (devicePixelRatio / zoom),
-        (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+        (e.clientY - bounds.top - pan.yOffset * 0.5) *
           (devicePixelRatio / zoom),
         tool,
         id
@@ -552,12 +550,12 @@ const useDraw = () => {
         values?.y1 as number,
         tool === "pencil"
           ? e.clientX
-          : (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+          : (e.clientX - bounds.left - pan.xOffset * 0.5) *
               (devicePixelRatio / zoom),
 
         tool === "pencil"
           ? e.clientY
-          : (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+          : (e.clientY - bounds.top - pan.yOffset * 0.5) *
               (devicePixelRatio / zoom),
         tool,
         index,
@@ -567,16 +565,14 @@ const useDraw = () => {
         hex
       );
     } else if (action === "moving") {
-      if (selectedElement.type === "pencil") {
+      if (selectedElement?.type === "pencil") {
         const newPoints = selectedElement.points?.map(
           (_: ElementInterface, index: number) => ({
             x:
-              ((e.clientX - pan.xOffset * 0.5) / zoom) *
-                devicePixelRatio -
+              ((e.clientX - pan.xOffset * 0.5) / zoom) * devicePixelRatio -
               selectedElement?.offsetXs[index],
             y:
-              ((e.clientY - pan.yOffset * 0.5) / zoom) *
-                devicePixelRatio -
+              ((e.clientY - pan.yOffset * 0.5) / zoom) * devicePixelRatio -
               selectedElement?.offsetYs[index],
           })
         );
@@ -586,19 +582,19 @@ const useDraw = () => {
           points: newPoints,
         };
         setElements(elementsCopy, true);
-      } else if (selectedElement.type === "image") {
+      } else if (selectedElement?.type === "image") {
         const { x2, x1, y2, y1, id, type, offsetX, offsetY, image } =
           selectedElement;
         const afterOffsetX =
           e.clientX -
           bounds?.left -
-          pan.xOffset * zoom * zoom * 0.5 -
-          ((offsetX - pan.xOffset * zoom) * zoom) / devicePixelRatio;
+          pan.xOffset * 0.5 -
+          (offsetX * zoom - pan.xOffset) / devicePixelRatio;
         const afterOffsetY =
           e.clientY -
           bounds?.top -
-          pan.yOffset * zoom * zoom * 0.5 -
-          ((offsetY - pan.yOffset * zoom) * zoom) / devicePixelRatio;
+          pan.yOffset * 0.5 -
+          (offsetY * zoom - pan.yOffset) / devicePixelRatio;
         updateElement(
           {
             xOffset: pan.xOffset * 0.5,
@@ -638,14 +634,19 @@ const useDraw = () => {
           offsetY,
         } = selectedElement;
         const afterOffsetX =
-          ((e.clientX - bounds?.left - pan.xOffset * zoom * zoom * 0.5) /
-            zoom) *
-            devicePixelRatio -
-          offsetX;
+          type === "text"
+            ? ((e.clientX - bounds?.left - pan.xOffset * 0.5) * devicePixelRatio) /
+              zoom
+            : ((e.clientX - bounds?.left - pan.xOffset * 0.5) / zoom) *
+                devicePixelRatio -
+              offsetX;
         const afterOffsetY =
-          ((e.clientY - bounds?.top - pan.yOffset * zoom * zoom * 0.5) / zoom) *
-            devicePixelRatio -
-          offsetY;
+          type === "text"
+            ? ((e.clientY - bounds?.top - pan.yOffset * 0.5) * devicePixelRatio) /
+              zoom
+            : ((e.clientY - bounds?.top - pan.yOffset * 0.5) / zoom) *
+                devicePixelRatio -
+              offsetY;
         updateElement(
           {
             xOffset: pan.xOffset * 0.5,
@@ -656,34 +657,10 @@ const useDraw = () => {
           elements,
           setElements,
           ctx as CanvasRenderingContext2D,
-          type === "text"
-            ? ((e.clientX -
-                bounds.left / devicePixelRatio -
-                (pan.xOffset * zoom * zoom) / devicePixelRatio) *
-                devicePixelRatio) /
-                zoom
-            : afterOffsetX,
-          type === "text"
-            ? ((e.clientY -
-                bounds.top / devicePixelRatio -
-                (pan.yOffset * zoom * zoom) / devicePixelRatio) *
-                devicePixelRatio) /
-                zoom
-            : afterOffsetY,
-          type === "text"
-            ? ((e.clientX -
-                bounds.left / devicePixelRatio -
-                (pan.xOffset * zoom * zoom) / devicePixelRatio) *
-                devicePixelRatio) /
-                zoom
-            : afterOffsetX + x2,
-          type === "text"
-            ? ((e.clientY -
-                bounds.top / devicePixelRatio -
-                (pan.yOffset * zoom * zoom) / devicePixelRatio) *
-                devicePixelRatio) /
-                zoom
-            : afterOffsetY + y2,
+          afterOffsetX,
+          afterOffsetY,
+          afterOffsetX + x2,
+          afterOffsetY + y2,
           type,
           id,
           strokeWidth,
@@ -718,9 +695,9 @@ const useDraw = () => {
         ctx as CanvasRenderingContext2D,
         x1 as number,
         y1 as number,
-        (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+        (e.clientX - bounds.left - pan.xOffset * 0.5) *
           (devicePixelRatio / zoom),
-        (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+        (e.clientY - bounds.top - pan.yOffset * 0.5) *
           (devicePixelRatio / zoom),
         tool,
         index,
@@ -741,14 +718,14 @@ const useDraw = () => {
           updatedY2: number,
           updatedX1: number,
           updatedY1: number;
-        if ((values?.x2 as number) < 1) {
+        if ((values?.x2 as number) < 1 && values?.type !== "line") {
           updatedX1 = (values?.x2 as number) + (values?.x1 as number);
           updatedX2 = values?.x1 as number;
         } else {
           updatedX1 = values?.x1 as number;
           updatedX2 = (values?.x2 as number) + (values?.x1 as number);
         }
-        if ((values?.y2 as number) < 1) {
+        if ((values?.y2 as number) < 1 && values?.type !== "line") {
           updatedY1 = (values?.y2 as number) + (values?.y1 as number);
           updatedY2 = values?.y1 as number;
         } else {
@@ -756,11 +733,9 @@ const useDraw = () => {
           updatedY2 = (values?.y2 as number) + (values?.y1 as number);
         }
         const updatedCoordinates = resizedCoordinates(
-          ((e.clientX - bounds.left - pan.xOffset * zoom * zoom * 0.5) *
-            devicePixelRatio) /
+          ((e.clientX - bounds.left - pan.xOffset * 0.5) * devicePixelRatio) /
             zoom,
-          ((e.clientY - bounds.top - pan.yOffset * zoom * zoom * 0.5) *
-            devicePixelRatio) /
+          ((e.clientY - bounds.top - pan.yOffset * 0.5) * devicePixelRatio) /
             zoom,
           values?.position,
           updatedX1,
@@ -794,10 +769,10 @@ const useDraw = () => {
           e.clientX - bounds?.left,
           e.clientY - bounds?.top,
           values?.position,
-          (values?.x1 * zoom + pan.xOffset * zoom * zoom) / devicePixelRatio,
-          (values?.y1 * zoom + pan.yOffset * zoom * zoom) / devicePixelRatio,
-          (values?.x2 * zoom + pan.xOffset * zoom * zoom) / devicePixelRatio,
-          (values?.y2 * zoom + pan.yOffset * zoom * zoom) / devicePixelRatio
+          (values?.x1 * zoom + pan.xOffset) / devicePixelRatio,
+          (values?.y1 * zoom + pan.yOffset) / devicePixelRatio,
+          (values?.x2 * zoom + pan.xOffset) / devicePixelRatio,
+          (values?.y2 * zoom + pan.yOffset) / devicePixelRatio
         );
         updateElement(
           {
@@ -835,9 +810,9 @@ const useDraw = () => {
           ctx as CanvasRenderingContext2D,
           values?.x1,
           values?.y1,
-          (e.clientX - bounds.left - pan.xOffset * 0.5 * zoom * zoom) *
+          (e.clientX - bounds.left - pan.xOffset * 0.5) *
             (devicePixelRatio / zoom),
-          (e.clientY - bounds.top - pan.yOffset * 0.5 * zoom * zoom) *
+          (e.clientY - bounds.top - pan.yOffset * 0.5) *
             (devicePixelRatio / zoom),
           values?.type,
           values?.id,
@@ -866,14 +841,8 @@ const useDraw = () => {
         elements,
         setElements,
         ctx as CanvasRenderingContext2D,
-        (x1 * devicePixelRatio +
-          bounds.left * zoom -
-          pan.xOffset * zoom * zoom) /
-          zoom,
-        (y1 * devicePixelRatio +
-          bounds.top * zoom -
-          pan.yOffset * zoom * zoom) /
-          zoom,
+        (x1 * devicePixelRatio + bounds.left * zoom - pan.xOffset) / zoom,
+        (y1 * devicePixelRatio + bounds.top * zoom - pan.yOffset) / zoom,
         x2,
         y2,
         type,
@@ -890,7 +859,7 @@ const useDraw = () => {
   const handleMouseUp = (e: MouseEvent): void => {
     if (selectedElement) {
       if (
-        selectedElement.type === "text" &&
+        selectedElement?.type === "text" &&
         e.clientX - selectedElement.offsetX === selectedElement.x1 &&
         e.clientY - selectedElement.offsetY === selectedElement.y1
       ) {
@@ -932,7 +901,7 @@ const useDraw = () => {
     const textAreaElement = writingRef.current;
     if (action === "writing") {
       textAreaElement?.focus();
-      (textAreaElement as HTMLTextAreaElement).value = selectedElement.text;
+      (textAreaElement as HTMLTextAreaElement).value = selectedElement?.text;
     }
   }, [tool, action, selectedElement]);
 
