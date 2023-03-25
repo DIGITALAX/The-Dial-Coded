@@ -6,6 +6,7 @@ import { PublicationSearchResult } from "../../../../../../Common/types/lens.typ
 import InfiniteScroll from "react-infinite-scroll-component";
 import PostFeedLoading from "../../../../../../Common/Loaders/PostFeedLoading";
 import FetchMoreLoading from "../../../../../../Common/Loaders/FetchMoreLoading";
+import { getScrollPosition } from "../../../../../../../lib/lens/utils";
 
 const Main: FunctionComponent<MainProps> = ({
   publicationsFeed,
@@ -25,19 +26,16 @@ const Main: FunctionComponent<MainProps> = ({
   noHotData,
   hasMore,
   reactionLoaded,
+  onFeedScroll,
 }): JSX.Element => {
   const dispatch = useDispatch();
   if (publicationsLoading && firstPubLoad) {
     return <PostFeedLoading />;
   }
   return (
-    <div
-      className="relative w-full md:w-[50vw] h-full row-start-2 md:row-start-1 col-start-1 grid grid-flow-row auto-rows-auto gap-5"
-      id="targetDiv"
-    >
+    <div className="relative w-full md:w-[50vw] h-full row-start-2 md:row-start-1 col-start-1 grid grid-flow-row auto-rows-auto gap-5">
       {!noUserData ? (
         <InfiniteScroll
-          scrollableTarget={"targetDiv"}
           height={"242.95rem"}
           loader={<FetchMoreLoading />}
           hasMore={hasMore}
@@ -45,8 +43,13 @@ const Main: FunctionComponent<MainProps> = ({
           dataLength={publicationsFeed?.length}
           className={`relative row-start-1 w-full h-full`}
           style={{ color: "#131313", fontFamily: "Digi Reg" }}
+          scrollableTarget="scrollableDiv"
+          scrollThreshold={0.9}
+          onScroll={() => onFeedScroll()}
         >
-          <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-3 overflow-y-scroll">
+          <div
+            className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-3 overflow-y-scroll"
+          >
             {publicationsFeed?.map(
               (publication: PublicationSearchResult, index: number) => {
                 return (

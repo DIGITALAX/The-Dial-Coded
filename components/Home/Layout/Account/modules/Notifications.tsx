@@ -22,10 +22,8 @@ const Notifications: FunctionComponent<NotificationsProps> = ({
       ) : notificationsList?.length > 0 ? (
         <div
           className="relative w-full h-full row-start-2 grid grid-flow-row auto-rows-auto gap-5"
-          id="targetDiv"
         >
           <InfiniteScroll
-            scrollableTarget={"targetDiv"}
             height={"44rem"}
             loader={<FetchMoreLoading />}
             hasMore={hasMoreNotifications}

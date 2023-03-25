@@ -3,6 +3,7 @@ import refresh from "../../graphql/mutations/refresh";
 const AUTH_STORAGE_KEY = "LH_STORAGE_KEY";
 const NOTIF_STORAGE_KEY = "LH_NOTIFICATIONS";
 const POST_STORAGE_KEY = "POST_STORAGE";
+const SCROLL_STORAGE_KEY = "SCROLL_POSITION";
 
 interface authToken {
   token: {
@@ -122,5 +123,20 @@ export const getNotificationLength = () => {
     return JSON.parse(data) as {
       notifLength: number;
     };
+  }
+};
+
+export const setScrollPosition = (pos: string) => {
+  if (typeof window !== "undefined") {
+    sessionStorage.setItem(SCROLL_STORAGE_KEY, pos);
+    return;
+  }
+};
+
+export const getScrollPosition = () => {
+  if (typeof window !== "undefined") {
+    const data = sessionStorage.getItem(SCROLL_STORAGE_KEY);
+    if (!data) return null;
+    return data;
   }
 };

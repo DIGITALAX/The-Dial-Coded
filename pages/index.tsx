@@ -18,6 +18,7 @@ const Home: NextPage<HomeProps> = ({ newLink }): JSX.Element => {
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
+
   useEffect(() => {
     if (router?.asPath?.includes("#")) {
       dispatch(setLayout(router.asPath.split("/#")[1]));
@@ -29,6 +30,12 @@ const Home: NextPage<HomeProps> = ({ newLink }): JSX.Element => {
       });
     }
   }, [router?.asPath]);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.clear();
+    });
+  }, []);
 
   useEffect(() => {
     checkDispatcher(dispatch, profile?.id, profile?.dispatcher?.canUseRelay);

@@ -25,7 +25,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   handleHidePost,
   followerOnly,
   height,
-  reactionLoaded
+  reactionLoaded,
 }): JSX.Element => {
   const router = useRouter();
   const viewerOpen = useSelector(
@@ -55,6 +55,8 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
       className={`relative w-full ${
         height ? "h-full" : "h-fit"
       } flex flex-row flex-wrap sm:flex-nowrap gap-6 rounded-md z-0`}
+      data-post-id={(publication as any).id}
+      id={(publication as any).id}
     >
       <Profile
         publication={publication}
@@ -101,12 +103,12 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
             (publication as any)?.__typename === "Mirror"
               ? "row-start-2"
               : "row-start-1"
-          } relative w-full h-fit  text-left font-dosis grid grid-flow-row auto-rows-auto gap-6`}
+          } relative w-full h-fit text-left font-dosis grid grid-flow-row auto-rows-auto gap-6`}
         >
           <div
             className={`relative w-full h-fit row-start-1 relative w-fit h-fit ${
               mixtapeMirror ? "text-offBlack" : "text-white"
-            } font-dosis self-center text-base justify-self-start`}
+            } font-dosis self-center justify-self-start `}
           >
             {!mixtapeMirror ? (
               <div

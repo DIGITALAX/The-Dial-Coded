@@ -28,6 +28,11 @@ import checkIfMixtapeMirror from "../../../../../../../lib/lens/helpers/checkIfM
 import getPostComments from "../../../../../../../lib/lens/helpers/getPostComments";
 import checkIfFollowerOnly from "../../../../../../../lib/lens/helpers/checkIfFollowerOnly";
 import checkFeedTypes from "../../../../../../../lib/lens/helpers/checkFeedTypes";
+import {
+  getScrollPosition,
+  setScrollPosition,
+} from "../../../../../../../lib/lens/utils";
+import { scrollToPosition } from "../../../../../../../lib/lens/helpers/scrollToPosition";
 
 const useMainFeed = () => {
   const router = useRouter();
@@ -155,6 +160,13 @@ const useMainFeed = () => {
           undefined
         );
         setFollowerOnly(isOnlyFollowers as boolean[]);
+      }
+      console.log({ filteredArr });
+      if (firstPubLoad) {
+        const postStorage = getScrollPosition();
+        if (postStorage) {
+          scrollToPosition(filteredArr, postStorage, fetchMorePublications);
+        }
       }
       setPublicationsLoading(false);
       setFirstPubLoad(false);
@@ -342,7 +354,7 @@ const useMainFeed = () => {
   };
 
   // fetch more
-  const fetchMorePublications = async (): Promise<void> => {
+  const fetchMorePublications = async (): Promise<any[] | void> => {
     const feedOrder = checkPublicationTypes(feedOrderState, feedPriorityState);
     const feedType = checkFeedTypes(
       feedTypeState as string,
@@ -419,6 +431,7 @@ const useMainFeed = () => {
         ...prevReactionsLoaded,
         ...Array(filteredArr?.length).fill(true),
       ]);
+      return [...publicationsFeed, ...filteredArr];
     } catch (err: any) {
       console.error(err);
     }
@@ -740,7 +753,10 @@ const useMainFeed = () => {
   ]);
 
   useEffect(() => {
-    if (!router.asPath.includes("post") && !router.asPath.includes("mixtape")) {
+    if (
+      !router.asPath.includes("/post/") &&
+      !router.asPath.includes("/mixtape/")
+    ) {
       if (userView?.handle) {
         getUserSelectFeed();
       } else {
@@ -767,6 +783,26 @@ const useMainFeed = () => {
     router.asPath,
   ]);
 
+  const onFeedScroll = () => {
+    const scrollableDivRef = document.getElementsByClassName(
+      "relative row-start-1 w-full h-full"
+    );
+    const postElements = document.querySelectorAll("[data-post-id]");
+    for (let i = postElements.length - 1; i >= 0; i--) {
+      const postElement = postElements[i];
+      const postElementBounds = postElement.getBoundingClientRect();
+      const scrollableDivBounds = scrollableDivRef[4].getBoundingClientRect();
+      if (
+        postElementBounds.top <= scrollableDivBounds.top + 50 &&
+        postElementBounds.bottom >= scrollableDivBounds.top
+      ) {
+        const postId = (postElement as any).dataset.postId;
+        setScrollPosition(String(postId));
+        break;
+      }
+    }
+  };
+
   return {
     publicationsFeed,
     fetchMoreFeed,
@@ -791,6 +827,7 @@ const useMainFeed = () => {
     firstPubLoad,
     hasMore,
     setReactionLoaded,
+    onFeedScroll,
   };
 };
 
