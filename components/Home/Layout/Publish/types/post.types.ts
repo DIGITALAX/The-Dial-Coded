@@ -1,3 +1,5 @@
+import { LegacyRef, Ref } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { AnyAction, Dispatch } from "redux";
 import {
   Profile,
@@ -42,4 +44,5 @@ export type FeedProps = {
   hasMoreHot: boolean;
   reactionLoaded: boolean[];
   reactionLoadedHot: boolean[];
+  onFeedScroll: () => void;
 };

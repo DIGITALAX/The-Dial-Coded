@@ -1,3 +1,4 @@
+import { Ref, RefObject } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Profile,
@@ -23,7 +24,8 @@ export type MainProps = {
   mixtapeLength: number;
   noHotData: boolean;
   hasMore: boolean;
-  reactionLoaded: boolean[]
+  reactionLoaded: boolean[];
+  onFeedScroll: () => void;
 };
 
 export type HotProps = {
@@ -41,7 +43,7 @@ export type HotProps = {
   hotFollowerOnly: boolean[];
   noHotData: boolean;
   hasMoreHot: boolean;
-  reactionLoaded: boolean[]
+  reactionLoaded: boolean[];
 };
 
 export type UseHotResults = {
@@ -55,7 +57,7 @@ export type UseHotResults = {
   firstMixLoad: boolean;
   followerOnly: boolean[];
   hasMoreHot: boolean;
-  reactionLoaded: boolean[]
+  reactionLoaded: boolean[];
 };
 
 export type UseMainResults = {

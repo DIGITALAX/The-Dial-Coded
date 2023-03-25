@@ -31,7 +31,8 @@ const Feed: FunctionComponent<FeedProps> = ({
   hasMore,
   hasMoreHot,
   reactionLoaded,
-  reactionLoadedHot
+  reactionLoadedHot,
+  onFeedScroll,
 }): JSX.Element => {
   const dispatch = useDispatch();
   const isOpen = useSelector(
@@ -62,6 +63,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           noHotData={noHotData}
           hasMore={hasMore}
           reactionLoaded={reactionLoaded}
+          onFeedScroll={onFeedScroll}
         />
         <Hot
           isOpen={isOpen}

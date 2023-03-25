@@ -32,7 +32,7 @@ const useParameters = (): UseParametersResult => {
     "reactions",
     "interests",
     "video",
-    "long form",
+    "texto",
     "audio",
   ];
   const [profileSearch, setProfileSearch] = useState<any[]>([]);
