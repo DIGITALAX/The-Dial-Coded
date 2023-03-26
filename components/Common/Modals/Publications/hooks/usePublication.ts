@@ -79,7 +79,9 @@ const usePublication = () => {
     (state: RootState) => state?.app?.lensProfileReducer?.profile?.id
   );
   const [tags, setTags] = useState<string[]>(
-    route.includes("/post/") ? [] : JSON.parse(getPostData() || "{}").tags || []
+    isCanvas || route.includes("/post/")
+      ? []
+      : JSON.parse(getPostData() || "{}").tags || []
   );
   const pubId = useSelector(
     (state: RootState) => state.app.reactionStateReducer.value
@@ -95,7 +97,7 @@ const usePublication = () => {
     (state: RootState) => state?.app?.collectValueTypeReducer?.type
   );
   const [gifs, setGifs] = useState<UploadedMedia[]>(
-    route.includes("/post/")
+    isCanvas || route.includes("/post/")
       ? []
       : JSON.parse(getPostData() || "{}").images || []
   );
@@ -109,7 +111,7 @@ const usePublication = () => {
 
   useEffect(() => {
     const savedData = getPostData();
-    if (savedData && postBox) {
+    if (savedData && postBox && !isCanvas) {
       setPostDescription(JSON.parse(savedData).post);
       setTextCount(JSON.parse(savedData).post.length);
       let resultElement = document.querySelector("#highlighted-content");
@@ -240,15 +242,15 @@ const usePublication = () => {
   };
 
   const handleEmoji = (e: any): void => {
-    if (e.target.value.length > 270) {
-      setPostDescription(e.target.value.slice(0, 269));
+    if ((postDescription + e.emoji).length > 270) {
+      setPostDescription((postDescription + e.emoji).slice(0, 269));
     }
-    setTextCount(e.target.value.length);
+    setTextCount((postDescription + e.emoji).length);
     let resultElement = document.querySelector("#highlighted-content");
     (resultElement as any).innerHTML = postHTML + e.emoji;
     setPostHTML(postHTML + e.emoji);
     setPostDescription(postDescription + e.emoji);
-    if (!route.includes("/post/")) {
+    if (!route.includes("/post/") && !isCanvas && !route.includes("#Canvas")) {
       const postStorage = JSON.parse(getPostData() || "{}");
       setPostData(
         JSON.stringify({
@@ -281,7 +283,7 @@ const usePublication = () => {
           type: MediaType.Gif,
         },
       ]);
-      if (!route.includes("/post/")) {
+      if (!route.includes("/post/") && !isCanvas && !route.includes("#Canvas")) {
         const postStorage = JSON.parse(getPostData() || "{}");
         setPostData(
           JSON.stringify({
@@ -480,7 +482,7 @@ const usePublication = () => {
     }
     setTextCount(newElementPost.length);
     setPostDescription(newElementPost);
-    if (!route.includes("/post/")) {
+    if (!route.includes("/post/") && !isCanvas && !route.includes("#Canvas")) {
       const postStorage = JSON.parse(getPostData() || "{}");
       setPostData(
         JSON.stringify({
@@ -504,7 +506,7 @@ const usePublication = () => {
     setTextCount(e.target.value.length);
     setPostHTML(getPostHTML(e, resultElement as Element));
     setPostDescription(e.target.value);
-    if (!route.includes("/post/")) {
+    if (!route.includes("/post/") && !isCanvas && !route.includes("#Canvas")) {
       const postStorage = JSON.parse(getPostData() || "{}");
       setPostData(
         JSON.stringify({
@@ -542,7 +544,7 @@ const usePublication = () => {
     let newTags: string[] = [...(tags as string[])];
     newTags.push((e.target as HTMLFormElement).tag?.value);
     setTags(newTags);
-    if (!route.includes("/post/")) {
+    if (!route.includes("/post/") && !isCanvas && !route.includes("#Canvas")) {
       const postStorage = JSON.parse(getPostData() || "{}");
       setPostData(
         JSON.stringify({
@@ -557,7 +559,7 @@ const usePublication = () => {
     const newArr = lodash.filter(tags, (tag: string) => tag !== removeTag);
     setTags(newArr);
     const postStorage = JSON.parse(getPostData() || "{}");
-    if (!route.includes("/post/")) {
+    if (!route.includes("/post/") && !isCanvas && !route.includes("#Canvas")) {
       setPostData(
         JSON.stringify({
           ...postStorage,
