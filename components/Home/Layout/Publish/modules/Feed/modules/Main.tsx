@@ -43,13 +43,13 @@ const Main: FunctionComponent<MainProps> = ({
           dataLength={publicationsFeed?.length}
           className={`relative row-start-1 w-full h-full`}
           style={{ color: "#131313", fontFamily: "Digi Reg" }}
-          scrollableTarget="scrollableDiv"
           scrollThreshold={0.9}
           onScroll={() => onFeedScroll()}
+          initialScrollY={
+            Number(JSON.parse(getScrollPosition() || "{}").top) || 0
+          }
         >
-          <div
-            className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-3 overflow-y-scroll"
-          >
+          <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto gap-3 overflow-y-scroll">
             {publicationsFeed?.map(
               (publication: PublicationSearchResult, index: number) => {
                 return (
