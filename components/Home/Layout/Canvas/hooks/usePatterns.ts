@@ -38,6 +38,7 @@ import {
   getCanvasStorage,
   setCanvasStorage,
 } from "../../../../../lib/replicate/utils";
+import { setFulfillment } from "../../../../../redux/reducers/fulfillmentSlice";
 
 const usePatterns = (): UsePatternsResult => {
   const dispatch = useDispatch();
@@ -50,6 +51,9 @@ const usePatterns = (): UsePatternsResult => {
   );
   const promptLoading = useSelector(
     (state: RootState) => state.app.synthLoadingReducer.value
+  );
+  const postImage = useSelector(
+    (state: RootState) => state.app.postImageReducer.value
   );
   const writingRef = useRef<HTMLTextAreaElement>(null);
   const canvasPatternRef = useRef<HTMLCanvasElement>(null);
@@ -74,6 +78,7 @@ const usePatterns = (): UsePatternsResult => {
     xOffset: 0,
     yOffset: 0,
   });
+  const [value, setValue] = useState<string | undefined>("");
   const [patternType, setPatternType] = useState<string>("");
   const [template, setTemplate] = useState<string>("");
   const [switchType, setSwitchType] = useState<boolean>(false);
@@ -95,6 +100,7 @@ const usePatterns = (): UsePatternsResult => {
   );
   const [postLoading, setPostLoading] = useState<boolean>(false);
   const templateSwitch = async (value: string | undefined) => {
+    setValue(value);
     await addRashToCanvas(
       setElements,
       JSON.parse(getCanvasStorage() || "{}")?.[patternType]?.[template] || [],
@@ -159,7 +165,7 @@ const usePatterns = (): UsePatternsResult => {
           [patternType]: {
             ...canvasStorage[patternType],
             [template]: elements
-              .map((elem: any) => {
+              ?.map((elem: any) => {
                 if (
                   elem.type === "image" &&
                   elem.image instanceof HTMLImageElement
@@ -610,7 +616,7 @@ const usePatterns = (): UsePatternsResult => {
         const reader = new FileReader();
         reader?.readAsDataURL(compressedImage as File);
         reader.onloadend = async (e) => {
-          const imagePromises = synthElementSelect.map((selectedTemplate) => {
+          const imagePromises = synthElementSelect?.map((selectedTemplate) => {
             return new Promise((resolve, reject) => {
               const imageObject = new Image();
               imageObject.src = e.target?.result as string;
@@ -661,7 +667,7 @@ const usePatterns = (): UsePatternsResult => {
           setSynthElementMove(undefined);
         };
       } else {
-        const imagePromises = synthElementSelect.map((selectedTemplate) => {
+        const imagePromises = synthElementSelect?.map((selectedTemplate) => {
           return new Promise((resolve, reject) => {
             const imageObject = new Image();
             imageObject.src = e;
@@ -796,6 +802,51 @@ const usePatterns = (): UsePatternsResult => {
     }
   };
 
+  const handleFulfillment = async (): Promise<void> => {
+    setPostLoading(true);
+    const filteredCanvas = document.createElement("canvas");
+    const context = filteredCanvas.getContext("2d");
+    filteredCanvas.width = canvas.width;
+    filteredCanvas.height = canvas.height;
+    elements.forEach((element: any) => {
+      if (
+        element.type === "image" ||
+        element.type === "0" ||
+        element.type === "1" ||
+        element.type === "2"
+      ) {
+        drawPatternElement(
+          element,
+          context,
+          zoom,
+          tool,
+          synthElementMove!,
+          synthElementSelect!,
+          promptLoading,
+          true
+        );
+      } else {
+        drawElement(element, context, zoom, filteredCanvas);
+      }
+    });
+    await dispatchPostCanvas(
+      filteredCanvas,
+      elements,
+      uploadImage,
+      setPostLoading
+    );
+    filteredCanvas.remove();
+    setPostLoading(false);
+    dispatch(
+      setFulfillment({
+        actionOpen: true,
+        actionFile: "",
+        actionCatalog: patternType,
+        actionSku: value,
+      })
+    );
+  };
+
   return {
     template,
     patternType,
@@ -837,6 +888,7 @@ const usePatterns = (): UsePatternsResult => {
     postLoading,
     saveImagesLocal,
     setSaveImagesLocal,
+    handleFulfillment,
   };
 };
 

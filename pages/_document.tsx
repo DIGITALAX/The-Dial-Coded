@@ -98,6 +98,13 @@ class Document extends NextDocument {
             crossOrigin=""
             type="font/ttf"
           />
+          <link
+            rel="preload"
+            href="/fonts/HermanoAltoStamp.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
           <style
             dangerouslySetInnerHTML={{
               __html: `
@@ -159,6 +166,12 @@ class Document extends NextDocument {
                 font-family: "Earls Revenge";
                 font-weight: 400;
                 src: url("./fonts/EarlsRevenge.ttf");
+              }
+
+              @font-face {
+                font-family: "Hermano";
+                font-weight: 400;
+                src: url("/fonts/HermanoAltoStamp.ttf");
               }
             `,
             }}

@@ -43,7 +43,6 @@ import noUserDataReducer from "./reducers/noUserDataSlice";
 import notificationsReducer from "./reducers/notificationsSlice";
 import mixtapeTitleReducer from "./reducers/mixtapeTitleSlice";
 import mixtapeSourceReducer from "./reducers/mixtapeSourceSlice";
-import completeTrackReducer from "./reducers/completeTrackSlice";
 import chosenDMProfileReducer from "./reducers/chosenDMProfileSlice";
 import preSearchReducer from "./reducers/preSearchSlice";
 import lexicaImagesReducer from "./reducers/lexicaImagesSlice";
@@ -64,6 +63,7 @@ import initImagePromptReducer from "./reducers/initImagePromptSlice";
 import selectSynthElementReducer from "./reducers/selectSynthElementSlice";
 import synthLoadingReducer from "./reducers/synthLoadingSlice";
 import litClientReducer from "./reducers/litClientSlice";
+import fulfillmentReducer from "./reducers/fulfillmentSlice";
 
 const reducer = combineReducers({
   layoutReducer,
@@ -109,7 +109,6 @@ const reducer = combineReducers({
   notificationsReducer,
   mixtapeSourceReducer,
   mixtapeTitleReducer,
-  completeTrackReducer,
   chosenDMProfileReducer,
   preSearchReducer,
   lexicaImagesReducer,
@@ -130,6 +129,7 @@ const reducer = combineReducers({
   selectSynthElementReducer,
   synthLoadingReducer,
   litClientReducer,
+  fulfillmentReducer,
 });
 
 export const store = configureStore({

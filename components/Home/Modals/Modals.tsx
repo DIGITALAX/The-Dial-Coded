@@ -12,14 +12,15 @@ import CommentsModal from "../../Common/Modals/Publications/CommentsModal";
 import HeartsModal from "../../Common/Modals/Reactions/HeartsModal";
 import MirrorsModal from "../../Common/Modals/Reactions/MirrorsModal";
 import SignInModal from "../../Common/Modals/SignIn/SignInModal";
-import Transaction from "../../Common/Modals/Transactions/Transactions";
+import General from "../../Common/Modals/General/General";
 import useMainFeed from "../Layout/Publish/modules/Feed/hooks/useMainFeed";
 import FollowsModal from "../../Common/Modals/Follows/FollowsModal";
 import useProfilePage from "../Profile/hooks/useProfilePage";
 import IndexingModal from "../../Common/Modals/Indexing/IndexingModal";
-import CompleteTrack from "../../Common/Modals/CompleteTrack/CompleteTrackModal";
 import handleHidePost from "../../../lib/lens/helpers/handleHidePost";
 import FollowTypeModal from "../../Common/Modals/FollowType/FollowTypeModal";
+import FulfillmentCanvas from "../../Common/Modals/FulfillmentCanvas/FulfillmentCanvas";
+import useFulfillmentCanvas from "../../Common/Modals/FulfillmentCanvas/hooks/useFulfillmentCanvas";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -53,11 +54,17 @@ const Modals = () => {
   const indexingModal = useSelector(
     (state: RootState) => state.app.indexModalReducer
   );
-  const completeTrackModal = useSelector(
-    (state: RootState) => state.app.completeTrackReducer.value
-  );
   const followTypes = useSelector(
     (state: RootState) => state.app.followTypeValuesReducer
+  );
+  const fulfillmentModal = useSelector(
+    (state: RootState) => state.app.fulfillmentReducer
+  );
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile
+  );
+  const image = useSelector(
+    (state: RootState) => state.app.postImageReducer.value
   );
   const {
     mirrorInfoLoading,
@@ -111,12 +118,42 @@ const Modals = () => {
     followLoading,
   } = useProfilePage();
 
+  const {
+    notes,
+    setNotes,
+    amount,
+    setAmount,
+    sizes,
+    setSizes,
+    baseColor,
+    setBaseColor,
+    payment,
+    setPayment,
+  } = useFulfillmentCanvas();
+
   return (
     <>
       {makePublication && <PublicationModal />}
       {signInModal && <SignInModal />}
       {getProfileModal && <GetProfileModal />}
       {imageViewerModal && <ImageViewerModal />}
+      {fulfillmentModal.open && (
+        <FulfillmentCanvas
+          lensProfile={lensProfile}
+          fulfillmentModal={fulfillmentModal}
+          postImage={image![0].cid}
+          notes={notes}
+          setNotes={setNotes}
+          amount={amount}
+          setAmount={setAmount}
+          sizes={sizes}
+          setSizes={setSizes}
+          baseColor={baseColor}
+          setBaseColor={setBaseColor}
+          payment={payment}
+          setPayment={setPayment}
+        />
+      )}
       {collectNotificationModal && <CollectNotificationModal />}
       {reactionModal.open && reactionModal.type === "collect" && (
         <CollectsModal
@@ -183,13 +220,10 @@ const Modals = () => {
           followLoading={followLoading}
         />
       )}
-      {completeTrackModal && (
-        <CompleteTrack inputText="Fill Out both the title and image of your track!" />
-      )}
       {indexingModal?.value && (
         <IndexingModal message={indexingModal?.message} />
       )}
-      {text !== "" && text !== undefined && <Transaction inputText={text} />}
+      {text !== "" && text !== undefined && <General inputText={text} />}
     </>
   );
 };

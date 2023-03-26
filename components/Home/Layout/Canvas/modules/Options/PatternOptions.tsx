@@ -16,7 +16,7 @@ const PatternOptions: FunctionComponent<PatternOptionsProps> = ({
     (state: RootState) => state.app.canvasTypeReducer.value
   );
   return (
-    <div className="absolute flex flex-row gap-2 bottom-3 w-fit h-fit left-20">
+    <div className="absolute flex flex-row gap-2 bottom-3 w-fit h-fit left-20 sm:flex-nowrap flex-wrap">
       <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto gap-1 self-end">
         {patternType === "0" && (
           <div className="relative w-fit h-fit row-start-1 place-self-center bottom-14 right-5">

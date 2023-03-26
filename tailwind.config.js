@@ -17,6 +17,7 @@ module.exports = {
         mult: "Multiple",
         sats: "Satoshi",
         earl: "Earls Revenge",
+        herm: "Hermano",
       },
       colors: {
         offBlack: "#111313",
@@ -62,6 +63,12 @@ module.exports = {
         litnus: "#06cf0b",
         posh: "#0a15c7",
         cap: "#919191",
+        dG: "#001517",
+        naran: "#F87326",
+        azul: "#85AEFF",
+        playa: "#2A58F6",
+        rojo: "#F62A2A",
+        amarillo: "#F7F7F3"
       },
       cursor: {
         focus: "url('/focus.png'), auto",
@@ -78,7 +85,7 @@ module.exports = {
       },
       backgroundSize: {
         boardSize: "2em 2em",
-        tileSize: "80em 80em"
+        tileSize: "80em 80em",
       },
       zIndex: {
         1: "1",

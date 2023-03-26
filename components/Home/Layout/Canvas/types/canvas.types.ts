@@ -162,6 +162,9 @@ export type DrawProps = {
   openHeight: boolean;
   samplers: any[];
   handleReset: () => void;
+  publishModal: boolean;
+  setPublishModal: (e: boolean) => void;
+  handleFulfillment: () => Promise<void>;
 };
 
 export type ColorPickerProps = {
@@ -376,6 +379,9 @@ export type PublishProps = {
   patternPostLoading: boolean;
   handleCanvasPatternPost: () => Promise<void>;
   canvasType: boolean;
+  publishModal: boolean;
+  setPublishModal: (e: boolean) => void;
+  handleFulfillment: () => Promise<void>;
 };
 
 export type TitleProps = {
@@ -585,6 +591,7 @@ export type UsePatternsResult = {
   postLoading: boolean;
   saveImagesLocal: boolean;
   setSaveImagesLocal: (e: boolean) => void;
+  handleFulfillment: () => Promise<void>;
 };
 
 export interface SafeImage {
