@@ -13,6 +13,7 @@ import {
   WhoCollectedPublicationRequest,
 } from "./lens.types";
 import { FormEvent } from "react";
+import { FulfillmentState } from "../../../redux/reducers/fulfillmentSlice";
 
 export type ReactionProps = {
   id?: string;
@@ -661,7 +662,7 @@ export interface ApprovalArgs {
   data: string;
 }
 
-export type TransactionProps = {
+export type GeneralProps = {
   inputText: string;
 };
 
@@ -863,4 +864,20 @@ export type CassetteButton = {
   dropOpen?: boolean;
   scroll?: boolean;
   width?: string;
+};
+
+export type FulfillmentProps = {
+  lensProfile: Profile | undefined;
+  fulfillmentModal: FulfillmentState;
+  postImage: string;
+  notes: string;
+  setNotes: (e: string) => void;
+  amount: number;
+  setAmount: (e: number) => void;
+  sizes: string[];
+  setSizes: (e: string[]) => void;
+  baseColor: string;
+  setBaseColor: (e: string) => void;
+  payment: string | undefined;
+  setPayment: (e: string) => void;
 };

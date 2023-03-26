@@ -184,6 +184,13 @@ const Profile: NextPage = (): JSX.Element => {
           crossOrigin=""
           type="font/ttf"
         />
+        <link
+            rel="preload"
+            href="/fonts/HermanoAltoStamp.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
       </Head>
       {(profileDataLoading || profileDataLoading === undefined) &&
       !profileData &&

@@ -143,7 +143,10 @@ const Draw: FunctionComponent<DrawProps> = ({
   setOpenHeight,
   setOpenWidth,
   samplers,
-  handleReset
+  handleReset,
+  publishModal,
+  setPublishModal,
+  handleFulfillment
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full grid grid-flow-row auto-rows-auto">
@@ -224,6 +227,9 @@ const Draw: FunctionComponent<DrawProps> = ({
                     handleCanvasPatternPost={handleCanvasPatternPost}
                     patternPostLoading={patternPostLoading}
                     canvasType={canvasType}
+                    publishModal={publishModal}
+                    setPublishModal={setPublishModal}
+                    handleFulfillment={handleFulfillment}
                   />
                   <Title title={title} handleTitle={handleTitle} />
                   <SideMenu

@@ -308,6 +308,13 @@ const Mixtape: NextPage = (): JSX.Element => {
           crossOrigin=""
           type="font/ttf"
         />
+        <link
+            rel="preload"
+            href="/fonts/HermanoAltoStamp.ttf"
+            as="font"
+            crossOrigin=""
+            type="font/ttf"
+          />
       </Head>
       <div className="relative w-full h-full grid grid-flow-col auto-cols-auto col-start-1 rounded-t-md">
         {(publicationDataLoading || publicationDataLoading === undefined) &&

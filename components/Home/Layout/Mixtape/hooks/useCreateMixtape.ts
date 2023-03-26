@@ -24,7 +24,6 @@ import { LENS_HUB_PROXY_ADDRESS_MUMBAI } from "../../../../../lib/lens/constants
 import LensHubProxy from "../../../../../abis/LensHubProxy.json";
 import { setCollectValueType } from "../../../../../redux/reducers/collectValueTypeSlice";
 import lodash from "lodash";
-import { setCompleteTrack } from "../../../../../redux/reducers/completeTrackSlice";
 import { setMixtapeSource } from "../../../../../redux/reducers/mixtapeSourceSlice";
 import { setMixtapeTitle } from "../../../../../redux/reducers/mixtapeTitleSlice";
 import splitSignature from "../../../../../lib/lens/helpers/splitSignature";
@@ -218,7 +217,9 @@ const useCreateMixtape = (): UseCreateMixtapeResults => {
       !mixTapeSource ||
       !check
     ) {
-      dispatch(setCompleteTrack(true));
+      dispatch(
+        setInsufficientFunds("Fill Out both the title and image of your track!")
+      );
       return;
     }
 

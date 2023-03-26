@@ -24,6 +24,7 @@ handler.post(async (req: any, res: NextApiResponse<Data>) => {
 });
 
 const uploadToIPFS = async (file: any) => {
+
   const client = create({
     url: "https://ipfs.infura.io:5001/api/v0",
     headers: {

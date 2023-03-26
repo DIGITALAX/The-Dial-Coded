@@ -167,6 +167,13 @@ function MyApp({ Component, pageProps }: AppProps) {
                 crossOrigin=""
                 type="font/ttf"
               />
+              <link
+                rel="preload"
+                href="/fonts/HermanoAltoStamp.ttf"
+                as="font"
+                crossOrigin=""
+                type="font/ttf"
+              />
             </Head>
             <Header />
             <Component {...pageProps} newLink={newLink} />

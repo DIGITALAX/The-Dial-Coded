@@ -5,6 +5,8 @@ import { RootState } from "../../../../../../redux/store";
 import { useSelector } from "react-redux";
 import { PublishProps } from "../../types/canvas.types";
 import { AiOutlineLoading } from "react-icons/ai";
+import Image from "next/legacy/image";
+import { INFURA_GATEWAY } from "../../../../../../lib/lens/constants";
 
 const Publish: FunctionComponent<PublishProps> = ({
   handleCanvasPost,
@@ -14,6 +16,9 @@ const Publish: FunctionComponent<PublishProps> = ({
   handleCanvasPatternPost,
   patternPostLoading,
   canvasType,
+  publishModal,
+  setPublishModal,
+  handleFulfillment,
 }): JSX.Element => {
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
@@ -49,7 +54,7 @@ const Publish: FunctionComponent<PublishProps> = ({
           lensProfile
             ? canvasType
               ? !patternPostLoading
-                ? () => handleCanvasPatternPost()
+                ? () => setPublishModal(!publishModal)
                 : () => {}
               : !postLoading
               ? () => handleCanvasPost()
@@ -72,6 +77,40 @@ const Publish: FunctionComponent<PublishProps> = ({
           </div>
         )}
       </div>
+      {canvasType && publishModal && (
+        <div className="relative w-40 h-40 rounded-lg p-px" id="modal">
+          <div className="relative w-full h-full bg-dG rounded-lg flex flex-col text-center p-px text-naran font-digiR cursor-default">
+            <div
+              className="relative w-full h-fit text-center cursor-pointer"
+              onClick={() => {
+                setPublishModal(false);
+                handleCanvasPatternPost();
+              }}
+            >
+              PROCESS SNAPSHOT &gt;
+            </div>
+            <div className="relative w-full h-full font-digiR text-center grid grid-flow-col auto-cols-auto">
+              <div className="relative w-full h-full grid grid-flow-col auto-cols-auto">
+                <Image
+                  src={`${INFURA_GATEWAY}/ipfs/QmQHDdrJa8NCYkVwtUfRN4y2B52AHMQJ9RrMmK11dN3GcR`}
+                  layout="fill"
+                  objectFit={"cover"}
+                />
+                <div className="relative w-fit h-fit place-self-center">OR</div>
+              </div>
+            </div>
+            <div
+              className="relative w-full h-fit text-center cursor-pointer"
+              onClick={() => {
+                setPublishModal(false);
+                handleFulfillment();
+              }}
+            >
+              READY TO FULFILL &gt;
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

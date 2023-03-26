@@ -90,7 +90,11 @@ const useImageUpload = (): ImageUploadResults => {
               ) {
                 let newArr = [...(imagesUploaded as any), ...finalImages];
                 setMappedFeaturedFiles(newArr);
-                if (!router.asPath.includes("/post/") && !isCanvas && !router.asPath.includes("#Canvas")) {
+                if (
+                  !router.asPath.includes("/post/") &&
+                  !isCanvas &&
+                  !router.asPath.includes("#Canvas")
+                ) {
                   const postStorage = JSON.parse(getPostData() || "{}");
                   setPostData(
                     JSON.stringify({
@@ -129,7 +133,11 @@ const useImageUpload = (): ImageUploadResults => {
         { cid: String(cid?.cid), type: MediaType.Video },
       ];
       setMappedFeaturedFiles(newArr);
-      if (!router.asPath.includes("/post/") && !isCanvas && !router.asPath.includes("#Canvas")) {
+      if (
+        !router.asPath.includes("/post/") &&
+        !isCanvas &&
+        !router.asPath.includes("#Canvas")
+      ) {
         const postStorage = JSON.parse(getPostData() || "{}");
         setPostData(
           JSON.stringify({
@@ -150,7 +158,11 @@ const useImageUpload = (): ImageUploadResults => {
       (uploaded) => uploaded.cid !== image.cid
     );
     setMappedFeaturedFiles(cleanedArray);
-    if (!router.asPath.includes("/post/") && !isCanvas && !router.asPath.includes("#Canvas")) {
+    if (
+      !router.asPath.includes("/post/") &&
+      !isCanvas &&
+      !router.asPath.includes("#Canvas")
+    ) {
       const postStorage = JSON.parse(getPostData() || "{}");
       setPostData(
         JSON.stringify({

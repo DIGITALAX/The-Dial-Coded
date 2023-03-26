@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { setSignIn } from "../../../../redux/reducers/signInSlice";
@@ -26,6 +26,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
   const promptLoading = useSelector(
     (state: RootState) => state.app.synthLoadingReducer.value
   );
+  const [publishModal, setPublishModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { openConnectModal } = useConnectModal();
   const {
@@ -69,6 +70,7 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
     postLoading: patternPostLoading,
     saveImagesLocal: savePatternImagesLocal,
     setSaveImagesLocal: setSavePatternImagesLocal,
+    handleFulfillment
   } = usePatterns();
   const {
     steps,
@@ -349,6 +351,9 @@ const CanvasSwitch: FunctionComponent = (): JSX.Element => {
           setOpenWidth={setOpenWidth}
           samplers={samplers}
           handleReset={handleReset}
+          publishModal={publishModal}
+          setPublishModal={setPublishModal}
+          handleFulfillment={handleFulfillment}
         />
       );
   }
