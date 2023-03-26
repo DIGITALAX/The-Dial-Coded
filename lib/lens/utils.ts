@@ -126,9 +126,15 @@ export const getNotificationLength = () => {
   }
 };
 
-export const setScrollPosition = (pos: string) => {
+export const setScrollPosition = (id: string, top: string) => {
   if (typeof window !== "undefined") {
-    sessionStorage.setItem(SCROLL_STORAGE_KEY, pos);
+    sessionStorage.setItem(
+      SCROLL_STORAGE_KEY,
+      JSON.stringify({
+        id,
+        top,
+      })
+    );
     return;
   }
 };
@@ -138,5 +144,11 @@ export const getScrollPosition = () => {
     const data = sessionStorage.getItem(SCROLL_STORAGE_KEY);
     if (!data) return null;
     return data;
+  }
+};
+
+export const removeScrollPosition = () => {
+  if (typeof window !== "undefined") {
+    sessionStorage.removeItem(SCROLL_STORAGE_KEY);
   }
 };

@@ -30,6 +30,7 @@ import checkIfFollowerOnly from "../../../../../../../lib/lens/helpers/checkIfFo
 import checkFeedTypes from "../../../../../../../lib/lens/helpers/checkFeedTypes";
 import {
   getScrollPosition,
+  removeScrollPosition,
   setScrollPosition,
 } from "../../../../../../../lib/lens/utils";
 import { scrollToPosition } from "../../../../../../../lib/lens/helpers/scrollToPosition";
@@ -132,7 +133,17 @@ const useMainFeed = () => {
       } else {
         setHasMore(true);
       }
-      const arr: any[] = [...publicationsList?.data.explorePublications.items];
+      const { feed, paginatedData } = await scrollToPosition(
+        firstPubLoad,
+        hasMore,
+        setHasMore,
+        publicationsList?.data.explorePublications,
+        0,
+        profileExists,
+        feedOrder,
+        feedType
+      );
+      const arr: any[] = [...feed];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
@@ -161,16 +172,9 @@ const useMainFeed = () => {
         );
         setFollowerOnly(isOnlyFollowers as boolean[]);
       }
-      console.log({ filteredArr });
-      if (firstPubLoad) {
-        const postStorage = getScrollPosition();
-        if (postStorage) {
-          scrollToPosition(filteredArr, postStorage, fetchMorePublications);
-        }
-      }
       setPublicationsLoading(false);
       setFirstPubLoad(false);
-      setPaginatedResults(publicationsList?.data?.explorePublications.pageInfo);
+      setPaginatedResults(paginatedData);
       const mixtapeMirrors = checkIfMixtapeMirror(filteredArr);
       setMixtapeMirror(mixtapeMirrors);
       const response = await checkPostReactions(filteredArr, lensProfile);
@@ -215,11 +219,22 @@ const useMainFeed = () => {
         } else {
           dispatch(setNoUserData(false));
         }
-        const arr: any[] = [...data?.publications?.items];
+        const { feed, paginatedData } = await scrollToPosition(
+          firstPubLoad,
+          hasMore,
+          setHasMore,
+          data?.publications,
+          1,
+          false,
+          feedOrder,
+          feedType,
+          userView
+        );
+        const arr: any[] = [...feed];
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
-        pageData = data?.publications?.pageInfo;
+        pageData = paginatedData;
       } else {
         const { data } = await profilePublicationsAuth({
           sources: "thedial",
@@ -234,11 +249,22 @@ const useMainFeed = () => {
         } else {
           dispatch(setNoUserData(false));
         }
-        const arr: any[] = [...data?.publications?.items];
+        const { feed, paginatedData } = await scrollToPosition(
+          firstPubLoad,
+          hasMore,
+          setHasMore,
+          data?.publications,
+          1,
+          true,
+          feedOrder,
+          feedType,
+          userView
+        );
+        const arr: any[] = [...feed];
         sortedArr = arr.sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         );
-        pageData = data?.publications?.pageInfo;
+        pageData = paginatedData;
       }
       if (!sortedArr || sortedArr?.length < 20) {
         setHasMore(false);
@@ -302,7 +328,19 @@ const useMainFeed = () => {
       } else {
         setHasMore(true);
       }
-      const arr: any[] = [...res?.data.feed.items];
+      const { feed, paginatedData } = await scrollToPosition(
+        firstPubLoad,
+        hasMore,
+        setHasMore,
+        res?.data?.feed,
+        2,
+        true,
+        undefined,
+        undefined,
+        undefined,
+        lensProfile
+      );
+      const arr: any[] = [...feed];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
@@ -334,7 +372,7 @@ const useMainFeed = () => {
         setFollowerOnly(isOnlyFollowers as boolean[]);
         const mixtapeMirrors = checkIfMixtapeMirror(orderedArr);
         setMixtapeMirror(mixtapeMirrors);
-        setPaginatedResults(res?.data.feed.pageInfo);
+        setPaginatedResults(paginatedData);
         const response = await checkPostReactions(orderedArr, lensProfile);
         setHasReacted(response?.hasReactedArr);
         setReactionsFeed(response?.reactionsFeedArr);
@@ -757,6 +795,13 @@ const useMainFeed = () => {
       !router.asPath.includes("/post/") &&
       !router.asPath.includes("/mixtape/")
     ) {
+      if (!firstPubLoad) {
+        const scrollableDivRef = document.getElementsByClassName(
+          "relative row-start-1 w-full h-full"
+        );
+        removeScrollPosition();
+        scrollableDivRef[4].scrollTop = 0;
+      }
       if (userView?.handle) {
         getUserSelectFeed();
       } else {
@@ -797,7 +842,10 @@ const useMainFeed = () => {
         postElementBounds.bottom >= scrollableDivBounds.top
       ) {
         const postId = (postElement as any).dataset.postId;
-        setScrollPosition(String(postId));
+        setScrollPosition(
+          String(postId),
+          String(scrollableDivRef[4].scrollTop)
+        );
         break;
       }
     }
