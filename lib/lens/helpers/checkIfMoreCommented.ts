@@ -15,12 +15,18 @@ const checkIfMoreCommented = async (
         commentsOf: id,
         limit: 50,
         cursor: pageData?.next,
+        commentsOfOrdering: "RANKING",
+        commentsRankingFilter: "RELEVANT",
+        sources: ["thedial"],
       });
     } else {
       comments = await whoCommentedPublications({
         commentsOf: id,
         limit: 50,
         cursor: pageData?.next,
+        commentsOfOrdering: "RANKING",
+        commentsRankingFilter: "RELEVANT",
+        sources: ["thedial"],
       });
     }
 

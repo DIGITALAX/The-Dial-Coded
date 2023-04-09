@@ -21,11 +21,11 @@ const useHeader = (): UseHeaderResult => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { handleRefreshProfile } = useLensSignIn();
-  const [connected, setConnected] = useState(false);
+  const [connected, setConnected] = useState<boolean>(false);
   const backgroundNumber: number = useSelector(
     (state: RootState) => state.app.backgroundReducer.value
   );
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
   const handleImageData = (): void => {
     if (backgroundNumber < 66 && backgroundNumber > 4) {
       dispatch(setBackground(backgroundNumber + 1));
@@ -35,7 +35,7 @@ const useHeader = (): UseHeaderResult => {
   };
 
   const handleAccount = (): void => {
-    router.push(`/#Account`)
+    router.push(`/#Account`);
     dispatch(setLayout("Account"));
     dispatch(setHamburger(false));
     document.getElementById("account")?.scrollIntoView({

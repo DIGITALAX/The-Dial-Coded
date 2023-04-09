@@ -1,7 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { useSelector } from "react-redux";
-import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
 import createProfilePicture from "../../../../lib/lens/helpers/createProfilePicture";
 import { setHamburger } from "../../../../redux/reducers/hamburgerSlice";
 import { RootState } from "../../../../redux/store";

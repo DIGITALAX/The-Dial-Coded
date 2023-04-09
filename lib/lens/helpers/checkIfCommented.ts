@@ -17,11 +17,17 @@ const checkIfCommented = async (
         comments = await whoCommentedPublicationsAuth({
           commentsOf: inputArr[i]?.id,
           limit: 50,
+          commentsOfOrdering: "RANKING",
+          commentsRankingFilter: "RELEVANT",
+          sources: ["thedial"]
         });
       } else {
         comments = await whoCommentedPublications({
           commentsOf: inputArr[i]?.id,
           limit: 50,
+          commentsOfOrdering: "RANKING",
+          commentsRankingFilter: "RELEVANT",
+          sources: ["thedial"]
         });
       }
 

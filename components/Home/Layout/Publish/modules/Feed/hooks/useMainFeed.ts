@@ -711,12 +711,18 @@ const useMainFeed = () => {
           commentsOf: id ? id : commentId,
           limit: 30,
           cursor: commentPageInfo?.next,
+          commentsOfOrdering: "RANKING",
+          commentsRankingFilter: "RELEVANT",
+          sources: ["thedial"]
         });
       } else {
         comments = await whoCommentedPublications({
           commentsOf: id ? id : commentId,
           limit: 30,
           cursor: commentPageInfo?.next,
+          commentsOfOrdering: "RANKING",
+          commentsRankingFilter: "RELEVANT",
+          sources: ["thedial"]
         });
       }
       const arr: any[] = [...comments.data.publications.items];
