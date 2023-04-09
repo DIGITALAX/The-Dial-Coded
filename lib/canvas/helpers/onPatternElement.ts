@@ -20,7 +20,7 @@ const onPatternElement = (
   const bounds = canvas?.getBoundingClientRect();
   const ctx = canvas?.getContext("2d");
   const newelements = [...elements];
-  newelements.sort((a, b) => (a.id > b.id ? -1 : 1));
+  elements && newelements.sort((a, b) => (a.id > b.id ? -1 : 1));
   if (!template) {
     lodash.filter(newelements, (element: SvgPatternType) => {
       switch (element.type) {

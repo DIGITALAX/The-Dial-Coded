@@ -34,10 +34,6 @@ import dispatchPostCanvas from "../../../../../lib/canvas/helpers/dispatchPostCa
 import useImageUpload from "../../../../Common/Modals/Publications/hooks/useImageUpload";
 import { setPublication } from "../../../../../redux/reducers/publicationSlice";
 import { setInsufficientFunds } from "../../../../../redux/reducers/insufficientFunds";
-import {
-  getCanvasStorage,
-  setCanvasStorage,
-} from "../../../../../lib/replicate/utils";
 import { setFulfillment } from "../../../../../redux/reducers/fulfillmentSlice";
 
 const usePatterns = (): UsePatternsResult => {
@@ -95,7 +91,7 @@ const usePatterns = (): UsePatternsResult => {
   const [thickness, setThickness] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(false);
   const [elements, setElements, undo, redo] = useElements(
-    JSON.parse(getCanvasStorage() || "{}")?.[patternType]?.[template] || [],
+    [],
     true
   );
   const [postLoading, setPostLoading] = useState<boolean>(false);
@@ -103,7 +99,7 @@ const usePatterns = (): UsePatternsResult => {
     setValue(value);
     await addRashToCanvas(
       setElements,
-      JSON.parse(getCanvasStorage() || "{}")?.[patternType]?.[template] || [],
+      [],
       base[Number(patternType)],
       safe[Number(patternType)],
       temp[Number(patternType)][Number(value?.split("0x0")[1]) - 1]
@@ -158,30 +154,30 @@ const usePatterns = (): UsePatternsResult => {
         }
       });
       ctx.save();
-      const canvasStorage = JSON.parse(getCanvasStorage() || "{}");
-      setCanvasStorage(
-        JSON.stringify({
-          ...canvasStorage,
-          [patternType]: {
-            ...canvasStorage[patternType],
-            [template]: elements
-              ?.map((elem: any) => {
-                if (
-                  elem.type === "image" &&
-                  elem.image instanceof HTMLImageElement
-                ) {
-                  return { ...elem, image: elem.image.src };
-                } else {
-                  return elem;
-                }
-              })
-              .filter(
-                (elem: any) =>
-                  elem.type !== "0" && elem.type !== "1" && elem.type !== "2"
-              ),
-          },
-        })
-      );
+      // const canvasStorage = JSON.parse(getCanvasStorage() || "{}");
+      // setCanvasStorage(
+      //   JSON.stringify({
+      //     ...canvasStorage,
+      //     [patternType]: {
+      //       ...canvasStorage[patternType],
+      //       [template]: elements
+      //         ?.map((elem: any) => {
+      //           if (
+      //             elem.type === "image" &&
+      //             elem.image instanceof HTMLImageElement
+      //           ) {
+      //             return { ...elem, image: elem.image.src };
+      //           } else {
+      //             return elem;
+      //           }
+      //         })
+      //         .filter(
+      //           (elem: any) =>
+      //             elem.type !== "0" && elem.type !== "1" && elem.type !== "2"
+      //         ),
+      //     },
+      //   })
+      // );
     }
   }, [
     elements,

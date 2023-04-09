@@ -6,7 +6,6 @@ import {
 } from "@apollo/client";
 import { BASE_URL } from "./constants";
 import { getAuthenticationToken, isAuthExpired, refreshAuth } from "./utils";
-import jwt_decode from "jwt-decode";
 import { RetryLink } from "@apollo/client/link/retry";
 
 const httpLink = new HttpLink({ uri: BASE_URL });

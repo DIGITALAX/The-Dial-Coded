@@ -2,7 +2,7 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { FeedPublicationProps } from "../../types/common.types";
 import { INFURA_GATEWAY } from "../../../../lib/lens/constants";
-import { Media, MediaSet } from "../../types/lens.types";
+import { MediaSet } from "../../types/lens.types";
 import { setImageViewer } from "../../../../redux/reducers/imageViewerSlice";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -12,6 +12,7 @@ import { setReactionState } from "../../../../redux/reducers/reactionStateSlice"
 import { setCommentShow } from "../../../../redux/reducers/commentShowSlice";
 import descriptionRegex from "../../../../lib/lens/helpers/descriptionRegex";
 import Profile from "../Profile/Profile";
+import getLinkPreview from "../../../../lib/lens/helpers/getLinkPreview";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
@@ -30,6 +31,15 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   const router = useRouter();
   const viewerOpen = useSelector(
     (state: RootState) => state.app.imageViewerReducer.open
+  );
+  const link = getLinkPreview(
+    (publication as any)?.__typename !== "Mirror"
+      ? (publication as any)?.metadata?.description
+        ? (publication as any)?.metadata?.description
+        : (publication as any)?.metadata?.content
+      : (publication as any)?.mirrorOf?.metadata?.description
+      ? (publication as any)?.mirrorOf?.metadata?.description
+      : (publication as any)?.mirrorOf?.metadata?.content
   );
   const tags = document.querySelectorAll("em");
   if (tags.length > 0) {

@@ -82,7 +82,7 @@ const useHearted = () => {
     );
     try {
       if (voteWay.length === 0 || voteWay[0]?.reaction === "DOWNVOTE") {
-        const add = await addReaction({
+        await addReaction({
           profileId: profileId,
           reaction: "UPVOTE",
           publicationId: pubId,
@@ -94,7 +94,7 @@ const useHearted = () => {
           })
         );
       } else {
-        const remove = await removeReaction({
+        await removeReaction({
           profileId: profileId,
           reaction: "DOWNVOTE",
           publicationId: pubId,

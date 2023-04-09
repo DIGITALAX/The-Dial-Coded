@@ -33,85 +33,60 @@ const useImageUpload = (): ImageUploadResults => {
     (state: RootState) => state.app.postImageReducer.value
   );
 
-  const uploadImage = async (
-    e: FormEvent | File,
-    canvas?: boolean
-  ): Promise<void> => {
-    if (!canvas) {
-      if ((e as any)?.target?.files?.length < 1) {
-        return;
-      }
-    }
+  const uploadImage = async (e: FormEvent | File): Promise<void> => {
     let finalImages: UploadedMedia[] = [];
     setImageUploading(true);
-    if (canvas) {
-      try {
-        const compressedImage = await compressImageFiles(e as File);
-        const response = await fetch("/api/ipfs", {
-          method: "POST",
-          body: compressedImage as any,
-        });
-        let cid = await response.json();
-        finalImages.push({
-          cid: String(cid?.cid),
-          type: MediaType.Image,
-        });
-        setMappedFeaturedFiles([...finalImages]);
-      } catch (err: any) {
-        console.error(err.message);
-      }
+
+    if (fileLimitAlert((e as any).target.files[0])) {
       setImageUploading(false);
-    } else {
-      if (fileLimitAlert((e as any).target.files[0])) {
-        setImageUploading(false);
-        return;
-      }
-      Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(
-        async (file: any, index: number) => {
-          try {
-            const compressedImage = await compressImageFiles(
-              (e as any).target.files[index] as File
-            );
-            const response = await fetch("/api/ipfs", {
-              method: "POST",
-              body: compressedImage as any,
-            });
-            if (response.status !== 200) {
-              setImageUploading(false);
-            } else {
-              let cid = await response.json();
-              finalImages.push({
-                cid: String(cid?.cid),
-                type: MediaType.Image,
-              });
-              if (
-                finalImages?.length ===
-                ((e as FormEvent).target as HTMLFormElement).files?.length
-              ) {
-                let newArr = [...(imagesUploaded as any), ...finalImages];
-                setMappedFeaturedFiles(newArr);
-                if (
-                  !router.asPath.includes("/post/") &&
-                  !isCanvas &&
-                  !router.asPath.includes("#Canvas")
-                ) {
-                  const postStorage = JSON.parse(getPostData() || "{}");
-                  setPostData(
-                    JSON.stringify({
-                      ...postStorage,
-                      images: newArr,
-                    })
-                  );
-                }
-                setImageUploading(false);
-              }
-            }
-          } catch (err: any) {
-            console.error(err.message);
-          }
-        }
-      );
+      return;
     }
+    Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(
+      async (file: any, index: number) => {
+        if (index >= 4) return;
+        try {
+          const compressedImage = await compressImageFiles(
+            (e as any).target.files[index] as File
+          );
+          const response = await fetch("/api/ipfs", {
+            method: "POST",
+            body: compressedImage as any,
+          });
+          if (response.status !== 200) {
+            setImageUploading(false);
+          } else {
+            let cid = await response.json();
+            finalImages.push({
+              cid: String(cid?.cid),
+              type: MediaType.Image,
+            });
+            if (
+              finalImages?.length ===
+              ((e as FormEvent).target as HTMLFormElement).files?.length
+            ) {
+              let newArr = [...(imagesUploaded as any), ...finalImages];
+              setMappedFeaturedFiles(newArr);
+              if (
+                !router.asPath.includes("/post/") &&
+                !isCanvas &&
+                !router.asPath.includes("#Canvas")
+              ) {
+                const postStorage = JSON.parse(getPostData() || "{}");
+                setPostData(
+                  JSON.stringify({
+                    ...postStorage,
+                    images: newArr,
+                  })
+                );
+              }
+              setImageUploading(false);
+            }
+          }
+        } catch (err: any) {
+          console.error(err.message);
+        }
+      }
+    );
   };
 
   const uploadVideo = async (e: FormEvent) => {
@@ -174,9 +149,13 @@ const useImageUpload = (): ImageUploadResults => {
   };
 
   useEffect(() => {
-    dispatch(setPostImages(mappedFeaturedFiles));
+    if (mappedFeaturedFiles.length > 3) {
+      setMappedFeaturedFiles(mappedFeaturedFiles.slice(0, 4));
+      dispatch(setPostImages(mappedFeaturedFiles.slice(0, 4)));
+    } else {
+      dispatch(setPostImages(mappedFeaturedFiles));
+    }
   }, [mappedFeaturedFiles]);
-
   return {
     uploadImage,
     imageUploading,
