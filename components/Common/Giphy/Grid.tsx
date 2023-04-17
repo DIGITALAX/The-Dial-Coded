@@ -28,7 +28,7 @@ const Grid: FunctionComponent<GridProps> = ({
         onClick={(e: FormEvent) => handleGifSubmit(e)}
       >
         <div className="relative w-fit h-fit col-start-1 place-self-center">
-          Submit
+          Search
         </div>
       </div>
       {results?.length !== 0 && (

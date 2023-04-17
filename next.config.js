@@ -3,6 +3,7 @@
 const allowedOrigins = [
   "https://api-mumbai.lens.dev",
   "https://thedial.infura-ipfs.io",
+  "https://api.lens.dev",
   "https://lexica.art",
   "https://tenor.googleapis.com",
   "http://127.0.0.1:7860",
