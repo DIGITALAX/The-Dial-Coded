@@ -49,7 +49,7 @@ const CommentsModal: FunctionComponent<CommentsModalProps> = ({
             </div>
             {!commentInfoLoading ? (
               <>
-                {commentors.length > 0 && (
+                {commentors?.length > 0 && (
                   <div className="relative w-full h-fit row-start-2 grid grid-flow-row auto-rows-auto">
                     <InfiniteScroll
                       hasMore={true}

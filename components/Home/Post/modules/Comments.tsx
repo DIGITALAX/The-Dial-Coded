@@ -319,7 +319,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
           </div>
         )}
       </div>
-      {commentors.length > 0 && (
+      {commentors?.length > 0 && (
         <div className="relative w-full h-fit grid grid-flow-row auto-rows-auto place-self-center">
           <InfiniteScroll
             hasMore={true}

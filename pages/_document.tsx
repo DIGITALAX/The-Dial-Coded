@@ -17,7 +17,7 @@ class Document extends NextDocument {
           <meta name="og:url" content="https://thedial.xyz/" />
           <meta name="og:image" content="https://thedial.xyz/card.png/" />
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:site" content="@igitalax_" />
+          <meta name="twitter:site" content="@digitalax_" />
           <meta name="twitter:creator" content="@digitalax_" />
           <meta name="twitter:image" content="https://thedial.xyz/card.png/" />
           <meta name="twitter:url" content="https://thedial.xyz/" />

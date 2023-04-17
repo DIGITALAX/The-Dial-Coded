@@ -40,13 +40,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [routerChangeLoading, setRouterChangeLoading] =
     useState<boolean>(false);
   const streamLinks: string[] = [
-    "https://www.youtube.com/embed/__PtdR1xZYY?controls=0?rel=0&autoplay=1&mute=1",
-    "https://www.youtube.com/embed/CqpU5vCQxGM?controls=0?rel=0&autoplay=1&mute=1",
+    "https://www.youtube.com/embed/ntzmHYiy2Ko?controls=0?rel=0&autoplay=1&mute=1&modestBranding=1",
+    "https://www.youtube.com/embed/ntzmHYiy2Ko?controls=0?rel=0&autoplay=1&mute=1&modestBranding=1",
   ];
   const [newLink, setNewLink] = useState<string>(
-    "https://www.youtube.com/embed/__PtdR1xZYY?controls=0?rel=0&autoplay=1&mute=1"
+    "https://www.youtube.com/embed/ntzmHYiy2Ko?controls=0?rel=0&autoplay=1&mute=1&modestBranding=1"
   );
-
+  
   useEffect(() => {
     const shuffledLinks: number[] = shuffle([0, 1]);
     setNewLink(streamLinks[shuffledLinks[0]]);
